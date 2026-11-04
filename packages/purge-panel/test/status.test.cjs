@@ -9,7 +9,7 @@ const { buildSync } = require("esbuild");
 const code = buildSync({
   stdin: {
     contents:
-      'export * from "./src/api/client.js"; export {setTranslate,zh} from "./src/shared/locale.js"; export { StatusStrip, VersionNotice } from "./src/components/page.js"; export { PurgifySection } from "./src/components/settings-form.js";',
+      'export * from "./src/api/client.js"; export {setTranslate,ko} from "./src/shared/locale.js"; export { StatusStrip, VersionNotice } from "./src/components/page.js"; export { PurgifySection } from "./src/components/settings-form.js";',
     resolveDir: path.join(__dirname, ".."),
   },
   bundle: true,
@@ -36,7 +36,7 @@ function harness(fetch) {
   vm.runInNewContext(code, context);
   const api = context.module.exports;
   api.setTranslate((key, values = {}) =>
-    (api.zh[key] || key).replace(/\{(\w+)\}/g, (_, name) => values[name] ?? ""),
+    (api.ko[key] || key).replace(/\{(\w+)\}/g, (_, name) => values[name] ?? ""),
   );
   return api;
 }
@@ -116,23 +116,23 @@ test("failed status can retry and does not fabricate zero patch counts or a miss
     renderToStaticMarkup(
       React.createElement(h.VersionNotice, { info: failure }),
     );
-  assert.match(markup, /读取失败/);
+  assert.match(markup, /읽기 실패/);
   assert.match(markup, /timeout/);
   assert.match(markup, /\?\/\?/);
-  assert.doesNotMatch(markup, /0\/0|未定位宿主/);
+  assert.doesNotMatch(markup, /0\/0|호스트 미탐지/);
   const text = JSON.stringify(view.toJSON());
-  assert.match(text, /状态未知/);
-  assert.doesNotMatch(text, /未定位到.*宿主/);
+  assert.match(text, /상태 미확인/);
+  assert.doesNotMatch(text, /찾지 못.*호스트|호스트 미탐지/);
   fail = false;
   const refresh = view.root
     .findAllByType("button")
-    .find((b) => b.children.includes("刷新"));
+    .find((b) => b.children.includes("새로 고침"));
   await act(async () => {
     refresh.props.onClick();
   });
   assert.equal(states.at(-1).ai_base, "/fixture");
   assert.equal(states.at(-1).patches_applied, 2);
-  assert.doesNotMatch(JSON.stringify(view.toJSON()), /timeout|状态未知/);
+  assert.doesNotMatch(JSON.stringify(view.toJSON()), /timeout|상태 미확인/);
   await act(async () => view.unmount());
 });
 test("a confirmed missing host remains a visible diagnostic, not a read failure", () => {
@@ -147,6 +147,6 @@ test("a confirmed missing host remains a visible diagnostic, not a read failure"
       },
     }),
   );
-  assert.match(markup, /未定位宿主/);
-  assert.doesNotMatch(markup, /读取失败/);
+  assert.match(markup, /호스트 미탐지/);
+  assert.doesNotMatch(markup, /읽기 실패/);
 });

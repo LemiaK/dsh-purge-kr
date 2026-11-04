@@ -48,13 +48,13 @@ var h = import_react.default.createElement;
 var { useState, useEffect, useCallback, useRef, Component } = import_react.default;
 
 // src/styles/base.css
-var base_default = '.dshpp-root {\n  --dshpp-display:\n    "Songti SC", "Noto Serif SC", "Iowan Old Style", Palatino,\n    "Palatino Linotype", Georgia, serif;\n  --dshpp-sans:\n    "Yu Gothic UI", "Hiragino Sans GB", "Source Han Sans SC", system-ui,\n    sans-serif;\n  --dshpp-mono: "Cascadia Mono", "Sarasa Mono SC", ui-monospace, monospace;\n  --dshpp-ease: cubic-bezier(0.16, 1, 0.3, 1);\n  max-width: 920px;\n  display: flex;\n  flex-direction: column;\n  gap: 18px;\n  padding: 16px;\n  border-radius: 12px;\n  background: var(--dshpp-bg);\n  color: var(--dshpp-ink);\n  font-family: var(--dshpp-sans);\n}\n.dshpp-root {\n  --dshpp-bg: transparent;\n  --dshpp-paper: color-mix(\n    in srgb,\n    var(--dsw-alias-bg-layer-1, #f6f4ef) 74%,\n    transparent\n  );\n  --dshpp-ink: var(--dsw-alias-label-primary, #1a1916);\n  --dshpp-mute: color-mix(\n    in srgb,\n    var(--dsw-alias-label-primary, #1a1916) 74%,\n    var(--dsw-alias-label-secondary, #5c564c)\n  );\n  --dshpp-line: color-mix(\n    in srgb,\n    var(--dsw-alias-border-l1, #c8c2b6) 78%,\n    transparent\n  );\n  --dshpp-fill: color-mix(\n    in srgb,\n    var(--dsw-alias-brand-primary, #6d8f78) 14%,\n    transparent\n  );\n  --dshpp-accent: var(--dsw-alias-brand-primary, #3f6b52);\n  --dshpp-accent-soft: color-mix(\n    in srgb,\n    var(--dsw-alias-brand-primary, #6d8f78) 18%,\n    transparent\n  );\n  --dshpp-ok: #1f7a45;\n  --dshpp-warn: #8a5a12;\n  --dshpp-bad: #9a3434;\n}\n.dshpp-root[data-theme="white"] {\n  color-scheme: light;\n}\n.dshpp-root[data-theme="dusk"] {\n  color-scheme: dark;\n  --dshpp-ok: #8fd0a8;\n  --dshpp-warn: #e4c48a;\n  --dshpp-bad: #f0b4b4;\n}\n.dshpp-toolbar {\n  display: flex;\n  align-items: center;\n  justify-content: flex-end;\n  gap: 8px;\n}\n.dshpp-switch {\n  display: inline-flex;\n  border: 1px solid var(--dshpp-line);\n  border-radius: 999px;\n  overflow: hidden;\n  background: var(--dshpp-paper);\n}\n.dshpp-switch button {\n  appearance: none;\n  border: 0;\n  background: transparent;\n  color: var(--dshpp-mute);\n  font: 12px/1 var(--dshpp-sans);\n  padding: 6px 14px;\n  cursor: pointer;\n}\n.dshpp-switch button.is-on {\n  background: var(--dshpp-accent-soft);\n  color: var(--dshpp-ink);\n}\n.dshpp-switch button:focus-visible {\n  outline: 2px solid var(--dshpp-accent);\n  outline-offset: -2px;\n}\n.dshpp-panel {\n  border: 1px solid var(--dshpp-line);\n  background: var(--dshpp-paper);\n  border-radius: 10px;\n  padding: 18px 18px 16px;\n}\n.dshpp-kicker {\n  font-family: var(--dshpp-mono);\n  font-size: 11px;\n  letter-spacing: 0.14em;\n  text-transform: uppercase;\n  color: var(--dshpp-mute);\n  margin: 0 0 4px;\n}\n.dshpp-title {\n  font-family: var(--dshpp-display);\n  font-size: 20px;\n  font-weight: 500;\n  letter-spacing: 0.02em;\n  line-height: 1.3;\n  margin: 0;\n  color: var(--dshpp-ink);\n}\n.dshpp-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 12px;\n  margin-bottom: 14px;\n  flex-wrap: wrap;\n}\n.dshpp-sub {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  margin: 20px 0 10px;\n}\n.dshpp-sub h4 {\n  margin: 0;\n  font-family: var(--dshpp-display);\n  font-size: 15px;\n  font-weight: 500;\n}\n.dshpp-metrics {\n  display: grid;\n  grid-template-columns: repeat(3, minmax(0, 1fr));\n  gap: 8px;\n  margin-bottom: 14px;\n}\n.dshpp-metric {\n  border: 1px solid var(--dshpp-line);\n  background: var(--dshpp-bg);\n  padding: 12px;\n  min-height: 68px;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  border-radius: 8px;\n}\n.dshpp-metric b {\n  font-family: var(--dshpp-display);\n  font-size: 18px;\n  font-weight: 500;\n  line-height: 1.2;\n}\n.dshpp-metric span {\n  font-size: 11px;\n  color: var(--dshpp-mute);\n}\n.dshpp-bar {\n  height: 3px;\n  border-radius: 99px;\n  background: var(--dshpp-line);\n  overflow: hidden;\n  margin: 8px 0 14px;\n}\n.dshpp-bar > i {\n  display: block;\n  height: 100%;\n  background: var(--dshpp-accent);\n  width: 0;\n  transition: width 0.4s var(--dshpp-ease);\n}\n.dshpp-group {\n  border: 1px solid var(--dshpp-line);\n  margin: 0 0 8px;\n  background: var(--dshpp-bg);\n  border-radius: 8px;\n  overflow: hidden;\n}\n.dshpp-group-h {\n  width: 100%;\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  padding: 9px 12px;\n  border: 0;\n  background: transparent;\n  color: inherit;\n  cursor: pointer;\n  font: inherit;\n  text-align: left;\n}\n.dshpp-group-h:hover {\n  background: var(--dshpp-fill);\n}\n.dshpp-group-h:focus-visible {\n  outline: 2px solid var(--dshpp-accent);\n  outline-offset: -2px;\n}\n.dshpp-group-h strong {\n  font-family: var(--dshpp-display);\n  font-size: 14px;\n  font-weight: 500;\n}\n.dshpp-group-h em {\n  font-style: normal;\n  font-size: 12px;\n  color: var(--dshpp-mute);\n  flex: 1;\n}\n.dshpp-count {\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  color: var(--dshpp-mute);\n}\n.dshpp-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: 12.5px;\n}\n.dshpp-table th {\n  text-align: left;\n  font-weight: 500;\n  font-size: 11px;\n  letter-spacing: 0.06em;\n  color: var(--dshpp-mute);\n  padding: 7px 12px;\n  border-bottom: 1px solid var(--dshpp-line);\n}\n.dshpp-table td {\n  padding: 8px 12px;\n  border-bottom: 1px solid var(--dshpp-line);\n  vertical-align: middle;\n}\n.dshpp-table tr:last-child td {\n  border-bottom: 0;\n}\n.dshpp-table tr.is-on td {\n  background: var(--dshpp-accent-soft);\n}\n.dshpp-id {\n  font-family: var(--dshpp-mono);\n  opacity: 0.75;\n  width: 42px;\n}\n.dshpp-actions {\n  text-align: right;\n  white-space: nowrap;\n}\n.dshpp-row {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n}\n.dshpp-row + .dshpp-row {\n  margin-top: 10px;\n}\n.dshpp-pill {\n  display: inline-flex;\n  align-items: center;\n  gap: 6px;\n  font-family: var(--dshpp-mono);\n  font-size: 11px;\n  padding: 2px 8px;\n  border: 1px solid var(--dshpp-line);\n  border-radius: 99px;\n  line-height: 1.6;\n  background: var(--dshpp-bg);\n}\n.dshpp-pill::before {\n  content: "";\n  width: 6px;\n  height: 6px;\n  border-radius: 50%;\n  background: currentColor;\n}\n.dshpp-pill.is-ok {\n  color: var(--dshpp-ok);\n  border-color: color-mix(in srgb, var(--dshpp-ok) 30%, var(--dshpp-line));\n}\n.dshpp-pill.is-wait {\n  color: var(--dshpp-warn);\n  border-color: color-mix(in srgb, var(--dshpp-warn) 30%, var(--dshpp-line));\n}\n.dshpp-pill.is-miss {\n  color: var(--dshpp-mute);\n}\n.dshpp-pill.is-bad {\n  color: var(--dshpp-bad);\n}\n.dshpp-btn {\n  appearance: none;\n  font-family: var(--dshpp-sans);\n  font-size: 13px;\n  font-weight: 500;\n  min-height: 34px;\n  padding: 0 14px;\n  border-radius: 8px;\n  border: 1px solid transparent;\n  cursor: pointer;\n  transition:\n    background 0.15s var(--dshpp-ease),\n    opacity 0.15s var(--dshpp-ease);\n}\n.dshpp-btn:disabled {\n  opacity: 0.45;\n  cursor: not-allowed;\n}\n.dshpp-btn:focus-visible {\n  outline: 2px solid var(--dshpp-accent);\n  outline-offset: 2px;\n}\n.dshpp-btn-primary {\n  background: var(--dshpp-accent-soft);\n  color: var(--dshpp-ink);\n  border-color: color-mix(in srgb, var(--dshpp-accent) 35%, var(--dshpp-line));\n}\n.dshpp-btn-primary:hover:not(:disabled) {\n  background: color-mix(in srgb, var(--dshpp-accent) 22%, var(--dshpp-bg));\n}\n.dshpp-btn-ghost {\n  background: transparent;\n  color: var(--dshpp-ink);\n  border-color: var(--dshpp-line);\n}\n.dshpp-btn-danger {\n  background: transparent;\n  color: var(--dshpp-bad);\n  border-color: color-mix(in srgb, var(--dshpp-bad) 40%, var(--dshpp-line));\n}\n.dshpp-btn-solid-danger {\n  background: color-mix(in srgb, var(--dshpp-bad) 16%, var(--dshpp-bg));\n  color: var(--dshpp-bad);\n  border-color: color-mix(in srgb, var(--dshpp-bad) 30%, var(--dshpp-line));\n}\n.dshpp-btn-tiny {\n  min-height: 28px;\n  padding: 0 10px;\n  font-size: 12px;\n}\n.dshpp-field,\n.dshpp-area {\n  width: 100%;\n  box-sizing: border-box;\n  font: 13px/1.55 var(--dshpp-mono);\n  padding: 8px 10px;\n  background: var(--dshpp-bg);\n  color: var(--dshpp-ink);\n  border: 1px solid var(--dshpp-line);\n  border-radius: 8px;\n}\n.dshpp-field {\n  width: auto;\n  min-width: 140px;\n}\n.dshpp-cr-row {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  flex-wrap: wrap;\n  margin: 8px 0 0;\n  font-size: 13px;\n}\n.dshpp-cr-row label {\n  display: inline-flex;\n  align-items: center;\n  gap: 6px;\n  color: var(--dshpp-ink);\n}\n.dshpp-cr-num {\n  width: 64px;\n  min-width: 64px;\n  height: 28px;\n  padding: 0 8px;\n}\n.dshpp-cr-text {\n  width: 120px;\n  min-width: 88px;\n  height: 28px;\n  padding: 0 8px;\n}\n.dshpp-ver {\n  width: 100%;\n  min-width: 0;\n  max-width: none;\n  height: 32px;\n  padding: 0 10px;\n  font-size: 12px;\n}\n.dshpp-rel {\n  margin: 0 0 14px;\n}\n.dshpp-now {\n  display: flex;\n  align-items: baseline;\n  gap: 8px;\n  flex-wrap: wrap;\n  margin: 0 0 4px;\n}\n.dshpp-now-label {\n  font-family: var(--dshpp-mono);\n  font-size: 11px;\n  letter-spacing: 0.12em;\n  text-transform: uppercase;\n  color: var(--dshpp-mute);\n}\n.dshpp-now-ver {\n  font-family: var(--dshpp-display);\n  font-size: 20px;\n  font-weight: 500;\n  letter-spacing: 0.01em;\n}\n.dshpp-now-mark {\n  display: inline-flex;\n  align-items: center;\n  margin-left: 6px;\n  padding: 1px 7px;\n  border-radius: 99px;\n  font-family: var(--dshpp-mono);\n  font-size: 11px;\n  font-style: normal;\n  font-weight: 500;\n  line-height: 1.5;\n  color: var(--dshpp-ok);\n  border: 1px solid color-mix(in srgb, var(--dshpp-ok) 38%, var(--dshpp-line));\n  background: color-mix(in srgb, var(--dshpp-ok) 14%, var(--dshpp-bg));\n}\n.dshpp-editions {\n  display: flex;\n  flex-direction: column;\n  margin: 10px 0 0;\n  border-top: 1px solid var(--dshpp-line);\n}\n.dshpp-edition {\n  display: grid;\n  grid-template-columns: auto minmax(0, 1fr) auto;\n  align-items: center;\n  gap: 10px;\n  padding: 10px 0;\n  border-bottom: 1px solid var(--dshpp-line);\n}\n.dshpp-edition-name {\n  display: inline-flex;\n  align-items: center;\n  gap: 0;\n  font-family: var(--dshpp-display);\n  font-size: 15px;\n  font-weight: 500;\n  white-space: nowrap;\n}\n.dshpp-edition.is-on .dshpp-edition-name {\n  color: var(--dshpp-ink);\n}\n.dshpp-edition:not(.is-on) .dshpp-edition-name {\n  color: var(--dshpp-mute);\n}\n.dshpp-edition .dshpp-btn {\n  min-width: 118px;\n}\n.dshpp-rel .dshpp-notice {\n  display: block;\n  margin-top: 8px;\n  min-height: 16px;\n}\n@media (max-width: 560px) {\n  .dshpp-edition {\n    grid-template-columns: 1fr auto;\n    grid-template-areas: "name btn" "sel sel";\n  }\n  .dshpp-edition-name {\n    grid-area: name;\n  }\n  .dshpp-edition .dshpp-ver {\n    grid-area: sel;\n  }\n  .dshpp-edition .dshpp-btn {\n    grid-area: btn;\n  }\n}\n.dshpp-area {\n  min-height: 220px;\n  resize: vertical;\n}\n.dshpp-field:focus,\n.dshpp-area:focus {\n  outline: none;\n  border-color: var(--dshpp-accent);\n  box-shadow: 0 0 0 3px var(--dshpp-accent-soft);\n}\n.dshpp-field:disabled,\n.dshpp-area:disabled {\n  opacity: 0.5;\n}\n.dshpp-ask {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n  margin-top: 10px;\n  padding: 10px 12px;\n  border: 1px solid var(--dshpp-line);\n  border-radius: 8px;\n  background: var(--dshpp-bg);\n  font-size: 13px;\n}\n.dshpp-modal-bg {\n  position: fixed;\n  inset: 0;\n  z-index: 80;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 20px;\n  background: color-mix(in srgb, var(--dshpp-ink) 28%, transparent);\n}\n.dshpp-modal {\n  width: min(420px, 100%);\n  background: var(--dshpp-paper);\n  color: var(--dshpp-ink);\n  border: 1px solid var(--dshpp-line);\n  border-radius: 12px;\n  padding: 20px 20px 16px;\n  box-shadow: 0 16px 40px color-mix(in srgb, var(--dshpp-ink) 18%, transparent);\n}\n.dshpp-modal h4 {\n  margin: 0 0 8px;\n  font-family: var(--dshpp-display);\n  font-size: 18px;\n  font-weight: 500;\n}\n.dshpp-modal p {\n  margin: 0 0 16px;\n  font-size: 13.5px;\n  line-height: 1.55;\n}\n.dshpp-modal-ops {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n}\n.dshpp-restart-mask {\n  position: fixed;\n  inset: 0;\n  z-index: 12000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 24px;\n  background: rgba(0, 0, 0, 0.62);\n  font-family:\n    "Yu Gothic UI", "Hiragino Sans GB", "Source Han Sans SC",\n    "Microsoft YaHei UI", system-ui, sans-serif;\n}\n.dshpp-restart-card {\n  width: min(420px, 100%);\n  box-sizing: border-box;\n  padding: 22px 22px 18px;\n  border-radius: 14px;\n  background: var(--dsw-alias-bg-layer-1, #fffcf7);\n  color: var(--dsw-alias-label-primary, #16140f);\n  border: 1px solid var(--dsw-alias-border-l1, #c9c3b6);\n  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);\n}\n.dshpp-restart-card h4 {\n  margin: 0 0 10px;\n  font-family: inherit;\n  font-size: 20px;\n  font-weight: 650;\n  line-height: 1.35;\n  color: inherit;\n}\n.dshpp-restart-card p {\n  margin: 0 0 18px;\n  font-size: 16px;\n  font-weight: 500;\n  line-height: 1.65;\n  color: inherit;\n}\n.dshpp-restart-card .dshpp-modal-ops {\n  display: flex;\n  justify-content: flex-end;\n  gap: 10px;\n}\n.dshpp-restart-card .dshpp-btn {\n  min-height: 38px;\n  padding: 0 16px;\n  font-size: 15px;\n  font-weight: 650;\n  color: var(--dsw-alias-label-primary, #16140f);\n  background: var(--dsw-alias-bg-layer-2, #fff);\n  border: 1px solid var(--dsw-alias-border-l1, #c9c3b6);\n}\n.dshpp-restart-card .dshpp-btn-primary,\n.dshpp-restart-card .dshpp-btn-primary:hover:not(:disabled) {\n  color: #fff;\n  background: #2f6b4f;\n  border-color: #2f6b4f;\n}\nbody[data-ds-dark-theme] .dshpp-restart-card,\n.dshpp-restart-mask[data-theme="dusk"] .dshpp-restart-card {\n  background: #1c1e24;\n  color: #f4f1ea;\n  border-color: #5a5e68;\n}\nbody[data-ds-dark-theme] .dshpp-restart-card .dshpp-btn,\n.dshpp-restart-mask[data-theme="dusk"] .dshpp-restart-card .dshpp-btn {\n  color: #f4f1ea;\n  background: #2a2d34;\n  border-color: #5a5e68;\n}\nbody[data-ds-dark-theme] .dshpp-restart-card .dshpp-btn-primary,\nbody[data-ds-dark-theme]\n  .dshpp-restart-card\n  .dshpp-btn-primary:hover:not(:disabled),\n.dshpp-restart-mask[data-theme="dusk"] .dshpp-restart-card .dshpp-btn-primary,\n.dshpp-restart-mask[data-theme="dusk"]\n  .dshpp-restart-card\n  .dshpp-btn-primary:hover:not(:disabled) {\n  color: #fff;\n  background: #3d8f68;\n  border-color: #3d8f68;\n}\n.dshpp-notice {\n  font-size: 12.5px;\n  line-height: 1.4;\n}\n.dshpp-notice.is-ok {\n  color: var(--dshpp-ok);\n}\n.dshpp-notice.is-bad {\n  color: var(--dshpp-bad);\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n}\n.dshpp-skel {\n  height: 12px;\n  border-radius: 6px;\n  background: linear-gradient(\n    90deg,\n    var(--dshpp-fill),\n    var(--dshpp-line),\n    var(--dshpp-fill)\n  );\n  background-size: 200% 100%;\n  animation: dshpp-pulse 1.2s ease-in-out infinite;\n}\n.dshpp-active {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  flex-wrap: wrap;\n  padding: 10px 12px;\n  margin-bottom: 12px;\n  border: 1px solid var(--dshpp-line);\n  background: var(--dshpp-bg);\n  border-radius: 8px;\n}\n.dshpp-active b {\n  font-family: var(--dshpp-display);\n  font-weight: 500;\n}\n.dshpp-empty {\n  padding: 28px 12px;\n  font-size: 13px;\n  color: var(--dshpp-mute);\n  text-align: center;\n}\n.dshpp-split {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n.dshpp-rulelist {\n  display: flex;\n  flex-direction: column;\n  border: 1px solid var(--dshpp-line);\n  border-radius: 8px;\n  background: var(--dshpp-bg);\n  overflow: hidden;\n}\n.dshpp-rulebody {\n  max-height: 240px;\n  overflow: auto;\n}\n.dshpp-ruleitem {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  width: 100%;\n  padding: 10px 12px;\n  border: 0;\n  border-bottom: 1px solid var(--dshpp-line);\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.dshpp-ruleitem:hover {\n  background: var(--dshpp-fill);\n}\n.dshpp-ruleitem.is-edit {\n  background: var(--dshpp-accent-soft);\n}\n.dshpp-rule-main {\n  flex: 1;\n  min-width: 0;\n}\n.dshpp-rule-name {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-family: var(--dshpp-display);\n  font-size: 14px;\n  line-height: 1.35;\n}\n.dshpp-rule-meta {\n  display: block;\n  margin-top: 3px;\n  font-family: var(--dshpp-mono);\n  font-size: 11px;\n  color: var(--dshpp-mute);\n}\n.dshpp-rule-ops {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  gap: 6px;\n  flex-shrink: 0;\n}\n.dshpp-create {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 10px 12px;\n  border-top: 1px solid var(--dshpp-line);\n  background: var(--dshpp-paper);\n}\n.dshpp-create-row {\n  display: flex;\n  gap: 6px;\n  align-items: center;\n}\n.dshpp-create .dshpp-field {\n  flex: 1;\n  min-width: 0;\n  width: auto;\n}\n.dshpp-editor {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  min-width: 0;\n  border: 1px solid var(--dshpp-line);\n  border-radius: 8px;\n  background: var(--dshpp-bg);\n  padding: 12px;\n  min-height: 320px;\n}\n.dshpp-editor .dshpp-area {\n  flex: 1;\n  min-height: 240px;\n}\n.dshpp-editor-empty {\n  flex: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--dshpp-mute);\n  font-size: 13px;\n  min-height: 160px;\n}\n.dshpp-block {\n  padding: 14px 0;\n  border-top: 1px solid var(--dshpp-line);\n}\n.dshpp-block-head {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  margin: 0 0 8px;\n}\n.dshpp-block-head h4 {\n  margin: 0;\n  font-family: var(--dshpp-display);\n  font-size: 14px;\n  font-weight: 500;\n  flex: 1;\n  color: var(--dshpp-ink);\n}\n.dshpp-block-hint {\n  margin: 8px 0 0;\n  font-size: 12px;\n  line-height: 1.55;\n  color: var(--dshpp-mute);\n}\n.dshpp-policy-row {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n}\n.dshpp-policy-row > label {\n  font-size: 12px;\n  color: var(--dshpp-mute);\n  flex: 0 0 auto;\n}\n.dshpp-cwd-path {\n  margin: 0 0 8px;\n  font-family: var(--dshpp-mono);\n  font-size: 11px;\n  color: var(--dshpp-mute);\n  word-break: break-all;\n  line-height: 1.5;\n}\n.dshpp-cwd-list {\n  display: flex;\n  flex-direction: column;\n  border: 1px solid var(--dshpp-line);\n  border-radius: 8px;\n  background: var(--dshpp-bg);\n  overflow: hidden;\n}\n.dshpp-cwd-item {\n  display: flex;\n  align-items: flex-start;\n  gap: 10px;\n  padding: 10px 12px;\n  border-bottom: 1px solid var(--dshpp-line);\n  cursor: pointer;\n  margin: 0;\n}\n.dshpp-cwd-item:last-child {\n  border-bottom: 0;\n}\n.dshpp-cwd-item:hover {\n  background: var(--dshpp-fill);\n}\n.dshpp-cwd-item.is-on {\n  background: var(--dshpp-accent-soft);\n}\n.dshpp-cwd-item input {\n  margin: 3px 0 0;\n  flex: 0 0 auto;\n}\n.dshpp-cwd-main {\n  flex: 1;\n  min-width: 0;\n}\n.dshpp-cwd-name {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n  font-family: var(--dshpp-display);\n  font-size: 13.5px;\n  line-height: 1.35;\n  color: var(--dshpp-ink);\n}\n.dshpp-cwd-badge {\n  font-family: var(--dshpp-mono);\n  font-size: 10px;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  padding: 1px 7px;\n  border-radius: 99px;\n  border: 1px solid var(--dshpp-line);\n  color: var(--dshpp-mute);\n  line-height: 1.6;\n}\n.dshpp-cwd-size {\n  font-family: var(--dshpp-mono);\n  font-size: 11px;\n  color: var(--dshpp-mute);\n}\n.dshpp-cwd-sub {\n  margin-top: 3px;\n  font-family: var(--dshpp-mono);\n  font-size: 11px;\n  color: var(--dshpp-mute);\n  word-break: break-all;\n}\n.dshpp-cwd-prev {\n  margin-top: 4px;\n  font-size: 11px;\n  line-height: 1.5;\n  color: var(--dshpp-mute);\n  max-height: 34px;\n  overflow: hidden;\n}\n@keyframes dshpp-pulse {\n  0% {\n    background-position: 200% 0;\n  }\n  100% {\n    background-position: -200% 0;\n  }\n}\n@media (max-width: 640px) {\n  .dshpp-metrics {\n    grid-template-columns: 1fr;\n  }\n  .dshpp-ruleitem {\n    flex-wrap: wrap;\n  }\n  .dshpp-rule-ops {\n    width: 100%;\n    justify-content: flex-end;\n  }\n}\n@media (prefers-reduced-motion: reduce) {\n  .dshpp-btn,\n  .dshpp-bar > i {\n    transition: none;\n  }\n  .dshpp-skel {\n    animation: none;\n  }\n}\nbody:not([data-ds-dark-theme]) .dshpp-auth-modal {\n  background: color-mix(\n    in srgb,\n    var(--dsw-alias-bg-layer-1, #fffcf7) 92%,\n    transparent\n  );\n  color: var(--dsw-alias-label-primary, #1a1916);\n  border-color: color-mix(\n    in srgb,\n    var(--dsw-alias-border-l1, #c9c3b6) 80%,\n    transparent\n  );\n  backdrop-filter: blur(18px) saturate(1.3);\n  -webkit-backdrop-filter: blur(18px) saturate(1.3);\n}\nbody:not([data-ds-dark-theme]) .dshpp-auth-legal {\n  background: color-mix(\n    in srgb,\n    var(--dsw-alias-bg-layer-2, #f3f0e8) 90%,\n    transparent\n  );\n  color: var(--dsw-alias-label-primary, #1a1916);\n  border-color: color-mix(\n    in srgb,\n    var(--dsw-alias-border-l1, #c9c3b6) 80%,\n    transparent\n  );\n}\nbody:not([data-ds-dark-theme]) .dshpp-auth-warn {\n  background: color-mix(in srgb, #f5e6c8 88%, transparent);\n  color: #6b4a10;\n}\nbody:not([data-ds-dark-theme]) .dshpp-auth-ops button {\n  border-color: var(--dsw-alias-border-l1, #c9c3b6);\n  color: var(--dsw-alias-label-primary, #1a1916);\n  background: color-mix(\n    in srgb,\n    var(--dsw-alias-bg-layer-1, #fff) 88%,\n    transparent\n  );\n}\nbody:not([data-ds-dark-theme]) .dshpp-auth-ops button.primary {\n  background: var(--dsw-alias-brand-primary, #3f6b52);\n  border-color: var(--dsw-alias-brand-primary, #3f6b52);\n  color: #fff;\n}\n.dshpp-auth-mask {\n  position: fixed;\n  inset: 0;\n  z-index: 10100;\n  background: rgba(0, 0, 0, 0.62);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 20px;\n  pointer-events: auto;\n}\n.dshpp-auth-modal {\n  width: min(680px, 100%);\n  max-height: min(88vh, 820px);\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 16px;\n  border: 1px solid var(--dsw-alias-border-l1, #333);\n  border-radius: 12px;\n  background: var(--dsw-alias-bg-layer-1, #1a1a1a);\n  color: var(--dsw-alias-label-primary, #eee);\n}\n.dshpp-auth-modal h2 {\n  margin: 0;\n  font-size: 16px;\n  font-weight: 600;\n}\n.dshpp-auth-warn {\n  padding: 8px 10px;\n  border-radius: 8px;\n  background: #3a2e18;\n  color: #f0d48a;\n  font-size: 13px;\n}\n.dshpp-auth-legal {\n  overflow: auto;\n  height: 300px;\n  margin: 0;\n  padding: 10px 12px;\n  border: 1px solid var(--dsw-alias-border-l1, #333);\n  border-radius: 8px;\n  background: #121212;\n  font-size: 13px;\n  line-height: 1.55;\n}\n.dshpp-auth-legal h3 {\n  margin: 14px 0 4px;\n  font-size: 13px;\n}\n.dshpp-auth-legal h3:first-child {\n  margin-top: 0;\n}\n.dshpp-auth-legal p {\n  margin: 0 0 8px;\n}\n.dshpp-auth-checks {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  font-size: 13px;\n}\n.dshpp-auth-checks label {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.dshpp-auth-checks label.locked {\n  opacity: 0.45;\n}\n.dshpp-auth-ops {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n}\n.dshpp-auth-ops button {\n  appearance: none;\n  border: 1px solid var(--dsw-alias-border-l1, #444);\n  background: transparent;\n  color: inherit;\n  border-radius: 8px;\n  padding: 6px 12px;\n  cursor: pointer;\n  font: inherit;\n}\n.dshpp-auth-ops button.primary {\n  background: #2a4033;\n  border-color: #8fbf9a;\n}\n.dshpp-auth-ops button:disabled {\n  opacity: 0.45;\n  cursor: default;\n}\n.dshpp-icon-btn {\n  appearance: none;\n  display: inline-flex;\n  align-items: center;\n  gap: 6px;\n  height: 32px;\n  padding: 0 10px;\n  border: 1px solid\n    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 45%, transparent);\n  border-radius: 8px;\n  background: transparent;\n  color: var(--dsw-alias-label-secondary, currentColor);\n  cursor: pointer;\n  font: 13px/1 inherit;\n  white-space: nowrap;\n  flex: 0 0 auto;\n}\n.dshpp-icon-btn:hover {\n  border-color: var(--dsw-alias-brand-primary, #6dbf8c);\n  background: color-mix(\n    in srgb,\n    var(--dsw-alias-brand-primary, #6dbf8c) 12%,\n    transparent\n  );\n  color: var(--dsw-alias-label-primary, currentColor);\n}\n.dshpp-icon-btn.on {\n  border-color: var(--dsw-alias-brand-primary, #6dbf8c);\n  color: var(--dsw-alias-brand-primary, #6dbf8c);\n  background: color-mix(\n    in srgb,\n    var(--dsw-alias-brand-primary, #6dbf8c) 16%,\n    transparent\n  );\n  box-shadow: 0 0 0 1px\n    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 28%, transparent);\n}\n.dshpp-hbtn {\n  appearance: none;\n  display: inline-flex;\n  flex: 0 0 auto;\n  align-items: center;\n  gap: 6px;\n  border: 1px solid\n    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 55%, transparent);\n  background: transparent;\n  color: var(--dsw-alias-label-secondary, currentColor);\n  cursor: pointer;\n  font: 12px/1 inherit;\n  padding: 5px 10px;\n  border-radius: 8px;\n  white-space: nowrap;\n}\n.dshpp-hbtn:hover {\n  border-color: var(--dsw-alias-brand-primary, #6dbf8c);\n  background: color-mix(\n    in srgb,\n    var(--dsw-alias-brand-primary, #6dbf8c) 12%,\n    transparent\n  );\n  color: var(--dsw-alias-label-primary, currentColor);\n}\n.dshpp-hbtn.on {\n  border-color: var(--dsw-alias-brand-primary, #6dbf8c);\n  color: var(--dsw-alias-brand-primary, #6dbf8c);\n  background: color-mix(\n    in srgb,\n    var(--dsw-alias-brand-primary, #6dbf8c) 18%,\n    transparent\n  );\n  box-shadow: 0 0 0 1px\n    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 32%, transparent);\n}\n.dshpp-live-dot {\n  width: 7px;\n  height: 7px;\n  border-radius: 50%;\n  flex: none;\n  background: var(--dsw-alias-brand-primary, #6dbf8c);\n  box-shadow: 0 0 0 3px\n    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 28%, transparent);\n}\n/* \u73BB\u7483\u8DDF\u968F\u5BBF\u4E3B\u989C\u8272\u3002\u5B57\u91CD\u548C\u5E95\u7684\u4E0D\u900F\u660E\u5EA6\u5206\u5F00\uFF1A\u58F3\u900F\uFF0C\u5B57\u5750\u5728\u66F4\u5B9E\u7684\u4E00\u5C42\u4E0A\u3002 */\n';
+var base_default = '/* Purge \uD328\uB110 \uAE30\uBCF8 \uC2A4\uD0C0\uC77C.\n   \uC0C9\xB7\uBC18\uACBD\xB7\uD3F0\uD2B8\xB7\uADF8\uB9BC\uC790\xB7\uBAA8\uC158\uC740 \uC804\uBD80 DSH 0.2.1-rc.5 \uB514\uC790\uC778 \uD1A0\uD070(--dsw-*)\uC5D0\uC11C \uC628\uB2E4.\n   \uD14C\uB9C8\uB97C \uBC14\uAFB8\uAC70\uB098 \uC0C8 \uD14C\uB9C8\uB97C \uC124\uCE58\uD574\uB3C4 \uC790\uB3D9\uC73C\uB85C \uB530\uB77C\uAC00\uB3C4\uB85D, \uD50C\uB7EC\uADF8\uC778 \uACE0\uC720 \uBCC0\uC218(--dshpp-*)\uB294\n   \uC774\uB984\uB9CC \uC720\uC9C0\uD558\uACE0 \uAC12\uC740 \uD1A0\uD070\uC744 \uAC00\uB9AC\uD0A4\uAC8C \uD55C\uB2E4. \uAD6C\uC870/\uD074\uB798\uC2A4 \uC774\uB984\uC740 \uADF8\uB300\uB85C \uB454\uB2E4.\n   \uD0C0\uC774\uD3EC\uADF8\uB798\uD53C\xB7\uAC04\uACA9\uC740 DSH \uC124\uC815 \uD654\uBA74 \uC2E4\uCE21 \uADDC\uACA9\uC744 \uB530\uB978\uB2E4:\n   \uBCF8\uBB38 14/22, \uBCF4\uC870 13/20, \uCEA1\uC158 12/18, \uC81C\uBAA9 600, \uAC04\uACA9 \uC2A4\uCF00\uC77C 4/8/12/16/20/24. */\n\n.dshpp-root {\n  --dshpp-display: var(--dsw-font-family);\n  --dshpp-sans: var(--dsw-font-family);\n  --dshpp-mono: var(--dsw-font-markdown-code-font-family);\n  --dshpp-bg: transparent;\n  --dshpp-paper: var(--dsw-alias-bg-layer-1);\n  --dshpp-ink: var(--dsw-alias-label-primary);\n  --dshpp-mute: var(--dsw-alias-label-secondary);\n  --dshpp-line: var(--dsw-alias-border-l2);\n  --dshpp-fill: var(--dsw-alias-interactive-bg-hover);\n  --dshpp-accent: var(--dsw-alias-button-primary-fill);\n  --dshpp-accent-soft: var(--dsw-alias-bg-layer-3);\n  --dshpp-ok: var(--dsw-alias-state-success-primary);\n  --dshpp-warn: var(--dsw-alias-state-warn-primary);\n  --dshpp-bad: var(--dsw-alias-state-error-primary);\n  max-width: 920px;\n  display: flex;\n  flex-direction: column;\n  gap: 24px;\n  padding: 16px;\n  border-radius: var(--dsw-radius-lg);\n  background: var(--dshpp-bg);\n  color: var(--dshpp-ink);\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 22px;\n  letter-spacing: 0;\n}\n/* \uD234\uBC14: \uD558\uB2E8 .5px \uAD6C\uBD84\uC120 + 12px \uD328\uB529(DSH \uC124\uC815 \uD5E4\uB354 \uADDC\uACA9) */\n.dshpp-toolbar {\n  display: flex;\n  align-items: center;\n  justify-content: flex-end;\n  gap: 8px;\n  padding: 12px 0;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n}\n/* \uC138\uADF8\uBA3C\uD2B8 \uC2A4\uC704\uCE58: DSH \uD0ED\uACFC \uAC19\uC740 \uC7AC\uC9C8(module-platform \uBC14\uD0D5 + \uD65C\uC131 layer-1) */\n.dshpp-switch {\n  display: inline-flex;\n  gap: 2px;\n  padding: 2px;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-sm);\n  overflow: hidden;\n  background: var(--dsw-alias-bg-module-platform);\n}\n.dshpp-switch button {\n  appearance: none;\n  border: 0;\n  border-radius: var(--dsw-radius-xs);\n  background: transparent;\n  color: var(--dsw-alias-label-secondary);\n  font-family: var(--dsw-font-family);\n  font-size: 12px;\n  line-height: 18px;\n  letter-spacing: -0.01em;\n  height: 28px;\n  padding: 0 12px;\n  cursor: pointer;\n  transition:\n    background-color 0.18s ease,\n    color 0.18s ease;\n}\n.dshpp-switch button.is-on {\n  background: var(--dsw-alias-bg-layer-1);\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-switch button:focus-visible {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);\n  outline-offset: 1px;\n}\n/* \uC139\uC158 \uCE74\uB4DC: \uADF8\uB9BC\uC790 \uC5C6\uC774 layer-1 \uBC14\uD0D5 + .5px \uAD6C\uBD84\uC120\uB9CC \uB0A8\uAE34\uB2E4 */\n.dshpp-panel {\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: var(--dshpp-paper);\n  border-radius: var(--dsw-radius-lg);\n  padding: 16px;\n  box-shadow: none;\n}\n.dshpp-kicker {\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  line-height: 18px;\n  letter-spacing: 0.14em;\n  text-transform: uppercase;\n  color: var(--dsw-alias-label-tertiary);\n  margin: 0 0 4px;\n}\n.dshpp-title {\n  font-family: var(--dsw-font-family);\n  font-size: 20px;\n  line-height: 28px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n  margin: 0;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 12px;\n  margin-bottom: 12px;\n  flex-wrap: wrap;\n}\n/* \uC139\uC158 \uC81C\uBAA9: \uC704 16px \xB7 \uC544\uB798 8px */\n.dshpp-sub {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  margin: 16px 0 8px;\n}\n.dshpp-sub h4 {\n  margin: 0;\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 22px;\n  font-weight: 600;\n  letter-spacing: 0;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-metrics {\n  display: grid;\n  grid-template-columns: repeat(3, minmax(0, 1fr));\n  gap: 8px;\n  margin-bottom: 12px;\n}\n/* \uCE74\uB4DC \uC548\uC758 \uCE74\uB4DC: \uBC14\uD0D5\uC740 \uBE44\uC6B0\uACE0 \uAD6C\uBD84\uC120\uB9CC \uB0A8\uAE34\uB2E4 */\n.dshpp-metric {\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: transparent;\n  padding: 12px;\n  min-height: 64px;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  border-radius: var(--dsw-radius-md);\n}\n.dshpp-metric b {\n  font-family: var(--dsw-font-family);\n  font-size: 18px;\n  font-weight: 600;\n  line-height: 24px;\n  letter-spacing: -0.01em;\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-metric span {\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-secondary);\n}\n.dshpp-bar {\n  height: 3px;\n  border-radius: var(--dsw-radius-xs);\n  background: var(--dsw-alias-border-l2);\n  overflow: hidden;\n  margin: 8px 0 12px;\n}\n.dshpp-bar > i {\n  display: block;\n  height: 100%;\n  background: var(--dsw-alias-button-primary-fill);\n  width: 0;\n  transition: width 0.16s ease-out;\n}\n.dshpp-group {\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  margin: 0 0 12px;\n  background: transparent;\n  border-radius: var(--dsw-radius-md);\n  overflow: hidden;\n}\n.dshpp-group-h {\n  width: 100%;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 8px 12px;\n  border: 0;\n  background: transparent;\n  color: inherit;\n  cursor: pointer;\n  font: inherit;\n  text-align: left;\n  transition: background-color 0.16s ease-out;\n}\n.dshpp-group-h:hover {\n  background: var(--dsw-alias-interactive-bg-hover);\n}\n.dshpp-group-h:focus-visible {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);\n  outline-offset: -2px;\n}\n.dshpp-group-h strong {\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 22px;\n  font-weight: 600;\n  letter-spacing: 0;\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-group-h em {\n  font-style: normal;\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-tertiary);\n  flex: 1;\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-count {\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-secondary);\n}\n.dshpp-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: 13px;\n  line-height: 20px;\n}\n.dshpp-table th {\n  text-align: left;\n  font-weight: 500;\n  font-size: 12px;\n  line-height: 18px;\n  letter-spacing: 0;\n  color: var(--dsw-alias-label-secondary);\n  padding: 8px 12px;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n}\n.dshpp-table td {\n  padding: 8px 12px;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n  vertical-align: middle;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-table tr:last-child td {\n  border-bottom: 0;\n}\n.dshpp-table tr.is-on td {\n  background: var(--dsw-alias-bg-layer-3);\n}\n.dshpp-id {\n  font-family: var(--dshpp-mono);\n  color: var(--dsw-alias-label-tertiary);\n  width: 42px;\n}\n.dshpp-actions {\n  text-align: right;\n  white-space: nowrap;\n}\n.dshpp-row {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n}\n.dshpp-row + .dshpp-row {\n  margin-top: 8px;\n}\n.dshpp-pill {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  padding: 2px 8px;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-sm);\n  line-height: 18px;\n  background: transparent;\n  color: var(--dsw-alias-label-secondary);\n}\n.dshpp-pill::before {\n  content: "";\n  width: 6px;\n  height: 6px;\n  border-radius: 50%;\n  background: currentColor;\n}\n.dshpp-pill.is-ok {\n  color: var(--dsw-alias-state-success-primary);\n  border-color: color-mix(\n    in srgb,\n    var(--dsw-alias-state-success-primary) 40%,\n    var(--dsw-alias-border-l2)\n  );\n}\n.dshpp-pill.is-wait {\n  color: var(--dsw-alias-state-warn-primary);\n  border-color: color-mix(\n    in srgb,\n    var(--dsw-alias-state-warn-primary) 40%,\n    var(--dsw-alias-border-l2)\n  );\n}\n.dshpp-pill.is-miss {\n  color: var(--dsw-alias-label-tertiary);\n}\n.dshpp-pill.is-bad {\n  color: var(--dsw-alias-state-error-primary);\n}\n/* \uBC84\uD2BC: DSH \uC2E4\uCE21 \uADDC\uACA9(\uB192\uC774 36/28, radius md/sm, \uD14D\uC2A4\uD2B8-\uC544\uC774\uCF58 gap 4, .16s ease-out, disabled .4) */\n.dshpp-btn {\n  appearance: none;\n  box-sizing: border-box;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 4px;\n  height: 36px;\n  padding: 0 14px;\n  border: 0;\n  border-radius: var(--dsw-radius-md);\n  background: transparent;\n  color: var(--dsw-alias-label-primary);\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 22px;\n  font-weight: 500;\n  letter-spacing: -0.01em;\n  cursor: pointer;\n  transition:\n    background-color 0.16s ease-out,\n    color 0.16s ease-out,\n    border-color 0.16s ease-out,\n    opacity 0.16s ease-out;\n}\n.dshpp-btn:disabled {\n  cursor: not-allowed;\n  opacity: 0.4;\n}\n.dshpp-btn:focus-visible {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);\n  outline-offset: 2px;\n}\n.dshpp-btn-primary {\n  background: var(--dsw-alias-button-primary-fill);\n  color: var(--dsw-alias-label-primary-foreground);\n}\n.dshpp-btn-primary:hover:not(:disabled) {\n  background: var(--dsw-alias-button-primary-hover);\n}\n.dshpp-btn-ghost {\n  background: transparent;\n  color: var(--dsw-alias-label-primary);\n  border: 0.5px solid var(--dsw-alias-border-l3);\n}\n.dshpp-btn-ghost:hover:not(:disabled) {\n  background: var(--dsw-alias-interactive-bg-hover);\n}\n.dshpp-btn-ghost:active:not(:disabled) {\n  background: var(--dsw-alias-interactive-bg-active);\n}\n.dshpp-btn-danger {\n  background: transparent;\n  color: var(--dsw-alias-state-error-primary);\n  border: 0.5px solid\n    color-mix(\n      in srgb,\n      var(--dsw-alias-state-error-primary) 40%,\n      var(--dsw-alias-border-l3)\n    );\n}\n.dshpp-btn-danger:hover:not(:disabled) {\n  background: var(--dsw-alias-interactive-bg-hover-danger);\n}\n.dshpp-btn-solid-danger {\n  background: var(--dsw-alias-state-error-primary);\n  color: var(--dsw-alias-label-primary-foreground);\n}\n.dshpp-btn-solid-danger:hover:not(:disabled) {\n  background: color-mix(\n    in srgb,\n    var(--dsw-alias-state-error-primary) 88%,\n    var(--dsw-alias-bg-base)\n  );\n}\n.dshpp-btn-tiny {\n  height: 28px;\n  padding: 0 10px;\n  border-radius: var(--dsw-radius-sm);\n  font-size: 12px;\n  line-height: 18px;\n}\n.dshpp-field,\n.dshpp-area {\n  width: 100%;\n  box-sizing: border-box;\n  font-family: var(--dshpp-mono);\n  font-size: 13px;\n  line-height: 20px;\n  padding: 8px 12px;\n  background: var(--dsw-alias-bg-layer-2);\n  color: var(--dsw-alias-label-primary);\n  border: 0.5px solid var(--dsw-alias-border-l3);\n  border-radius: var(--dsw-radius-sm);\n  transition:\n    border-color 0.16s ease-out,\n    background-color 0.16s ease-out;\n}\n.dshpp-field {\n  width: auto;\n  min-width: 140px;\n}\n.dshpp-cr-row {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n  margin: 8px 0 0;\n  font-size: 13px;\n  line-height: 20px;\n}\n.dshpp-cr-row label {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-cr-num {\n  width: 64px;\n  min-width: 64px;\n  height: 28px;\n  padding: 0 8px;\n}\n.dshpp-cr-text {\n  width: 120px;\n  min-width: 88px;\n  height: 28px;\n  padding: 0 8px;\n}\n.dshpp-ver {\n  width: 100%;\n  min-width: 0;\n  max-width: none;\n  height: 32px;\n  padding: 0 12px;\n  font-size: 13px;\n  line-height: 20px;\n}\n.dshpp-rel {\n  margin: 0 0 12px;\n}\n.dshpp-now {\n  display: flex;\n  align-items: baseline;\n  gap: 8px;\n  flex-wrap: wrap;\n  margin: 0 0 4px;\n}\n.dshpp-now-label {\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  line-height: 18px;\n  letter-spacing: 0.12em;\n  text-transform: uppercase;\n  color: var(--dsw-alias-label-tertiary);\n}\n.dshpp-now-ver {\n  font-family: var(--dsw-font-family);\n  font-size: 20px;\n  line-height: 28px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-now-mark {\n  display: inline-flex;\n  align-items: center;\n  margin-left: 4px;\n  padding: 2px 8px;\n  border-radius: var(--dsw-radius-sm);\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  font-style: normal;\n  font-weight: 500;\n  line-height: 18px;\n  color: var(--dsw-alias-state-success-primary);\n  border: 0.5px solid\n    color-mix(\n      in srgb,\n      var(--dsw-alias-state-success-primary) 40%,\n      var(--dsw-alias-border-l2)\n    );\n  background: color-mix(\n    in srgb,\n    var(--dsw-alias-state-success-primary) 12%,\n    transparent\n  );\n}\n.dshpp-editions {\n  display: flex;\n  flex-direction: column;\n  margin: 8px 0 0;\n  border-top: 0.5px solid var(--dsw-alias-border-l2);\n}\n/* \uC124\uC815 \uD589: flex + gap 8 + 16px \uC138\uB85C \uD328\uB529 + .5px \uD558\uB2E8 \uAD6C\uBD84\uC120 */\n.dshpp-edition {\n  display: grid;\n  grid-template-columns: auto minmax(0, 1fr) auto;\n  align-items: center;\n  gap: 12px;\n  padding: 16px 0;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n}\n.dshpp-edition-name {\n  display: inline-flex;\n  align-items: center;\n  gap: 0;\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 22px;\n  font-weight: 600;\n  letter-spacing: 0;\n  white-space: nowrap;\n}\n.dshpp-edition.is-on .dshpp-edition-name {\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-edition:not(.is-on) .dshpp-edition-name {\n  color: var(--dsw-alias-label-secondary);\n}\n.dshpp-edition .dshpp-btn {\n  min-width: 118px;\n}\n.dshpp-rel .dshpp-notice {\n  display: block;\n  margin-top: 8px;\n  min-height: 18px;\n}\n@media (max-width: 560px) {\n  .dshpp-edition {\n    grid-template-columns: 1fr auto;\n    grid-template-areas: "name btn" "sel sel";\n  }\n  .dshpp-edition-name {\n    grid-area: name;\n  }\n  .dshpp-edition .dshpp-ver {\n    grid-area: sel;\n  }\n  .dshpp-edition .dshpp-btn {\n    grid-area: btn;\n  }\n}\n.dshpp-area {\n  min-height: 220px;\n  resize: vertical;\n}\n.dshpp-field:focus,\n.dshpp-area:focus {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);\n  outline-offset: 1px;\n  border-color: var(--dsw-alias-border-l4);\n}\n.dshpp-field:disabled,\n.dshpp-area:disabled {\n  opacity: 0.4;\n}\n.dshpp-ask {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n  margin-top: 12px;\n  padding: 12px;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-md);\n  background: transparent;\n  font-size: 13px;\n  line-height: 20px;\n  color: var(--dsw-alias-label-secondary);\n}\n/* \uBAA8\uB2EC \uC2A4\uD06C\uB9BC: DSH \uB9C8\uC2A4\uD06C \uD1A0\uD070(bg-mask-1)\uACFC \uB9C8\uC2A4\uD06C \uBE14\uB7EC\uB97C \uADF8\uB300\uB85C \uC4F4\uB2E4 */\n.dshpp-modal-bg {\n  position: fixed;\n  inset: 0;\n  z-index: 80;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 20px;\n  background: var(--dsw-alias-bg-mask-1);\n  backdrop-filter: var(--dsw-mask-blur);\n}\n.dshpp-modal {\n  width: min(420px, 100%);\n  box-sizing: border-box;\n  background: var(--dsw-alias-bg-layer-1);\n  color: var(--dsw-alias-label-primary);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-lg);\n  padding: 24px;\n  box-shadow: var(--dsw-elevation-panel);\n}\n.dshpp-modal h4 {\n  margin: 0 0 8px;\n  font-family: var(--dsw-font-family);\n  font-size: 16px;\n  line-height: 24px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-modal p {\n  margin: 0;\n  font-size: 14px;\n  line-height: 22px;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-modal-ops {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n  margin-top: 16px;\n}\n.dshpp-restart-mask {\n  position: fixed;\n  inset: 0;\n  z-index: 12000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 24px;\n  background: var(--dsw-alias-bg-mask-3);\n  backdrop-filter: var(--dsw-mask-blur);\n  font-family: var(--dsw-font-family);\n}\n.dshpp-restart-card {\n  width: min(420px, 100%);\n  box-sizing: border-box;\n  padding: 24px;\n  border-radius: var(--dsw-radius-lg);\n  background: var(--dsw-alias-bg-layer-1);\n  color: var(--dsw-alias-label-primary);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  box-shadow: var(--dsw-elevation-prominent);\n}\n.dshpp-restart-card h4 {\n  margin: 0 0 8px;\n  font-family: inherit;\n  font-size: 20px;\n  font-weight: 600;\n  line-height: 28px;\n  letter-spacing: -0.01em;\n  color: inherit;\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-restart-card p {\n  margin: 0;\n  font-size: 14px;\n  font-weight: 400;\n  line-height: 22px;\n  color: var(--dsw-alias-label-secondary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-restart-card .dshpp-modal-ops {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n  margin-top: 16px;\n}\n.dshpp-restart-card .dshpp-btn {\n  height: 36px;\n  padding: 0 14px;\n  font-size: 14px;\n  font-weight: 500;\n  color: var(--dsw-alias-label-primary);\n  background: transparent;\n  border: 0.5px solid var(--dsw-alias-border-l3);\n  border-radius: var(--dsw-radius-md);\n}\n.dshpp-restart-card .dshpp-btn-primary,\n.dshpp-restart-card .dshpp-btn-primary:hover:not(:disabled) {\n  color: var(--dsw-alias-label-primary-foreground);\n  background: var(--dsw-alias-button-primary-fill);\n  border-color: transparent;\n}\n.dshpp-notice {\n  font-size: 12px;\n  line-height: 18px;\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-notice.is-ok {\n  color: var(--dsw-alias-state-success-primary);\n}\n.dshpp-notice.is-bad {\n  color: var(--dsw-alias-state-error-primary);\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n}\n.dshpp-skel {\n  height: 12px;\n  border-radius: var(--dsw-radius-xs);\n  background: linear-gradient(\n    90deg,\n    var(--dsw-alias-interactive-bg-hover),\n    var(--dsw-alias-bg-layer-3),\n    var(--dsw-alias-interactive-bg-hover)\n  );\n  background-size: 200% 100%;\n  animation: dshpp-pulse 1.2s ease-in-out infinite;\n}\n.dshpp-active {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n  padding: 12px;\n  margin-bottom: 12px;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: transparent;\n  border-radius: var(--dsw-radius-md);\n  font-size: 13px;\n  line-height: 20px;\n}\n.dshpp-active b {\n  font-family: var(--dsw-font-family);\n  font-weight: 600;\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-empty {\n  padding: 24px 12px;\n  font-size: 13px;\n  line-height: 20px;\n  color: var(--dsw-alias-label-secondary);\n  text-align: center;\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-split {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n.dshpp-rulelist {\n  display: flex;\n  flex-direction: column;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-md);\n  background: transparent;\n  overflow: hidden;\n}\n.dshpp-rulebody {\n  max-height: 240px;\n  overflow: auto;\n}\n.dshpp-ruleitem {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  width: 100%;\n  padding: 12px;\n  border: 0;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n  transition: background-color 0.16s ease-out;\n}\n.dshpp-ruleitem:hover {\n  background: var(--dsw-alias-interactive-bg-hover);\n}\n.dshpp-ruleitem.is-edit {\n  background: var(--dsw-alias-bg-layer-3);\n}\n.dshpp-rule-main {\n  flex: 1;\n  min-width: 0;\n}\n.dshpp-rule-name {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 22px;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-rule-meta {\n  display: block;\n  margin-top: 4px;\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-tertiary);\n}\n.dshpp-rule-ops {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  gap: 8px;\n  flex-shrink: 0;\n}\n.dshpp-create {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  padding: 12px;\n  border-top: 0.5px solid var(--dsw-alias-border-l2);\n  background: transparent;\n}\n.dshpp-create-row {\n  display: flex;\n  gap: 8px;\n  align-items: center;\n}\n.dshpp-create .dshpp-field {\n  flex: 1;\n  min-width: 0;\n  width: auto;\n}\n.dshpp-editor {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  min-width: 0;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-md);\n  background: transparent;\n  padding: 12px;\n  min-height: 320px;\n}\n.dshpp-editor .dshpp-area {\n  flex: 1;\n  min-height: 240px;\n}\n.dshpp-editor-empty {\n  flex: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--dsw-alias-label-secondary);\n  font-size: 13px;\n  line-height: 20px;\n  min-height: 160px;\n}\n.dshpp-block {\n  padding: 16px 0;\n  border-top: 0.5px solid var(--dsw-alias-border-l2);\n}\n.dshpp-block-head {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  margin: 0 0 8px;\n}\n.dshpp-block-head h4 {\n  margin: 0;\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 22px;\n  font-weight: 600;\n  letter-spacing: 0;\n  flex: 1;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-block-hint {\n  margin: 8px 0 0;\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-secondary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-policy-row {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.dshpp-policy-row > label {\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-secondary);\n  flex: 0 0 auto;\n}\n.dshpp-cwd-path {\n  margin: 0 0 8px;\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-secondary);\n  word-break: break-all;\n}\n.dshpp-cwd-list {\n  display: flex;\n  flex-direction: column;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-md);\n  background: transparent;\n  overflow: hidden;\n}\n.dshpp-cwd-item {\n  display: flex;\n  align-items: flex-start;\n  gap: 12px;\n  padding: 12px;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n  cursor: pointer;\n  margin: 0;\n  transition: background-color 0.16s ease-out;\n}\n.dshpp-cwd-item:last-child {\n  border-bottom: 0;\n}\n.dshpp-cwd-item:hover {\n  background: var(--dsw-alias-interactive-bg-hover);\n}\n.dshpp-cwd-item.is-on {\n  background: var(--dsw-alias-bg-layer-3);\n}\n.dshpp-cwd-item input {\n  margin: 3px 0 0;\n  flex: 0 0 auto;\n}\n.dshpp-cwd-main {\n  flex: 1;\n  min-width: 0;\n}\n.dshpp-cwd-name {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n  font-family: var(--dsw-font-family);\n  font-size: 13px;\n  line-height: 20px;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-cwd-badge {\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  padding: 2px 8px;\n  border-radius: var(--dsw-radius-sm);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  color: var(--dsw-alias-label-secondary);\n  line-height: 18px;\n}\n.dshpp-cwd-size {\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-secondary);\n}\n.dshpp-cwd-sub {\n  margin-top: 4px;\n  font-family: var(--dshpp-mono);\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-tertiary);\n  word-break: break-all;\n}\n.dshpp-cwd-prev {\n  margin-top: 4px;\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-secondary);\n  max-height: 36px;\n  overflow: hidden;\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n@keyframes dshpp-pulse {\n  0% {\n    background-position: 200% 0;\n  }\n  100% {\n    background-position: -200% 0;\n  }\n}\n@media (max-width: 640px) {\n  .dshpp-metrics {\n    grid-template-columns: 1fr;\n  }\n  .dshpp-ruleitem {\n    flex-wrap: wrap;\n  }\n  .dshpp-rule-ops {\n    width: 100%;\n    justify-content: flex-end;\n  }\n}\n@media (prefers-reduced-motion: reduce) {\n  .dshpp-btn,\n  .dshpp-bar > i {\n    transition: none;\n  }\n  .dshpp-skel {\n    animation: none;\n  }\n}\n/* \uC778\uC99D/\uC57D\uAD00 \uBAA8\uB2EC: \uB77C\uC774\uD2B8\xB7\uB2E4\uD06C \uC804\uC6A9 \uC624\uBC84\uB77C\uC774\uB4DC\uB97C \uD1A0\uD070\uC73C\uB85C \uD761\uC218\uD588\uB2E4 */\n.dshpp-auth-mask {\n  position: fixed;\n  inset: 0;\n  z-index: 10100;\n  background: var(--dsw-alias-bg-mask-1);\n  backdrop-filter: var(--dsw-mask-blur);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 20px;\n  pointer-events: auto;\n}\n.dshpp-auth-modal {\n  width: min(680px, 100%);\n  max-height: min(88vh, 820px);\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  padding: 20px;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-lg);\n  background: var(--dsw-alias-bg-layer-1);\n  color: var(--dsw-alias-label-primary);\n  box-shadow: var(--dsw-elevation-panel);\n}\n.dshpp-auth-modal h2 {\n  margin: 0;\n  font-size: 16px;\n  line-height: 24px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-auth-warn {\n  padding: 8px 12px;\n  border-radius: var(--dsw-radius-sm);\n  background: var(--dsw-alias-bg-layer-3);\n  color: var(--dsw-alias-state-warn-label);\n  font-size: 13px;\n  line-height: 20px;\n}\n.dshpp-auth-legal {\n  overflow: auto;\n  height: 300px;\n  margin: 0;\n  padding: 12px;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-sm);\n  background: var(--dsw-alias-bg-layer-2);\n  color: var(--dsw-alias-label-primary);\n  font-size: 13px;\n  line-height: 20px;\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-auth-legal h3 {\n  margin: 16px 0 4px;\n  font-size: 13px;\n  line-height: 20px;\n  font-weight: 600;\n  letter-spacing: 0;\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-auth-legal h3:first-child {\n  margin-top: 0;\n}\n.dshpp-auth-legal p {\n  margin: 0 0 8px;\n}\n.dshpp-auth-checks {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  font-size: 13px;\n  line-height: 20px;\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-auth-checks label {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.dshpp-auth-checks label.locked {\n  opacity: 0.4;\n}\n.dshpp-auth-ops {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n}\n.dshpp-auth-ops button {\n  appearance: none;\n  box-sizing: border-box;\n  height: 28px;\n  padding: 0 10px;\n  border: 0.5px solid var(--dsw-alias-border-l3);\n  border-radius: var(--dsw-radius-sm);\n  background: transparent;\n  color: var(--dsw-alias-label-primary);\n  cursor: pointer;\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-size: 12px;\n  line-height: 18px;\n  letter-spacing: -0.01em;\n  transition:\n    background-color 0.16s ease-out,\n    color 0.16s ease-out,\n    border-color 0.16s ease-out;\n}\n.dshpp-auth-ops button.primary {\n  background: var(--dsw-alias-button-primary-fill);\n  border-color: transparent;\n  color: var(--dsw-alias-label-primary-foreground);\n}\n.dshpp-auth-ops button:disabled {\n  opacity: 0.4;\n  cursor: default;\n}\n.dshpp-icon-btn {\n  appearance: none;\n  box-sizing: border-box;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 4px;\n  height: 28px;\n  padding: 0 10px;\n  border: 0.5px solid var(--dsw-alias-border-l3);\n  border-radius: var(--dsw-radius-sm);\n  background: transparent;\n  color: var(--dsw-alias-label-secondary);\n  cursor: pointer;\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-size: 12px;\n  line-height: 18px;\n  letter-spacing: -0.01em;\n  white-space: nowrap;\n  flex: 0 0 auto;\n  transition:\n    background-color 0.16s ease-out,\n    color 0.16s ease-out,\n    border-color 0.16s ease-out;\n}\n.dshpp-icon-btn:hover {\n  border-color: var(--dsw-alias-border-l4);\n  background: var(--dsw-alias-interactive-bg-hover);\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-icon-btn.on {\n  border-color: var(--dsw-alias-button-ghost-active-border);\n  color: var(--dsw-alias-label-primary);\n  background: var(--dsw-alias-button-ghost-active-fill);\n}\n.dshpp-hbtn {\n  appearance: none;\n  box-sizing: border-box;\n  display: inline-flex;\n  flex: 0 0 auto;\n  align-items: center;\n  justify-content: center;\n  gap: 4px;\n  height: 28px;\n  padding: 0 10px;\n  border: 0.5px solid var(--dsw-alias-border-l3);\n  border-radius: var(--dsw-radius-sm);\n  background: transparent;\n  color: var(--dsw-alias-label-secondary);\n  cursor: pointer;\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-size: 12px;\n  line-height: 18px;\n  letter-spacing: -0.01em;\n  white-space: nowrap;\n  transition:\n    background-color 0.16s ease-out,\n    color 0.16s ease-out,\n    border-color 0.16s ease-out;\n}\n.dshpp-hbtn:hover {\n  border-color: var(--dsw-alias-border-l4);\n  background: var(--dsw-alias-interactive-bg-hover);\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-hbtn.on {\n  border-color: var(--dsw-alias-button-ghost-active-border);\n  color: var(--dsw-alias-label-primary);\n  background: var(--dsw-alias-button-ghost-active-fill);\n}\n.dshpp-live-dot {\n  width: 7px;\n  height: 7px;\n  border-radius: 50%;\n  flex: none;\n  background: var(--dsw-alias-state-success-primary);\n  outline: 2px solid\n    color-mix(in srgb, var(--dsw-alias-state-success-primary) 24%, transparent);\n  outline-offset: -1px;\n}\n/* \uC720\uB9AC\uB294 \uD638\uC2A4\uD2B8 \uC0C9\uC0C1\uC744 \uB530\uB978\uB2E4. \uAE00\uC790 \uB450\uAED8\uC640 \uBC14\uD0D5\uC758 \uBD88\uD22C\uBA85\uB3C4\uB97C \uBD84\uB9AC\uD55C\uB2E4: \uAECD\uB370\uAE30\uB294 \uD22C\uBA85\uD558\uACE0, \uAE00\uC790\uB294 \uB354 \uC2E4\uD55C \uCE35 \uC704\uC5D0 \uC549\uB294\uB2E4. */\n';
 
 // src/styles/native.css
-var native_default = '.dshpp-native.dshpp-root {\n  --dshpp-display: inherit;\n  --dshpp-sans: inherit;\n  --dshpp-paper: var(--dsw-alias-bg-base, transparent);\n  --dshpp-bg: transparent;\n  --dshpp-line: var(--dsw-alias-border-l1, #ddd);\n  --dshpp-ink: var(--dsw-alias-label-primary, #171717);\n  --dshpp-mute: var(--dsw-alias-label-secondary, #777);\n  --dshpp-accent: var(--dsw-alias-brand-primary, #4775ed);\n  --dshpp-fill: var(--dsw-alias-interactive-bg-hover, #f3f3f3);\n  font: inherit;\n  font-size: var(--dsh-content-font-size, 14px);\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n  max-width: none;\n  padding: 0;\n  gap: 0;\n  border-radius: 0;\n  overflow: hidden;\n  box-sizing: border-box;\n}\n.dshpp-native * {\n  box-sizing: border-box;\n}\n.dshpp-native [hidden] {\n  display: none !important;\n}\n.dshpp-native-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 20px 20px 12px;\n  gap: 12px;\n  flex: none;\n}\n.dshpp-native-head h2 {\n  font: inherit;\n  font-size: 1.15em;\n  font-weight: 600;\n  margin: 0;\n}\n.dshpp-native-head p {\n  margin: 4px 0 0;\n  font-size: 0.85em;\n  color: var(--dshpp-mute);\n}\n.dshpp-native-badge {\n  font-size: 0.8em;\n  color: var(--dshpp-mute);\n}\n.dshpp-native-nav {\n  display: flex;\n  gap: 4px;\n  padding: 0 16px;\n  border-bottom: 1px solid var(--dshpp-line);\n  flex: none;\n  overflow-x: auto;\n}\n.dshpp-native-nav button {\n  font: inherit;\n  font-size: 0.92em;\n  border: 0;\n  border-bottom: 2px solid transparent;\n  background: none;\n  color: var(--dshpp-mute);\n  padding: 10px 8px;\n  white-space: nowrap;\n  cursor: pointer;\n}\n.dshpp-native-nav button[aria-pressed="true"] {\n  color: var(--dshpp-ink);\n  border-bottom-color: var(--dshpp-accent);\n}\n.dshpp-native-content {\n  min-height: 0;\n  flex: 1;\n  overflow: auto;\n  padding: 20px;\n  scrollbar-gutter: stable;\n  overscroll-behavior: contain;\n}\n.dshpp-native .dshpp-panel {\n  border: 0;\n  border-radius: 0;\n  padding: 0;\n  background: transparent;\n  min-width: 0;\n}\n.dshpp-native\n  :is(\n    h3,\n    h4,\n    .dshpp-title,\n    .dshpp-group-h strong,\n    .dshpp-metric b,\n    .dshpp-now-ver,\n    .dshpp-edition-name\n  ) {\n  font-family: inherit;\n  font-size: 1em;\n  letter-spacing: normal;\n  font-weight: 550;\n}\n.dshpp-native .dshpp-metric b {\n  font-size: 1.12em;\n}\n.dshpp-native .dshpp-head {\n  margin-bottom: 12px;\n}\n.dshpp-native .dshpp-sub {\n  margin-top: 0;\n  flex-wrap: wrap;\n}\n.dshpp-native :is(button, input, select, textarea) {\n  font-family: inherit;\n  box-shadow: none;\n  background-image: none;\n  max-width: 100%;\n}\n.dshpp-native .dshpp-btn {\n  font-size: 0.9em;\n  min-height: 32px;\n  border-radius: 7px;\n  padding: 6px 10px;\n  transform: none;\n  box-shadow: none;\n}\n.dshpp-native .dshpp-btn:hover:not(:disabled) {\n  background: var(--dshpp-fill);\n  box-shadow: none;\n  transform: none;\n}\n.dshpp-native .dshpp-btn-primary {\n  background: var(--dsw-alias-label-primary, #171717);\n  color: var(--dsw-alias-bg-base, #fff);\n  border-color: transparent;\n}\n.dshpp-native .dshpp-btn-primary:hover:not(:disabled) {\n  opacity: 0.85;\n  background: var(--dsw-alias-label-primary, #171717);\n}\n.dshpp-native :is(button, input, select, textarea):focus-visible {\n  outline: 2px solid var(--dshpp-accent);\n  outline-offset: 2px;\n  box-shadow: none;\n}\n.dshpp-native .dshpp-area {\n  font-family: inherit;\n  font-size: 0.92em;\n  line-height: 1.6;\n  min-height: 260px;\n  width: 100%;\n  border-radius: 8px;\n  background: transparent;\n  color: inherit;\n}\n.dshpp-native .dshpp-field {\n  font-size: 0.92em;\n  background: transparent;\n  color: inherit;\n}\n.dshpp-native .dshpp-metrics {\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 8px;\n}\n.dshpp-native .dshpp-metric:nth-child(2) {\n  display: none;\n}\n.dshpp-native .dshpp-metric {\n  min-height: 60px;\n  padding: 12px;\n  background: var(--dshpp-fill);\n  border: 0;\n}\n.dshpp-native .dshpp-metric span {\n  font-size: 0.85em;\n}\n.dshpp-native .dshpp-editions {\n  margin: 10px 0;\n  border: 0;\n}\n.dshpp-native summary {\n  cursor: pointer;\n  color: var(--dshpp-mute);\n  padding: 8px 0;\n  font-size: 0.9em;\n}\n.dshpp-native .dshpp-edition {\n  grid-template-columns: 1fr auto;\n  gap: 8px;\n}\n.dshpp-native .dshpp-edition-name {\n  grid-column: 1/-1;\n}\n.dshpp-native .dshpp-edition .dshpp-btn {\n  min-width: 0;\n}\n.dshpp-native .dshpp-table {\n  table-layout: fixed;\n  font-size: 0.83em;\n}\n.dshpp-native .dshpp-table td {\n  word-break: break-word;\n  padding: 8px;\n}\n.dshpp-native .dshpp-table th {\n  padding: 8px;\n}\n.dshpp-native .dshpp-group-h {\n  flex-wrap: wrap;\n  gap: 6px;\n}\n.dshpp-native .dshpp-group-h em {\n  font-size: 0.85em;\n}\n.dshpp-native .dshpp-row {\n  gap: 8px;\n}\n.dshpp-native .dshpp-hint {\n  font-size: 0.85em !important;\n  line-height: 1.6;\n  color: var(--dshpp-mute);\n}\n.dshpp-native .dshpp-more {\n  border-top: 1px solid var(--dshpp-line);\n  padding-top: 20px;\n  margin-top: 24px;\n}\n.dshpp-native .dshpp-more p {\n  font-size: 0.9em;\n  line-height: 1.6;\n  color: var(--dshpp-mute);\n}\n.dshpp-native .dshpp-attribution {\n  margin-top: 32px;\n  font-size: 0.78em !important;\n}\n\n/* \u6F14\u7EC3\u53F0\uFF1A\u65E7\u7248\u8DD1\u5728\u53EF\u62D6\u62FD\u60AC\u6D6E\u7A97\u91CC\uFF0C\u73B0\u5728\u5D4C\u5728\u53F3\u4FA7\u680F\uFF0C\u5FC5\u987B\u81EA\u5DF1\u6491\u5F00\u5E76\u5141\u8BB8\u6EDA\u52A8 */\n.dshpp-native-drill {\n  width: 100%;\n  min-width: 0;\n  min-height: 72vh;\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding-bottom: 24px;\n  box-sizing: border-box;\n}\n.dshpp-native-drill > .rt-dock.rt-embedded {\n  flex: 1 1 auto;\n  min-height: 0;\n  min-width: 0;\n  width: 100%;\n  height: auto;\n  overflow: visible;\n}\n/* \u53F3\u4FA7\u680F\u5F88\u7A84\uFF1A\u5185\u90E8\u6240\u6709 flex \u884C\u90FD\u5F97\u80FD\u6362\u884C\uFF0C\u8F93\u5165\u6846\u4E0D\u80FD\u628A\u5144\u5F1F\u5143\u7D20\u6324\u6210 1ch \u5BBD */\n.dshpp-native-drill .rt-dock,\n.dshpp-native-drill .rt-dock * {\n  box-sizing: border-box;\n  min-width: 0;\n  word-break: normal;\n  overflow-wrap: anywhere;\n}\n.dshpp-native-drill .rt-dock input,\n.dshpp-native-drill .rt-dock textarea,\n.dshpp-native-drill .rt-dock select {\n  width: 100%;\n  max-width: 100%;\n}\n\n/* \u300C\u66F4\u65B0\u901A\u9053\u300D\u4E0E\u300C\u81EA\u52A8\u68C0\u67E5\u66F4\u65B0 / \u6BCF N \u5C0F\u65F6\u300D\u540C\u884C\u5E76\u6392\uFF1A\u9AD8\u5EA6\u3001\u5706\u89D2\u3001\u5B57\u53F7\u5BF9\u9F50 select\u3002\n   \u540C\u4E00\u7EC4\u4EF6\u540C\u65F6\u6302\u5728\u63D2\u4EF6\u8BBE\u7F6E\u9875(.dshpp-native)\u548C\u5DE6\u4FA7 Purge \u6574\u9875(.dshpp-page)\uFF0C\n   \u4E24\u5904\u6839 class \u4E0D\u540C\uFF0C\u9009\u62E9\u5668\u5FC5\u987B\u90FD\u8986\u76D6\u3002 */\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-open {\n  min-height: 32px;\n  padding: 4px 12px;\n  border-radius: 7px;\n  font-size: 0.9em;\n  white-space: nowrap;\n}\n/* \u65E7\u7248\u6807\u9898\u884C\u53F3\u5BF9\u9F50\u5E03\u5C40\u4FDD\u7559\u7ED9\u53EF\u80FD\u7684\u5916\u90E8\u8C03\u7528\uFF0C\u4F46\u4E3B\u5165\u53E3\u5DF2\u79FB\u5230\u8BBE\u7F6E\u884C\u3002 */\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  flex-wrap: wrap;\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-head h3 {\n  margin: 0;\n}\n/* \u66F4\u65B0\u901A\u9053\u5BF9\u8BDD\u6846\uFF1A\u9762\u677F\u91CC\u6CA1\u6709\u53EF\u9760\u7684 react-dom portal\uFF0C\u7528\u56FA\u5B9A\u5B9A\u4F4D + \u906E\u7F69\u81EA\u5DF1\u5B9E\u73B0 */\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-mask {\n  position: fixed;\n  inset: 0;\n  z-index: 12050;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 20px;\n  background: rgba(0, 0, 0, 0.55);\n  pointer-events: auto;\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-card {\n  width: min(440px, 100%);\n  max-height: min(88vh, 720px);\n  overflow: auto;\n  box-sizing: border-box;\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 18px;\n  border-radius: 12px;\n  border: 1px solid var(--dshpp-line);\n  background: var(--dsw-alias-bg-layer-1, #fffcf7);\n  color: var(--dshpp-ink);\n  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-title {\n  margin: 0 0 2px;\n  font-family: inherit;\n  font-size: 1em;\n  font-weight: 600;\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-label {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  font-size: 0.88em;\n  color: var(--dshpp-mute);\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-field {\n  width: 100%;\n  min-width: 0;\n  font-size: 0.92em;\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-check {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  font-size: 0.88em;\n  color: var(--dshpp-mute);\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-ops {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n  margin-top: 4px;\n}\n';
+var native_default = '/* DSH \uD50C\uB7EC\uADF8\uC778 \uC124\uC815 \uD398\uC774\uC9C0\uC5D0 \uADF8\uB300\uB85C \uC5B9\uD788\uB294 \uB124\uC774\uD2F0\uBE0C \uB808\uC774\uC544\uC6C3.\n   \uC0C9\xB7\uBC18\uACBD\xB7\uD3F0\uD2B8\xB7\uBAA8\uC158\uC740 \uC804\uBD80 DSH \uD1A0\uD070\uC744 \uC4F0\uACE0, \uB808\uC774\uC544\uC6C3\uB9CC \uC774 \uD30C\uC77C\uC774 \uB2F4\uB2F9\uD55C\uB2E4.\n   \uD0C0\uC774\uD3EC\uADF8\uB798\uD53C\xB7\uAC04\uACA9\uC740 DSH \uC124\uC815 \uD654\uBA74 \uC2E4\uCE21 \uADDC\uACA9(\uBCF8\uBB38 14/22, \uBCF4\uC870 13/20, \uCEA1\uC158 12/18,\n   \uC81C\uBAA9 600, \uAC04\uACA9 4/8/12/16/20/24)\uC744 \uB530\uB978\uB2E4. */\n\n.dshpp-native.dshpp-root {\n  --dshpp-display: var(--dsw-font-family);\n  --dshpp-sans: var(--dsw-font-family);\n  --dshpp-paper: var(--dsw-alias-bg-base);\n  --dshpp-bg: transparent;\n  --dshpp-line: var(--dsw-alias-border-l2);\n  --dshpp-ink: var(--dsw-alias-label-primary);\n  --dshpp-mute: var(--dsw-alias-label-secondary);\n  --dshpp-accent: var(--dsw-alias-button-primary-fill);\n  --dshpp-accent-soft: var(--dsw-alias-bg-layer-3);\n  --dshpp-fill: var(--dsw-alias-interactive-bg-hover);\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-size: var(--dsh-content-font-size, 14px);\n  line-height: 22px;\n  letter-spacing: 0;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n  max-width: none;\n  padding: 0;\n  gap: 0;\n  border-radius: 0;\n  overflow: hidden;\n  box-sizing: border-box;\n}\n.dshpp-native * {\n  box-sizing: border-box;\n}\n.dshpp-native [hidden] {\n  display: none !important;\n}\n.dshpp-native-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 20px 20px 12px;\n  gap: 12px;\n  flex: none;\n}\n.dshpp-native-head h2 {\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-size: 16px;\n  line-height: 24px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n  margin: 0;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-native-head p {\n  margin: 4px 0 0;\n  font-size: 13px;\n  line-height: 20px;\n  color: var(--dsw-alias-label-tertiary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-native-badge {\n  font-size: 12px;\n  line-height: 18px;\n  color: var(--dsw-alias-label-tertiary);\n  white-space: nowrap;\n}\n/* \uD0ED: DSH \uC2E4\uCE21 \uADDC\uACA9(bg-module-platform \uCEE8\uD14C\uC774\uB108 + radius lg + \uD65C\uC131 bg-layer-1, 34px, .18s ease) */\n.dshpp-native-nav {\n  display: flex;\n  gap: 4px;\n  padding: 4px;\n  margin: 0 16px 12px;\n  border: 0;\n  border-radius: var(--dsw-radius-lg);\n  background: var(--dsw-alias-bg-module-platform);\n  flex: none;\n  overflow-x: auto;\n}\n.dshpp-native-nav button {\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 20px;\n  letter-spacing: -0.01em;\n  height: 34px;\n  padding: 0 12px;\n  border: 0;\n  border-radius: var(--dsw-radius-md);\n  background: transparent;\n  color: var(--dsw-alias-label-secondary);\n  white-space: nowrap;\n  cursor: pointer;\n  transition:\n    color 0.18s ease,\n    background-color 0.18s ease;\n}\n.dshpp-native-nav button[aria-pressed="true"] {\n  color: var(--dsw-alias-label-primary);\n  background: var(--dsw-alias-bg-layer-1);\n}\n.dshpp-native-content {\n  min-height: 0;\n  flex: 1;\n  overflow: auto;\n  padding: 20px;\n  scrollbar-gutter: stable;\n  overscroll-behavior: contain;\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-native .dshpp-panel {\n  border: 0;\n  border-radius: 0;\n  padding: 0;\n  background: transparent;\n  box-shadow: none;\n  min-width: 0;\n}\n.dshpp-native\n  :is(\n    h3,\n    h4,\n    .dshpp-title,\n    .dshpp-group-h strong,\n    .dshpp-metric b,\n    .dshpp-now-ver,\n    .dshpp-edition-name\n  ) {\n  font-family: var(--dsw-font-family);\n  font-size: 1em;\n  letter-spacing: 0;\n  font-weight: 600;\n}\n.dshpp-native .dshpp-metric b {\n  font-size: 16px;\n  line-height: 24px;\n  letter-spacing: -0.01em;\n}\n.dshpp-native .dshpp-head {\n  margin-bottom: 12px;\n}\n/* \uC139\uC158 \uC81C\uBAA9: \uC704 16px \xB7 \uC544\uB798 8px, \uC81C\uBAA9\uACFC \uCCAB \uD589 \uC0AC\uC774 \uAC04\uACA9\uC740 \uD56D\uC0C1 8px */\n.dshpp-native .dshpp-sub {\n  margin: 16px 0 8px;\n  flex-wrap: wrap;\n}\n.dshpp-native :is(button, input, select, textarea) {\n  font-family: inherit;\n  box-shadow: none;\n  background-image: none;\n  max-width: 100%;\n}\n/* \uC124\uC815 \uD398\uC774\uC9C0\uB294 \uBC00\uB3C4\uAC00 \uB192\uC73C\uBBC0\uB85C DSH \uC758 28px \uBCF4\uC870 \uBC84\uD2BC \uADDC\uACA9\uC744 \uC4F4\uB2E4 */\n.dshpp-native .dshpp-btn {\n  height: 28px;\n  min-height: 28px;\n  padding: 0 10px;\n  border-radius: var(--dsw-radius-sm);\n  font-size: 12px;\n  line-height: 18px;\n}\n.dshpp-native .dshpp-btn:hover:not(:disabled) {\n  box-shadow: none;\n  transform: none;\n}\n.dshpp-native .dshpp-btn-primary {\n  background: var(--dsw-alias-button-primary-fill);\n  color: var(--dsw-alias-label-primary-foreground);\n  border-color: transparent;\n}\n.dshpp-native .dshpp-btn-primary:hover:not(:disabled) {\n  background: var(--dsw-alias-button-primary-hover);\n  opacity: 1;\n}\n.dshpp-native :is(button, input, select, textarea):focus-visible {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);\n  outline-offset: 2px;\n  box-shadow: none;\n}\n.dshpp-native .dshpp-area {\n  font-family: inherit;\n  font-size: 13px;\n  line-height: 20px;\n  min-height: 260px;\n  width: 100%;\n  border-radius: var(--dsw-radius-sm);\n  color: inherit;\n}\n.dshpp-native .dshpp-field {\n  font-size: 13px;\n  line-height: 20px;\n  color: inherit;\n}\n.dshpp-native .dshpp-metrics {\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 8px;\n}\n.dshpp-native .dshpp-metric:nth-child(2) {\n  display: none;\n}\n.dshpp-native .dshpp-metric {\n  min-height: 60px;\n  padding: 12px;\n  background: transparent;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-md);\n}\n.dshpp-native .dshpp-metric span {\n  font-size: 12px;\n  line-height: 18px;\n}\n.dshpp-native .dshpp-editions {\n  margin: 12px 0;\n  border: 0;\n}\n.dshpp-native summary {\n  cursor: pointer;\n  color: var(--dsw-alias-label-secondary);\n  padding: 8px 0;\n  font-size: 13px;\n  line-height: 20px;\n}\n.dshpp-native .dshpp-edition {\n  grid-template-columns: 1fr auto;\n  gap: 8px;\n}\n.dshpp-native .dshpp-edition-name {\n  grid-column: 1/-1;\n}\n.dshpp-native .dshpp-edition .dshpp-btn {\n  min-width: 0;\n}\n.dshpp-native .dshpp-table {\n  table-layout: fixed;\n  font-size: 13px;\n  line-height: 20px;\n}\n.dshpp-native .dshpp-table td {\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n  padding: 8px;\n}\n.dshpp-native .dshpp-table th {\n  padding: 8px;\n}\n.dshpp-native .dshpp-group-h {\n  flex-wrap: wrap;\n  gap: 8px;\n}\n.dshpp-native .dshpp-group-h em {\n  font-size: 12px;\n  line-height: 18px;\n}\n.dshpp-native .dshpp-row {\n  gap: 8px;\n}\n.dshpp-native .dshpp-hint {\n  font-size: 13px !important;\n  line-height: 20px;\n  color: var(--dsw-alias-label-secondary);\n}\n.dshpp-native .dshpp-more {\n  border-top: 0.5px solid var(--dsw-alias-border-l2);\n  padding-top: 20px;\n  margin-top: 24px;\n}\n.dshpp-native .dshpp-more p {\n  font-size: 13px;\n  line-height: 20px;\n  color: var(--dsw-alias-label-secondary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n.dshpp-native .dshpp-attribution {\n  margin-top: 24px;\n  font-size: 12px !important;\n  line-height: 18px;\n  color: var(--dsw-alias-label-tertiary);\n}\n\n/* \uB4DC\uB9B4 \uCF58\uC194: \uC61B \uBC84\uC804\uC740 \uB4DC\uB798\uADF8 \uAC00\uB2A5\uD55C \uD50C\uB85C\uD305 \uCC3D\uC5D0\uC11C \uB3CC\uC558\uC9C0\uB9CC, \uC9C0\uAE08\uC740 \uC624\uB978\uCABD \uC0AC\uC774\uB4DC\uBC14\uC5D0 \uB0B4\uC7A5\uB418\uBBC0\uB85C \uC2A4\uC2A4\uB85C \uB192\uC774\uB97C \uC7A1\uACE0 \uC2A4\uD06C\uB864\uC744 \uD5C8\uC6A9\uD574\uC57C \uD55C\uB2E4 */\n.dshpp-native-drill {\n  width: 100%;\n  min-width: 0;\n  min-height: 72vh;\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  padding-bottom: 24px;\n  box-sizing: border-box;\n}\n.dshpp-native-drill > .rt-dock.rt-embedded {\n  flex: 1 1 auto;\n  min-height: 0;\n  min-width: 0;\n  width: 100%;\n  height: auto;\n  overflow: visible;\n}\n/* \uC624\uB978\uCABD \uC0AC\uC774\uB4DC\uBC14\uB294 \uC544\uC8FC \uC881\uB2E4: \uC548\uCABD\uC758 \uBAA8\uB4E0 flex \uD589\uC774 \uC904\uBC14\uAFC8\uB420 \uC218 \uC788\uC5B4\uC57C \uD558\uACE0, \uC785\uB825\uCC3D\uC774 \uD615\uC81C \uC694\uC18C\uB97C 1ch \uD3ED\uC73C\uB85C \uBC00\uC5B4\uB0B4\uBA74 \uC548 \uB41C\uB2E4 */\n.dshpp-native-drill .rt-dock,\n.dshpp-native-drill .rt-dock * {\n  box-sizing: border-box;\n  min-width: 0;\n  word-break: normal;\n  overflow-wrap: anywhere;\n}\n.dshpp-native-drill .rt-dock input,\n.dshpp-native-drill .rt-dock textarea,\n.dshpp-native-drill .rt-dock select {\n  width: 100%;\n  max-width: 100%;\n}\n\n/* "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110"\uACFC "\uC790\uB3D9 \uD655\uC778 / N\uC2DC\uAC04\uB9C8\uB2E4"\uB97C \uD55C \uC904\uC5D0 \uB098\uB780\uD788: \uB192\uC774, \uBAA8\uC11C\uB9AC \uBC18\uACBD, \uAE00\uC790 \uD06C\uAE30\uB97C select \uC5D0 \uB9DE\uCD98\uB2E4.\n   \uAC19\uC740 \uCEF4\uD3EC\uB10C\uD2B8\uAC00 \uD50C\uB7EC\uADF8\uC778 \uC124\uC815 \uD398\uC774\uC9C0(.dshpp-native)\uC640 \uC67C\uCABD Purge \uC804\uCCB4 \uD398\uC774\uC9C0(.dshpp-page)\uC5D0 \uB3D9\uC2DC\uC5D0 \uBD99\uACE0,\n   \uB450 \uACF3\uC758 \uB8E8\uD2B8 class \uAC00 \uB2EC\uB77C \uC120\uD0DD\uC790\uAC00 \uC591\uCABD\uC744 \uBAA8\uB450 \uB36E\uC5B4\uC57C \uD55C\uB2E4. */\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-open {\n  height: 32px;\n  min-height: 32px;\n  padding: 0 12px;\n  border-radius: var(--dsw-radius-sm);\n  font-size: 12px;\n  letter-spacing: -0.01em;\n  white-space: nowrap;\n}\n/* \uC61B \uBC84\uC804\uC758 \uC81C\uBAA9 \uD589 \uC624\uB978\uCABD \uC815\uB82C \uB808\uC774\uC544\uC6C3\uC740 \uC678\uBD80 \uD638\uCD9C \uAC00\uB2A5\uC131\uC744 \uC704\uD574 \uB0A8\uACA8 \uB450\uC9C0\uB9CC, \uC8FC \uC9C4\uC785\uC810\uC740 \uC774\uBBF8 \uC124\uC815 \uD589\uC73C\uB85C \uC62E\uACBC\uB2E4. */\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  flex-wrap: wrap;\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-head h3 {\n  margin: 0;\n}\n/* \uC5C5\uB370\uC774\uD2B8 \uCC44\uB110 \uB300\uD654\uC0C1\uC790: \uD328\uB110\uC5D0\uB294 \uBBFF\uC744 \uB9CC\uD55C react-dom portal \uC774 \uC5C6\uC5B4 \uACE0\uC815 \uC704\uCE58 + \uC624\uBC84\uB808\uC774\uB85C \uC9C1\uC811 \uAD6C\uD604\uD55C\uB2E4.\n   \uC2A4\uD06C\uB9BC\uC740 DSH \uB9C8\uC2A4\uD06C \uD1A0\uD070, \uCE74\uB4DC\uB294 DSH \uCE74\uB4DC \uD1A0\uD070\uC744 \uC4F4\uB2E4. */\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-mask {\n  position: fixed;\n  inset: 0;\n  z-index: 12050;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 20px;\n  background: var(--dsw-alias-bg-mask-1);\n  backdrop-filter: var(--dsw-mask-blur);\n  pointer-events: auto;\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-card {\n  width: min(440px, 100%);\n  max-height: min(88vh, 720px);\n  overflow: auto;\n  box-sizing: border-box;\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 20px;\n  border-radius: var(--dsw-radius-lg);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: var(--dsw-alias-bg-layer-1);\n  color: var(--dsw-alias-label-primary);\n  box-shadow: var(--dsw-elevation-panel);\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-title {\n  margin: 0 0 8px;\n  font-family: inherit;\n  font-size: 16px;\n  line-height: 24px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n  color: var(--dsw-alias-label-primary);\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-label {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  font-size: 13px;\n  line-height: 20px;\n  color: var(--dsw-alias-label-secondary);\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-field {\n  width: 100%;\n  min-width: 0;\n  font-size: 13px;\n  line-height: 20px;\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-check {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-size: 13px;\n  line-height: 20px;\n  color: var(--dsw-alias-label-secondary);\n}\n:is(.dshpp-native, .dshpp-page) .dshpp-updch-ops {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n  margin-top: 16px;\n}\n';
 
 // src/styles/page.css
-var page_default = '/* \u6574\u9875\uFF08\u5DE6\u4FA7\u680F\u5165\u53E3\uFF09\u6837\u5F0F\uFF1A\u6CBF\u7528 DSH \u81EA\u5DF1\u7684\u5B57\u4F53\u3001\u95F4\u8DDD\u4E0E\u4E3B\u9898\u53D8\u91CF\uFF0C\u4E0D\u5F15\u5165\u81EA\u5B9A\u4E49\u5B57\u4F53\u3002 */\n.dshpp-page {\n  --dshpp-line: var(--dsw-alias-border-l1, rgba(127, 127, 127, 0.22));\n  --dshpp-line-strong: var(--dsw-alias-border-l2, rgba(127, 127, 127, 0.4));\n  --dshpp-fg: var(--dsw-alias-label-primary, currentColor);\n  --dshpp-mute: var(\n    --dsw-alias-label-secondary,\n    color-mix(in srgb, currentColor 62%, transparent)\n  );\n  --dshpp-bg: var(--dsw-alias-bg-layer-1, transparent);\n  --dshpp-bg-2: var(--dsw-alias-bg-layer-2, rgba(127, 127, 127, 0.06));\n  --dshpp-accent: var(--dsw-alias-brand-primary, #4d6bfe);\n  --dshpp-ok: var(--dsw-alias-state-success-primary, #1f9d55);\n  --dshpp-warn: var(--dsw-alias-state-warn-primary, #b7791f);\n  --dshpp-bad: var(--dsw-alias-state-error-primary, #d14343);\n  box-sizing: border-box;\n  height: 100%;\n  min-height: 0;\n  overflow: auto;\n  padding: 20px 24px 40px;\n  color: var(--dshpp-fg);\n  font: inherit;\n  line-height: 1.55;\n  -webkit-font-smoothing: antialiased;\n}\n.dshpp-page *,\n.dshpp-page *::before,\n.dshpp-page *::after {\n  box-sizing: border-box;\n}\n\n.dshpp-page-head {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  min-width: 0;\n}\n.dshpp-page-glyph {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 34px;\n  height: 34px;\n  border-radius: 10px;\n  border: 1px solid var(--dshpp-line);\n  background: var(--dshpp-bg-2);\n  color: var(--dshpp-accent);\n  flex: none;\n}\n.dshpp-page-title {\n  min-width: 0;\n}\n.dshpp-page-title h1 {\n  margin: 0;\n  font-size: 1.15em;\n  font-weight: 600;\n  letter-spacing: 0.01em;\n}\n.dshpp-page-title p {\n  margin: 2px 0 0;\n  font-size: 0.86em;\n  color: var(--dshpp-mute);\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n}\n.dshpp-page-ver {\n  padding: 1px 6px;\n  border-radius: 999px;\n  border: 1px solid var(--dshpp-line);\n  font-size: 0.92em;\n}\n\n/* \u9876\u90E8\u4E00\u884C\u72B6\u6001\u6458\u8981\uFF1A\u4E0D\u7528\u5361\u7247\uFF0C\u8DDF DSH \u7684 subtitle \u884C\u4E00\u81F4 */\n.dshpp-strip {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px 18px;\n  margin: 14px 0 2px;\n  padding: 10px 0 12px;\n  border-bottom: 1px solid var(--dshpp-line);\n  font-size: 0.86em;\n  color: var(--dshpp-mute);\n}\n.dshpp-strip-item {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  min-width: 0;\n}\n.dshpp-strip-item b {\n  color: var(--dshpp-fg);\n  font-weight: 600;\n}\n.dshpp-dot {\n  width: 7px;\n  height: 7px;\n  border-radius: 50%;\n  background: var(--dshpp-mute);\n  flex: none;\n}\n.dshpp-dot.is-ok {\n  background: var(--dshpp-ok);\n}\n.dshpp-dot.is-warn {\n  background: var(--dshpp-warn);\n}\n.dshpp-dot.is-bad {\n  background: var(--dshpp-bad);\n}\n\n/* \u9875\u7B7E\uFF1A\u4E0B\u5212\u7EBF\u5F0F\uFF0C\u8DDF DSH \u8BBE\u7F6E\u9875\u7684 tab \u4E00\u81F4 */\n.dshpp-page-tabs {\n  display: flex;\n  gap: 2px;\n  margin: 10px 0 0;\n  border-bottom: 1px solid var(--dshpp-line);\n  overflow-x: auto;\n  scrollbar-width: none;\n}\n.dshpp-page-tabs::-webkit-scrollbar {\n  display: none;\n}\n.dshpp-page-tabs button {\n  appearance: none;\n  border: 0;\n  background: transparent;\n  color: var(--dshpp-mute);\n  font: inherit;\n  font-size: 0.92em;\n  padding: 9px 12px 10px;\n  border-bottom: 2px solid transparent;\n  margin-bottom: -1px;\n  cursor: pointer;\n  white-space: nowrap;\n}\n.dshpp-page-tabs button:hover {\n  color: var(--dshpp-fg);\n}\n.dshpp-page-tabs button[aria-selected="true"] {\n  color: var(--dshpp-fg);\n  border-bottom-color: var(--dshpp-accent);\n  font-weight: 600;\n}\n\n.dshpp-page-body {\n  padding-top: 18px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n  min-width: 0;\n}\n.dshpp-sec {\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n  min-width: 0;\n}\n.dshpp-sec[hidden] {\n  display: none;\n}\n\n/* \u5361\u7247\uFF1ADSH \u7684 layer-1 \u9762\u677F */\n.dshpp-page .dshpp-card,\n.dshpp-page section.dshpp-panel {\n  border: 1px solid var(--dshpp-line);\n  border-radius: 12px;\n  background: var(--dshpp-bg);\n  padding: 16px 18px;\n  margin: 0;\n  min-width: 0;\n}\n.dshpp-page .dshpp-card > h3:first-child,\n.dshpp-page section.dshpp-panel > h3:first-child {\n  margin: 0 0 12px;\n  font-size: 1em;\n  font-weight: 600;\n}\n.dshpp-page .dshpp-panel {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n\n/* \u5B57\u6BB5\u884C\uFF1A\u5DE6\u6807\u9898\u53F3\u63A7\u4EF6\uFF1B\u7A84\u5C4F\u81EA\u52A8\u6362\u884C */\n.dshpp-page .dshpp-field {\n  display: grid;\n  grid-template-columns: minmax(120px, 190px) 1fr;\n  gap: 8px 14px;\n  align-items: center;\n}\n.dshpp-page .dshpp-field > .dshpp-field-label {\n  display: inline-flex;\n  align-items: center;\n  gap: 6px;\n  font-size: 0.92em;\n  color: var(--dshpp-fg);\n}\n.dshpp-page .dshpp-field > .dshpp-field-body {\n  min-width: 0;\n}\n@media (max-width: 720px) {\n  .dshpp-page .dshpp-field {\n    grid-template-columns: 1fr;\n  }\n}\n\n.dshpp-page .dshpp-muted,\n.dshpp-page .dshpp-hint {\n  color: var(--dshpp-mute) !important;\n  font-size: 0.86em !important;\n  line-height: 1.6;\n  margin: 0;\n}\n\n.dshpp-page .dshpp-row {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 10px;\n  align-items: center;\n  min-width: 0;\n}\n.dshpp-page input,\n.dshpp-page select,\n.dshpp-page textarea {\n  font: inherit;\n  color: var(--dshpp-fg);\n  background: var(--dshpp-bg-2);\n  border: 1px solid var(--dshpp-line);\n  border-radius: 8px;\n  padding: 7px 10px;\n  max-width: 100%;\n}\n.dshpp-page input:focus-visible,\n.dshpp-page select:focus-visible,\n.dshpp-page textarea:focus-visible {\n  outline: 2px solid color-mix(in srgb, var(--dshpp-accent) 55%, transparent);\n  outline-offset: 1px;\n}\n.dshpp-page textarea {\n  width: 100%;\n  min-height: 320px;\n  resize: vertical;\n  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\n  font-size: 0.86em;\n  line-height: 1.6;\n}\n\n.dshpp-page .dshpp-btn {\n  font: inherit;\n  font-size: 0.9em;\n  border-radius: 8px;\n  padding: 6px 12px;\n  border: 1px solid var(--dshpp-line);\n  background: var(--dshpp-bg-2);\n  color: var(--dshpp-fg);\n  cursor: pointer;\n  white-space: nowrap;\n}\n.dshpp-page .dshpp-btn:hover:not(:disabled) {\n  border-color: var(--dshpp-line-strong);\n}\n.dshpp-page .dshpp-btn:disabled {\n  opacity: 0.45;\n  cursor: not-allowed;\n}\n/* \u4E3B\u6309\u94AE\uFF1A\u4E0D\u8981\u7528 brand-primary \u5F53\u5E95\u8272\u2014\u2014\u6DF1\u8272\u6A21\u5F0F\u4E0B\u5B83\u662F\u9AD8\u4EAE\u6587\u5B57\u8272\uFF0C\n   \u76F4\u63A5\u94FA\u6210\u80CC\u666F\u5C31\u6210\u4E86"\u767D\u5E95\u767D\u5B57"\u7684\u65B9\u5757\u3002\u8FD9\u91CC\u7528\u56FA\u5B9A\u7684\u5B9E\u5FC3\u7EFF + \u767D\u5B57\u3002 */\n.dshpp-page {\n  --dshpp-solid: #2f6b4f;\n  --dshpp-solid-hover: #3a8260;\n  --dshpp-solid-danger: #a63b3b;\n  --dshpp-solid-danger-hover: #bd4747;\n}\n.dshpp-page .dshpp-btn-primary {\n  background: var(--dshpp-solid);\n  border-color: var(--dshpp-solid);\n  color: #fff;\n  font-weight: 600;\n}\n.dshpp-page .dshpp-btn-primary:hover:not(:disabled) {\n  background: var(--dshpp-solid-hover);\n  border-color: var(--dshpp-solid-hover);\n}\n.dshpp-page .dshpp-btn-solid-danger {\n  background: var(--dshpp-solid-danger);\n  border-color: var(--dshpp-solid-danger);\n  color: #fff;\n}\n.dshpp-page .dshpp-btn-solid-danger:hover:not(:disabled) {\n  background: var(--dshpp-solid-danger-hover);\n  border-color: var(--dshpp-solid-danger-hover);\n}\n.dshpp-page .dshpp-btn-danger {\n  color: var(--dshpp-bad);\n  border-color: color-mix(in srgb, var(--dshpp-bad) 40%, transparent);\n}\n.dshpp-page .dshpp-btn-tiny {\n  padding: 3px 8px;\n  font-size: 0.82em;\n}\n\n.dshpp-page .dshpp-pill {\n  display: inline-flex;\n  align-items: center;\n  padding: 1px 8px;\n  border-radius: 999px;\n  font-size: 0.8em;\n  border: 1px solid var(--dshpp-line);\n  color: var(--dshpp-mute);\n}\n.dshpp-page .dshpp-pill.is-ok {\n  color: var(--dshpp-ok);\n  border-color: color-mix(in srgb, var(--dshpp-ok) 35%, transparent);\n}\n.dshpp-page .dshpp-pill.is-wait {\n  color: var(--dshpp-warn);\n  border-color: color-mix(in srgb, var(--dshpp-warn) 35%, transparent);\n}\n.dshpp-page .dshpp-pill.is-bad {\n  color: var(--dshpp-bad);\n  border-color: color-mix(in srgb, var(--dshpp-bad) 40%, transparent);\n}\n\n.dshpp-page .dshpp-table {\n  width: 100%;\n  border-collapse: collapse;\n  font-size: 0.86em;\n}\n.dshpp-page .dshpp-table th,\n.dshpp-page .dshpp-table td {\n  text-align: left;\n  padding: 7px 10px;\n  border-bottom: 1px solid var(--dshpp-line);\n  vertical-align: top;\n  overflow-wrap: anywhere;\n}\n.dshpp-page .dshpp-table th {\n  color: var(--dshpp-mute);\n  font-weight: 500;\n  font-size: 0.95em;\n}\n.dshpp-page .dshpp-group-h {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n  width: 100%;\n  border: 0;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  padding: 8px 0;\n  cursor: pointer;\n}\n.dshpp-page .dshpp-count {\n  color: var(--dshpp-mute);\n  font-size: 0.85em;\n}\n\n/* \u6F14\u7EC3\u53F0\u5360\u6EE1\u5269\u4F59\u9AD8\u5EA6 */\n.dshpp-page-drill {\n  min-height: 60vh;\n}\n.dshpp-page-drill .rt-dock.rt-embedded {\n  width: 100%;\n  min-width: 0;\n}\n\n.dshpp-page-foot {\n  margin-top: 28px;\n  padding-top: 14px;\n  border-top: 1px solid var(--dshpp-line);\n  font-size: 0.8em;\n  color: var(--dshpp-mute);\n}\n\n/* \u540D\u8BCD\u89E3\u91CA\uFF1A\u6807\u9898\u540E\u9762\u7684\u5C0F\u95EE\u53F7 */\n.dshpp-help {\n  position: relative;\n  display: inline-flex;\n  align-items: center;\n}\n.dshpp-help-btn {\n  appearance: none;\n  border: 0;\n  background: transparent;\n  color: var(--dshpp-mute);\n  font: inherit;\n  font-size: 0.85em;\n  line-height: 1;\n  width: 16px;\n  height: 16px;\n  border-radius: 50%;\n  border: 1px solid var(--dshpp-line);\n  cursor: help;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  padding: 0;\n}\n.dshpp-help-btn:hover,\n.dshpp-help-btn[aria-expanded="true"] {\n  color: var(--dshpp-fg);\n  border-color: var(--dshpp-line-strong);\n  background: var(--dshpp-bg-2);\n}\n.dshpp-tip {\n  position: absolute;\n  left: 0;\n  top: calc(100% + 6px);\n  z-index: 2147483000;\n  width: max-content;\n  max-width: min(340px, 70vw);\n  padding: 9px 11px;\n  border-radius: 8px;\n  border: 1px solid var(--dshpp-line);\n  background: var(--dsw-alias-bg-overlay, canvas);\n  color: var(--dshpp-fg);\n  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);\n  font-size: 0.82em;\n  line-height: 1.6;\n  white-space: normal;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.dshpp-tip b {\n  font-weight: 600;\n}\n\n.dshpp-page .dshpp-warn {\n  margin: 10px 0 0;\n  padding: 8px 12px;\n  border-radius: 8px;\n  border: 1px solid color-mix(in srgb, var(--dshpp-warn) 45%, transparent);\n  color: var(--dshpp-warn);\n  background: color-mix(in srgb, var(--dshpp-warn) 10%, transparent);\n  font-size: 0.86em;\n}\n\n/* \u64CD\u4F5C\u6761\uFF1A\u6700\u5E38\u7528\u7684\u300C\u5E94\u7528\u300D\u56FA\u5B9A\u5728\u5185\u5BB9\u533A\u9876\u90E8 */\n.dshpp-page .dshpp-actions {\n  position: sticky;\n  top: 0;\n  z-index: 5;\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 8px;\n  padding: 10px 0 12px;\n  margin: -4px 0 6px;\n  background: linear-gradient(\n    var(--dsw-alias-bg-base, canvas) 78%,\n    transparent\n  );\n  backdrop-filter: blur(2px);\n  border-bottom: 1px solid var(--dshpp-line);\n}\n.dshpp-page .dshpp-actions .dshpp-pill {\n  margin-left: auto;\n}\n\n/* \u6307\u6807\uFF1A\u4E09\u5217\u7D27\u51D1 */\n.dshpp-page .dshpp-metrics {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));\n  gap: 10px;\n  margin: 4px 0 2px;\n}\n.dshpp-page .dshpp-metric {\n  border: 1px solid var(--dshpp-line);\n  border-radius: 10px;\n  padding: 10px 12px;\n  background: var(--dshpp-bg-2);\n  min-width: 0;\n}\n.dshpp-page .dshpp-metric b {\n  display: block;\n  font-size: 1.05em;\n  font-weight: 600;\n  margin-bottom: 2px;\n  overflow-wrap: anywhere;\n}\n.dshpp-page .dshpp-metric span {\n  color: var(--dshpp-mute);\n  font-size: 0.82em;\n}\n\n/* \u6298\u53E0\u5757\uFF1A\u8865\u4E01\u660E\u7EC6 / \u7EF4\u62A4 / \u81EA\u68C0 */\n.dshpp-page .dshpp-fold,\n.dshpp-page .dshpp-fold-inline {\n  border: 1px solid var(--dshpp-line);\n  border-radius: 10px;\n  background: var(--dshpp-bg);\n  padding: 0 12px;\n}\n.dshpp-page .dshpp-fold > summary,\n.dshpp-page .dshpp-fold-inline > summary {\n  cursor: pointer;\n  padding: 10px 0;\n  font-size: 0.92em;\n  color: var(--dshpp-fg);\n  list-style: none;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.dshpp-page .dshpp-fold > summary::-webkit-details-marker,\n.dshpp-page .dshpp-fold-inline > summary::-webkit-details-marker {\n  display: none;\n}\n.dshpp-page .dshpp-fold > summary::before,\n.dshpp-page .dshpp-fold-inline > summary::before {\n  content: "\u25B8";\n  color: var(--dshpp-mute);\n  font-size: 0.9em;\n  transition: transform 0.12s ease;\n}\n.dshpp-page .dshpp-fold[open] > summary::before,\n.dshpp-page .dshpp-fold-inline[open] > summary::before {\n  transform: rotate(90deg);\n}\n.dshpp-page .dshpp-fold > summary b,\n.dshpp-page .dshpp-fold-inline > summary b {\n  color: var(--dshpp-mute);\n  font-weight: 500;\n  margin-left: auto;\n}\n\n/* \u72B6\u6001\u884C\uFF08\u81EA\u68C0 / \u5F3A\u5316\u6BB5\uFF09 */\n.dshpp-page .dshpp-line {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  flex-wrap: wrap;\n  padding: 6px 0;\n}\n.dshpp-page .dshpp-line + .dshpp-line {\n  border-top: 1px solid var(--dshpp-line);\n}\n.dshpp-page .dshpp-line-main {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  font-size: 0.92em;\n  min-width: 0;\n}\n.dshpp-page .dshpp-line-main b {\n  font-weight: 600;\n}\n.dshpp-page .dshpp-fold-inline {\n  border: 0;\n  padding: 0;\n  background: transparent;\n}\n.dshpp-page .dshpp-fold-inline > summary {\n  padding: 2px 0;\n  color: var(--dshpp-mute);\n  font-size: 0.86em;\n}\n.dshpp-page .dshpp-fold-inline[open] {\n  flex-basis: 100%;\n}\n\n/* \u9010\u5C42\u81EA\u68C0\uFF1A\u4E24\u5217/\u591A\u5217\u7F51\u683C\uFF0C\u4E0D\u518D\u4E00\u6761\u4E00\u884C */\n.dshpp-page .dshpp-checks {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));\n  gap: 2px 14px;\n  padding: 6px 0 10px;\n}\n.dshpp-page .dshpp-check {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  font-size: 0.84em;\n  min-width: 0;\n  padding: 2px 0;\n}\n.dshpp-page .dshpp-check.is-bad {\n  color: var(--dshpp-bad);\n}\n.dshpp-page .dshpp-check-name {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  min-width: 0;\n}\n.dshpp-page .dshpp-check-val {\n  margin-left: auto;\n  color: var(--dshpp-mute);\n  font-variant-numeric: tabular-nums;\n}\n\n/* \u72B6\u6001\u9875 hero\uFF1A\u4E00\u773C\u770B\u5230"\u73B0\u5728\u4EC0\u4E48\u72B6\u6001\u3001\u4E0B\u4E00\u6B65\u70B9\u54EA" */\n.dshpp-page .dshpp-hero {\n  border: 1px solid var(--dshpp-line);\n  border-radius: 12px;\n  background: var(--dshpp-bg);\n  padding: 16px 18px;\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.dshpp-page .dshpp-hero-state {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-size: 1.02em;\n  min-width: 0;\n}\n.dshpp-page .dshpp-hero-state b {\n  font-weight: 600;\n}\n.dshpp-page .dshpp-hero-sub {\n  margin-left: auto;\n  color: var(--dshpp-mute);\n  font-size: 0.82em;\n}\n.dshpp-page .dshpp-hero-actions {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 8px;\n}\n.dshpp-page .dshpp-btn-lead {\n  padding: 9px 20px;\n  font-size: 0.98em;\n  font-weight: 600;\n  border-radius: 10px;\n}\n.dshpp-page .dshpp-hero-hint {\n  margin: 0;\n  color: var(--dshpp-mute);\n  font-size: 0.84em;\n  line-height: 1.6;\n}\n.dshpp-check.is-warn {\n  color: var(--dshpp-warn);\n}\n\n.dshpp-page .dshpp-probe-msg {\n  margin: 6px 0 0;\n  padding: 8px 10px;\n  border-radius: 8px;\n  border: 1px dashed var(--dshpp-line);\n  background: var(--dshpp-bg-2);\n  font-size: 0.82em;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n}\n';
+var page_default = '/* \uC804\uCCB4 \uD398\uC774\uC9C0(\uC67C\uCABD \uC0AC\uC774\uB4DC\uBC14 \uC9C4\uC785\uC810) \uC2A4\uD0C0\uC77C.\n   DSH \uC124\uC815 \uD654\uBA74\uACFC \uAC19\uC740 \uB9AC\uB4EC\uC73C\uB85C \uC815\uB3C8\uD55C\uB2E4: \uC88C\uC6B0 20px \xB7 \uC0C1\uB2E8 16px \xB7 \uC139\uC158 \uAC04 24px,\n   \uAC04\uACA9 \uC2A4\uCF00\uC77C 4/8/12/16/20/24, \uC124\uC815 \uD589 padding 16px 0 + .5px \uD558\uB2E8 \uAD6C\uBD84\uC120.\n   \uC0C9\xB7\uC120\xB7\uBC18\uACBD\xB7\uBAA8\uC158\uC740 \uC804\uBD80 DSH \uB514\uC790\uC778 \uD1A0\uD070(--dsw-*)\uC774\uACE0, \uD0C0\uC774\uD3EC\uB294 DSH \uD3F0\uD2B8 \uD1A0\uD070\uC758\n   \uD06C\uAE30/\uD589\uAC04(14/22 \uBCF8\uBB38, 13/20 \uBCF4\uC870, 12/18 \uCEA1\uC158)\uC744 \uADF8\uB300\uB85C \uAC00\uC838\uB2E4 \uC4F4\uB2E4. */\n/* --dshpp-* \uC774\uB984\uC740 \uD074\uB798\uC2A4/\uAD6C\uC870/\uC0AC\uC6A9\uC790 \uD14C\uB9C8 \uC624\uBC84\uB77C\uC774\uB4DC \uD638\uD658\uC744 \uC704\uD574 \uB0A8\uAE34 \uBCC4\uCE6D\uC774\uACE0,\n   \uAC12\uC740 \uC804\uBD80 DSH \uD1A0\uD070\uC774\uB2E4(base.css \uAC00 \uD398\uC774\uC9C0 \uBB38\uB9E5\uC5D0\uC11C \uC774 \uC774\uB984\uC744 \uCC38\uC870\uD55C\uB2E4). */\n.dshpp-page {\n  --dshpp-line: var(--dsw-alias-border-l1);\n  --dshpp-line-strong: var(--dsw-alias-border-l2);\n  --dshpp-fg: var(--dsw-alias-label-primary);\n  --dshpp-ink: var(--dsw-alias-label-primary);\n  --dshpp-mute: var(--dsw-alias-label-secondary);\n  --dshpp-bg: var(--dsw-alias-bg-layer-1);\n  --dshpp-paper: var(--dsw-alias-bg-layer-1);\n  --dshpp-bg-2: var(--dsw-alias-bg-layer-2);\n  --dshpp-mono: var(--dsw-font-markdown-code-font-family);\n  --dshpp-accent: var(--dsw-alias-brand-primary);\n  --dshpp-accent-soft: var(--dsw-alias-bg-layer-3);\n  --dshpp-fill: var(--dsw-alias-interactive-bg-hover);\n  --dshpp-ok: var(--dsw-alias-state-success-primary);\n  --dshpp-warn: var(--dsw-alias-state-warn-primary);\n  --dshpp-bad: var(--dsw-alias-state-error-primary);\n  /* \uC608\uC804 \uACE0\uC815\uC0C9 \uC790\uB9AC(--dshpp-solid*)\uB3C4 DSH \uBC84\uD2BC/\uC0C1\uD0DC \uD1A0\uD070 \uBCC4\uCE6D\uC73C\uB85C \uB0A8\uAE34\uB2E4. */\n  --dshpp-solid: var(--dsw-alias-button-primary-fill);\n  --dshpp-solid-hover: var(--dsw-alias-button-primary-hover);\n  --dshpp-solid-danger: var(--dsw-alias-state-error-primary);\n  --dshpp-solid-danger-hover: var(--dsw-alias-state-error-secondary);\n  box-sizing: border-box;\n  width: 100%;\n  /* DSH \uD50C\uB7EC\uADF8\uC778 \uC124\uC815 \uD654\uBA74\uACFC \uAC19\uC740 \uD3ED \uC0C1\uD55C(\uB113\uC740 \uD654\uBA74\uC5D0\uC11C\uB294 \uC911\uC559 \uC815\uB82C, \uC881\uC73C\uBA74 100%). */\n  max-width: 1400px;\n  margin-inline: auto;\n  height: 100%;\n  min-height: 0;\n  overflow: auto;\n  /* DSH \uC124\uC815 \uD654\uBA74\uCC98\uB7FC \uC2A4\uD06C\uB864\uBC14\uB294 \uAC10\uCD94\uACE0 \uC2A4\uD06C\uB864 \uAE30\uB2A5\uB9CC \uB0A8\uAE34\uB2E4. */\n  scrollbar-width: none;\n  -ms-overflow-style: none;\n  padding: 16px 24px 48px;\n  color: var(--dsw-alias-label-primary);\n  font-family: var(--dsw-font-family);\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: var(--dsw-font-s-14-line-height);\n  letter-spacing: 0;\n  -webkit-font-smoothing: antialiased;\n}\n.dshpp-page::-webkit-scrollbar {\n  width: 0;\n  height: 0;\n  display: none;\n}\n/* \uC548\uCABD \uBAA9\uB85D/\uC5D0\uB514\uD130 \uC2A4\uD06C\uB864 \uC601\uC5ED\uB3C4 \uAC19\uC740 \uADDC\uCE59\uC744 \uB530\uB978\uB2E4. */\n.dshpp-page :is(.dshpp-rulelist, .dshpp-cwd-list, .dshpp-editor, .dshpp-auth-legal, .dshpp-fold-inner, .dshpp-page-tabs) {\n  scrollbar-width: none;\n  -ms-overflow-style: none;\n}\n.dshpp-page :is(.dshpp-rulelist, .dshpp-cwd-list, .dshpp-editor, .dshpp-auth-legal, .dshpp-fold-inner, .dshpp-page-tabs)::-webkit-scrollbar {\n  width: 0;\n  height: 0;\n  display: none;\n}\n.dshpp-page *,\n.dshpp-page *::before,\n.dshpp-page *::after {\n  box-sizing: border-box;\n}\n\n/* \uD55C\uAD6D\uC5B4 \uC124\uBA85\uBB38\uC740 \uB2E8\uC5B4 \uC911\uAC04\uC5D0\uC11C \uB04A\uC9C0 \uC54A\uB294\uB2E4(word-break: keep-all).\n   \uB118\uCE60 \uB54C\uB9CC overflow-wrap \uC73C\uB85C \uC548\uC804\uD558\uAC8C \uC811\uB294\uB2E4. */\n.dshpp-page :is(p, li, dd, dt, summary, .dshpp-muted, .dshpp-hint, .dshpp-note),\n.dshpp-page :is(.dshpp-tip, .dshpp-warn, .dshpp-strip, .dshpp-hero-hint),\n.dshpp-page .dshpp-page-title p {\n  word-break: keep-all;\n  overflow-wrap: anywhere;\n}\n\n/* \uC81C\uBAA9\xB7\uD0ED\xB7\uBC84\uD2BC\uC740 \uC790\uAC04\uC744 \uC0B4\uC9DD \uC870\uC778\uB2E4(DSH \uC640 \uAC19\uC740 -0.01em). \uBCF8\uBB38\uC740 0. */\n.dshpp-page :is(h1, h2, h3, h4),\n.dshpp-page .dshpp-page-tabs button,\n.dshpp-page .dshpp-btn,\n.dshpp-page .dshpp-help-btn,\n.dshpp-page .dshpp-group-h,\n.dshpp-page .dshpp-fold > summary,\n.dshpp-page .dshpp-fold-inline > summary {\n  letter-spacing: -0.01em;\n  word-break: keep-all;\n}\n\n.dshpp-page-head {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  min-width: 0;\n}\n.dshpp-page-glyph {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 34px;\n  height: 34px;\n  border-radius: var(--dsw-radius-md);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: var(--dsw-alias-bg-layer-2);\n  color: var(--dsw-alias-brand-primary);\n  flex: none;\n}\n.dshpp-page-title {\n  min-width: 0;\n}\n.dshpp-page-title h1 {\n  margin: 0;\n  font-size: 16px;\n  line-height: 24px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n}\n.dshpp-page-title p {\n  margin: 2px 0 0;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n  font-size: var(--dsw-font-xs-13-font-size);\n  line-height: var(--dsw-font-xs-13-line-height);\n  color: var(--dsw-alias-label-secondary);\n}\n/* \uBC30\uC9C0/\uD544: \uCEA1\uC158 12/18, padding 2px 8px, radius sm, layer-2 \uBC14\uD0D5 + .5px \uC120 */\n.dshpp-page-ver {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  padding: 2px 8px;\n  border-radius: var(--dsw-radius-sm);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: var(--dsw-alias-bg-layer-2);\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n  letter-spacing: 0;\n  white-space: nowrap;\n}\n\n/* \uC0C1\uB2E8 \uD55C \uC904 \uC0C1\uD0DC \uC694\uC57D: \uCE74\uB4DC \uB300\uC2E0 DSH \uC758 subtitle \uD589\uACFC \uB9DE\uCD98\uB2E4 */\n.dshpp-strip {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 8px 16px;\n  margin: 12px 0 0;\n  padding: 12px 0;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n  color: var(--dsw-alias-label-secondary);\n}\n.dshpp-strip-item {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  min-width: 0;\n}\n.dshpp-strip-item b {\n  color: var(--dsw-alias-label-primary);\n  font-weight: 600;\n}\n.dshpp-dot {\n  width: 7px;\n  height: 7px;\n  border-radius: 50%;\n  background: var(--dsw-alias-label-secondary);\n  flex: none;\n}\n.dshpp-dot.is-ok {\n  background: var(--dsw-alias-state-success-primary);\n}\n.dshpp-dot.is-warn {\n  background: var(--dsw-alias-state-warn-primary);\n}\n.dshpp-dot.is-bad {\n  background: var(--dsw-alias-state-error-primary);\n}\n\n/* \uD0ED: DSH \uC54C\uC57D\uD615 \uD0ED. \uCEE8\uD14C\uC774\uB108\uB294 bg-module-platform, \uD65C\uC131 \uD0ED\uC740 bg-layer-1. */\n.dshpp-page-tabs {\n  display: flex;\n  gap: 4px;\n  margin: 16px 0 0;\n  padding: 4px;\n  border-radius: var(--dsw-radius-lg);\n  background: var(--dsw-alias-bg-module-platform);\n  overflow-x: auto;\n  scrollbar-width: none;\n}\n.dshpp-page-tabs::-webkit-scrollbar {\n  display: none;\n}\n.dshpp-page-tabs button {\n  appearance: none;\n  flex: none;\n  height: 34px;\n  padding: 0 12px;\n  border: 0;\n  border-radius: var(--dsw-radius-md);\n  background: transparent;\n  color: var(--dsw-alias-label-secondary);\n  font-family: var(--dsw-font-family);\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: 20px;\n  letter-spacing: -0.01em;\n  cursor: pointer;\n  white-space: nowrap;\n  transition:\n    color 0.18s ease,\n    background-color 0.18s ease;\n}\n.dshpp-page-tabs button:hover {\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-page-tabs button[aria-selected="true"] {\n  background: var(--dsw-alias-bg-layer-1);\n  color: var(--dsw-alias-label-primary);\n  font-weight: 600;\n}\n.dshpp-page-tabs button:focus-visible {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-alias-border-l4);\n  outline-offset: -2px;\n}\n\n/* \uBCF8\uBB38/\uC139\uC158 \uB9AC\uB4EC: \uC139\uC158 \uC0AC\uC774\uB294 24px */\n.dshpp-page-body {\n  display: flex;\n  flex-direction: column;\n  gap: 24px;\n  padding-top: 16px;\n  min-width: 0;\n}\n.dshpp-sec {\n  display: flex;\n  flex-direction: column;\n  gap: 24px;\n  min-width: 0;\n}\n.dshpp-sec[hidden] {\n  display: none;\n}\n\n/* \uCE74\uB4DC/\uD328\uB110: \uADF8\uB9BC\uC790 \uC5C6\uC774 layer-1 \uB2E8\uC77C \uBC30\uACBD + .5px \uC120. base.css \uC758 \uADF8\uB9BC\uC790\xB7\uC774\uC911 \uBC30\uACBD\uC744 \uB36E\uB294\uB2E4. */\n.dshpp-page :is(.dshpp-card, .dshpp-panel) {\n  display: block;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-lg);\n  background: var(--dsw-alias-bg-layer-1);\n  box-shadow: none;\n  padding: 16px;\n  margin: 0;\n  min-width: 0;\n}\n.dshpp-page section.dshpp-panel {\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-lg);\n  background: var(--dsw-alias-bg-layer-1);\n  box-shadow: none;\n  padding: 16px;\n  margin: 0;\n  min-width: 0;\n}\n/* \uCE74\uB4DC \uC548 \uD615\uC81C \uC694\uC18C\uB294 12px \uB9AC\uB4EC. \uC81C\uBAA9\uC740 \uC704 16px/\uC544\uB798 8px \uC774\uACE0, \uC544\uB798 \uAC12\uC740 \uB9AC\uB4EC\uACFC \uBCD1\uD569\uB418\uC5B4 12px \uB85C \uC218\uB834\uD55C\uB2E4. */\n.dshpp-page :is(.dshpp-card, .dshpp-panel) > * + * {\n  margin-top: 12px;\n}\n.dshpp-page :is(.dshpp-card, .dshpp-panel) :is(h3, h4) {\n  margin: 16px 0 8px;\n  font-size: 15px;\n  line-height: 22px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-page :is(.dshpp-card, .dshpp-panel) :is(h3, h4):first-child {\n  margin-top: 0;\n}\n.dshpp-page\n  :is(.dshpp-card, .dshpp-panel)\n  :is(h3, h4):first-child:not(:last-child) {\n  margin-bottom: 12px;\n}\n/* \uC18C\uC81C\uBAA9 \uD589: \uC81C\uBAA9\uACFC \uC6B0\uCE21 \uC561\uC158\uC744 \uD55C \uC904\uC5D0 */\n.dshpp-page .dshpp-sub {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  flex-wrap: wrap;\n  margin: 16px 0 8px;\n}\n.dshpp-page .dshpp-sub > :is(h3, h4) {\n  margin: 0;\n  font-size: 15px;\n  line-height: 22px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n}\n\n/* \uC124\uC815 \uD589: \uC67C\uCABD \uB77C\uBCA8 / \uC624\uB978\uCABD \uCEE8\uD2B8\uB864. DSH \uC124\uC815 \uD654\uBA74\uACFC \uAC19\uC740 16px \uC0C1\uD558 \uC5EC\uBC31 + .5px \uAD6C\uBD84\uC120 */\n.dshpp-page .dshpp-policy-row {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n  padding: 16px 0;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n}\n.dshpp-page .dshpp-policy-row > label {\n  flex: 0 0 auto;\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: var(--dsw-font-s-14-line-height);\n  letter-spacing: 0;\n  color: var(--dsw-alias-label-primary);\n}\n/* .dshpp-field / .dshpp-area \uB294 input\xB7select\xB7textarea \uC5D0 \uBD99\uB294 \uCEE8\uD2B8\uB864 \uD074\uB798\uC2A4\uB2E4(\uB798\uD37C\uAC00 \uC544\uB2C8\uB2E4).\n   \uC5EC\uAE30\uC11C\uB294 \uD3F0\uD2B8\xB7\uC120\xB7\uBC14\uD0D5\uB9CC \uD398\uC774\uC9C0 \uADDC\uACA9\uC73C\uB85C \uB9DE\uCD98\uB2E4. */\n.dshpp-page .dshpp-field {\n  font-family: var(--dsw-font-family);\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: var(--dsw-font-s-14-line-height);\n  letter-spacing: 0;\n  color: var(--dsw-alias-label-primary);\n  background: var(--dsw-alias-bg-layer-2);\n  border: 0.5px solid var(--dsw-alias-border-l3);\n  border-radius: var(--dsw-radius-sm);\n  padding: 8px 10px;\n  max-width: 100%;\n}\n.dshpp-page .dshpp-field:focus-visible {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-alias-border-l4);\n  outline-offset: 1px;\n}\n\n/* \uBCF4\uC870 \uC124\uBA85: 13/20 */\n.dshpp-page .dshpp-muted,\n.dshpp-page .dshpp-hint {\n  margin: 0;\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xs-13-font-size);\n  line-height: var(--dsw-font-xs-13-line-height);\n}\n.dshpp-page .dshpp-note {\n  margin: 4px 0 0;\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n}\n.dshpp-layout-details > summary {\n  cursor: pointer;\n  padding: 8px 0;\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n}\n\n/* \uBE14\uB85D(\uC815\uCC45/\uC0DD\uC131/\uBAA9\uB85D): \uCE74\uB4DC \uC548\uC5D0\uC11C \uC88C\uC6B0 \uB4E4\uC5EC\uC4F0\uAE30\uB97C \uB9CC\uB4E4\uC9C0 \uC54A\uACE0 .5px \uC120\uC73C\uB85C\uB9CC \uB098\uB208\uB2E4 */\n.dshpp-page .dshpp-block,\n.dshpp-page .dshpp-create {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  padding: 12px 0;\n  border-top: 0.5px solid var(--dsw-alias-border-l2);\n  background: transparent;\n  min-width: 0;\n}\n/* \uC815\uCC45 \uD589\uC774 \uC774\uBBF8 \uD558\uB2E8 \uC120\uC744 \uADF8\uB9AC\uBBC0\uB85C \uC0DD\uC131 \uBE14\uB85D\uC758 \uC704\uCABD \uC120\uC740 \uACB9\uCE58\uC9C0 \uC54A\uAC8C \uD55C\uB2E4 */\n.dshpp-page .dshpp-policy-row + .dshpp-create {\n  border-top: 0;\n}\n.dshpp-page .dshpp-create-row {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n}\n\n.dshpp-page .dshpp-row {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 8px;\n  min-width: 0;\n}\n.dshpp-page input,\n.dshpp-page select,\n.dshpp-page textarea {\n  font-family: var(--dsw-font-family);\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: var(--dsw-font-s-14-line-height);\n  color: var(--dsw-alias-label-primary);\n  background: var(--dsw-alias-bg-layer-2);\n  border: 0.5px solid var(--dsw-alias-border-l3);\n  border-radius: var(--dsw-radius-sm);\n  padding: 8px 10px;\n  max-width: 100%;\n}\n.dshpp-page input:focus-visible,\n.dshpp-page select:focus-visible,\n.dshpp-page textarea:focus-visible {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-alias-border-l4);\n  outline-offset: 1px;\n}\n.dshpp-page textarea {\n  width: 100%;\n  min-height: 320px;\n  resize: vertical;\n  font-family: var(--dsw-font-markdown-code-font-family);\n  font-size: var(--dsw-font-xs-13-font-size);\n  line-height: var(--dsw-font-xs-13-line-height);\n  background: var(--dsw-alias-markdown-code-block);\n}\n\n/* \uCF54\uB4DC/\uD504\uB9AC: DSH markdown \uCF54\uB4DC \uD1A0\uD070. \uD504\uB9AC \uBE14\uB85D\uC740 12/18 \xB7 padding 12px \xB7 radius sm */\n.dshpp-page :is(code, kbd, samp, pre) {\n  font-family: var(--dsw-font-markdown-code-font-family);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n}\n.dshpp-page :is(code, kbd, samp) {\n  padding: 1px 4px;\n  border-radius: var(--dsw-radius-xs);\n  background: var(--dsw-alias-markdown-inline-code);\n}\n.dshpp-page pre {\n  margin: 0;\n  padding: 12px;\n  border-radius: var(--dsw-radius-sm);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: var(--dsw-alias-markdown-code-block);\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  overflow-x: auto;\n}\n\n/* \uBC84\uD2BC: DSH \uBC84\uD2BC \uADDC\uACA9(36/28, radius md/sm, .16s ease-out) \uADF8\uB300\uB85C */\n.dshpp-page .dshpp-btn {\n  box-sizing: border-box;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 4px;\n  height: 36px;\n  min-height: 0;\n  padding: 0 14px;\n  border: none;\n  border-radius: var(--dsw-radius-md);\n  background: transparent;\n  color: var(--dsw-alias-label-primary);\n  font-family: var(--dsw-font-family);\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: var(--dsw-font-s-14-line-height);\n  letter-spacing: -0.01em;\n  cursor: pointer;\n  white-space: nowrap;\n  transition:\n    background-color 0.16s ease-out,\n    color 0.16s ease-out,\n    border-color 0.16s ease-out,\n    opacity 0.15s ease-out;\n}\n.dshpp-page .dshpp-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.dshpp-page .dshpp-btn:focus-visible {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-alias-border-l4);\n  outline-offset: 2px;\n}\n.dshpp-page .dshpp-btn-primary {\n  background: var(--dsw-alias-button-primary-fill);\n  color: var(--dsw-alias-label-primary-foreground);\n}\n.dshpp-page .dshpp-btn-primary:hover:not(:disabled) {\n  background: var(--dsw-alias-button-primary-hover);\n}\n.dshpp-page .dshpp-btn-ghost {\n  background: transparent;\n}\n.dshpp-page .dshpp-btn-ghost:hover:not(:disabled) {\n  background: var(--dsw-alias-interactive-bg-hover);\n}\n.dshpp-page .dshpp-btn-ghost:active:not(:disabled) {\n  background: var(--dsw-alias-interactive-bg-active);\n}\n.dshpp-page .dshpp-btn-outline {\n  border: 0.5px solid var(--dsw-alias-border-l3);\n  background: transparent;\n}\n.dshpp-page .dshpp-btn-outline:hover:not(:disabled) {\n  background: var(--dsw-alias-interactive-bg-hover);\n}\n/* \uC0C1\uB2E8 \uACE0\uC815 \uC561\uC158 \uBC14\uB294 DSH \uD234\uBC14 \uBC84\uD2BC \uC0C9\uC744 \uC4F4\uB2E4(primary/outline \uC740 \uAC01\uC790 \uC0C9 \uC720\uC9C0) */\n.dshpp-page .dshpp-actions .dshpp-btn-ghost {\n  background: var(--dsw-alias-button-tool-bar-fill);\n}\n.dshpp-page .dshpp-actions .dshpp-btn-ghost:hover:not(:disabled) {\n  background: var(--dsw-alias-button-tool-bar-hover);\n}\n/* danger \uB294 \uD14D\uC2A4\uD2B8\uD615: \uBC30\uACBD \uC5C6\uC774 \uAE00\uC790\uC0C9\uB9CC state-error-primary \uB85C \uB0AE\uCD98\uB2E4. */\n.dshpp-page .dshpp-btn-danger,\n.dshpp-page .dshpp-btn-solid-danger {\n  background: transparent;\n  color: var(--dsw-alias-state-error-primary);\n}\n.dshpp-page .dshpp-btn-danger:hover:not(:disabled),\n.dshpp-page .dshpp-btn-solid-danger:hover:not(:disabled) {\n  background: var(--dsw-alias-interactive-bg-hover-danger);\n  color: var(--dsw-alias-state-error-primary);\n}\n.dshpp-page .dshpp-btn-tiny {\n  height: 28px;\n  padding: 0 10px;\n  border-radius: var(--dsw-radius-sm);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n}\n\n/* \uBC30\uC9C0/\uD544: 12/18, padding 2px 8px, radius sm, layer-2 \uBC14\uD0D5 + .5px \uC120.\n   \uC0C1\uD0DC\uB294 \uAE00\uC790\uC0C9\uB9CC \uBC14\uAFBC\uB2E4(\uD14C\uB450\uB9AC/\uBC30\uACBD\uC5D0 \uC0C1\uD0DC\uC0C9\uC744 \uC11E\uC9C0 \uC54A\uB294\uB2E4). */\n.dshpp-page .dshpp-pill {\n  display: inline-flex;\n  align-items: center;\n  gap: 6px;\n  padding: 2px 8px;\n  border-radius: var(--dsw-radius-sm);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: var(--dsw-alias-bg-layer-2);\n  color: var(--dsw-alias-label-secondary);\n  font-family: var(--dsw-font-family);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n  letter-spacing: 0;\n}\n.dshpp-page .dshpp-pill.is-ok {\n  color: var(--dsw-alias-state-success-primary);\n}\n.dshpp-page .dshpp-pill.is-wait {\n  color: var(--dsw-alias-state-warn-primary);\n}\n.dshpp-page .dshpp-pill.is-bad {\n  color: var(--dsw-alias-state-error-primary);\n}\n\n/* \uD45C: \uD5E4\uB354 \uBC30\uACBD \uC5C6\uC774 .5px \uC120\uB9CC. \uBCF8\uBB38 13/20, \uCEA1\uC158 12/18 */\n.dshpp-page .dshpp-table {\n  width: 100%;\n  border-collapse: collapse;\n  border: 0;\n  font-size: var(--dsw-font-xs-13-font-size);\n  line-height: var(--dsw-font-xs-13-line-height);\n  letter-spacing: 0;\n}\n.dshpp-page .dshpp-table th,\n.dshpp-page .dshpp-table td {\n  text-align: left;\n  padding: 12px 8px;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n  vertical-align: top;\n  background: transparent;\n  overflow-wrap: anywhere;\n}\n/* \uD45C \uC88C\uC6B0 \uB05D\uC740 \uADF8\uB8F9/\uCE74\uB4DC \uD14D\uC2A4\uD2B8\uC640 \uAC19\uC740 \uAE30\uC900\uC120\uC5D0 \uB9DE\uCD98\uB2E4 */\n.dshpp-page .dshpp-table :is(th, td):first-child {\n  padding-left: 0;\n}\n.dshpp-page .dshpp-table :is(th, td):last-child {\n  padding-right: 0;\n}\n.dshpp-page .dshpp-table th {\n  color: var(--dsw-alias-label-secondary);\n  font-weight: 500;\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n  letter-spacing: 0;\n}\n.dshpp-page .dshpp-table tbody tr:hover {\n  background: var(--dsw-alias-interactive-bg-hover);\n}\n\n/* \uADF8\uB8F9(\uD328\uCE58 \uC0C1\uC138): layer-1 \uBC14\uD0D5 + .5px \uD558\uB2E8 \uAD6C\uBD84\uC120\uC758 \uC124\uC815 \uD589 \uC2A4\uD0C0\uC77C. \uCE74\uB4DC/\uADF8\uB9BC\uC790 \uC5C6\uC74C. */\n.dshpp-page .dshpp-group {\n  border: 0;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: 0;\n  margin: 0;\n  background: var(--dsw-alias-bg-layer-1);\n  overflow: visible;\n}\n.dshpp-page .dshpp-group:last-child {\n  border-bottom: 0;\n}\n.dshpp-page .dshpp-group-h {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  width: 100%;\n  border: 0;\n  background: transparent;\n  color: var(--dsw-alias-label-primary);\n  font-family: var(--dsw-font-family);\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: var(--dsw-font-s-14-line-height);\n  letter-spacing: -0.01em;\n  padding: 16px 0;\n  cursor: pointer;\n}\n.dshpp-page .dshpp-group-h:hover {\n  color: var(--dsw-alias-label-primary);\n}\n.dshpp-page .dshpp-group-h strong {\n  font-weight: 600;\n}\n.dshpp-page .dshpp-group-h em {\n  font-style: normal;\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n  color: var(--dsw-alias-label-secondary);\n}\n.dshpp-page .dshpp-count {\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n  font-variant-numeric: tabular-nums;\n}\n\n/* \uB4DC\uB9B4 \uCF58\uC194\uC774 \uB0A8\uC740 \uB192\uC774\uB97C \uC804\uBD80 \uCC28\uC9C0\uD55C\uB2E4 */\n.dshpp-page-drill {\n  min-height: 60vh;\n}\n.dshpp-page-drill .rt-dock.rt-embedded {\n  width: 100%;\n  min-width: 0;\n}\n\n.dshpp-page-foot {\n  margin-top: 24px;\n  padding-top: 16px;\n  border-top: 0.5px solid var(--dsw-alias-border-l2);\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n}\n\n/* \uC774\uB984 \uC124\uBA85: \uC81C\uBAA9 \uB4A4\uC758 \uC791\uC740 \uBB3C\uC74C\uD45C */\n.dshpp-help {\n  position: relative;\n  display: inline-flex;\n  align-items: center;\n}\n.dshpp-help-btn {\n  appearance: none;\n  border: 0;\n  background: transparent;\n  color: var(--dsw-alias-label-secondary);\n  font-family: var(--dsw-font-family);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: 1;\n  width: 16px;\n  height: 16px;\n  border-radius: 50%;\n  border: 0.5px solid var(--dsw-alias-border-l3);\n  cursor: help;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  padding: 0;\n  transition:\n    background-color 0.16s ease-out,\n    color 0.16s ease-out,\n    border-color 0.16s ease-out;\n}\n.dshpp-help-btn:hover,\n.dshpp-help-btn[aria-expanded="true"] {\n  color: var(--dsw-alias-label-primary);\n  border-color: var(--dsw-alias-border-l2);\n  background: var(--dsw-alias-interactive-bg-hover);\n}\n.dshpp-tip {\n  position: absolute;\n  left: 0;\n  top: calc(100% + 6px);\n  z-index: 2147483000;\n  width: max-content;\n  max-width: min(340px, 70vw);\n  padding: 8px 12px;\n  border-radius: var(--dsw-radius-sm);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: var(--dsw-alias-bg-overlay);\n  color: var(--dsw-alias-label-primary);\n  box-shadow: var(--dsw-elevation-prominent);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n  white-space: normal;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.dshpp-tip b {\n  font-weight: 600;\n}\n\n/* \uACBD\uACE0/\uC548\uB0B4 \uD55C \uC904: \uC120\uACFC \uAE00\uC790\uC0C9\uB9CC \uC4F0\uACE0 \uBC30\uACBD\uC740 layer-2 \uD558\uB098\uB85C \uC815\uB9AC */\n.dshpp-page .dshpp-warn {\n  margin: 12px 0 0;\n  padding: 12px;\n  border-radius: var(--dsw-radius-sm);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: var(--dsw-alias-bg-layer-2);\n  color: var(--dsw-alias-state-warn-primary);\n  font-size: var(--dsw-font-xs-13-font-size);\n  line-height: var(--dsw-font-xs-13-line-height);\n}\n\n/* \uC561\uC158 \uBC14: \uAC00\uC7A5 \uC790\uC8FC \uC4F0\uB294 "\uC801\uC6A9"\uC744 \uCF58\uD150\uCE20 \uC601\uC5ED \uB9E8 \uC704\uC5D0 \uACE0\uC815\uD55C\uB2E4 */\n.dshpp-page .dshpp-actions {\n  position: sticky;\n  top: 0;\n  z-index: 5;\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 8px;\n  padding: 8px 0 12px;\n  margin: -4px 0 8px;\n  background: var(--dsw-alias-bg-base);\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n}\n.dshpp-page .dshpp-actions .dshpp-pill {\n  margin-left: auto;\n}\n\n/* \uC9C0\uD45C: \uC0C1\uD0DC \uC694\uC57D \uD589\uC740 \uC81C\uBAA9 \uBC14\uB85C \uC544\uB798 12px */\n.dshpp-page .dshpp-metrics {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));\n  gap: 8px;\n  margin: 12px 0 0;\n}\n.dshpp-page .dshpp-metric {\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-md);\n  padding: 12px;\n  background: var(--dsw-alias-bg-layer-2);\n  min-width: 0;\n}\n.dshpp-page .dshpp-metric b {\n  display: block;\n  margin-bottom: 2px;\n  font-size: 15px;\n  line-height: 22px;\n  font-weight: 600;\n  letter-spacing: -0.01em;\n  overflow-wrap: anywhere;\n}\n.dshpp-page .dshpp-metric span {\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n}\n\n/* \uC811\uC774\uC2DD \uBE14\uB85D: \uD328\uCE58 \uC0C1\uC138 / \uC720\uC9C0\uBCF4\uC218 / \uC790\uCCB4 \uC810\uAC80 \u2014 \uC124\uC815 \uD589\uCC98\uB7FC \uC120\uB9CC \uB0A8\uAE34\uB2E4 */\n.dshpp-page .dshpp-fold {\n  border: 0;\n  border-bottom: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: 0;\n  background: transparent;\n  padding: 0;\n}\n.dshpp-page .dshpp-fold-inline {\n  border: 0;\n  border-radius: 0;\n  background: transparent;\n  padding: 0;\n}\n.dshpp-page .dshpp-fold > summary,\n.dshpp-page .dshpp-fold-inline > summary {\n  cursor: pointer;\n  padding: 12px 0;\n  font-size: var(--dsw-font-xs-13-font-size);\n  line-height: var(--dsw-font-xs-13-line-height);\n  color: var(--dsw-alias-label-secondary);\n  list-style: none;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.dshpp-page .dshpp-fold > summary::-webkit-details-marker,\n.dshpp-page .dshpp-fold-inline > summary::-webkit-details-marker {\n  display: none;\n}\n.dshpp-page .dshpp-fold > summary::before,\n.dshpp-page .dshpp-fold-inline > summary::before {\n  content: "\u25B8";\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  transition: transform 0.16s ease-out;\n}\n.dshpp-page .dshpp-fold[open] > summary::before,\n.dshpp-page .dshpp-fold-inline[open] > summary::before {\n  transform: rotate(90deg);\n}\n.dshpp-page .dshpp-fold > summary b,\n.dshpp-page .dshpp-fold-inline > summary b {\n  color: var(--dsw-alias-label-secondary);\n  font-weight: 500;\n  margin-left: auto;\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n}\n.dshpp-page .dshpp-fold-inline > summary {\n  padding: 2px 0;\n}\n\n/* \uC0C1\uD0DC \uD589(\uC790\uCCB4 \uC810\uAC80 / \uAC15\uD654 \uC139\uC158) */\n.dshpp-page .dshpp-line {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n  padding: 12px 0;\n}\n.dshpp-page .dshpp-line + .dshpp-line {\n  border-top: 0.5px solid var(--dsw-alias-border-l2);\n}\n.dshpp-page .dshpp-line-main {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  min-width: 0;\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: var(--dsw-font-s-14-line-height);\n}\n.dshpp-page .dshpp-line-main b {\n  font-weight: 600;\n}\n.dshpp-page .dshpp-fold-inline[open] {\n  flex-basis: 100%;\n}\n\n/* \uACC4\uCE35\uBCC4 \uC790\uCCB4 \uC810\uAC80: 2\uC5F4/\uB2E4\uC5F4 \uADF8\uB9AC\uB4DC\uB85C \uBC14\uAFD4 \uB354 \uC774\uC0C1 \uD55C \uC904\uC5D0 \uD558\uB098\uC529 \uB450\uC9C0 \uC54A\uB294\uB2E4 */\n.dshpp-page .dshpp-checks {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));\n  gap: 4px 16px;\n  padding: 6px 0 12px;\n}\n.dshpp-page .dshpp-check {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  min-width: 0;\n  padding: 2px 0;\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n}\n.dshpp-page .dshpp-check.is-bad {\n  color: var(--dsw-alias-state-error-primary);\n}\n.dshpp-page .dshpp-check.is-warn {\n  color: var(--dsw-alias-state-warn-primary);\n}\n.dshpp-page .dshpp-check-name {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  min-width: 0;\n  word-break: keep-all;\n}\n.dshpp-page .dshpp-check-val {\n  margin-left: auto;\n  color: var(--dsw-alias-label-secondary);\n  font-variant-numeric: tabular-nums;\n}\n\n/* \uC0C1\uD0DC \uD398\uC774\uC9C0 hero: "\uC9C0\uAE08 \uC5B4\uB5A4 \uC0C1\uD0DC\uC774\uACE0 \uB2E4\uC74C\uC5D0 \uC5B4\uB514\uB97C \uB204\uB974\uB294\uC9C0"\uB97C \uD55C\uB208\uC5D0 \uBCF4\uC5EC\uC900\uB2E4 */\n.dshpp-page .dshpp-hero {\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-lg);\n  background: var(--dsw-alias-bg-layer-1);\n  box-shadow: none;\n  padding: 16px;\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n.dshpp-page .dshpp-hero-state {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  min-width: 0;\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: var(--dsw-font-s-14-line-height);\n}\n.dshpp-page .dshpp-hero-state b {\n  font-weight: 600;\n}\n.dshpp-page .dshpp-hero-sub {\n  margin-left: auto;\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n}\n.dshpp-page .dshpp-hero-actions {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 8px;\n}\n.dshpp-page .dshpp-btn-lead {\n  height: 36px;\n  padding: 0 20px;\n  font-size: var(--dsw-font-s-14-font-size);\n  line-height: var(--dsw-font-s-14-line-height);\n}\n.dshpp-page .dshpp-hero-hint {\n  margin: 0;\n  color: var(--dsw-alias-label-secondary);\n  font-size: var(--dsw-font-xs-13-font-size);\n  line-height: var(--dsw-font-xs-13-line-height);\n}\n\n.dshpp-page .dshpp-probe-msg {\n  margin: 8px 0 0;\n  padding: 12px;\n  border-radius: var(--dsw-radius-sm);\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  background: var(--dsw-alias-markdown-code-block);\n  color: var(--dsw-alias-label-primary);\n  font-family: var(--dsw-font-markdown-code-font-family);\n  font-size: var(--dsw-font-xxs-12-font-size);\n  line-height: var(--dsw-font-xxs-12-line-height);\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .dshpp-page .dshpp-btn,\n  .dshpp-page .dshpp-help-btn,\n  .dshpp-page-tabs button,\n  .dshpp-page .dshpp-fold > summary::before,\n  .dshpp-page .dshpp-fold-inline > summary::before {\n    transition: none;\n  }\n}\n';
 
 // src/shared/runtime-error.js
 function runtimeRepairDetails(report) {
@@ -223,7 +223,7 @@ async function requestJson(p, init) {
     if (isAbortError(e)) throw new Error("timeout");
     const msg = String(e && e.message || e || "");
     if (!e?.status && /failed to fetch|networkerror|load failed/i.test(msg)) {
-      throw new Error("\u8FDE\u4E0D\u4E0A\u63A5\u53E3\uFF0C\u8BF7\u786E\u8BA4 dsh \u8FD8\u5728\u8DD1\u540E Ctrl+F5");
+      throw new Error("\uC778\uD130\uD398\uC774\uC2A4\uC5D0 \uC5F0\uACB0\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. dsh \uAC00 \uC2E4\uD589 \uC911\uC778\uC9C0 \uD655\uC778\uD55C \uB4A4 Ctrl+F5 \uB97C \uB204\uB974\uC138\uC694");
     }
     throw e;
   } finally {
@@ -298,8 +298,8 @@ var __dshPurgeDrill = (() => {
 .rt-btn{border:1px solid var(--dsw-alias-border-l1);background:var(--dsw-alias-bg-layer-2);color:inherit;
   border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
 .rt-btn:hover{border-color:var(--dsw-alias-border-l2)}
-/* brand-primary \u5728\u6DF1\u8272\u4E3B\u9898\u4E0B\u662F\u8FD1\u767D\u8272\uFF08#f9fafb\uFF09\uFF0C\u5F53\u5E95\u8272\u914D #fff \u4F1A\u767D\u5E95\u767D\u5B57\u3002
-   \u6539\u7528\u6807\u7B7E\u8272/\u5E95\u8272\u8FD9\u5BF9\u53CD\u8F6C token\uFF0C\u4E24\u5957\u4E3B\u9898\u90FD\u4FDD\u6301\u9AD8\u5BF9\u6BD4\u3002 */
+/* brand-primary \uB294 \uC5B4\uB450\uC6B4 \uD14C\uB9C8\uC5D0\uC11C \uAC70\uC758 \uD770\uC0C9(#f9fafb)\uC774\uB77C, \uBC30\uACBD\uC0C9\uC5D0 #fff \uB97C \uC4F0\uBA74 \uD770 \uBC14\uD0D5\uC5D0 \uD770 \uAE00\uC790\uAC00 \uB41C\uB2E4.
+   \uB77C\uBCA8/\uBC30\uACBD \uBC18\uC804 \uD1A0\uD070\uC744 \uC4F0\uBA74 \uB450 \uD14C\uB9C8 \uBAA8\uB450 \uB300\uBE44\uAC00 \uC720\uC9C0\uB41C\uB2E4. */
 .rt-btn-primary{background:var(--dsw-alias-label-primary,#111);border-color:var(--dsw-alias-label-primary,#111);color:var(--dsw-alias-bg-base,#fff)}
 .rt-btn-primary:hover{opacity:.9}
 .rt-btn:disabled{opacity:.5;cursor:default}
@@ -308,7 +308,7 @@ var __dshPurgeDrill = (() => {
   display:inline-flex;align-items:center;gap:5px;border-bottom:2px solid transparent;margin-bottom:-1px;background:transparent}
 .rt-tab:hover{color:var(--dsw-alias-label-primary)}
 .rt-tab.on{color:var(--dsw-alias-label-primary);background:transparent;font-weight:600;border-bottom-color:var(--dsw-alias-brand-primary,#6dbf8c)}
-/* \u672A\u8BFB\u7EA2\u70B9\uFF1A\u8BE5\u9875\u7B7E\u6709\u65B0\u5185\u5BB9\uFF08\u65B0\u8D44\u4EA7/\u65B0\u6F0F\u6D1E/\u65B0\u5F97\u5206/\u65B0\u6B65\u9AA4\u2026\uFF09\uFF0C\u70B9\u5F00\u770B\u8FC7\u5C31\u6D88\u5931 */
+/* \uBBF8\uD655\uC778 \uBE68\uAC04 \uC810: \uADF8 \uD0ED\uC5D0 \uC0C8 \uB0B4\uC6A9(\uC0C8 \uC790\uC0B0/\uC0C8 \uCDE8\uC57D\uC810/\uC0C8 \uB4DD\uC810/\uC0C8 \uB2E8\uACC4\u2026)\uC774 \uC788\uC73C\uBA70, \uC5F4\uC5B4 \uBCF4\uBA74 \uC0AC\uB77C\uC9C4\uB2E4 */
 .rt-tab-dot{width:7px;height:7px;border-radius:50%;background:#ef4444;flex:none;
   box-shadow:0 0 0 2px color-mix(in srgb, #ef4444 22%, transparent)}
 .rt-body{flex:1;min-height:0;display:flex;flex-direction:column}
@@ -340,7 +340,7 @@ var __dshPurgeDrill = (() => {
 .rt-tag-active{color:#f59e0b;border-color:#f59e0b55;background:#f59e0b1a}
 .rt-tag-live{color:#10b981;border-color:#10b98155;background:#10b9811a}
 .rt-tag-warn{color:#ef4444;border-color:#ef444455;background:#ef44441a}
-/* \u7EAA\u5F8B\u63D0\u793A\u6761\uFF1A\u4E0D\u6EE1\u8DB3\u4EA4\u4ED8\u8981\u6C42\uFF08\u975E\u51B0\u874E/\u54E5\u65AF\u62C9\u9A6C\u3001\u6CA1\u6709 suo5 \u96A7\u9053\uFF09\u65F6\u9876\u5728\u533A\u5757\u6700\u4E0A\u65B9 */
+/* \uADDC\uC728 \uC548\uB0B4 \uBC14: \uB0A9\uD488 \uC694\uAC74(Behinder/Godzilla \uC178 \uC544\uB2D8, suo5 \uD130\uB110 \uC5C6\uC74C)\uC744 \uCDA9\uC871\uD558\uC9C0 \uBABB\uD560 \uB54C \uBE14\uB85D \uB9E8 \uC704\uC5D0 \uBD99\uB294\uB2E4 */
 .rt-hint{border-radius:6px;padding:7px 9px;margin-bottom:8px;font-size:11.5px;line-height:1.6;
   border:1px dashed #ef444488;background:#ef44440f;color:var(--dsw-alias-label-primary)}
 .rt-hint b{color:#ef4444}
@@ -348,7 +348,7 @@ var __dshPurgeDrill = (() => {
 .rt-expand{grid-column:1/-1;padding:8px 4px 10px;font-size:12px;color:var(--dsw-alias-label-secondary)}
 .rt-kv{display:flex;gap:8px;margin-bottom:3px;align-items:baseline}
 .rt-kv b{color:var(--dsw-alias-label-primary);font-weight:600;min-width:64px;flex:none}
-/* \u56FE\u8C31\u89C6\u56FE\u5DF2\u79FB\u9664\uFF08\u89C1 AssetsTab\uFF1A\u8D44\u4EA7\u5173\u7CFB\u7531\u300C\u57DF\u540D\u7EF4\u5EA6\u300D\u4E0E redteam_attack_path \u5DE5\u5177\u627F\u62C5\uFF09 */
+/* \uADF8\uB798\uD504 \uBDF0\uB294 \uC81C\uAC70\uB410\uB2E4(AssetsTab \uCC38\uACE0: \uC790\uC0B0 \uAD00\uACC4\uB294 \u201C\uB3C4\uBA54\uC778 \uCC28\uC6D0\u201D\uACFC redteam_attack_path \uB3C4\uAD6C\uAC00 \uB2F4\uB2F9\uD55C\uB2E4) */
 .rt-pane{flex:1;min-height:0;overflow:auto;padding:12px}
 .rt-card{border:1px solid color-mix(in srgb,var(--dsw-alias-border-l1,#444) 75%,transparent);border-radius:8px;padding:10px;margin-bottom:10px;
   background:color-mix(in srgb,var(--dsw-alias-bg-layer-2,#2a2a2a) 48%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
@@ -394,12 +394,12 @@ var __dshPurgeDrill = (() => {
 .rt-score-row.head{cursor:default;color:var(--dsw-alias-label-secondary);font-size:11.5px;font-weight:600;
   position:sticky;top:0;background:var(--dsw-alias-bg-layer-1);z-index:1}
 .rt-score-detail{grid-column:1/-1;padding:8px 4px 10px;font-size:12px;color:var(--dsw-alias-label-secondary)}
-/* \u5F97\u5206\u76EE\u6807\u6309\u5408\u5E76\u7248\u7684 8 \u4E2A\u7C7B\u522B\u5206\u7EC4\uFF1A\u7C7B\u522B\u5934 + \u7EC4\u5185\u6309\u5206\u503C\u5347\u5E8F */
+/* \uB4DD\uC810 \uBAA9\uD45C\uB294 \uBCD1\uD569\uD310\uC758 8\uAC1C \uBD84\uB958\uB85C \uBB36\uB294\uB2E4: \uBD84\uB958 \uD5E4\uB354 + \uADF8\uB8F9 \uC548\uC740 \uC810\uC218 \uC624\uB984\uCC28\uC21C */
 .rt-score-group{display:flex;align-items:center;gap:8px;padding:7px 10px 5px;margin-top:2px;
   font-size:12px;font-weight:600;border-top:1px solid var(--dsw-alias-border-l1);background:var(--dsw-alias-bg-layer-2)}
 .rt-score-group:first-child{border-top:none}
 .rt-score-group .rt-sg-sub{font-weight:400;font-size:11px;color:var(--dsw-alias-label-secondary)}
-/* \u2500\u2500 \u4F1A\u8BDD\u4E0E\u5165\u53E3\uFF1A\u6BCF\u5F20\u5361\u7247\u5206\u300C\u6807\u9898\u884C / \u5173\u952E\u4E8B\u5B9E / \u53EF\u7528\u547D\u4EE4 / \u5907\u6CE8\u300D\u56DB\u6BB5\uFF0C\u907F\u514D\u4E00\u884C\u7CCA\u5728\u4E00\u8D77 \u2500\u2500 */
+/* \u2500\u2500 \uC138\uC158\uACFC \uC9C4\uC785\uC810: \uCE74\uB4DC\uB9C8\uB2E4 \u201C\uC81C\uBAA9 \uD589 / \uD575\uC2EC \uC0AC\uC2E4 / \uC0AC\uC6A9 \uAC00\uB2A5\uD55C \uBA85\uB839 / \uBE44\uACE0\u201D \uB124 \uAD6C\uAC04\uC73C\uB85C \uB098\uB220 \uD55C \uC904\uC5D0 \uBB49\uAC1C\uC9C0\uC9C0 \uC54A\uAC8C \uD55C\uB2E4 \u2500\u2500 */
 .rt-sess-facts{display:flex;flex-direction:column;gap:2px;margin-top:5px}
 .rt-sess-fact{display:flex;gap:6px;font-size:11.5px;line-height:1.5}
 .rt-sess-fact>b{flex:none;min-width:62px;font-weight:600;color:var(--dsw-alias-label-secondary)}
@@ -549,11 +549,11 @@ var __dshPurgeDrill = (() => {
 .rt-subtab{padding:4px 10px;border-radius:6px 6px 0 0;cursor:pointer;font-size:12px;color:var(--dsw-alias-label-secondary)}
 .rt-subtab.on{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);font-weight:600}
 .rt-sevbar{width:3px;border-radius:2px;align-self:stretch;flex:none;margin-right:2px}
-/* \u2500\u2500 \u6298\u53E0\u5C42\u6B21\u4F53\u7CFB \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-   L1 \u6298\u53E0\u5934 .rt-sec   \uFF1A\u901A\u680F\u3001\u65E0\u5706\u89D2\u65E0\u8FB9\u6846\u3001\u5DE6\u8272\u6761\u3001\u6DF1\u5E95 \u2014\u2014 \u6C38\u8FDC\u662F"\u6241"\u7684
-   L2 \u5185\u5BB9\u5361 .rt-atest/.rt-hit/.rt-cred/.rt-evi\uFF1A\u5185\u7F29\u3001\u6709\u8FB9\u6846\u3001\u5706\u89D2 \u2014\u2014 \u7ACB\u8D77\u6765
-   L3 \u8BE6\u60C5/\u957F\u6587\u672C .rt-clip-body / .rt-evi-body \uFF1A\u65E0\u8FB9\u6846\u3001\u6700\u6D45\u3001\u7B49\u5BBD
-   L4 \u5B50\u9879\u5BB9\u5668 .rt-sec-body\uFF1A\u5DE6\u7F29\u8FDB + \u7AD6\u5F15\u5BFC\u7EBF\uFF0C\u8868\u660E"\u5C5E\u4E8E\u4E0A\u9762\u90A3\u4E2A\u5934"
+/* \u2500\u2500 \uC811\uD798 \uACC4\uCE35 \uCCB4\uACC4 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+   L1 \uC811\uD798 \uD5E4\uB354 .rt-sec   : \uC804\uCCB4 \uD3ED, \uB465\uADFC \uBAA8\uC11C\uB9AC\xB7\uD14C\uB450\uB9AC \uC5C6\uC74C, \uC67C\uCABD \uC0C9 \uB9C9\uB300, \uC5B4\uB450\uC6B4 \uBC14\uD0D5 \u2014 \uD56D\uC0C1 "\uD3C9\uD3C9"\uD558\uB2E4
+   L2 \uB0B4\uC6A9 \uCE74\uB4DC .rt-atest/.rt-hit/.rt-cred/.rt-evi: \uC548\uCABD\uC73C\uB85C \uB4E4\uC5EC\uC4F0\uAE30, \uD14C\uB450\uB9AC, \uB465\uADFC \uBAA8\uC11C\uB9AC \u2014 \uC138\uC6CC\uC9C4 \uB290\uB08C
+   L3 \uC0C1\uC138/\uAE34 \uD14D\uC2A4\uD2B8 .rt-clip-body / .rt-evi-body : \uD14C\uB450\uB9AC \uC5C6\uC74C, \uAC00\uC7A5 \uBC1D\uC74C, \uACE0\uC815\uD3ED
+   L4 \uD558\uC704 \uD56D\uBAA9 \uCEE8\uD14C\uC774\uB108 .rt-sec-body: \uC67C\uCABD \uB4E4\uC5EC\uC4F0\uAE30 + \uC138\uB85C \uC548\uB0B4\uC120, "\uC704\uC758 \uD5E4\uB354\uC5D0 \uC18D\uD55C\uB2E4"\uB97C \uD45C\uC2DC
    \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 .rt-sec-wrap{margin:0}
 .rt-sec{display:flex;align-items:center;gap:8px;padding:7px 12px 7px 9px;cursor:pointer;
@@ -576,7 +576,7 @@ var __dshPurgeDrill = (() => {
 .rt-sec.t-past{border-left-color:#94a3b8}
 .rt-sec-body{margin-left:12px;border-left:1px solid var(--dsw-alias-border-l1);padding:7px 0 3px 10px}
 .rt-sec-body>.rt-atest:last-child,.rt-sec-body>.rt-hit:last-child{margin-bottom:2px}
-/* \u957F\u6587\u672C\u6298\u53E0\uFF08L3\uFF09\uFF1A\u9ED8\u8BA4\u9884\u89C8 2 \u884C\u5E76\u6E10\u9690\uFF0C\u5C55\u5F00\u540E\u9650\u9AD8\u6EDA\u52A8 */
+/* \uAE34 \uD14D\uC2A4\uD2B8 \uC811\uAE30(L3): \uAE30\uBCF8 \uBBF8\uB9AC\uBCF4\uAE30 2\uC904\uC5D0 \uD398\uC774\uB4DC, \uD3BC\uCE58\uBA74 \uB192\uC774 \uC81C\uD55C \uC2A4\uD06C\uB864 */
 .rt-clip{margin-top:6px}
 .rt-clip-head{display:flex;align-items:center;gap:6px}
 .rt-clip-label{font-size:11px;color:var(--dsw-alias-label-secondary);font-weight:600}
@@ -643,7 +643,7 @@ var __dshPurgeDrill = (() => {
 .rt-rep-req-head{display:flex;align-items:center;gap:7px;padding:4px 8px;font-size:11.5px;font-weight:600;
   background:var(--dsw-alias-bg-layer-1);border-bottom:1px solid var(--dsw-alias-border-l1)}
 .rt-rep-http{margin:0;padding:8px 10px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto;background:var(--dsw-alias-bg-base)}
-/* \u2500\u2500 \u62A5\u544A\u91CC\u7684\u300C\u8FD9\u4E00\u6B65\u600E\u4E48\u6765\u7684\u300D\uFF1A\u52A8\u4F5C\u6B65\u9AA4 / \u547D\u4EE4 / \u51ED\u636E / \u96A7\u9053 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* \u2500\u2500 \uBCF4\uACE0\uC11C\uC758 \u201C\uC774 \uB2E8\uACC4\uB294 \uC5B4\uB514\uC11C \uB098\uC654\uB098\u201D: \uB3D9\uC791 \uB2E8\uACC4 / \uBA85\uB839 / \uC790\uACA9 \uC99D\uBA85 / \uD130\uB110 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 .rt-rep-trace{margin-top:8px;border:1px solid var(--dsw-alias-border-l1);border-radius:7px;padding:8px 10px;
   background:var(--dsw-alias-bg-base)}
 .rt-rep-trace-head{display:flex;align-items:center;gap:7px;margin-bottom:5px}
@@ -661,7 +661,7 @@ var __dshPurgeDrill = (() => {
 .rt-rep-step-result{font-size:11.5px;margin-top:3px;word-break:break-word}
 .rt-rep-src{margin-top:6px;padding-top:6px;border-top:1px dashed var(--dsw-alias-border-l1)}
 .rt-rep-src-title{font-weight:600;font-size:12px;margin-bottom:3px}
-/* \u2500\u2500 \u5168\u94FE\u8DEF\u653B\u51FB\u8DEF\u5F84\u56FE \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* \u2500\u2500 \uC804 \uAD6C\uAC04 \uACF5\uACA9 \uACBD\uB85C\uB3C4 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 .rt-ap{padding:10px 12px 18px;overflow:auto}
 .rt-ap-stage{margin-bottom:2px}
 .rt-ap-head{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--dsw-alias-bg-layer-2);
@@ -679,7 +679,7 @@ var __dshPurgeDrill = (() => {
 .rt-ap-pts{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;font-weight:700;color:#065f46;background:#a7f3d0;
   border:1px solid #10b98155;border-radius:10px;padding:0 7px;white-space:nowrap}
 .rt-ap-pts.off{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1);border-color:var(--dsw-alias-border-l1)}
-/* \u6309\u670D\u52A1\u5C01\u9876/\u81EA\u5EFA\u800C\u4E0D\u8BA1\u5206\u7684\u547D\u4E2D\uFF1A\u5206\u503C\u6807\u7070\uFF08+0\uFF09\uFF0C\u907F\u514D\u770B\u7740\u50CF\u53C8\u52A0\u4E86\u5206 */
+/* \uC11C\uBE44\uC2A4 \uC0C1\uD55C \uB3C4\uB2EC/\uC790\uCCB4 \uC0DD\uC131\uC73C\uB85C \uBBF8\uC9D1\uACC4\uC778 \uC801\uC911: \uC810\uC218\uB97C \uD68C\uC0C9(+0)\uC73C\uB85C \uD45C\uC2DC\uD574 \uB610 \uC810\uC218\uAC00 \uC624\uB978 \uAC83\uCC98\uB7FC \uBCF4\uC774\uC9C0 \uC54A\uAC8C \uD55C\uB2E4 */
 .rt-ap-pts.uncounted{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1);border-color:var(--dsw-alias-border-l1)}
 .rt-ap-nth{font-size:10.5px;color:var(--dsw-alias-label-secondary);white-space:nowrap}
 .rt-ap-hit{border:1px solid var(--dsw-alias-border-l1);border-left:3px solid #10b981;border-radius:6px;
@@ -696,7 +696,7 @@ var __dshPurgeDrill = (() => {
 .rt-ap-none{font-size:11.5px;color:var(--dsw-alias-label-secondary);padding:2px 0 4px}
 .rt-ap-trans{display:flex;align-items:center;gap:7px;padding:2px 0 2px 14px}
 .rt-ap-trans-t{font-size:11px;color:var(--dsw-alias-label-secondary)}
-/* \u6A2A\u5411\u8DEF\u5F84\u56FE */
+/* \uD6A1\uC801 \uACBD\uB85C\uB3C4 */
 .rt-ap-h{display:flex;align-items:stretch;padding:10px 12px 14px;overflow-x:auto;flex:1;min-height:0}
 .rt-ap-col{display:flex;align-items:stretch;flex:none}
 .rt-ap-col-arrow{align-self:center;color:var(--dsw-alias-border-l2);padding:0 6px;font-size:12px;flex:none}
@@ -729,16 +729,16 @@ var __dshPurgeDrill = (() => {
 .rt-hcol-sub.off{opacity:.6}
 .rt-hit-row{display:flex;flex-wrap:wrap;align-items:center;gap:2px 7px;font-size:11.5px;padding:4px 7px;border-radius:5px;
   background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1);margin-bottom:3px}
-/* \u8D44\u4EA7\u4E0E\u5185\u5BB9\u90FD\u81EA\u9002\u5E94\u6362\u884C\uFF1A\u957F\u57DF\u540D/\u957F\u53E3\u4EE4/\u957F\u7ED3\u679C\u4E00\u5F8B\u6362\u884C\u663E\u793A\uFF0C\u4E0D\u622A\u65AD\u6210\u7701\u7565\u53F7 */
+/* \uC790\uC0B0\uACFC \uB0B4\uC6A9 \uBAA8\uB450 \uC790\uB3D9 \uC904\uBC14\uAFC8: \uAE34 \uB3C4\uBA54\uC778/\uAE34 \uD328\uC2A4\uC6CC\uB4DC/\uAE34 \uACB0\uACFC\uB3C4 \uC904\uBC14\uAFC8\uD574 \uD45C\uC2DC\uD558\uACE0 \uB9D0\uC904\uC784\uC73C\uB85C \uC790\uB974\uC9C0 \uC54A\uB294\uB2E4 */
 .rt-hit-asset{font-family:ui-monospace,Menlo,monospace;font-weight:600;flex:0 1 auto;max-width:100%;
   overflow-wrap:anywhere;word-break:break-word}
 .rt-hit-txt{flex:1 1 100%;color:var(--dsw-alias-label-primary);line-height:1.55;
   white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
 .rt-hit-txt.none{color:var(--dsw-alias-state-error-primary)}
 .rt-hit-row .rt-hit-time{flex:none;margin-left:auto}
-/* \u81EA\u5DF1\u6CE8\u518C/\u81EA\u5EFA\u7684\u8D26\u53F7\uFF1A\u7559\u75D5\u4F46\u4E0D\u8BA1\u5206\uFF0C\u6574\u884C\u538B\u6697 */
+/* \uC9C1\uC811 \uB4F1\uB85D/\uC790\uCCB4 \uC0DD\uC131\uD55C \uACC4\uC815: \uD754\uC801\uC740 \uB0A8\uAE30\uB418 \uBBF8\uC9D1\uACC4, \uD589 \uC804\uCCB4\uB97C \uC5B4\uB461\uAC8C */
 .rt-hit-row.self-created{opacity:.72;border-left:3px solid #ef444488}
-/* \u540C\u4E00\u8D44\u4EA7\u540C\u4E00\u7AEF\u53E3\u7684\u91CD\u590D\u8D26\u53F7/\u5E93\u6743\u9650\uFF1A\u670D\u52A1\u5DF2\u62FF\u6EE1\uFF0C\u4E0D\u8BA1\u5206\uFF08\u53EA\u4F5C\u7559\u75D5\uFF09 */
+/* \uAC19\uC740 \uC790\uC0B0 \uAC19\uC740 \uD3EC\uD2B8\uC758 \uC911\uBCF5 \uACC4\uC815/DB \uAD8C\uD55C: \uC11C\uBE44\uC2A4 \uC0C1\uD55C \uB3C4\uB2EC, \uBBF8\uC9D1\uACC4(\uD754\uC801\uB9CC \uB0A8\uAE34\uB2E4) */
 .rt-hit-row.service-capped{opacity:.72;border-left:3px solid #f59e0b88}
 .rt-hit-row.service-capped .rt-hit-idx{background:#f59e0b}
 .rt-rep-group{margin-bottom:14px}
@@ -751,24 +751,24 @@ var __dshPurgeDrill = (() => {
   display:inline-flex;align-items:center;justify-content:center}
 .rt-rep-stage-name{font-weight:700;font-size:13px}
 .rt-rep-stage-n{font-size:11px;color:var(--dsw-alias-label-secondary)}
-/* \u6298\u53E0\u540E\u4ECD\u8981\u80FD\u4E00\u773C\u770B\u5230"\u8FD9\u4E00\u9636\u6BB5\u62FF\u4E86\u591A\u5C11\u5206"\uFF0C\u6240\u4EE5\u5206\u6570\u7559\u5728\u5934\u4E0A */
+/* \uC811\uD78C \uC0C1\uD0DC\uC5D0\uC11C\uB3C4 "\uC774 \uB2E8\uACC4\uC5D0\uC11C \uBA87 \uC810\uC744 \uB544\uB294\uC9C0" \uD55C\uB208\uC5D0 \uBCF4\uC5EC\uC57C \uD558\uBBC0\uB85C \uC810\uC218\uB97C \uD5E4\uB354\uC5D0 \uB0A8\uAE34\uB2E4 */
 .rt-rep-pts{font-size:11px;font-weight:600;padding:1px 6px;border-radius:5px;border:1px solid transparent;flex:none}
 .rt-rep-body{padding-left:6px}
-/* \u2500\u2500 \u77E5\u8BC6\u5E93\uFF08POC/EXP\uFF09 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* \u2500\u2500 \uC9C0\uC2DD \uBCA0\uC774\uC2A4(POC/EXP) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 .rt-kb-filter{display:flex;align-items:center;gap:7px;padding:8px 10px;border-bottom:1px solid var(--dsw-alias-border-l1)}
-/* \u77E5\u8BC6\u5E93\u5F52\u7C7B\u603B\u89C8\uFF1A\u4E00\u884C\u6807\u7B7E\uFF0C\u70B9\u4E00\u4E0B\u6309\u8BE5\u7C7B\u7B5B\u9009 */
+/* \uC9C0\uC2DD \uBCA0\uC774\uC2A4 \uBD84\uB958 \uAC1C\uC694: \uD55C \uC904 \uB77C\uBCA8, \uD55C \uBC88 \uB204\uB974\uBA74 \uADF8 \uBD84\uB958\uB85C \uD544\uD130\uB41C\uB2E4 */
 .rt-kb-cats{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid var(--dsw-alias-border-l1)}
-/* \u77E5\u8BC6\u5E93\u5206\u7EC4\u6807\u9898\uFF08\u6309\u5F52\u7C7B\u5206\u7EC4\u65F6\u6BCF\u7EC4\u4E00\u6761\uFF09 */
+/* \uC9C0\uC2DD \uBCA0\uC774\uC2A4 \uADF8\uB8F9 \uD5E4\uB354(\uBD84\uB958\uBCC4 \uADF8\uB8F9\uC77C \uB54C \uADF8\uB8F9\uB9C8\uB2E4 \uD558\uB098) */
 .rt-kb-cat{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--dsw-alias-bg-layer-2);
   border-bottom:1px solid var(--dsw-alias-border-l1);position:sticky;top:0;z-index:1}
 .rt-kb-cat-name{font-weight:600;font-size:12.5px}
-/* \u6280\u80FD\u53EF\u7528\u6027\u5FBD\u7AE0\uFF08\u6280\u80FD\u5E93\u9875\u7B7E\uFF09 */
+/* \uC2A4\uD0AC \uC0AC\uC6A9 \uAC00\uB2A5\uC131 \uBC30\uC9C0(\uC2A4\uD0AC \uB77C\uC774\uBE0C\uB7EC\uB9AC \uD0ED) */
 .rt-avail{display:inline-block;padding:0 5px;border-radius:4px;font-size:10.5px;white-space:nowrap;
   border:1px solid var(--dsw-alias-border-l1);color:var(--dsw-alias-label-secondary)}
 .rt-avail-available{color:#10b981;border-color:#10b98155;background:#10b9811a}
 .rt-avail-broken{color:#ef4444;border-color:#ef444455;background:#ef44441a}
 .rt-avail-unknown{color:#94a3b8;border-color:#94a3b855;background:#94a3b81a}
-/* \u7248\u672C / \u66F4\u65B0\u5F39\u7A97 */
+/* \uBC84\uC804 / \uC5C5\uB370\uC774\uD2B8 \uBAA8\uB2EC */
 .rt-modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}
 .rt-modal-box{width:min(560px,92vw);max-height:80vh;overflow:auto;background:var(--dsw-alias-bg-layer-1);
   border:1px solid var(--dsw-alias-border-l1);border-radius:10px;padding:14px 16px;font-size:12.5px;line-height:1.7;
@@ -793,7 +793,7 @@ var __dshPurgeDrill = (() => {
 .rt-kb-body{padding:0 9px 9px}
 .rt-kb-actions{display:flex;gap:6px;margin:7px 0}
 .rt-kb-body .rt-kv span{overflow-wrap:anywhere;word-break:break-word}
-/* \u672C\u673A nuclei \u6A21\u677F\u547D\u4E2D\uFF1A\u8DEF\u5F84\u8981\u80FD\u5B8C\u6574\u770B\u5230\uFF08\u590D\u5236\u6210\u547D\u4EE4\u76F4\u63A5\u8DD1\uFF09 */
+/* \uC774 PC nuclei \uD15C\uD50C\uB9BF \uC801\uC911: \uACBD\uB85C\uAC00 \uC804\uBD80 \uBCF4\uC5EC\uC57C \uD55C\uB2E4(\uBA85\uB839\uC73C\uB85C \uBCF5\uC0AC\uD574 \uBC14\uB85C \uC2E4\uD589) */
 .rt-kb-tpl{margin-top:12px;border-top:1px dashed var(--dsw-alias-border-l1);padding-top:8px}
 .rt-kb-tpl-row{display:flex;align-items:center;gap:7px;font-size:11.5px;padding:3px 7px;border-radius:5px;
   background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1);margin-bottom:3px}
@@ -876,29 +876,29 @@ var __dshPurgeDrill = (() => {
     return st;
   };
   const POC_CAT_NAME = {
-    rce: "\u8FDC\u7A0B\u547D\u4EE4\u6267\u884C",
-    deserialization: "\u53CD\u5E8F\u5217\u5316",
-    "file-upload": "\u6587\u4EF6\u4E0A\u4F20 getshell",
-    sqli: "SQL \u6CE8\u5165",
-    unauthorized: "\u672A\u6388\u6743\u8BBF\u95EE",
-    "auth-bypass": "\u8BA4\u8BC1\u7ED5\u8FC7 / \u8D8A\u6743",
-    "weak-password": "\u5F31\u53E3\u4EE4 / \u7206\u7834",
+    rce: "\uC6D0\uACA9 \uBA85\uB839 \uC2E4\uD589",
+    deserialization: "\uC5ED\uC9C1\uB82C\uD654",
+    "file-upload": "\uD30C\uC77C \uC5C5\uB85C\uB4DC getshell",
+    sqli: "SQL \uC778\uC81D\uC158",
+    unauthorized: "\uBE44\uC778\uAC00 \uC811\uADFC",
+    "auth-bypass": "\uC778\uC99D \uC6B0\uD68C / \uAD8C\uD55C \uC6B0\uD68C",
+    "weak-password": "\uC57D\uD55C \uBE44\uBC00\uBC88\uD638 / \uBE0C\uB8E8\uD2B8\uD3EC\uC2A4",
     ssrf: "SSRF",
     xxe: "XXE",
-    "path-traversal": "\u76EE\u5F55\u7A7F\u8D8A / \u4EFB\u610F\u6587\u4EF6\u8BFB",
-    "info-leak": "\u4FE1\u606F\u6CC4\u9732",
-    privesc: "\u63D0\u6743 / \u6A2A\u5411",
-    tunnel: "\u96A7\u9053 / \u4EE3\u7406",
-    other: "\u5176\u5B83"
+    "path-traversal": "\uB514\uB809\uD130\uB9AC \uD2B8\uB798\uBC84\uC124 / \uC784\uC758 \uD30C\uC77C \uC77D\uAE30",
+    "info-leak": "\uC815\uBCF4 \uC720\uCD9C",
+    privesc: "\uAD8C\uD55C \uC0C1\uC2B9 / \uD6A1\uC801",
+    tunnel: "\uD130\uB110 / \uD504\uB85D\uC2DC",
+    other: "\uAE30\uD0C0"
   };
   const POC_CAT_ORDER = Object.keys(POC_CAT_NAME);
   const ROLE_LABEL = {
-    plan: "\u4E3B\u4F1A\u8BDD\uFF08\u6307\u6325\uFF09",
-    recon: "\u4FE1\u606F\u6536\u96C6",
-    assess: "\u8D44\u4EA7\u68B3\u7406",
-    "vuln-scan": "\u6F0F\u6D1E\u53D1\u73B0",
-    exploit: "\u6F0F\u6D1E\u5229\u7528",
-    internal: "\u5185\u7F51\u6E17\u900F"
+    plan: "\uC8FC \uC138\uC158(\uC9C0\uD718)",
+    recon: "\uC815\uBCF4 \uC218\uC9D1",
+    assess: "\uC790\uC0B0 \uC815\uB9AC",
+    "vuln-scan": "\uCDE8\uC57D\uC810 \uBC1C\uACAC",
+    exploit: "\uCDE8\uC57D\uC810 \uC775\uC2A4\uD50C\uB85C\uC787",
+    internal: "\uB0B4\uBD80\uB9DD \uCE68\uD22C"
   };
   const fmt = (s) => s ? String(s).replace("T", " ").slice(0, 16) : "\u2014";
   const shotCache = /* @__PURE__ */ new Map();
@@ -925,7 +925,7 @@ var __dshPurgeDrill = (() => {
     });
     shotLoading.set(key, p);
   };
-  const SHOT_KIND = { screenshot: "\u73B0\u573A\u622A\u56FE", card: "\u8BB0\u5F55\u751F\u6210\u7684\u8BC1\u636E\u6458\u5F55" };
+  const SHOT_KIND = { screenshot: "\uD604\uC7A5 \uC2A4\uD06C\uB9B0\uC0F7", card: "\uAE30\uB85D\uC5D0\uC11C \uC0DD\uC131\uD55C \uC99D\uAC70 \uBC1C\uCDCC" };
   const ShotImage = ({ eng, shot, height }) => {
     const [zoom, setZoom] = import_react2.default.useState(false);
     const src = shotSrc(eng, shot.id);
@@ -942,11 +942,11 @@ var __dshPurgeDrill = (() => {
           className: "rt-shot-thumb rt-shot-loading",
           style: { height: (height || 96) + "px" }
         },
-        "\u8F7D\u5165\u4E2D\u2026"
+        "\uBD88\uB7EC\uC624\uB294 \uC911\u2026"
       ) : h2("img", {
         className: "rt-shot-thumb",
         src,
-        alt: shot.label || "\u8BC1\u636E " + shot.id,
+        alt: shot.label || "\uC99D\uAC70 " + shot.id,
         style: { height: (height || 96) + "px", cursor: "zoom-in" },
         onClick: () => setZoom(true)
       }),
@@ -957,9 +957,9 @@ var __dshPurgeDrill = (() => {
           "span",
           {
             className: "rt-tag " + (card ? "rt-tag-warn" : "rt-tag-live"),
-            title: card ? "\u7531\u5F53\u65E5\u8BB0\u5F55\u751F\u6210\u7684\u8BC1\u636E\u6458\u5F55\uFF0C\u4E0D\u662F\u73B0\u573A\u622A\u56FE \u2014\u2014 \u62A5\u544A\u91CC\u540C\u6837\u4F1A\u6807\u6CE8" : "\u73B0\u573A\u622A\u56FE"
+            title: card ? "\uB2F9\uC77C \uAE30\uB85D\uC5D0\uC11C \uC0DD\uC131\uD55C \uC99D\uAC70 \uBC1C\uCDCC\uC774\uBA70 \uD604\uC7A5 \uC2A4\uD06C\uB9B0\uC0F7\uC774 \uC544\uB2D9\uB2C8\uB2E4. \uBCF4\uACE0\uC11C\uC5D0\uB3C4 \uAC19\uC740 \uD45C\uAE30\uAC00 \uB4E4\uC5B4\uAC11\uB2C8\uB2E4" : "\uD604\uC7A5 \uC2A4\uD06C\uB9B0\uC0F7"
           },
-          SHOT_KIND[shot.kind] || shot.kind || "\u8BC1\u636E"
+          SHOT_KIND[shot.kind] || shot.kind || "\uC99D\uAC70"
         ),
         h2(
           "span",
@@ -974,7 +974,7 @@ var __dshPurgeDrill = (() => {
         h2(
           "div",
           { className: "rt-shot-zoom-cap" },
-          (shot.label || shot.target || "") + (card ? "\u3000\xB7\u3000\u7531\u5F53\u65E5\u8BB0\u5F55\u751F\u6210\uFF08\u975E\u73B0\u573A\u622A\u56FE\uFF09" : "") + (shot.captured_at ? "\u3000\xB7\u3000" + fmt(shot.captured_at) : "") + "\u3000\xB7\u3000\u70B9\u51FB\u4EFB\u610F\u5904\u5173\u95ED"
+          (shot.label || shot.target || "") + (card ? " \xB7 \uB2F9\uC77C \uAE30\uB85D\uC5D0\uC11C \uC0DD\uC131(\uD604\uC7A5 \uC2A4\uD06C\uB9B0\uC0F7 \uC544\uB2D8)" : "") + (shot.captured_at ? " \xB7 " + fmt(shot.captured_at) : "") + " \xB7 \uC544\uBB34 \uACF3\uC774\uB098 \uD074\uB9AD\uD558\uBA74 \uB2EB\uD799\uB2C8\uB2E4"
         )
       ) : null
     );
@@ -988,11 +988,11 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-shots-head" },
-        h2("b", null, title || "\u8BC1\u636E\u622A\u56FE"),
+        h2("b", null, title || "\uC99D\uAC70 \uC2A4\uD06C\uB9B0\uC0F7"),
         h2(
           "span",
           { className: "rt-shots-n" },
-          "\u663E\u793A " + list.length + " \u5F20" + (total && total > list.length ? "\uFF08\u8BE5\u5F97\u5206\u70B9\u5171 " + total + " \u5F20\uFF0C\u53D6\u4EE3\u8868\u56FE\uFF09" : "")
+          "\uD45C\uC2DC " + list.length + "\uC7A5" + (total && total > list.length ? "(\uD574\uB2F9 \uC810\uC218 \uD56D\uBAA9 \uCD1D " + total + "\uC7A5, \uB300\uD45C \uC774\uBBF8\uC9C0\uB9CC \uD45C\uC2DC)" : "")
         )
       ),
       h2(
@@ -1008,7 +1008,7 @@ var __dshPurgeDrill = (() => {
     const t = String(s || "").replace("T", " ");
     return t.length >= 16 ? t.slice(5, 16) : t || "\u2014";
   };
-  const provLabel = (p) => p === "passive" ? "\u88AB\u52A8" : p === "active" ? "\u4E3B\u52A8" : "\u672A\u77E5";
+  const provLabel = (p) => p === "passive" ? "\uC218\uB3D9" : p === "active" ? "\uB2A5\uB3D9" : "\uC54C \uC218 \uC5C6\uC74C";
   const clickable = (onActivate, options = {}) => {
     const props = {
       role: "button",
@@ -1054,12 +1054,12 @@ var __dshPurgeDrill = (() => {
   };
   const copyWithFeedback = async (text, label, onResult) => {
     const okFlag = await copyText(text);
-    const message = okFlag ? "\u5DF2\u590D\u5236\uFF1A" + label : "\u590D\u5236\u5931\u8D25\uFF08\u6D4F\u89C8\u5668\u672A\u6388\u6743\u526A\u8D34\u677F\uFF09\u2014\u2014 \u8BF7\u624B\u52A8\u9009\u4E2D\u6587\u672C\u590D\u5236";
+    const message = okFlag ? "\uBCF5\uC0AC\uB428: " + label : "\uBCF5\uC0AC \uC2E4\uD328(\uBE0C\uB77C\uC6B0\uC800\uAC00 \uD074\uB9BD\uBCF4\uB4DC\uB97C \uD5C8\uC6A9\uD558\uC9C0 \uC54A\uC74C) \u2014 \uD14D\uC2A4\uD2B8\uB97C \uC9C1\uC811 \uC120\uD0DD\uD574 \uBCF5\uC0AC\uD558\uC138\uC694";
     if (typeof onResult === "function") onResult(okFlag, message);
     return okFlag;
   };
   function ProvTag(props) {
-    if (!props.p) return h2("span", { className: "rt-tag" }, "\u672A\u77E5");
+    if (!props.p) return h2("span", { className: "rt-tag" }, "\uC54C \uC218 \uC5C6\uC74C");
     return h2(
       "span",
       { className: "rt-tag rt-tag-" + props.p },
@@ -1067,16 +1067,16 @@ var __dshPurgeDrill = (() => {
     );
   }
   const TEST_LABEL = {
-    untested: "\u672A\u6D4B\u8BD5",
-    testing: "\u6D4B\u8BD5\u4E2D",
-    tested: "\u5DF2\u6D4B\u8BD5",
-    blocked: "\u88AB\u5C01\u7981",
-    abandoned: "\u5DF2\u653E\u5F03",
-    no_surface: "\u65E0\u653B\u51FB\u9762"
+    untested: "\uBBF8\uD14C\uC2A4\uD2B8",
+    testing: "\uD14C\uC2A4\uD2B8 \uC911",
+    tested: "\uD14C\uC2A4\uD2B8 \uC644\uB8CC",
+    blocked: "\uCC28\uB2E8\uB428",
+    abandoned: "\uD3EC\uAE30",
+    no_surface: "\uACF5\uACA9 \uD45C\uBA74 \uC5C6\uC74C"
   };
-  const PRI_LABEL = { high: "\u9AD8", medium: "\u4E2D", low: "\u4F4E" };
+  const PRI_LABEL = { high: "\uB192\uC74C", medium: "\uBCF4\uD1B5", low: "\uB0AE\uC74C" };
   function PriTag(props) {
-    if (!props.p) return h2("span", { className: "rt-tag" }, "\u672A\u8BC4");
+    if (!props.p) return h2("span", { className: "rt-tag" }, "\uBBF8\uD3C9\uAC00");
     return h2(
       "span",
       { className: "rt-pri rt-pri-" + props.p, title: props.title || "" },
@@ -1146,7 +1146,7 @@ var __dshPurgeDrill = (() => {
           if (!r || r.ok === false) {
             setState({
               loading: false,
-              error: r && r.error || "\u67E5\u8BE2\u5931\u8D25",
+              error: r && r.error || "\uC870\uD68C \uC2E4\uD328",
               total: 0,
               items: []
             });
@@ -1232,13 +1232,13 @@ var __dshPurgeDrill = (() => {
               setCidr(null);
             },
             {
-              label: "\u5168\u90E8 C \u6BB5",
+              label: "\uC804\uCCB4 C \uBE14\uB85D",
               expanded: cidr === null && view !== "testing"
             }
           )
         ),
-        h2("div", { className: "rt-seg-cidr" }, "\u5168\u90E8 C \u6BB5"),
-        h2("div", { className: "rt-seg-meta" }, segs.length + " \u4E2A\u7F51\u6BB5")
+        h2("div", { className: "rt-seg-cidr" }, "\uC804\uCCB4 C \uBE14\uB85D"),
+        h2("div", { className: "rt-seg-meta" }, segs.length + "\uAC1C \uB300\uC5ED")
       )
     );
     sideChildren.push(
@@ -1248,14 +1248,14 @@ var __dshPurgeDrill = (() => {
           {
             key: "testing",
             className: "rt-seg" + (view === "testing" ? " on" : ""),
-            title: "\u6B63\u5728\u8DD1\u7684\u626B\u63CF / \u63A2\u6D4B\u4E0E\u8FDB\u5EA6\uFF085 \u79D2\u81EA\u52A8\u5237\u65B0\uFF09"
+            title: "\uC2E4\uD589 \uC911\uC778 \uC2A4\uCE94 / \uD0D0\uC9C0\uC640 \uC9C4\uD589\uB960(5\uCD08 \uC790\uB3D9 \uC0C8\uB85C\uACE0\uCE68)"
           },
           clickable(
             () => {
               setView("testing");
               setCidr(null);
             },
-            { label: "\u5F53\u524D\u6D4B\u8BD5", expanded: view === "testing" }
+            { label: "\uD604\uC7AC \uD14C\uC2A4\uD2B8", expanded: view === "testing" }
           )
         ),
         h2(
@@ -1268,13 +1268,13 @@ var __dshPurgeDrill = (() => {
             "span",
             {
               className: "rt-scope rt-scope-testing",
-              title: "\u5F53\u524D\u6D4B\u8BD5\uFF08\u65E2\u975E\u5185\u7F51\u4E5F\u975E\u5916\u7F51\uFF09"
+              title: "\uD604\uC7AC \uD14C\uC2A4\uD2B8(\uB0B4\uBD80\uB9DD\uB3C4 \uC678\uBD80\uB9DD\uB3C4 \uC544\uB2D8)"
             },
-            "\u6D4B"
+            "\uD604\uC7AC"
           ),
-          h2("span", { style: { flex: 1 } }, "\u5F53\u524D\u6D4B\u8BD5")
+          h2("span", { style: { flex: 1 } }, "\uD604\uC7AC \uD14C\uC2A4\uD2B8")
         ),
-        h2("div", { className: "rt-seg-meta" }, "\u6B63\u5728\u8DD1\u7684\u626B\u63CF\u4E0E\u63A2\u6D4B")
+        h2("div", { className: "rt-seg-meta" }, "\uC2E4\uD589 \uC911\uC778 \uC2A4\uCE94\uACFC \uD0D0\uC9C0")
       )
     );
     const segBlock = (title, list, kind) => {
@@ -1289,7 +1289,7 @@ var __dshPurgeDrill = (() => {
             role: "button",
             tabIndex: 0,
             "aria-expanded": open ? "true" : "false",
-            title: (open ? "\u6536\u8D77\u672C\u7EC4" : "\u5C55\u5F00\u672C\u7EC4") + "\uFF08\u5E76\u5207\u56DE\u8D44\u4EA7\u5217\u8868\uFF09",
+            title: (open ? "\uC774 \uADF8\uB8F9 \uC811\uAE30" : "\uC774 \uADF8\uB8F9 \uD3BC\uCE58\uAE30") + "(\uC790\uC0B0 \uBAA9\uB85D\uC73C\uB85C\uB3C4 \uC804\uD658)",
             onClick: () => {
               setView("list");
               toggle();
@@ -1306,14 +1306,14 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { className: "rt-scope rt-scope-" + kind },
-            kind === "internal" ? "\u5185\u7F51" : "\u5916\u7F51"
+            kind === "internal" ? "\uB0B4\uBD80\uB9DD" : "\uC678\uBD80\uB9DD"
           ),
-          h2("span", null, title + " \xB7 " + list.length + " \u4E2A C \u6BB5"),
+          h2("span", null, title + " \xB7 " + list.length + "\uAC1C C \uBE14\uB85D"),
           h2("span", { className: "rt-spacer" }),
           h2(
             "span",
             { style: { fontWeight: 400 } },
-            list.reduce((n, x) => n + (x.assets || 0), 0) + " \u8D44\u4EA7"
+            list.reduce((n, x) => n + (x.assets || 0), 0) + "\uAC1C \uC790\uC0B0"
           )
         )
       ];
@@ -1326,7 +1326,7 @@ var __dshPurgeDrill = (() => {
               {
                 key: s.cidr,
                 className: "rt-seg" + (cidr === s.cidr ? " on" : ""),
-                title: (s.org || "\u672A\u77E5\u5F52\u5C5E") + " \xB7 \u5B58\u6D3B " + (s.live || 0) + "/" + (s.assets || 0) + " \u53F0"
+                title: (s.org || "\uC18C\uC720 \uBD88\uBA85") + " \xB7 \uC0DD\uC874 " + (s.live || 0) + "/" + (s.assets || 0) + "\uB300"
               },
               clickable(
                 () => {
@@ -1334,7 +1334,7 @@ var __dshPurgeDrill = (() => {
                   setCidr(s.cidr);
                 },
                 {
-                  label: "\u7B5B\u9009 C \u6BB5 " + s.cidr,
+                  label: "C \uBE14\uB85D \uD544\uD130 " + s.cidr,
                   expanded: cidr === s.cidr && view !== "testing"
                 }
               )
@@ -1348,7 +1348,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "span",
                 { className: "rt-scope rt-scope-" + kind },
-                kind === "internal" ? "\u5185" : "\u5916"
+                kind === "internal" ? "\uB0B4" : "\uC678"
               ),
               h2("span", { style: { flex: 1 } }, s.cidr),
               h2(
@@ -1357,7 +1357,7 @@ var __dshPurgeDrill = (() => {
                   className: "rt-seg-meta",
                   style: { margin: 0, whiteSpace: "nowrap" }
                 },
-                s.assets + " \u53F0"
+                s.assets + "\uB300"
               )
             )
           )
@@ -1368,9 +1368,9 @@ var __dshPurgeDrill = (() => {
     const segExternal = segs.filter((x) => x.scope !== "internal");
     const segInternal = segs.filter((x) => x.scope === "internal");
     if (segExternal.length)
-      sideChildren.push(...segBlock("\u5916\u7F51\u8D44\u4EA7", segExternal, "external"));
+      sideChildren.push(...segBlock("\uC678\uBD80\uB9DD \uC790\uC0B0", segExternal, "external"));
     if (segInternal.length)
-      sideChildren.push(...segBlock("\u5185\u7F51\u8D44\u4EA7", segInternal, "internal"));
+      sideChildren.push(...segBlock("\uB0B4\uBD80\uB9DD \uC790\uC0B0", segInternal, "internal"));
     const side = h2("div", { className: "rt-side" }, sideChildren);
     const toolbar = h2(
       "div",
@@ -1378,7 +1378,7 @@ var __dshPurgeDrill = (() => {
       h2("input", {
         className: "rt-input",
         style: { flex: "1 1 150px" },
-        placeholder: "\u641C\u7D22 IP / \u57DF\u540D / \u6307\u7EB9\uFF08\u56DE\u8F66\uFF09",
+        placeholder: "IP / \uB3C4\uBA54\uC778 / \uC9C0\uBB38 \uAC80\uC0C9(Enter)",
         value: q,
         onChange: (e) => setQ(e.target.value),
         onKeyDown: (e) => {
@@ -1388,19 +1388,19 @@ var __dshPurgeDrill = (() => {
       h2(
         "button",
         { className: "rt-btn", onClick: () => setQApplied(q) },
-        "\u641C\u7D22"
+        "\uAC80\uC0C9"
       ),
       h2("input", {
         className: "rt-input",
         style: { width: "78px" },
-        placeholder: "\u670D\u52A1",
+        placeholder: "\uC11C\uBE44\uC2A4",
         value: service,
         onChange: (e) => setService(e.target.value)
       }),
       h2("input", {
         className: "rt-input",
         style: { width: "60px" },
-        placeholder: "\u7AEF\u53E3",
+        placeholder: "\uD3EC\uD2B8",
         value: port,
         onChange: (e) => setPort(e.target.value)
       }),
@@ -1411,9 +1411,9 @@ var __dshPurgeDrill = (() => {
           value: scope,
           onChange: (e) => setScope(e.target.value)
         },
-        h2("option", { value: "" }, "\u5185\u5916\u7F51\u4E0D\u9650"),
-        h2("option", { value: "external" }, "\u4EC5\u5916\u7F51\u8D44\u4EA7"),
-        h2("option", { value: "internal" }, "\u4EC5\u5185\u7F51\u8D44\u4EA7")
+        h2("option", { value: "" }, "\uB0B4\uC678\uBD80 \uBB34\uAD00"),
+        h2("option", { value: "external" }, "\uC678\uBD80\uB9DD \uC790\uC0B0\uB9CC"),
+        h2("option", { value: "internal" }, "\uB0B4\uBD80\uB9DD \uC790\uC0B0\uB9CC")
       ),
       h2(
         "select",
@@ -1421,11 +1421,11 @@ var __dshPurgeDrill = (() => {
           className: "rt-input",
           value: prov,
           onChange: (e) => setProv(e.target.value),
-          title: "\u6309\u7AEF\u53E3\u6765\u6E90\u8FC7\u6EE4\uFF08\u5217\u8868\u5DF2\u4E0D\u518D\u5355\u5217\u663E\u793A\uFF0C\u8BE6\u60C5\u91CC\u53EF\u89C1\uFF09"
+          title: "\uD3EC\uD2B8 \uCD9C\uCC98\uB85C \uD544\uD130(\uBAA9\uB85D\uC5D0\uB294 \uB354 \uC774\uC0C1 \uBCC4\uB3C4 \uC5F4\uB85C \uB098\uC624\uC9C0 \uC54A\uACE0 \uC0C1\uC138\uC5D0\uC11C \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4)"
         },
-        h2("option", { value: "" }, "\u6765\u6E90\u4E0D\u9650"),
-        h2("option", { value: "passive" }, "\u4EC5\u88AB\u52A8"),
-        h2("option", { value: "active" }, "\u4EC5\u4E3B\u52A8")
+        h2("option", { value: "" }, "\uCD9C\uCC98 \uBB34\uAD00"),
+        h2("option", { value: "passive" }, "\uC218\uB3D9\uB9CC"),
+        h2("option", { value: "active" }, "\uB2A5\uB3D9\uB9CC")
       ),
       h2(
         "select",
@@ -1434,10 +1434,10 @@ var __dshPurgeDrill = (() => {
           value: priority,
           onChange: (e) => setPriority(e.target.value)
         },
-        h2("option", { value: "" }, "\u6613\u6253\u6027\u4E0D\u9650"),
-        h2("option", { value: "high" }, "\u6613\u6253\uFF08\u9AD8\uFF09"),
-        h2("option", { value: "medium" }, "\u4E00\u822C\uFF08\u4E2D\uFF09"),
-        h2("option", { value: "low" }, "\u96BE\u6253\uFF08\u4F4E\uFF09")
+        h2("option", { value: "" }, "\uACF5\uB7B5 \uC6A9\uC774\uC131 \uBB34\uAD00"),
+        h2("option", { value: "high" }, "\uC26C\uC6C0(\uB192\uC74C)"),
+        h2("option", { value: "medium" }, "\uBCF4\uD1B5(\uC911\uAC04)"),
+        h2("option", { value: "low" }, "\uC5B4\uB824\uC6C0(\uB0AE\uC74C)")
       ),
       h2(
         "select",
@@ -1446,25 +1446,25 @@ var __dshPurgeDrill = (() => {
           value: testStatus,
           onChange: (e) => setTestStatus(e.target.value)
         },
-        h2("option", { value: "" }, "\u6D4B\u8BD5\u72B6\u6001\u4E0D\u9650"),
-        h2("option", { value: "untested" }, "\u672A\u6D4B\u8BD5"),
-        h2("option", { value: "testing" }, "\u6D4B\u8BD5\u4E2D"),
-        h2("option", { value: "tested" }, "\u5DF2\u6D4B\u8BD5"),
-        h2("option", { value: "blocked" }, "\u88AB\u5C01\u7981"),
-        h2("option", { value: "abandoned" }, "\u5DF2\u653E\u5F03"),
-        h2("option", { value: "no_surface" }, "\u65E0\u653B\u51FB\u9762")
+        h2("option", { value: "" }, "\uD14C\uC2A4\uD2B8 \uC0C1\uD0DC \uBB34\uAD00"),
+        h2("option", { value: "untested" }, "\uBBF8\uD14C\uC2A4\uD2B8"),
+        h2("option", { value: "testing" }, "\uD14C\uC2A4\uD2B8 \uC911"),
+        h2("option", { value: "tested" }, "\uD14C\uC2A4\uD2B8 \uC644\uB8CC"),
+        h2("option", { value: "blocked" }, "\uCC28\uB2E8\uB428"),
+        h2("option", { value: "abandoned" }, "\uD3EC\uAE30"),
+        h2("option", { value: "no_surface" }, "\uACF5\uACA9 \uD45C\uBA74 \uC5C6\uC74C")
       ),
       h2("div", { className: "rt-spacer" }),
       h2(
         "button",
         {
           className: "rt-btn",
-          title: "\u91CD\u65B0\u62C9\u53D6\u5FEB\u7167\u4E0E\u5F53\u524D\u89C6\u56FE\u6570\u636E",
+          title: "\uC2A4\uB0C5\uC0F7\uACFC \uD604\uC7AC \uBDF0 \uB370\uC774\uD130\uB97C \uB2E4\uC2DC \uAC00\uC838\uC635\uB2C8\uB2E4",
           onClick: () => {
             if (onRefresh) onRefresh();
           }
         },
-        "\u5237\u65B0"
+        "\uC0C8\uB85C\uACE0\uCE68"
       ),
       h2(
         "button",
@@ -1472,16 +1472,16 @@ var __dshPurgeDrill = (() => {
           className: "rt-btn" + (view === "list" ? " rt-btn-primary" : ""),
           onClick: () => setView("list")
         },
-        "\u5217\u8868"
+        "\uBAA9\uB85D"
       ),
       h2(
         "button",
         {
           className: "rt-btn" + (view === "timeline" ? " rt-btn-primary" : ""),
-          title: "\u6309\u53D1\u73B0\u65F6\u95F4\u770B\u8D44\u4EA7\uFF08\u4EC0\u4E48\u65F6\u5019\u53D1\u73B0\u3001\u54EA\u5929\u6536\u4E86\u591A\u5C11\uFF09",
+          title: "\uBC1C\uACAC \uC2DC\uAC01 \uAE30\uC900\uC73C\uB85C \uC790\uC0B0 \uBCF4\uAE30(\uC5B8\uC81C \uBC1C\uACAC\uD588\uACE0 \uC5B4\uB290 \uB0A0 \uC5BC\uB9C8\uB098 \uBAA8\uC558\uB294\uC9C0)",
           onClick: () => setView("timeline")
         },
-        "\u53D1\u73B0\u65F6\u95F4"
+        "\uBC1C\uACAC \uC2DC\uAC01"
       ),
       h2(
         "button",
@@ -1489,7 +1489,7 @@ var __dshPurgeDrill = (() => {
           className: "rt-btn" + (view === "domain" ? " rt-btn-primary" : ""),
           onClick: () => setView("domain")
         },
-        "\u57DF\u540D"
+        "\uB3C4\uBA54\uC778"
       ),
       h2(
         "button",
@@ -1509,10 +1509,10 @@ var __dshPurgeDrill = (() => {
         {
           key,
           className: "rt-concl-i" + (active ? " on" : ""),
-          title: "\u70B9\u51FB\u7B5B\u9009 / \u518D\u70B9\u53D6\u6D88"
+          title: "\uD074\uB9AD\uD558\uBA74 \uD544\uD130 / \uB2E4\uC2DC \uD074\uB9AD\uD558\uBA74 \uD574\uC81C"
         },
         clickable(onClick, {
-          label: "\u6309\u300C" + label + "\u300D\u7B5B\u9009\uFF08" + (value || 0) + "\uFF09",
+          label: "\u201C" + label + "\u201D\uB85C \uD544\uD130(" + (value || 0) + ")",
           expanded: active
         })
       ),
@@ -1526,7 +1526,7 @@ var __dshPurgeDrill = (() => {
     const conclusion = h2(
       "div",
       { className: "rt-concl" },
-      conclItem("all", "\u53F0\u8D44\u4EA7", snapStats.assets, noFilter, () => {
+      conclItem("all", "\uAC1C \uC790\uC0B0", snapStats.assets, noFilter, () => {
         setTestStatus("");
         setPriority("");
         setScope("");
@@ -1536,7 +1536,7 @@ var __dshPurgeDrill = (() => {
       }),
       conclItem(
         "live",
-        "\u5B58\u6D3B",
+        "\uC0DD\uC874",
         snapStats.liveAssets,
         assetState === "live",
         () => {
@@ -1546,28 +1546,28 @@ var __dshPurgeDrill = (() => {
       ),
       conclItem(
         "untested",
-        "\u5F85\u6D4B",
+        "\uB300\uAE30",
         tests.untested,
         testStatus === "untested",
         () => toggleTest("untested")
       ),
       conclItem(
         "testing",
-        "\u6D4B\u8BD5\u4E2D",
+        "\uD14C\uC2A4\uD2B8 \uC911",
         tests.testing,
         testStatus === "testing",
         () => toggleTest("testing")
       ),
       conclItem(
         "tested",
-        "\u5DF2\u6D4B",
+        "\uC644\uB8CC",
         tests.tested,
         testStatus === "tested",
         () => toggleTest("tested")
       ),
       conclItem(
         "giveup",
-        "\u653E\u5F03",
+        "\uD3EC\uAE30",
         (tests.abandoned || 0) + (tests.blocked || 0),
         testStatus === "abandoned,blocked",
         () => toggleTest("abandoned,blocked")
@@ -1579,23 +1579,23 @@ var __dshPurgeDrill = (() => {
           className: "rt-input",
           value: sort,
           onChange: (e) => setSort(e.target.value),
-          title: "\u5217\u8868\u6392\u5E8F\u65B9\u5F0F"
+          title: "\uBAA9\uB85D \uC815\uB82C \uBC29\uC2DD"
         },
-        h2("option", { value: "priority" }, "\u6392\u5E8F\uFF1A\u6613\u6253\u6027\u4F18\u5148"),
-        h2("option", { value: "todo" }, "\u6392\u5E8F\uFF1A\u5F85\u6D4B\u4F18\u5148"),
-        h2("option", { value: "discovered" }, "\u6392\u5E8F\uFF1A\u6700\u8FD1\u53D1\u73B0\u4F18\u5148"),
-        h2("option", { value: "ports" }, "\u6392\u5E8F\uFF1A\u7AEF\u53E3\u591A\u4F18\u5148"),
-        h2("option", { value: "ip" }, "\u6392\u5E8F\uFF1A\u6309 IP")
+        h2("option", { value: "priority" }, "\uC815\uB82C: \uACF5\uB7B5 \uC6A9\uC774\uC131 \uC6B0\uC120"),
+        h2("option", { value: "todo" }, "\uC815\uB82C: \uB300\uAE30 \uC6B0\uC120"),
+        h2("option", { value: "discovered" }, "\uC815\uB82C: \uCD5C\uADFC \uBC1C\uACAC \uC6B0\uC120"),
+        h2("option", { value: "ports" }, "\uC815\uB82C: \uD3EC\uD2B8 \uB9CE\uC740 \uC21C"),
+        h2("option", { value: "ip" }, "\uC815\uB82C: IP \uC21C")
       )
     );
     const head = h2(
       "div",
       { className: "rt-row head" },
       h2("span", null, "IP"),
-      h2("span", null, "\u6613\u6253"),
-      h2("span", null, "\u6D4B\u8BD5\u72B6\u6001"),
-      h2("span", null, "\u5F00\u653E\u7AEF\u53E3 / \u670D\u52A1"),
-      h2("span", null, "\u6307\u7EB9")
+      h2("span", null, "\uACF5\uB7B5"),
+      h2("span", null, "\uD14C\uC2A4\uD2B8 \uC0C1\uD0DC"),
+      h2("span", null, "\uC5F4\uB9B0 \uD3EC\uD2B8 / \uC11C\uBE44\uC2A4"),
+      h2("span", null, "\uC9C0\uBB38")
     );
     const rowNodes = [];
     for (const it of state.items) {
@@ -1615,7 +1615,7 @@ var __dshPurgeDrill = (() => {
               className: "rt-row"
             },
             clickable(() => toggleRow(it.id), {
-              label: "\u5C55\u5F00\u8D44\u4EA7 " + it.ip,
+              label: "\uC790\uC0B0 \uD3BC\uCE58\uAE30 " + it.ip,
               expanded: openId === it.id
             })
           ),
@@ -1635,10 +1635,10 @@ var __dshPurgeDrill = (() => {
               {
                 className: "rt-scope rt-scope-" + (it.scope === "internal" ? "internal" : "external")
               },
-              it.scope === "internal" ? "\u5185" : "\u5916"
+              it.scope === "internal" ? "\uB0B4" : "\uC678"
             ),
             h2("span", {
-              title: it.state === "live" ? "\u5B58\u6D3B" : String(it.state),
+              title: it.state === "live" ? "\uC0DD\uC874" : String(it.state),
               style: {
                 width: 7,
                 height: 7,
@@ -1653,7 +1653,7 @@ var __dshPurgeDrill = (() => {
               { style: { overflow: "hidden", textOverflow: "ellipsis" } },
               it.ip
             ),
-            /* 发现时间挂在 IP 下面一行：IP 列宽度有限，不另开列（列宽一改整表要跟着调） */
+            /* 발견 시각은 IP 아래 한 줄에 붙인다: IP 열 너비가 빠듯해 별도 열을 열지 않는다(열 너비를 고치면 표 전체를 따라 고쳐야 한다) */
             h2(
               "span",
               {
@@ -1662,9 +1662,9 @@ var __dshPurgeDrill = (() => {
                   color: "var(--dsw-alias-label-secondary)",
                   whiteSpace: "nowrap"
                 },
-                title: "\u53D1\u73B0\u65F6\u95F4\uFF1A" + (it.discovered_at ? fmt(it.discovered_at) : "\u672A\u8BB0\u5F55") + (it.last_seen ? "\n\u6700\u8FD1\u91C7\u96C6\uFF1A" + fmt(it.last_seen) : "")
+                title: "\uBC1C\uACAC \uC2DC\uAC01: " + (it.discovered_at ? fmt(it.discovered_at) : "\uBBF8\uAE30\uB85D") + (it.last_seen ? "\n\uCD5C\uADFC \uC218\uC9D1: " + fmt(it.last_seen) : "")
               },
-              it.discovered_at ? fmtShort(it.discovered_at) : "\u53D1\u73B0\u65F6\u95F4\u672A\u77E5"
+              it.discovered_at ? fmtShort(it.discovered_at) : "\uBC1C\uACAC \uC2DC\uAC01 \uBBF8\uC0C1"
             )
           ),
           h2(
@@ -1686,7 +1686,7 @@ var __dshPurgeDrill = (() => {
                   marginLeft: 4
                 }
               },
-              "\u5C01" + it.blocked_count
+              "\uCC28\uB2E8 " + it.blocked_count
             ) : null
           ),
           h2("span", { title: portText }, (shownPorts || "\u2014") + morePorts),
@@ -1713,7 +1713,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "span",
                 null,
-                [p.service, p.product, p.version].filter(Boolean).join(" ") || "\u672A\u77E5\u670D\u52A1"
+                [p.service, p.product, p.version].filter(Boolean).join(" ") || "\uC54C \uC218 \uC5C6\uB294 \uC11C\uBE44\uC2A4"
               ),
               p.url ? h2(
                 "a",
@@ -1742,7 +1742,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "span",
                 null,
-                [f.vendor, f.product, f.version].filter(Boolean).join(" ") + (f.evidence ? "\uFF08" + f.evidence + "\uFF09" : "")
+                [f.vendor, f.product, f.version].filter(Boolean).join(" ") + (f.evidence ? "(" + f.evidence + ")" : "")
               ),
               h2(ProvTag, { p: f.provenance })
             )
@@ -1760,7 +1760,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "span",
                 null,
-                (o.value || "") + " \xB7 " + (o.tool || "\u672A\u77E5\u5DE5\u5177") + " \xB7 " + fmt(o.collected_at)
+                (o.value || "") + " \xB7 " + (o.tool || "\uC54C \uC218 \uC5C6\uB294 \uB3C4\uAD6C") + " \xB7 " + fmt(o.collected_at)
               ),
               h2(ProvTag, { p: o.provenance })
             )
@@ -1772,11 +1772,11 @@ var __dshPurgeDrill = (() => {
       const inner = d ? h2(
         "div",
         null,
-        /* 必读三行 */
+        /* 반드시 읽을 3줄 */
         h2(
           "div",
           { className: "rt-kv" },
-          h2("b", null, "\u6D4B\u8BD5"),
+          h2("b", null, "\uD14C\uC2A4\uD2B8"),
           h2(
             "span",
             null,
@@ -1791,7 +1791,7 @@ var __dshPurgeDrill = (() => {
                   borderColor: "#ef444455"
                 }
               },
-              "\u88AB\u5C01 " + d.blocked_count + " \u6B21"
+              "\uCC28\uB2E8 " + d.blocked_count + "\uD68C"
             ) : null,
             h2(
               "span",
@@ -1801,14 +1801,14 @@ var __dshPurgeDrill = (() => {
                   color: "var(--dsw-alias-label-secondary)"
                 }
               },
-              (d.test_updated_at ? fmt(d.test_updated_at) : "\u672A\u6D4B\u8FC7") + (d.test_updated_by ? " \xB7 " + d.test_updated_by : "")
+              (d.test_updated_at ? fmt(d.test_updated_at) : "\uBBF8\uD14C\uC2A4\uD2B8") + (d.test_updated_by ? " \xB7 " + d.test_updated_by : "")
             )
           )
         ),
         h2(
           "div",
           { className: "rt-kv" },
-          h2("b", null, "\u6613\u6253\u6027"),
+          h2("b", null, "\uACF5\uB7B5 \uC6A9\uC774\uC131"),
           h2(
             "span",
             null,
@@ -1816,7 +1816,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "span",
               { style: { marginLeft: 8 } },
-              d.potential || "\u672A\u8BC4\u4F30"
+              d.potential || "\uBBF8\uD3C9\uAC00"
             ),
             d.assess_reason ? h2(
               "span",
@@ -1833,18 +1833,18 @@ var __dshPurgeDrill = (() => {
         h2(
           "div",
           { className: "rt-kv" },
-          h2("b", null, "\u653B\u51FB\u9762"),
+          h2("b", null, "\uACF5\uACA9 \uD45C\uBA74"),
           h2(
             "span",
             null,
-            d.test_surface || (portRows.length ? "\u672A\u8BB0\u5F55\uFF08\u5F00\u653E\u7AEF\u53E3\u89C1\u4E0B\uFF09" : "\u65E0\u5F00\u653E\u7AEF\u53E3"),
+            d.test_surface || (portRows.length ? "\uBBF8\uAE30\uB85D(\uC5F4\uB9B0 \uD3EC\uD2B8\uB294 \uC544\uB798 \uCC38\uC870)" : "\uC5F4\uB9B0 \uD3EC\uD2B8 \uC5C6\uC74C"),
             d.scope ? h2(
               "span",
               {
                 className: "rt-scope rt-scope-" + (d.scope === "internal" ? "internal" : "external"),
                 style: { marginLeft: 8 }
               },
-              d.scope === "internal" ? "\u5185\u7F51\u8D44\u4EA7" : "\u5916\u7F51\u8D44\u4EA7"
+              d.scope === "internal" ? "\uB0B4\uBD80\uB9DD \uC790\uC0B0" : "\uC678\uBD80\uB9DD \uC790\uC0B0"
             ) : null
           )
         ),
@@ -1853,11 +1853,11 @@ var __dshPurgeDrill = (() => {
           Object.assign(
             { className: "rt-more" },
             clickable(() => setShowAll(all ? null : it.id), {
-              label: all ? "\u6536\u8D77\u8D44\u4EA7\u8BE6\u60C5" : "\u5C55\u5F00\u8D44\u4EA7\u8BE6\u60C5",
+              label: all ? "\uC790\uC0B0 \uC0C1\uC138 \uC811\uAE30" : "\uC790\uC0B0 \uC0C1\uC138 \uD3BC\uCE58\uAE30",
               expanded: all
             })
           ),
-          all ? "\u6536\u8D77\u5168\u90E8 \u25B2" : "\u5C55\u5F00\u5168\u90E8\uFF08\u7AEF\u53E3 \xB7 \u6307\u7EB9 \xB7 \u91C7\u96C6\u6EAF\u6E90 \xB7 \u6D4B\u8BD5\u8BB0\u5F55\uFF09\u25BC"
+          all ? "\uC804\uCCB4 \uC811\uAE30 \u25B2" : "\uC804\uCCB4 \uD3BC\uCE58\uAE30(\uD3EC\uD2B8 \xB7 \uC9C0\uBB38 \xB7 \uC218\uC9D1 \uCD9C\uCC98 \xB7 \uD14C\uC2A4\uD2B8 \uAE30\uB85D) \u25BC"
         ),
         all ? h2(
           "div",
@@ -1865,7 +1865,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u4E3B\u673A\u540D"),
+            h2("b", null, "\uD638\uC2A4\uD2B8 \uC774\uB984"),
             h2(
               "span",
               null,
@@ -1875,78 +1875,78 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u53D1\u73B0\u65F6\u95F4"),
+            h2("b", null, "\uBC1C\uACAC \uC2DC\uAC01"),
             h2(
               "span",
               {
-                title: '\u672C\u6761\u8D44\u4EA7\u7B2C\u4E00\u6B21\u8FDB\u5165\u8D44\u4EA7\u5E93\u7684\u65F6\u523B\uFF08\u91CD\u590D\u91C7\u96C6\u53EA\u5237\u65B0"\u6700\u8FD1\u91C7\u96C6"\uFF09'
+                title: '\uC774 \uC790\uC0B0\uC774 \uC790\uC0B0 \uBAA9\uB85D\uC5D0 \uCC98\uC74C \uB4E4\uC5B4\uC628 \uC2DC\uAC01(\uC911\uBCF5 \uC218\uC9D1\uC740 "\uCD5C\uADFC \uC218\uC9D1"\uB9CC \uAC31\uC2E0\uD569\uB2C8\uB2E4)'
               },
               fmt(d.discovered_at)
             ),
             h2(
               "b",
               { style: { minWidth: 0, marginLeft: 8 } },
-              "\u6700\u8FD1\u91C7\u96C6"
+              "\uCD5C\uADFC \uC218\uC9D1"
             ),
             h2("span", null, fmt(d.last_seen)),
             h2(
               "b",
               { style: { minWidth: 0, marginLeft: 8 } },
-              "\u6570\u636E\u6E90\u9996\u89C1"
+              "\uB370\uC774\uD130 \uC18C\uC2A4 \uCD5C\uCD08 \uD655\uC778"
             ),
             h2("span", null, fmt(d.first_seen))
           ),
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "C \u6BB5"),
+            h2("b", null, "C \uBE14\uB85D"),
             h2("span", null, d.segment_cidr)
           ),
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u6613\u6253\u6027"),
+            h2("b", null, "\uACF5\uB7B5 \uC6A9\uC774\uC131"),
             h2(
               "span",
               null,
-              (d.priority || "\u672A\u8BC4\u4F30") + (d.potential ? " \xB7 \u9884\u671F\uFF1A" + d.potential : "") + (d.assess_reason ? " \xB7 \u4F9D\u636E\uFF1A" + d.assess_reason : "") + (d.assessed_at ? "\uFF08" + fmt(d.assessed_at) + "\uFF09" : "")
+              (d.priority || "\uBBF8\uD3C9\uAC00") + (d.potential ? " \xB7 \uC608\uC0C1: " + d.potential : "") + (d.assess_reason ? " \xB7 \uADFC\uAC70: " + d.assess_reason : "") + (d.assessed_at ? "(" + fmt(d.assessed_at) + ")" : "")
             )
           ),
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u6765\u6E90"),
+            h2("b", null, "\uCD9C\uCC98"),
             h2(
               "span",
               null,
-              "\u88AB\u52A8\u7AEF\u53E3 " + (d.passive || 0) + " \xB7 \u4E3B\u52A8\u7AEF\u53E3 " + (d.active || 0)
+              "\uC218\uB3D9 \uD3EC\uD2B8 " + (d.passive || 0) + " \xB7 \uB2A5\uB3D9 \uD3EC\uD2B8 " + (d.active || 0)
             )
           ),
           h2(
             "div",
             { style: { margin: "6px 0 3px", fontWeight: 600 } },
-            "\u5F00\u653E\u7AEF\u53E3 / \u670D\u52A1"
+            "\uC5F4\uB9B0 \uD3EC\uD2B8 / \uC11C\uBE44\uC2A4"
           ),
           h2("div", null, portRows.length ? portRows : "\u2014"),
           h2(
             "div",
             { style: { margin: "6px 0 3px", fontWeight: 600 } },
-            "\u6307\u7EB9"
+            "\uC9C0\uBB38"
           ),
           h2("div", null, fpRows.length ? fpRows : "\u2014"),
           noteLines.length ? h2(Clip, {
             key: "notes",
-            label: "\u6D4B\u8BD5\u8BB0\u5F55\uFF08" + noteLines.length + " \u6761\uFF09",
+            label: "\uD14C\uC2A4\uD2B8 \uAE30\uB85D(" + noteLines.length + "\uAC74)",
             text: noteLines.join("\n")
           }) : null,
           h2(
             "div",
             { style: { margin: "6px 0 3px", fontWeight: 600 } },
-            "\u91C7\u96C6\u6EAF\u6E90\uFF08\u6700\u8FD1 8 \u6761\uFF09"
+            "\uC218\uC9D1 \uCD9C\uCC98(\uCD5C\uADFC 8\uAC74)"
           ),
           h2("div", null, obsRows.length ? obsRows : "\u2014")
         ) : null
-      ) : h2("div", null, "\u52A0\u8F7D\u4E2D\u2026");
+      ) : h2("div", null, "\uBD88\uB7EC\uC624\uB294 \uC911\u2026");
       rowNodes.push(
         h2(
           "div",
@@ -1964,12 +1964,12 @@ var __dshPurgeDrill = (() => {
       { className: "rt-table" },
       head,
       rowNodes,
-      !state.loading && !state.items.length ? h2("div", { className: "rt-empty" }, "\u6CA1\u6709\u5339\u914D\u7684\u8D44\u4EA7") : null
+      !state.loading && !state.items.length ? h2("div", { className: "rt-empty" }, "\uC77C\uCE58\uD558\uB294 \uC790\uC0B0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4") : null
     );
     const domainPane = h2(
       "div",
       { className: "rt-table" },
-      domains === null ? h2("div", { className: "rt-empty" }, "\u52A0\u8F7D\u4E2D\u2026") : domains.length ? domains.map(
+      domains === null ? h2("div", { className: "rt-empty" }, "\uBD88\uB7EC\uC624\uB294 \uC911\u2026") : domains.length ? domains.map(
         (g) => h2(
           "div",
           { key: g.domain },
@@ -1992,7 +1992,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "span",
               { className: "rt-tag", style: { marginLeft: 8 } },
-              g.count + " \u4E2A\u8D44\u4EA7"
+              g.count + "\uAC1C \uC790\uC0B0"
             )
           ),
           g.assets.map(
@@ -2021,7 +2021,7 @@ var __dshPurgeDrill = (() => {
                   {
                     className: "rt-tag rt-tag-" + (a.state === "live" ? "live" : "dead")
                   },
-                  a.state === "live" ? "\u5B58\u6D3B" : a.state
+                  a.state === "live" ? "\uC0DD\uC874" : a.state
                 )
               ),
               h2(
@@ -2040,7 +2040,7 @@ var __dshPurgeDrill = (() => {
       ) : h2(
         "div",
         { className: "rt-empty" },
-        cidr ? "\u8BE5 C \u6BB5\u4E0B\u6682\u65E0\u57DF\u540D\uFF08\u5207\u6362\u5230\u300C\u5168\u90E8 C \u6BB5\u300D\u770B\u5168\u91CF\uFF09" : "\u6682\u65E0\u57DF\u540D\u6570\u636E\uFF08\u4FE1\u606F\u6536\u96C6\u9636\u6BB5\u4F1A\u5199\u5165\u57DF\u540D\uFF09"
+        cidr ? "\uC774 C \uBE14\uB85D\uC5D0\uB294 \uC544\uC9C1 \uB3C4\uBA54\uC778\uC774 \uC5C6\uC2B5\uB2C8\uB2E4(\u201C\uC804\uCCB4 C \uBE14\uB85D\u201D\uC73C\uB85C \uC804\uD658\uD558\uBA74 \uC804\uCCB4\uB97C \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4)" : "\uB3C4\uBA54\uC778 \uB370\uC774\uD130\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4(\uC815\uBCF4 \uC218\uC9D1 \uB2E8\uACC4\uC5D0\uC11C \uB3C4\uBA54\uC778\uC774 \uAE30\uB85D\uB429\uB2C8\uB2E4)"
       )
     );
     const webPane = h2(
@@ -2052,10 +2052,10 @@ var __dshPurgeDrill = (() => {
           className: "rt-row head",
           style: { gridTemplateColumns: "1.6fr 1.2fr 130px 110px" }
         },
-        h2("span", null, "URL\uFF08\u53EF\u70B9\u51FB\uFF09"),
-        h2("span", null, "\u6807\u9898"),
-        h2("span", null, "\u8D44\u4EA7"),
-        h2("span", null, "\u670D\u52A1")
+        h2("span", null, "URL(\uD074\uB9AD \uAC00\uB2A5)"),
+        h2("span", null, "\uC81C\uBAA9"),
+        h2("span", null, "\uC790\uC0B0"),
+        h2("span", null, "\uC11C\uBE44\uC2A4")
       ),
       (web || []).map((w) => {
         const url = w.url || "http" + (w.port === 443 || w.port === 8443 || w.port === 9443 ? "s" : "") + "://" + w.ip + (w.port === 80 || w.port === 443 ? "" : ":" + w.port);
@@ -2089,10 +2089,10 @@ var __dshPurgeDrill = (() => {
           )
         );
       }),
-      web === null ? h2("div", { className: "rt-empty" }, "\u52A0\u8F7D\u4E2D\u2026") : !web.length ? h2(
+      web === null ? h2("div", { className: "rt-empty" }, "\uBD88\uB7EC\uC624\uB294 \uC911\u2026") : !web.length ? h2(
         "div",
         { className: "rt-empty" },
-        cidr ? "\u8BE5 C \u6BB5\u4E0B\u6682\u65E0 Web \u8D44\u4EA7" : "\u6682\u65E0 Web \u8D44\u4EA7\uFF08HTTP \u63A2\u6D4B\u540E\u4F1A\u5199\u5165 URL \u4E0E\u6807\u9898\uFF09"
+        cidr ? "\uC774 C \uBE14\uB85D\uC5D0\uB294 \uC544\uC9C1 Web \uC790\uC0B0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4" : "Web \uC790\uC0B0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4(HTTP \uD0D0\uC9C0 \uD6C4 URL \uACFC \uC81C\uBAA9\uC774 \uAE30\uB85D\uB429\uB2C8\uB2E4)"
       ) : null
     );
     let pane = listPane;
@@ -2127,7 +2127,7 @@ var __dshPurgeDrill = (() => {
       setData(null);
       api({ op: "discoveryTimeline", engagement: eng, limit: 200 }).then(
         (r) => {
-          if (!r || r.ok === false) setErr(r && r.error || "\u52A0\u8F7D\u5931\u8D25");
+          if (!r || r.ok === false) setErr(r && r.error || "\uBD88\uB7EC\uC624\uAE30 \uC2E4\uD328");
           else {
             setErr(null);
             setData(r);
@@ -2142,7 +2142,7 @@ var __dshPurgeDrill = (() => {
         { className: "rt-pane" },
         h2("div", { className: "rt-err" }, err)
       );
-    if (!data) return h2("div", { className: "rt-empty" }, "\u52A0\u8F7D\u4E2D\u2026");
+    if (!data) return h2("div", { className: "rt-empty" }, "\uBD88\uB7EC\uC624\uB294 \uC911\u2026");
     const recent = (data.recent || []).filter(
       (a) => day === "" || String(a.discovered_at || "").slice(0, 10) === day
     );
@@ -2152,23 +2152,23 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-card" },
-        h2("h4", null, "\u8D44\u4EA7\u53D1\u73B0\u65F6\u95F4\u7EBF"),
+        h2("h4", null, "\uC790\uC0B0 \uBC1C\uACAC \uD0C0\uC784\uB77C\uC778"),
         h2(
           "div",
           {
             style: { fontSize: 12, color: "var(--dsw-alias-label-secondary)" }
           },
-          "\u5171 " + (data.span && data.span.total || 0) + " \u53F0 \xB7 \u6700\u65E9 " + (data.span && data.span.first ? fmt(data.span.first) : "\u2014") + " \xB7 \u6700\u8FD1 " + (data.span && data.span.last ? fmt(data.span.last) : "\u2014") + '\uFF08\u53D1\u73B0\u65F6\u95F4 = \u7B2C\u4E00\u6B21\u8FDB\u5165\u8D44\u4EA7\u5E93\u7684\u65F6\u523B\uFF1B\u91CD\u590D\u91C7\u96C6\u53EA\u5237\u65B0"\u6700\u8FD1\u91C7\u96C6"\uFF09'
+          "\uCD1D " + (data.span && data.span.total || 0) + "\uB300 \xB7 \uAC00\uC7A5 \uC774\uB978 " + (data.span && data.span.first ? fmt(data.span.first) : "\u2014") + " \xB7 \uCD5C\uADFC " + (data.span && data.span.last ? fmt(data.span.last) : "\u2014") + '(\uBC1C\uACAC \uC2DC\uAC01 = \uC790\uC0B0 \uBAA9\uB85D\uC5D0 \uCC98\uC74C \uB4E4\uC5B4\uC628 \uC2DC\uAC01; \uC911\uBCF5 \uC218\uC9D1\uC740 "\uCD5C\uADFC \uC218\uC9D1"\uB9CC \uAC31\uC2E0\uD569\uB2C8\uB2E4)'
         )
       ),
-      (data.days || []).length === 0 ? h2("div", { className: "rt-empty" }, "\u8FD8\u6CA1\u6709\u8D44\u4EA7\u3002") : null,
+      (data.days || []).length === 0 ? h2("div", { className: "rt-empty" }, "\uC544\uC9C1 \uC790\uC0B0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.") : null,
       h2(
         "div",
         { className: "rt-card" },
         h2(
           "h4",
           null,
-          "\u6309\u5929\u7EDF\u8BA1",
+          "\uC77C\uC790\uBCC4 \uD1B5\uACC4",
           day ? h2(
             "span",
             Object.assign(
@@ -2177,10 +2177,10 @@ var __dshPurgeDrill = (() => {
                 style: { marginLeft: 6, cursor: "pointer" }
               },
               clickable(() => setDay(""), {
-                label: "\u6E05\u9664\u6309\u5929\u7B5B\u9009\uFF1A" + day
+                label: "\uC77C\uC790 \uD544\uD130 \uD574\uC81C: " + day
               })
             ),
-            "\u6E05\u9664\u7B5B\u9009\uFF1A" + day
+            "\uD544\uD130 \uD574\uC81C: " + day
           ) : null
         ),
         h2(
@@ -2194,10 +2194,10 @@ var __dshPurgeDrill = (() => {
                   key: d.day,
                   className: "rt-seg" + (day === d.day ? " on" : ""),
                   style: { marginBottom: 0, cursor: "pointer" },
-                  title: d.day + "\uFF1A\u65B0\u589E " + d.assets + " \u53F0\uFF08\u5185\u7F51 " + d.internal + " / \u5916\u7F51 " + d.external + "\uFF09"
+                  title: d.day + ": \uC2E0\uADDC " + d.assets + "\uB300(\uB0B4\uBD80 " + d.internal + " / \uC678\uBD80 " + d.external + ")"
                 },
                 clickable(() => setDay(day === d.day ? "" : d.day), {
-                  label: "\u7B5B\u9009 " + d.day + " \u53D1\u73B0\u7684\u8D44\u4EA7",
+                  label: "\uBC1C\uACAC\uC77C \uD544\uD130 " + d.day + " \uC790\uC0B0",
                   expanded: day === d.day
                 })
               ),
@@ -2205,7 +2205,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "div",
                 { className: "rt-seg-meta" },
-                d.assets + " \u53F0 \xB7 \u5185 " + d.internal + " / \u5916 " + d.external
+                d.assets + "\uB300 \xB7 \uB0B4 " + d.internal + " / \uC678 " + d.external
               )
             )
           )
@@ -2217,9 +2217,9 @@ var __dshPurgeDrill = (() => {
         h2(
           "h4",
           null,
-          day ? day + " \u53D1\u73B0\u7684\u8D44\u4EA7\uFF08" + recent.length + "\uFF09" : "\u6700\u8FD1\u53D1\u73B0\u7684\u8D44\u4EA7\uFF08" + recent.length + "\uFF09"
+          day ? day + " \uBC1C\uACAC \uC790\uC0B0(" + recent.length + ")" : "\uCD5C\uADFC \uBC1C\uACAC \uC790\uC0B0(" + recent.length + ")"
         ),
-        recent.length === 0 ? h2("div", { className: "rt-empty" }, "\u8FD9\u4E00\u5929\u6CA1\u6709\u65B0\u589E\u8D44\u4EA7\u3002") : null,
+        recent.length === 0 ? h2("div", { className: "rt-empty" }, "\uC774 \uB0A0\uC740 \uC2E0\uADDC \uC790\uC0B0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.") : null,
         recent.map(
           (a) => h2(
             "div",
@@ -2233,7 +2233,7 @@ var __dshPurgeDrill = (() => {
                   className: "rt-scope rt-scope-" + (a.scope === "internal" ? "internal" : "external"),
                   style: { marginRight: 4 }
                 },
-                a.scope === "internal" ? "\u5185" : "\u5916"
+                a.scope === "internal" ? "\uB0B4" : "\uC678"
               ),
               a.ip
             ),
@@ -2246,12 +2246,12 @@ var __dshPurgeDrill = (() => {
                   color: "var(--dsw-alias-label-secondary)"
                 }
               },
-              a.discovered_at ? fmt(a.discovered_at) : "\u65F6\u95F4\u672A\u77E5"
+              a.discovered_at ? fmt(a.discovered_at) : "\uC2DC\uAC01 \uBBF8\uC0C1"
             ),
             h2(
               "span",
               { style: { flex: 1 } },
-              (a.primary_name || "\u2014") + (a.open_ports ? " \xB7 " + a.open_ports + " \u7AEF\u53E3" : "")
+              (a.primary_name || "\u2014") + (a.open_ports ? " \xB7 " + a.open_ports + "\uAC1C \uD3EC\uD2B8" : "")
             ),
             h2(PriTag, { p: a.priority })
           )
@@ -2271,7 +2271,7 @@ var __dshPurgeDrill = (() => {
       api(eng ? { op: "prompts", engagement: eng } : { op: "prompts" }).then(
         (r) => {
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u8BFB\u53D6\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uC77D\uAE30 \uC2E4\uD328" });
             return;
           }
           setRoles(r.roles || []);
@@ -2279,7 +2279,7 @@ var __dshPurgeDrill = (() => {
             setActive((cur2) => cur2 || r.roles[0].role);
           if (r.builtin)
             setMsg({
-              ok: "\u5F53\u524D\u4E3A\u5185\u7F6E\u9ED8\u8BA4\u63D0\u793A\u8BCD\uFF08\u521B\u5EFA\u9776\u6807\u540E\u53EF\u6309\u9776\u6807\u4FDD\u5B58\u4FEE\u6539\uFF09"
+              ok: "\uD604\uC7AC \uB0B4\uC7A5 \uAE30\uBCF8 \uD504\uB86C\uD504\uD2B8\uC785\uB2C8\uB2E4(\uD0C0\uAE43\uC744 \uB9CC\uB4E4\uBA74 \uD0C0\uAE43\uBCC4\uB85C \uC218\uC815\uD574 \uC800\uC7A5\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4)"
             });
         },
         (e) => setMsg({ err: String(e && e.message || e) })
@@ -2291,7 +2291,7 @@ var __dshPurgeDrill = (() => {
     }, [active, roles]);
     const save = () => {
       if (!eng) {
-        setMsg({ err: "\u8BF7\u5148\u521B\u5EFA\u9776\u6807\uFF0C\u518D\u4FDD\u5B58\u63D0\u793A\u8BCD" });
+        setMsg({ err: "\uBA3C\uC800 \uD0C0\uAE43\uC744 \uB9CC\uB4E0 \uB4A4 \uD504\uB86C\uD504\uD2B8\uB97C \uC800\uC7A5\uD558\uC138\uC694" });
         return;
       }
       setBusy(true);
@@ -2305,7 +2305,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u4FDD\u5B58\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uC800\uC7A5 \uC2E4\uD328" });
             return;
           }
           setRoles(
@@ -2316,7 +2316,7 @@ var __dshPurgeDrill = (() => {
               }) : x
             )
           );
-          setMsg({ ok: "\u5DF2\u4FDD\u5B58" });
+          setMsg({ ok: "\uC800\uC7A5\uB428" });
         },
         (e) => {
           setBusy(false);
@@ -2326,7 +2326,7 @@ var __dshPurgeDrill = (() => {
     };
     const reset = (all) => {
       if (!eng) {
-        setMsg({ err: "\u8BF7\u5148\u521B\u5EFA\u9776\u6807\uFF0C\u518D\u6062\u590D\u9ED8\u8BA4\u63D0\u793A\u8BCD" });
+        setMsg({ err: "\uBA3C\uC800 \uD0C0\uAE43\uC744 \uB9CC\uB4E0 \uB4A4 \uAE30\uBCF8 \uD504\uB86C\uD504\uD2B8\uB97C \uBCF5\uC6D0\uD558\uC138\uC694" });
         return;
       }
       setBusy(true);
@@ -2339,10 +2339,10 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u6062\u590D\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uBCF5\uC6D0 \uC2E4\uD328" });
             return;
           }
-          setMsg({ ok: "\u5DF2\u6062\u590D\u5185\u7F6E\u9ED8\u8BA4\uFF1A" + (r.reset || []).join("\u3001") });
+          setMsg({ ok: "\uB0B4\uC7A5 \uAE30\uBCF8\uAC12\uC73C\uB85C \uBCF5\uC6D0\uB428: " + (r.reset || []).join(", ") });
           api({ op: "prompts", engagement: eng }).then(
             (rr) => {
               if (rr && rr.ok) {
@@ -2376,7 +2376,7 @@ var __dshPurgeDrill = (() => {
               setMsg(null);
             },
             {
-              label: "\u67E5\u770B\u300C" + r.title + "\u300D\u63D0\u793A\u8BCD",
+              label: "\u201C" + r.title + "\u201D \uD504\uB86C\uD504\uD2B8 \uBCF4\uAE30",
               expanded: active === r.role
             }
           )
@@ -2385,7 +2385,7 @@ var __dshPurgeDrill = (() => {
         h2(
           "div",
           { className: "rt-item-desc" },
-          (r.content || "").replace(/[#*`]/g, "").slice(0, 60) || "\uFF08\u7A7A\uFF09"
+          (r.content || "").replace(/[#*`]/g, "").slice(0, 60) || "(\uBE44\uC5B4 \uC788\uC74C)"
         )
       )
     );
@@ -2399,11 +2399,11 @@ var __dshPurgeDrill = (() => {
         h2(
           "div",
           { className: "rt-toolbar" },
-          h2("span", { style: { fontWeight: 600 } }, cur ? cur.title : "\u63D0\u793A\u8BCD"),
+          h2("span", { style: { fontWeight: 600 } }, cur ? cur.title : "\uD504\uB86C\uD504\uD2B8"),
           h2(
             "span",
             { className: "rt-tag" },
-            "\u66F4\u65B0 " + fmt(cur && cur.updated_at)
+            "\uAC31\uC2E0 " + fmt(cur && cur.updated_at)
           ),
           h2("div", { className: "rt-spacer" }),
           h2(
@@ -2411,20 +2411,20 @@ var __dshPurgeDrill = (() => {
             {
               className: "rt-btn",
               disabled: busy || !active,
-              title: "\u628A\u5F53\u524D\u89D2\u8272\u6062\u590D\u6210\u5185\u7F6E\u6700\u65B0\u7248\u63D0\u793A\u8BCD",
+              title: "\uD604\uC7AC \uC5ED\uD560\uC744 \uB0B4\uC7A5 \uCD5C\uC2E0\uD310 \uD504\uB86C\uD504\uD2B8\uB85C \uB418\uB3CC\uB9BD\uB2C8\uB2E4",
               onClick: () => reset(false)
             },
-            "\u6062\u590D\u9ED8\u8BA4\u4E3A\u5F53\u524D"
+            "\uD604\uC7AC \uC5ED\uD560 \uAE30\uBCF8\uAC12 \uBCF5\uC6D0"
           ),
           h2(
             "button",
             {
               className: "rt-btn",
               disabled: busy,
-              title: "\u56DB\u4E2A\u89D2\u8272\u5168\u90E8\u6062\u590D\u6210\u5185\u7F6E\u6700\u65B0\u7248\u63D0\u793A\u8BCD",
+              title: "\uB124 \uC5ED\uD560 \uC804\uBD80\uB97C \uB0B4\uC7A5 \uCD5C\uC2E0\uD310 \uD504\uB86C\uD504\uD2B8\uB85C \uB418\uB3CC\uB9BD\uB2C8\uB2E4",
               onClick: () => reset(true)
             },
-            "\u5168\u90E8\u6062\u590D\u9ED8\u8BA4"
+            "\uC804\uCCB4 \uAE30\uBCF8\uAC12 \uBCF5\uC6D0"
           ),
           h2(
             "button",
@@ -2433,7 +2433,7 @@ var __dshPurgeDrill = (() => {
               disabled: busy || !active,
               onClick: save
             },
-            busy ? "\u4FDD\u5B58\u4E2D\u2026" : "\u4FDD\u5B58"
+            busy ? "\uC800\uC7A5 \uC911\u2026" : "\uC800\uC7A5"
           )
         ),
         msg ? h2(
@@ -2449,7 +2449,7 @@ var __dshPurgeDrill = (() => {
             value: draft,
             spellCheck: false,
             onChange: (e) => setDraft(e.target.value),
-            placeholder: "\u8BE5\u89D2\u8272\u7684\u7CFB\u7EDF\u63D0\u793A\u8BCD\uFF08Markdown\uFF09"
+            placeholder: "\uC774 \uC5ED\uD560\uC758 \uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8(Markdown)"
           }),
           h2(
             "div",
@@ -2460,7 +2460,7 @@ var __dshPurgeDrill = (() => {
                 marginTop: 6
               }
             },
-            "\u4FDD\u5B58\u540E\u5199\u5165 agents/" + (active || "role") + ".md\u3002\u5B50\u4F1A\u8BDD\u4EFB\u52A1\u7B2C\u4E00\u884C\u5199 redteamRole: recon\u3001assess\u3001vuln-scan\u3001exploit \u6216 internal \u540E\uFF0C\u5BF9\u5E94\u6587\u4EF6\u8FDB\u5165\u7CFB\u7EDF\u63D0\u793A\u8BCD\u3002"
+            "\uC800\uC7A5\uD558\uBA74 agents/" + (active || "role") + ".md \uC5D0 \uAE30\uB85D\uB429\uB2C8\uB2E4. \uC11C\uBE0C \uC138\uC158 \uC791\uC5C5 \uCCAB \uC904\uC5D0 redteamRole: recon, assess, vuln-scan, exploit \uB610\uB294 internal \uC744 \uC4F0\uBA74 \uD574\uB2F9 \uD30C\uC77C\uC774 \uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8\uB85C \uB4E4\uC5B4\uAC11\uB2C8\uB2E4."
           )
         )
       )
@@ -2483,7 +2483,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+            setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -2514,7 +2514,7 @@ var __dshPurgeDrill = (() => {
       }).then(
         (r) => {
           if (r && r.ok) setDetail(r);
-          else setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+          else setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
         },
         (e) => setErr(String(e && e.message || e))
       );
@@ -2542,7 +2542,7 @@ var __dshPurgeDrill = (() => {
           className: "rt-item" + (active === (s.library || "redteam") + ":" + s.name ? " on" : "")
         },
         clickable(() => open(s), {
-          label: "\u67E5\u770B\u6280\u80FD " + s.name,
+          label: "\uC2A4\uD0AC \uBCF4\uAE30 " + s.name,
           expanded: active === (s.library || "redteam") + ":" + s.name
         })
       ),
@@ -2553,36 +2553,36 @@ var __dshPurgeDrill = (() => {
         s.modelInvocable === false ? h2(
           "span",
           { className: "rt-tag", style: { marginLeft: 6 } },
-          "\u4EC5\u4EBA\u5DE5"
+          "\uC218\uB3D9 \uC804\uC6A9"
         ) : null,
         s.library === "official" ? h2(
           "span",
           {
             className: "rt-tag",
             style: { marginLeft: 6 },
-            title: "\u5B98\u65B9\u6280\u80FD\u76EE\u5F55\uFF0C\u4E0D\u6309\u7EA2\u961F\u5DE5\u5177\u8DEF\u5F84\u68C0\u67E5"
+            title: "\uACF5\uC2DD \uC2A4\uD0AC \uB514\uB809\uD130\uB9AC\uC774\uBA70 \uB808\uB4DC\uD300 \uB3C4\uAD6C \uACBD\uB85C\uB85C \uAC80\uC0AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4"
           },
-          "\u5B98\u65B9"
+          "\uACF5\uC2DD"
         ) : h2(
           "span",
           {
             className: "rt-avail rt-avail-" + (s.availability || "unknown"),
             style: { marginLeft: 6 },
-            title: s.availability === "available" ? "\u53EF\u7528\uFF1A\u6280\u80FD\u6B63\u6587\u53EF\u4EE5\u52A0\u8F7D\u3002\u7F3A\u7684\u5916\u90E8\u5DE5\u5177\u6216\u5BC6\u94A5\u8BB0\u5728\u8BE6\u60C5\u91CC\uFF0C\u4E0D\u963B\u6B62\u8C03\u7528\u3002" : (s.problems || []).join("\n") || "\u672A\u77E5"
+            title: s.availability === "available" ? "\uC0AC\uC6A9 \uAC00\uB2A5: \uC2A4\uD0AC \uBCF8\uBB38\uC744 \uB85C\uB4DC\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uBE60\uC9C4 \uC678\uBD80 \uB3C4\uAD6C\uB098 \uD0A4\uB294 \uC0C1\uC138\uC5D0 \uAE30\uB85D\uB418\uBA70 \uD638\uCD9C\uC744 \uB9C9\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." : (s.problems || []).join("\n") || "\uC54C \uC218 \uC5C6\uC74C"
           },
-          s.availability === "available" ? "\u53EF\u7528" : s.availability === "broken" ? "\u4E0D\u53EF\u7528" : "\u672A\u77E5"
+          s.availability === "available" ? "\uC0AC\uC6A9 \uAC00\uB2A5" : s.availability === "broken" ? "\uC0AC\uC6A9 \uBD88\uAC00" : "\uC54C \uC218 \uC5C6\uC74C"
         ),
         h2(
           "div",
           { className: "rt-item-desc" },
-          s.description || "\uFF08\u65E0\u63CF\u8FF0\uFF09"
+          s.description || "(\uC124\uBA85 \uC5C6\uC74C)"
         ),
         h2(
           "div",
           { className: "rt-kb-sub" },
           [
-            s.source ? "\u6765\u6E90 " + s.source : null,
-            s.fromPlugin ? "\u672C\u63D2\u4EF6\u81EA\u5E26" : null,
+            s.source ? "\uCD9C\uCC98 " + s.source : null,
+            s.fromPlugin ? "\uC774 \uD50C\uB7EC\uADF8\uC778 \uB0B4\uC7A5" : null,
             s.provider ? s.provider : null,
             s.dir ? s.dir : null
           ].filter(Boolean).join(" \xB7 ")
@@ -2611,7 +2611,7 @@ var __dshPurgeDrill = (() => {
             className: "rt-kb-sub",
             style: { margin: "8px 0 4px", fontWeight: 600 }
           },
-          "\u7EA2\u961F\u6280\u80FD"
+          "\uB808\uB4DC\uD300 \uC2A4\uD0AC"
         )
       );
       listItems.push.apply(listItems, redteamRows);
@@ -2625,7 +2625,7 @@ var __dshPurgeDrill = (() => {
             className: "rt-kb-sub",
             style: { margin: "8px 0 4px", fontWeight: 600 }
           },
-          "\u5B98\u65B9\u6280\u80FD"
+          "\uACF5\uC2DD \uC2A4\uD0AC"
         )
       );
       listItems.push.apply(listItems, officialRows);
@@ -2639,7 +2639,7 @@ var __dshPurgeDrill = (() => {
         h2("input", {
           className: "rt-input",
           style: { width: "100%", marginBottom: 8, boxSizing: "border-box" },
-          placeholder: "\u8FC7\u6EE4\u6280\u80FD",
+          placeholder: "\uC2A4\uD0AC \uD544\uD130",
           value: q,
           onChange: (e) => setQ(e.target.value)
         }),
@@ -2654,21 +2654,21 @@ var __dshPurgeDrill = (() => {
             checked: srcOnly,
             onChange: (e) => setSrcOnly(e.target.checked)
           }),
-          "\u53EA\u770B\u672C\u63D2\u4EF6\u81EA\u5E26\uFF08" + (meta.fromPlugin || 0) + " \u4E2A\uFF09"
+          "\uC774 \uD50C\uB7EC\uADF8\uC778 \uB0B4\uC7A5\uB9CC(" + (meta.fromPlugin || 0) + "\uAC1C)"
         ),
         availSummary && (availSummary.broken > 0 || availSummary.unknown > 0) ? h2(
           "label",
           {
             className: "rt-kb-check",
             style: { display: "flex", margin: "0 0 8px" },
-            title: "\u53EA\u770B\u6709\u660E\u786E\u7F3A\u53E3\uFF08\u7F3A key / \u7F3A\u672C\u673A\u8DEF\u5F84 / \u57FA\u7840\u8BBE\u65BD\u8FD8\u662F\u5360\u4F4D\u7B26\uFF09\u6216\u5224\u4E0D\u4E86\u53EF\u7528\u6027\u7684\u6280\u80FD"
+            title: "\uBA85\uD655\uD55C \uACB0\uC190(\uD0A4 \uC5C6\uC74C / \uB85C\uCEEC \uACBD\uB85C \uC5C6\uC74C / \uC778\uD504\uB77C\uAC00 \uC544\uC9C1 \uC790\uB9AC\uD45C\uC2DC\uC790)\uC774 \uC788\uAC70\uB098 \uC0AC\uC6A9 \uAC00\uB2A5\uC131\uC744 \uD310\uC815\uD560 \uC218 \uC5C6\uB294 \uC2A4\uD0AC\uB9CC \uBD05\uB2C8\uB2E4"
           },
           h2("input", {
             type: "checkbox",
             checked: brokenOnly,
             onChange: (e) => setBrokenOnly(e.target.checked)
           }),
-          "\u53EA\u770B\u4E0D\u53EF\u7528/\u672A\u77E5\uFF08" + ((availSummary.broken || 0) + (availSummary.unknown || 0)) + " \u4E2A\uFF09"
+          "\uC0AC\uC6A9 \uBD88\uAC00/\uC54C \uC218 \uC5C6\uC74C\uB9CC(" + ((availSummary.broken || 0) + (availSummary.unknown || 0)) + "\uAC1C)"
         ) : null,
         availSummary ? h2(
           "div",
@@ -2683,17 +2683,17 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { className: "rt-avail rt-avail-available" },
-            "\u53EF\u7528 " + (availSummary.available || 0)
+            "\uC0AC\uC6A9 \uAC00\uB2A5 " + (availSummary.available || 0)
           ),
           availSummary.broken > 0 ? h2(
             "span",
             { className: "rt-avail rt-avail-broken" },
-            "\u4E0D\u53EF\u7528 " + availSummary.broken
+            "\uC0AC\uC6A9 \uBD88\uAC00 " + availSummary.broken
           ) : null,
           availSummary.unknown > 0 ? h2(
             "span",
             { className: "rt-avail rt-avail-unknown" },
-            "\u672A\u77E5 " + availSummary.unknown
+            "\uC54C \uC218 \uC5C6\uC74C " + availSummary.unknown
           ) : null,
           h2(
             "span",
@@ -2701,11 +2701,11 @@ var __dshPurgeDrill = (() => {
               {
                 className: "rt-tag",
                 style: { cursor: "pointer" },
-                title: "\u6280\u80FD\u6B63\u6587\u6216\u73AF\u5883\u53D8\u91CF\u521A\u6539\u8FC7\uFF1F\u70B9\u8FD9\u91CC\u8DF3\u8FC7 30 \u79D2\u7F13\u5B58\u91CD\u67E5"
+                title: "\uC2A4\uD0AC \uBCF8\uBB38\uC774\uB098 \uD658\uACBD \uBCC0\uC218\uB97C \uBC29\uAE08 \uBC14\uAFB8\uC168\uB098\uC694? \uC5EC\uAE30\uB97C \uB204\uB974\uBA74 30\uCD08 \uCE90\uC2DC\uB97C \uAC74\uB108\uB6F0\uACE0 \uB2E4\uC2DC \uAC80\uC0AC\uD569\uB2C8\uB2E4"
               },
-              clickable(() => load(true), { label: "\u91CD\u65B0\u68C0\u67E5\u6280\u80FD\u53EF\u7528\u6027" })
+              clickable(() => load(true), { label: "\uC2A4\uD0AC \uC0AC\uC6A9 \uAC00\uB2A5\uC131 \uC7AC\uAC80\uC0AC" })
             ),
-            "\u91CD\u67E5\u53EF\u7528\u6027"
+            "\uC0AC\uC6A9 \uAC00\uB2A5\uC131 \uC7AC\uAC80\uC0AC"
           )
         ) : null,
         h2(
@@ -2717,11 +2717,11 @@ var __dshPurgeDrill = (() => {
               marginBottom: 6
             }
           },
-          "\u7EA2\u961F " + (meta.libraries && meta.libraries.redteam || 0) + " \xB7 \u5B98\u65B9 " + (meta.libraries && meta.libraries.official || 0),
+          "\uB808\uB4DC\uD300 " + (meta.libraries && meta.libraries.redteam || 0) + " \xB7 \uACF5\uC2DD " + (meta.libraries && meta.libraries.official || 0),
           items.length > 100 ? h2(
             "div",
             { style: { marginTop: 3 } },
-            "\uFF08\u6280\u80FD\u591A\u6765\u81EA\u5176\u5B83\u63D2\u4EF6\u6CE8\u518C\u7684\u6839\u6216\u4F60\u81EA\u5DF1\u7684\u6280\u80FD\u76EE\u5F55\uFF1B\u672C\u63D2\u4EF6\u53EA\u81EA\u5E26 " + (meta.fromPlugin || 0) + " \u4E2A\uFF09"
+            "(\uC2A4\uD0AC\uC740 \uB300\uAC1C \uB2E4\uB978 \uD50C\uB7EC\uADF8\uC778\uC774 \uB4F1\uB85D\uD55C \uB8E8\uD2B8\uB098 \uC9C1\uC811 \uB9CC\uB4E0 \uC2A4\uD0AC \uB514\uB809\uD130\uB9AC\uC5D0\uC11C \uC635\uB2C8\uB2E4; \uC774 \uD50C\uB7EC\uADF8\uC778 \uB0B4\uC7A5\uC740 " + (meta.fromPlugin || 0) + "\uAC1C\uBFD0\uC785\uB2C8\uB2E4)"
           ) : null
         ),
         listItems
@@ -2735,19 +2735,19 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { style: { fontWeight: 600 } },
-            detail ? detail.name : "\u6280\u80FD\u76EE\u5F55\uFF08DSH \u539F\u751F\uFF09"
+            detail ? detail.name : "\uC2A4\uD0AC \uB514\uB809\uD130\uB9AC(DSH \uB124\uC774\uD2F0\uBE0C)"
           ),
           h2("div", { className: "rt-spacer" }),
           h2(
             "button",
             { className: "rt-btn", disabled: busy, onClick: () => load(true) },
-            busy ? "\u5237\u65B0\u4E2D\u2026" : "\u5237\u65B0"
+            busy ? "\uC0C8\uB85C\uACE0\uCE68 \uC911\u2026" : "\uC0C8\uB85C\uACE0\uCE68"
           )
         ),
         err ? needRestart ? h2(
           "div",
           { className: "rt-empty" },
-          "\u8BE5\u6A21\u5757\u7684\u5BBF\u4E3B\u4EE3\u7801\u5DF2\u66F4\u65B0\uFF0C\u9700\u91CD\u542F\u4E00\u6B21\u5F53\u524D\u5BBF\u4E3B\uFF08\u5B98\u65B9 exe / \u793E\u533A\u7248 / dsh web\uFF09\u540E\u751F\u6548"
+          "\uC774 \uBAA8\uB4C8\uC758 \uD638\uC2A4\uD2B8 \uCF54\uB4DC\uAC00 \uAC31\uC2E0\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uD604\uC7AC \uD638\uC2A4\uD2B8(\uACF5\uC2DD exe / \uCEE4\uBBA4\uB2C8\uD2F0\uD310 / dsh web)\uB97C \uD55C \uBC88 \uC7AC\uC2DC\uC791\uD574\uC57C \uC801\uC6A9\uB429\uB2C8\uB2E4"
         ) : h2("div", { className: "rt-err" }, err) : null,
         detail ? h2(
           "div",
@@ -2755,19 +2755,19 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u63CF\u8FF0"),
+            h2("b", null, "\uC124\uBA85"),
             h2("span", null, detail.description || "\u2014")
           ),
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u4F55\u65F6\u4F7F\u7528"),
+            h2("b", null, "\uC0AC\uC6A9 \uC2DC\uC810"),
             h2("span", null, detail.whenToUse || "\u2014")
           ),
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u6765\u6E90"),
+            h2("b", null, "\uCD9C\uCC98"),
             h2(
               "span",
               null,
@@ -2783,11 +2783,11 @@ var __dshPurgeDrill = (() => {
               return h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u7C7B\u578B"),
+                h2("b", null, "\uC720\uD615"),
                 h2(
                   "span",
                   null,
-                  "\u5B98\u65B9\u6280\u80FD\u3002\u7531\u5BBF\u4E3B\u6309\u4EFB\u52A1\u8C03\u7528\uFF0C\u4E0D\u6309\u7EA2\u961F\u5DE5\u5177\u8DEF\u5F84\u68C0\u67E5\u3002"
+                  "\uACF5\uC2DD \uC2A4\uD0AC. \uD638\uC2A4\uD2B8\uAC00 \uC791\uC5C5\uC5D0 \uB530\uB77C \uD638\uCD9C\uD558\uBA70 \uB808\uB4DC\uD300 \uB3C4\uAD6C \uACBD\uB85C\uB85C \uAC80\uC0AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
                 )
               );
             }
@@ -2798,11 +2798,11 @@ var __dshPurgeDrill = (() => {
               h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u53EF\u7528\u6027"),
+                h2("b", null, "\uC0AC\uC6A9 \uAC00\uB2A5\uC131"),
                 h2(
                   "span",
                   { className: "rt-avail rt-avail-" + avail },
-                  avail === "available" ? "\u53EF\u7528" : avail === "broken" ? "\u4E0D\u53EF\u7528\uFF08\u6709\u660E\u786E\u7F3A\u53E3\uFF09" : "\u672A\u77E5\uFF08\u6B63\u6587\u8BFB\u4E0D\u5230\uFF09"
+                  avail === "available" ? "\uC0AC\uC6A9 \uAC00\uB2A5" : avail === "broken" ? "\uC0AC\uC6A9 \uBD88\uAC00(\uBA85\uD655\uD55C \uACB0\uC190 \uC788\uC74C)" : "\uC54C \uC218 \uC5C6\uC74C(\uBCF8\uBB38\uC744 \uC77D\uC744 \uC218 \uC5C6\uC74C)"
                 )
               ),
               (s2.problems || []).length > 0 ? h2(
@@ -2811,7 +2811,7 @@ var __dshPurgeDrill = (() => {
                 h2(
                   "b",
                   null,
-                  avail === "available" ? "\u672A\u88C5\u4E0A\u7684\u5916\u90E8\u5DE5\u5177" : "\u7F3A\u53E3"
+                  avail === "available" ? "\uC124\uCE58\uB418\uC9C0 \uC54A\uC740 \uC678\uBD80 \uB3C4\uAD6C" : "\uACB0\uC190"
                 ),
                 h2(
                   "span",
@@ -2824,7 +2824,7 @@ var __dshPurgeDrill = (() => {
               (s2.needs_user || []).length > 0 ? h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u9700\u8981\u4F60\u63D0\u4F9B"),
+                h2("b", null, "\uC9C1\uC811 \uC81C\uACF5\uD574\uC57C \uD558\uB294 \uAC83"),
                 h2(
                   "span",
                   {
@@ -2842,7 +2842,7 @@ var __dshPurgeDrill = (() => {
           detail.path ? h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u6587\u4EF6"),
+            h2("b", null, "\uD30C\uC77C"),
             h2(
               "span",
               {
@@ -2862,7 +2862,7 @@ var __dshPurgeDrill = (() => {
                 maxHeight: "52vh"
               }
             },
-            detail.content || "\uFF08\u7A7A\uFF09"
+            detail.content || "(\uBE44\uC5B4 \uC788\uC74C)"
           )
         ) : h2(
           "div",
@@ -2876,7 +2876,7 @@ var __dshPurgeDrill = (() => {
                 marginBottom: 8
               }
             },
-            meta.note || "\u6280\u80FD\u7531 DSH \u539F\u751F skill \u4F53\u7CFB\u7BA1\u7406\uFF0C\u7EA2\u961F\u667A\u80FD\u4F53\u901A\u8FC7 skill \u5DE5\u5177\u8C03\u7528\u3002"
+            meta.note || "\uC2A4\uD0AC\uC740 DSH \uB124\uC774\uD2F0\uBE0C skill \uCCB4\uACC4\uAC00 \uAD00\uB9AC\uD558\uBA70, \uB808\uB4DC\uD300 \uC5D0\uC774\uC804\uD2B8\uB294 skill \uB3C4\uAD6C\uB85C \uD638\uCD9C\uD569\uB2C8\uB2E4."
           ),
           availSummary ? h2(
             "div",
@@ -2893,22 +2893,22 @@ var __dshPurgeDrill = (() => {
             h2(
               "span",
               { className: "rt-avail rt-avail-available" },
-              "\u53EF\u7528 " + (availSummary.available || 0)
+              "\uC0AC\uC6A9 \uAC00\uB2A5 " + (availSummary.available || 0)
             ),
             availSummary.broken > 0 ? h2(
               "span",
               { className: "rt-avail rt-avail-broken" },
-              "\u4E0D\u53EF\u7528 " + availSummary.broken
+              "\uC0AC\uC6A9 \uBD88\uAC00 " + availSummary.broken
             ) : null,
             availSummary.unknown > 0 ? h2(
               "span",
               { className: "rt-avail rt-avail-unknown" },
-              "\u672A\u77E5 " + availSummary.unknown
+              "\uC54C \uC218 \uC5C6\uC74C " + availSummary.unknown
             ) : null,
             h2(
               "span",
               { style: { color: "var(--dsw-alias-label-secondary)" } },
-              "\uFF08" + (meta.availability && meta.availability.cached ? "\u7F13\u5B58\u4E8E " : "\u68C0\u67E5\u4E8E ") + (meta.availability && meta.availability.checked_at ? fmt(meta.availability.checked_at) : "\u2014") + "\uFF09"
+              "(" + (meta.availability && meta.availability.cached ? "\uCE90\uC2DC \uC2DC\uAC01 " : "\uAC80\uC0AC \uC2DC\uAC01 ") + (meta.availability && meta.availability.checked_at ? fmt(meta.availability.checked_at) : "\u2014") + ")"
             )
           ) : null,
           meta.availability && (meta.availability.broken || []).length > 0 ? h2(
@@ -2917,7 +2917,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "div",
               { style: { fontWeight: 600, marginBottom: 4 } },
-              "\u73B0\u5728\u8DD1\u4E0D\u8D77\u6765\u7684\u6280\u80FD\uFF1A"
+              "\uC9C0\uAE08 \uC2E4\uD589\uD560 \uC218 \uC5C6\uB294 \uC2A4\uD0AC:"
             ),
             meta.availability.broken.slice(0, 12).map(
               (b) => h2(
@@ -2939,7 +2939,7 @@ var __dshPurgeDrill = (() => {
                   overflowWrap: "anywhere"
                 }
               },
-              d.n + " \u4E2A \xB7 " + d.key
+              d.n + "\uAC1C \xB7 " + d.key
             )
           ),
           (meta.byDir || []).length > 6 ? h2(
@@ -2950,26 +2950,26 @@ var __dshPurgeDrill = (() => {
                 color: "var(--dsw-alias-label-secondary)"
               }
             },
-            "\u2026\u53E6\u6709 " + ((meta.byDir || []).length - 6) + " \u4E2A\u76EE\u5F55\uFF08\u5171 " + items.length + " \u4E2A\u6280\u80FD\uFF09"
+            "\u2026\uADF8 \uBC16\uC5D0 " + ((meta.byDir || []).length - 6) + "\uAC1C \uB514\uB809\uD130\uB9AC(\uCD1D " + items.length + "\uAC1C \uC2A4\uD0AC)"
           ) : null,
-          h2("div", { className: "rt-empty" }, "\u5DE6\u4FA7\u9009\u62E9\u6280\u80FD\u67E5\u770B\u5185\u5BB9")
+          h2("div", { className: "rt-empty" }, "\uC67C\uCABD\uC5D0\uC11C \uC2A4\uD0AC\uC744 \uC120\uD0DD\uD558\uBA74 \uB0B4\uC6A9\uC774 \uBCF4\uC785\uB2C8\uB2E4")
         )
       )
     );
   }
   const SEV_LABEL = {
-    critical: "\u4E25\u91CD",
-    high: "\u9AD8\u5371",
-    medium: "\u4E2D\u5371",
-    low: "\u4F4E\u5371",
-    info: "\u4FE1\u606F"
+    critical: "\uCE58\uBA85",
+    high: "\uB192\uC74C",
+    medium: "\uBCF4\uD1B5",
+    low: "\uB0AE\uC74C",
+    info: "\uC815\uBCF4"
   };
   const STATUS_LABEL = {
-    candidate: "\u5F85\u9A8C\u8BC1",
-    confirmed: "\u5DF2\u786E\u8BA4",
-    "false-positive": "\u8BEF\u62A5",
-    exploited: "\u5DF2\u5229\u7528",
-    fixed: "\u5DF2\u4FEE\u590D"
+    candidate: "\uAC80\uC99D \uB300\uAE30",
+    confirmed: "\uD655\uC778\uB428",
+    "false-positive": "\uC624\uD0D0",
+    exploited: "\uC775\uC2A4\uD50C\uB85C\uC787 \uC644\uB8CC",
+    fixed: "\uC218\uC815\uB428"
   };
   const sevClass = (s) => "rt-sev rt-sev-" + (SEV_LABEL[s] ? s : "info");
   function targetKeyOf(v) {
@@ -2981,7 +2981,7 @@ var __dshPurgeDrill = (() => {
       if (head) return head[1];
       return t;
     }
-    return v.asset_ip || "(\u672A\u6307\u5B9A\u76EE\u6807)";
+    return v.asset_ip || "(\uB300\uC0C1 \uBBF8\uC9C0\uC815)";
   }
   function HttpBlock(props) {
     const text = String(props.text || "");
@@ -3021,8 +3021,8 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { className: "rt-evi-head" },
-            "\u8BC1\u636E\u6458\u8981",
-            h2("span", { className: "rt-tag" }, looksHttp ? "\u539F\u59CB\u62A5\u6587" : "\u6587\u672C"),
+            "\uC99D\uAC70 \uC694\uC57D",
+            h2("span", { className: "rt-tag" }, looksHttp ? "\uC6D0\uBCF8 \uBA54\uC2DC\uC9C0" : "\uD14D\uC2A4\uD2B8"),
             h2("div", { className: "rt-spacer" }),
             h2(
               "button",
@@ -3034,7 +3034,7 @@ var __dshPurgeDrill = (() => {
                   copyText(evi);
                 }
               },
-              "\u590D\u5236"
+              "\uBCF5\uC0AC"
             )
           ),
           looksHttp ? h2(HttpBlock, { text: evi }) : h2("pre", { className: "rt-evi-body" }, evi)
@@ -3050,7 +3050,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { className: "rt-evi-head" },
-            e.label || "HTTP \u8BC1\u636E",
+            e.label || "HTTP \uC99D\uAC70",
             h2(
               "span",
               { className: "rt-tag" },
@@ -3074,14 +3074,14 @@ var __dshPurgeDrill = (() => {
             h2(
               "div",
               { className: "rt-evi-head", style: { borderTop: "none" } },
-              "\u25B8 \u8BF7\u6C42\uFF08\u53EF\u76F4\u63A5\u7C98\u8FDB Burp Repeater\uFF09"
+              "\u25B8 \uC694\uCCAD(Burp Repeater \uC5D0 \uADF8\uB300\uB85C \uBD99\uC5EC\uB123\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4)"
             ),
             h2(HttpBlock, { text: e.request, compact: true })
           ) : null,
           e.response ? h2(
             "div",
             null,
-            h2("div", { className: "rt-evi-head" }, "\u25B8 \u54CD\u5E94"),
+            h2("div", { className: "rt-evi-head" }, "\u25B8 \uC751\uB2F5"),
             h2(HttpBlock, { text: e.response })
           ) : null,
           e.note ? h2(
@@ -3097,11 +3097,11 @@ var __dshPurgeDrill = (() => {
         h2(
           "div",
           { key: "none", className: "rt-kv" },
-          h2("b", null, "\u8BC1\u636E"),
+          h2("b", null, "\uC99D\uAC70"),
           h2(
             "span",
             { style: { color: "var(--dsw-alias-state-error-primary)" } },
-            "\u7F3A\u5931 \u2014\u2014 \u672A\u9A8C\u8BC1/\u65E0\u8BC1\u636E\u7684\u6F0F\u6D1E\u4E0D\u8BA1\u5165\u62A5\u544A\uFF0C\u8BF7\u8865 redteam_http_evidence_add"
+            "\uB204\uB77D \u2014 \uAC80\uC99D\uB418\uC9C0 \uC54A\uC558\uAC70\uB098 \uC99D\uAC70\uAC00 \uC5C6\uB294 \uCDE8\uC57D\uC810\uC740 \uBCF4\uACE0\uC11C\uC5D0 \uBC18\uC601\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. redteam_http_evidence_add \uB85C \uBCF4\uAC15\uD558\uC138\uC694"
           )
         )
       );
@@ -3144,7 +3144,7 @@ var __dshPurgeDrill = (() => {
           if (!r || r.ok === false) {
             setState({
               loading: false,
-              error: r && r.error || "\u67E5\u8BE2\u5931\u8D25",
+              error: r && r.error || "\uC870\uD68C \uC2E4\uD328",
               total: 0,
               items: [],
               stats: null
@@ -3194,10 +3194,10 @@ var __dshPurgeDrill = (() => {
       }).then(
         (r) => {
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u66F4\u65B0\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uAC31\uC2E0 \uC2E4\uD328" });
             return;
           }
-          setMsg({ ok: "\u5DF2\u66F4\u65B0\u4E3A\u300C" + (STATUS_LABEL[next] || next) + "\u300D" });
+          setMsg({ ok: "\u201C" + (STATUS_LABEL[next] || next) + "\u201D(\uC73C)\uB85C \uAC31\uC2E0\uD588\uC2B5\uB2C8\uB2E4" });
           load();
         },
         (e) => setMsg({ err: String(e && e.message || e) })
@@ -3225,10 +3225,10 @@ var __dshPurgeDrill = (() => {
         {
           key,
           className: "rt-concl-i" + (active ? " on" : ""),
-          title: "\u70B9\u51FB\u7B5B\u9009 / \u518D\u70B9\u53D6\u6D88"
+          title: "\uD074\uB9AD\uD558\uBA74 \uD544\uD130 / \uB2E4\uC2DC \uD074\uB9AD\uD558\uBA74 \uD574\uC81C"
         },
         clickable(onClick, {
-          label: "\u6309\u300C" + label + "\u300D\u7B5B\u9009\uFF08" + (value || 0) + "\uFF09",
+          label: "\u201C" + label + "\u201D\uB85C \uD544\uD130(" + (value || 0) + ")",
           expanded: active
         })
       ),
@@ -3240,61 +3240,61 @@ var __dshPurgeDrill = (() => {
       { className: "rt-concl" },
       concl(
         "conf",
-        "\u5DF2\u786E\u8BA4",
+        "\uD655\uC778\uB428",
         stats.byStatus.confirmed || 0,
         status === "confirmed",
         () => setStatus((v) => v === "confirmed" ? "" : "confirmed")
       ),
       concl(
         "exp",
-        "\u5DF2\u5229\u7528",
+        "\uC775\uC2A4\uD50C\uB85C\uC787 \uC644\uB8CC",
         stats.byStatus.exploited || 0,
         status === "exploited",
         () => setStatus((v) => v === "exploited" ? "" : "exploited")
       ),
       concl(
         "crit",
-        "\u4E25\u91CD",
+        "\uCE58\uBA85",
         stats.bySeverity.critical || 0,
         sev === "critical",
         () => setSev((v) => v === "critical" ? "" : "critical")
       ),
       concl(
         "high",
-        "\u9AD8\u5371",
+        "\uB192\uC74C",
         stats.bySeverity.high || 0,
         sev === "high",
         () => setSev((v) => v === "high" ? "" : "high")
       ),
       concl(
         "med",
-        "\u4E2D\u5371",
+        "\uBCF4\uD1B5",
         stats.bySeverity.medium || 0,
         sev === "medium",
         () => setSev((v) => v === "medium" ? "" : "medium")
       ),
-      concl("gain", "\u62FF\u5230\u6743\u9650", stats.withGained || 0, false, () => {
+      concl("gain", "\uAD8C\uD55C \uD68D\uB4DD", stats.withGained || 0, false, () => {
       }),
       h2("div", { className: "rt-spacer" }),
       h2(
         "span",
         { style: { fontSize: 11, color: "var(--dsw-alias-label-secondary)" } },
-        "\u9ED8\u8BA4\u6309\u76EE\u6807\u805A\u5408 \xB7 \u5171 " + (stats.targetGroups || 0) + " \u4E2A\u76EE\u6807"
+        "\uAE30\uBCF8\uC740 \uB300\uC0C1\uBCC4 \uC9D1\uACC4 \xB7 \uCD1D " + (stats.targetGroups || 0) + "\uAC1C \uB300\uC0C1"
       )
     );
     const head = h2(
       "div",
       { className: "rt-vrow head" },
-      h2("span", null, "\u7B49\u7EA7"),
-      h2("span", null, "\u6F0F\u6D1E / \u7F16\u53F7"),
-      h2("span", null, "\u76EE\u6807"),
-      h2("span", null, "\u62FF\u5230\u4EC0\u4E48"),
-      h2("span", null, "\u72B6\u6001"),
-      h2("span", null, "\u7F6E\u4FE1")
+      h2("span", null, "\uB4F1\uAE09"),
+      h2("span", null, "\uCDE8\uC57D\uC810 / \uBC88\uD638"),
+      h2("span", null, "\uB300\uC0C1"),
+      h2("span", null, "\uD68D\uB4DD\uD55C \uAC83"),
+      h2("span", null, "\uC0C1\uD0DC"),
+      h2("span", null, "\uC2E0\uB8B0\uB3C4")
     );
     const vulnRows = (v, compact) => {
       const out = [];
-      const gainedList = String(v.gained || "").split(/[、,;，；]/).map((x) => x.trim()).filter(Boolean);
+      const gainedList = String(v.gained || "").split(/[,\u3001;\uFF0C\uFF1B]/).map((x) => x.trim()).filter(Boolean);
       const open = openId === v.id;
       out.push(
         h2(
@@ -3389,7 +3389,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "div",
               { className: "rt-kv" },
-              h2("b", null, "\u62FF\u5230\u4EC0\u4E48"),
+              h2("b", null, "\uD68D\uB4DD\uD55C \uAC83"),
               gainedList.length ? h2(
                 "span",
                 null,
@@ -3407,13 +3407,13 @@ var __dshPurgeDrill = (() => {
               ) : h2(
                 "span",
                 { style: { color: "var(--dsw-alias-label-secondary)" } },
-                "\u672A\u8BB0\u5F55 \u2014\u2014 \u62FF\u5230\u6743\u9650/\u6210\u679C\u540E\u8BF7\u7528 redteam_vuln_update \u8865 gained\uFF08\u4F8B\uFF1A\u670D\u52A1\u5668\u6743\u9650\u3001\u5185\u7F51\u96A7\u9053\u3001\u540E\u53F0\u7BA1\u7406\u5458\u8D26\u53F7\uFF09"
+                "\uBBF8\uAE30\uB85D \u2014 \uAD8C\uD55C/\uC131\uACFC\uB97C \uC5BB\uC73C\uBA74 redteam_vuln_update \uB85C gained \uB97C \uBCF4\uAC15\uD558\uC138\uC694(\uC608: \uC11C\uBC84 \uAD8C\uD55C, \uB0B4\uBD80\uB9DD \uD130\uB110, \uBC31\uC5D4\uB4DC \uAD00\uB9AC\uC790 \uACC4\uC815)"
               )
             ),
             h2(
               "div",
               { className: "rt-kv" },
-              h2("b", null, "\u76EE\u6807"),
+              h2("b", null, "\uB300\uC0C1"),
               h2(
                 "span",
                 { className: "rt-mono", style: { wordBreak: "break-all" } },
@@ -3423,7 +3423,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "div",
               { className: "rt-kv" },
-              h2("b", null, "\u8D44\u4EA7"),
+              h2("b", null, "\uC790\uC0B0"),
               h2(
                 "span",
                 null,
@@ -3433,7 +3433,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "div",
               { className: "rt-kv" },
-              h2("b", null, "\u6765\u6E90"),
+              h2("b", null, "\uCD9C\uCC98"),
               h2(
                 "span",
                 null,
@@ -3446,7 +3446,7 @@ var __dshPurgeDrill = (() => {
               return h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u653B\u51FB\u6587\u4EF6"),
+                h2("b", null, "\uACF5\uACA9 \uD30C\uC77C"),
                 mine.length ? h2(
                   "span",
                   null,
@@ -3454,7 +3454,7 @@ var __dshPurgeDrill = (() => {
                     (f, fi) => h2(
                       "div",
                       { key: "af" + fi, style: { marginBottom: 3 } },
-                      "\xB7 " + (f.kind ? "[" + f.kind + "] " : "") + (f.name || "(\u672A\u547D\u540D)") + (f.description ? " \u2014 " + f.description : ""),
+                      "\xB7 " + (f.kind ? "[" + f.kind + "] " : "") + (f.name || "(\uC774\uB984 \uC5C6\uC74C)") + (f.description ? " \u2014 " + f.description : ""),
                       h2(
                         "div",
                         {
@@ -3473,7 +3473,7 @@ var __dshPurgeDrill = (() => {
                 ) : h2(
                   "span",
                   { style: { color: "var(--dsw-alias-label-secondary)" } },
-                  "\uFF08\u65E0\uFF09\u7528 redteam_attack_file_add \u628A\u8FD9\u6761\u6F0F\u6D1E\u6253\u901A\u7684\u811A\u672C/\u9A6C/EXP \u5F52\u6863\uFF0C\u5E76\u5E26\u4E0A vuln_id"
+                  "(\uC5C6\uC74C) redteam_attack_file_add \uB85C \uC774 \uCDE8\uC57D\uC810\uC744 \uB6AB\uC740 \uC2A4\uD06C\uB9BD\uD2B8/\uC6F9\uC178/EXP \uB97C vuln_id \uC640 \uD568\uAED8 \uC544\uCE74\uC774\uBE0C\uD558\uC138\uC694"
                 )
               );
             })(),
@@ -3489,7 +3489,7 @@ var __dshPurgeDrill = (() => {
                     setVulnStatus(v.id, "confirmed");
                   }
                 },
-                "\u786E\u8BA4"
+                "\uD655\uC778"
               ),
               h2(
                 "button",
@@ -3500,7 +3500,7 @@ var __dshPurgeDrill = (() => {
                     setVulnStatus(v.id, "exploited");
                   }
                 },
-                "\u5DF2\u5229\u7528"
+                "\uC775\uC2A4\uD50C\uB85C\uC787 \uC644\uB8CC"
               ),
               h2(
                 "button",
@@ -3511,7 +3511,7 @@ var __dshPurgeDrill = (() => {
                     setVulnStatus(v.id, "false-positive");
                   }
                 },
-                "\u8BEF\u62A5"
+                "\uC624\uD0D0"
               ),
               h2(
                 "button",
@@ -3522,7 +3522,7 @@ var __dshPurgeDrill = (() => {
                     setVulnStatus(v.id, "fixed");
                   }
                 },
-                "\u5DF2\u4FEE\u590D"
+                "\uC218\uC815\uB428"
               )
             )
           )
@@ -3548,7 +3548,7 @@ var __dshPurgeDrill = (() => {
         gained: Array.from(
           new Set(
             vs.flatMap(
-              (v) => String(v.gained || "").split(/[、,;，；]/).map((x) => x.trim()).filter(Boolean)
+              (v) => String(v.gained || "").split(/[,\u3001;\uFF0C\uFF1B]/).map((x) => x.trim()).filter(Boolean)
             )
           )
         ),
@@ -3566,13 +3566,13 @@ var __dshPurgeDrill = (() => {
               key: "sec:" + g.key,
               tone: "target",
               title: g.key,
-              count: g.vulns.length + " \u4E2A\u6F0F\u6D1E",
+              count: g.vulns.length + "\uAC1C \uCDE8\uC57D\uC810",
               sub: [
                 SEV_LABEL[g.top.severity] || g.top.severity,
-                g.exploited ? "\u5DF2\u5229\u7528 " + g.exploited : null,
-                g.top.asset_ip && g.top.asset_ip !== g.key ? "\u8D44\u4EA7 " + g.top.asset_ip : null
+                g.exploited ? "\uC775\uC2A4\uD50C\uB85C\uC787 \uC644\uB8CC " + g.exploited : null,
+                g.top.asset_ip && g.top.asset_ip !== g.key ? "\uC790\uC0B0 " + g.top.asset_ip : null
               ].filter(Boolean).join(" \xB7 "),
-              right: g.gained.length ? g.gained.slice(0, 2).join(" / ") + (g.gained.length > 2 ? " +" + (g.gained.length - 2) : "") : "\u672A\u8BB0\u5F55\u6743\u9650",
+              right: g.gained.length ? g.gained.slice(0, 2).join(" / ") + (g.gained.length > 2 ? " +" + (g.gained.length - 2) : "") : "\uAD8C\uD55C \uBBF8\uAE30\uB85D",
               open: collapse.isOpen(key, defOpen),
               onToggle: collapse.toggle(key, defOpen)
             },
@@ -3582,7 +3582,7 @@ var __dshPurgeDrill = (() => {
       }
       if (!list.length && !state.loading && !state.error) {
         rows.push(
-          h2("div", { key: "none", className: "rt-empty" }, "\u6682\u65E0\u6F0F\u6D1E\u8BB0\u5F55")
+          h2("div", { key: "none", className: "rt-empty" }, "\uCDE8\uC57D\uC810 \uAE30\uB85D \uC5C6\uC74C")
         );
       }
     } else {
@@ -3594,7 +3594,7 @@ var __dshPurgeDrill = (() => {
       h2("input", {
         className: "rt-input",
         style: { flex: "1 1 140px" },
-        placeholder: "\u641C\u7D22\u6807\u9898 / CVE / \u76EE\u6807\uFF08\u56DE\u8F66\uFF09",
+        placeholder: "\uC81C\uBAA9 / CVE / \uB300\uC0C1 \uAC80\uC0C9(Enter)",
         value: q,
         onChange: (e) => setQ(e.target.value),
         onKeyDown: (e) => {
@@ -3604,7 +3604,7 @@ var __dshPurgeDrill = (() => {
       h2(
         "button",
         { className: "rt-btn", onClick: () => setQApplied(q) },
-        "\u641C\u7D22"
+        "\uAC80\uC0C9"
       ),
       h2(
         "select",
@@ -3613,12 +3613,12 @@ var __dshPurgeDrill = (() => {
           value: sev,
           onChange: (e) => setSev(e.target.value)
         },
-        h2("option", { value: "" }, "\u5168\u90E8\u7B49\u7EA7"),
-        h2("option", { value: "critical" }, "\u4E25\u91CD"),
-        h2("option", { value: "high" }, "\u9AD8\u5371"),
-        h2("option", { value: "medium" }, "\u4E2D\u5371"),
-        h2("option", { value: "low" }, "\u4F4E\u5371"),
-        h2("option", { value: "info" }, "\u4FE1\u606F")
+        h2("option", { value: "" }, "\uBAA8\uB4E0 \uB4F1\uAE09"),
+        h2("option", { value: "critical" }, "\uCE58\uBA85"),
+        h2("option", { value: "high" }, "\uB192\uC74C"),
+        h2("option", { value: "medium" }, "\uBCF4\uD1B5"),
+        h2("option", { value: "low" }, "\uB0AE\uC74C"),
+        h2("option", { value: "info" }, "\uC815\uBCF4")
       ),
       h2(
         "select",
@@ -3627,12 +3627,12 @@ var __dshPurgeDrill = (() => {
           value: status,
           onChange: (e) => setStatus(e.target.value)
         },
-        h2("option", { value: "" }, "\u5168\u90E8\u72B6\u6001"),
-        h2("option", { value: "candidate" }, "\u5F85\u9A8C\u8BC1"),
-        h2("option", { value: "confirmed" }, "\u5DF2\u786E\u8BA4"),
-        h2("option", { value: "exploited" }, "\u5DF2\u5229\u7528"),
-        h2("option", { value: "false-positive" }, "\u8BEF\u62A5"),
-        h2("option", { value: "fixed" }, "\u5DF2\u4FEE\u590D")
+        h2("option", { value: "" }, "\uBAA8\uB4E0 \uC0C1\uD0DC"),
+        h2("option", { value: "candidate" }, "\uAC80\uC99D \uB300\uAE30"),
+        h2("option", { value: "confirmed" }, "\uD655\uC778\uB428"),
+        h2("option", { value: "exploited" }, "\uC775\uC2A4\uD50C\uB85C\uC787 \uC644\uB8CC"),
+        h2("option", { value: "false-positive" }, "\uC624\uD0D0"),
+        h2("option", { value: "fixed" }, "\uC218\uC815\uB428")
       )
     );
     const credSection = h2(
@@ -3641,7 +3641,7 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-section" },
-        "\u51ED\u636E \xB7 " + creds.length + (creds.length ? "\uFF08\u660E\u6587\u76F4\u663E\uFF0C\u6CE8\u610F\u5C4F\u5E55\u5206\u4EAB/\u5F55\u5C4F\uFF09" : "")
+        "\uC790\uACA9 \uC99D\uBA85 \xB7 " + creds.length + (creds.length ? "(\uD3C9\uBB38 \uADF8\uB300\uB85C \uD45C\uC2DC \u2014 \uD654\uBA74 \uACF5\uC720\xB7\uB179\uD654\uC5D0 \uC8FC\uC758)" : "")
       ),
       creds.length ? h2(
         "div",
@@ -3676,36 +3676,36 @@ var __dshPurgeDrill = (() => {
                     copyText(String(c.secret_value || ""));
                   }
                 },
-                "\u590D\u5236"
+                "\uBCF5\uC0AC"
               )
             ),
             c.secret_value ? h2(
               "div",
-              { className: "rt-secret", title: "\u70B9\u51FB\u53EF\u5168\u9009" },
+              { className: "rt-secret", title: "\uD074\uB9AD\uD558\uBA74 \uC804\uCCB4 \uC120\uD0DD" },
               c.secret_value
             ) : h2(
               "div",
               { className: "rt-secret-none" },
-              "\u672A\u8BB0\u660E\u6587 \u2014\u2014 \u8BF7\u7528 redteam_credential_add \u7684 secret_value \u8865\u4E0A\uFF0C\u9762\u677F\u624D\u80FD\u76F4\u663E"
+              "\uD3C9\uBB38 \uBBF8\uAE30\uB85D \u2014 redteam_credential_add \uC758 secret_value \uB85C \uBCF4\uAC15\uD574\uC57C \uD328\uB110\uC5D0 \uBC14\uB85C \uD45C\uC2DC\uB429\uB2C8\uB2E4"
             ),
             h2(
               "div",
               { className: "rt-cred-meta" },
               [
-                c.source ? "\u6765\u6E90 " + c.source : null,
-                c.tool ? "\u5DE5\u5177 " + c.tool : null,
-                c.secret_ref ? "\u8BC1\u636E " + c.secret_ref : null,
+                c.source ? "\uCD9C\uCC98 " + c.source : null,
+                c.tool ? "\uB3C4\uAD6C " + c.tool : null,
+                c.secret_ref ? "\uC99D\uAC70 " + c.secret_ref : null,
                 c.found_by_agent ? "by " + c.found_by_agent : null,
                 c.found_at ? fmt(c.found_at) : null
               ].filter(Boolean).join(" \xB7 ")
             ),
-            c.note ? h2("div", { className: "rt-cred-meta" }, "\u5907\u6CE8\uFF1A" + c.note) : null
+            c.note ? h2("div", { className: "rt-cred-meta" }, "\uBE44\uACE0: " + c.note) : null
           )
         )
       ) : h2(
         "div",
         { className: "rt-empty" },
-        "\u6682\u65E0\u51ED\u636E\uFF08\u62FF\u5230\u53E3\u4EE4/\u5BC6\u94A5/Hash \u540E\u7528 redteam_credential_add \u843D\u5E93\uFF0C\u79D2\u7EA7\u53EF\u590D\u7528\uFF09"
+        "\uC790\uACA9 \uC99D\uBA85 \uC5C6\uC74C(\uD328\uC2A4\uC6CC\uB4DC/\uD0A4/Hash \uB97C \uC5BB\uC740 \uB4A4 redteam_credential_add \uB85C \uC800\uC7A5\uD558\uBA74 \uC989\uC2DC \uC7AC\uC0AC\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4)"
       )
     );
     const accessSection = h2(
@@ -3714,7 +3714,7 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-section" },
-        "\u5DF2\u83B7\u5F97\u8BBF\u95EE\u4F1A\u8BDD \xB7 " + accesses.length
+        "\uD68D\uB4DD\uD55C \uC811\uADFC \uC138\uC158 \xB7 " + accesses.length
       ),
       accesses.length ? accesses.map(
         (a) => h2(
@@ -3745,7 +3745,7 @@ var __dshPurgeDrill = (() => {
             a.session_ref || "\u2014"
           )
         )
-      ) : h2("div", { className: "rt-empty" }, "\u6682\u65E0")
+      ) : h2("div", { className: "rt-empty" }, "\uC5C6\uC74C")
     );
     const subTabBtn = (key, label, n) => h2(
       "span",
@@ -3754,7 +3754,7 @@ var __dshPurgeDrill = (() => {
           className: "rt-subtab" + (subTab === key ? " on" : "")
         },
         clickable(() => setSubTab(key), {
-          label: label + "\uFF08" + n + "\uFF09",
+          label: label + "(" + n + ")",
           expanded: subTab === key
         })
       ),
@@ -3768,43 +3768,43 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-subtabs" },
-        subTabBtn("vulns", "\u6F0F\u6D1E", state.total || 0),
-        subTabBtn("files", "\u653B\u51FB\u6587\u4EF6", allFiles.length),
-        subTabBtn("creds", "\u51ED\u636E", creds.length),
-        subTabBtn("access", "\u8BBF\u95EE\u4F1A\u8BDD", accesses.length),
+        subTabBtn("vulns", "\uCDE8\uC57D\uC810", state.total || 0),
+        subTabBtn("files", "\uACF5\uACA9 \uD30C\uC77C", allFiles.length),
+        subTabBtn("creds", "\uC790\uACA9 \uC99D\uBA85", creds.length),
+        subTabBtn("access", "\uC811\uADFC \uC138\uC158", accesses.length),
         h2("div", { className: "rt-spacer" }),
         grouped ? h2(
           "button",
           {
             className: "rt-btn",
-            title: "\u5C55\u5F00\u6240\u6709\u76EE\u6807",
+            title: "\uBAA8\uB4E0 \uB300\uC0C1 \uD3BC\uCE58\uAE30",
             onClick: () => collapse.setAll(
               (state.items || []).map((v) => "target:" + targetKeyOf(v)),
               true
             )
           },
-          "\u5168\u90E8\u5C55\u5F00"
+          "\uC804\uCCB4 \uD3BC\uCE58\uAE30"
         ) : null,
         grouped ? h2(
           "button",
           {
             className: "rt-btn",
-            title: "\u6536\u8D77\u6240\u6709\u76EE\u6807",
+            title: "\uBAA8\uB4E0 \uB300\uC0C1 \uC811\uAE30",
             onClick: () => collapse.setAll(
               (state.items || []).map((v) => "target:" + targetKeyOf(v)),
               false
             )
           },
-          "\u5168\u90E8\u6536\u8D77"
+          "\uC804\uCCB4 \uC811\uAE30"
         ) : null,
         h2(
           "button",
           {
             className: "rt-btn" + (grouped ? " rt-btn-primary" : ""),
-            title: grouped ? "\u5F53\u524D\uFF1A\u6309\u76EE\u6807\u805A\u5408\uFF08\u5148\u770B\u54EA\u53F0\u88AB\u6253\u4E0B\u4EC0\u4E48\uFF09" : "\u5F53\u524D\uFF1A\u5E73\u94FA\u6BCF\u6761\u6F0F\u6D1E",
+            title: grouped ? "\uD604\uC7AC: \uB300\uC0C1\uBCC4 \uC9D1\uACC4(\uC5B4\uB290 \uC790\uC0B0\uC774 \uC5B4\uB5BB\uAC8C \uB6AB\uB838\uB294\uC9C0 \uBA3C\uC800 \uBD05\uB2C8\uB2E4)" : "\uD604\uC7AC: \uCDE8\uC57D\uC810 \uD55C \uC904\uC529 \uB098\uC5F4",
             onClick: () => setGrouped((g) => !g)
           },
-          grouped ? "\u6309\u76EE\u6807\u805A\u5408" : "\u5E73\u94FA\u5217\u8868"
+          grouped ? "\uB300\uC0C1\uBCC4 \uC9D1\uACC4" : "\uAC1C\uBCC4 \uB098\uC5F4"
         )
       ),
       msg ? h2(
@@ -3815,7 +3815,7 @@ var __dshPurgeDrill = (() => {
       needRestart ? h2(
         "div",
         { className: "rt-empty" },
-        "\u8BE5\u6A21\u5757\u7684\u5BBF\u4E3B\u4EE3\u7801\u5DF2\u66F4\u65B0\uFF0C\u9700\u91CD\u542F\u4E00\u6B21\u5F53\u524D\u5BBF\u4E3B\uFF08\u5B98\u65B9 exe / \u793E\u533A\u7248 / dsh web\uFF09\u540E\u751F\u6548"
+        "\uC774 \uBAA8\uB4C8\uC758 \uD638\uC2A4\uD2B8 \uCF54\uB4DC\uAC00 \uAC31\uC2E0\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uD604\uC7AC \uD638\uC2A4\uD2B8(\uACF5\uC2DD exe / \uCEE4\uBBA4\uB2C8\uD2F0\uD310 / dsh web)\uB97C \uD55C \uBC88 \uC7AC\uC2DC\uC791\uD574\uC57C \uC801\uC6A9\uB429\uB2C8\uB2E4"
       ) : null,
       state.error && !needRestart ? h2("div", { className: "rt-err" }, state.error) : null,
       subTab === "files" ? h2(
@@ -3824,7 +3824,7 @@ var __dshPurgeDrill = (() => {
         h2(
           "div",
           { className: "rt-hint", style: { marginBottom: 8 } },
-          "\u653B\u51FB\u6587\u4EF6\u6309\u9776\u6807\u76EE\u5F55\u7EC4\u7EC7\uFF08\u539F\u300C\u653B\u51FB\u6587\u4EF6\u300D\u9875\u7B7E\uFF09\uFF1B\u6BCF\u6761\u6F0F\u6D1E\u7684\u5173\u8054\u6587\u4EF6\u4E5F\u80FD\u5728\u8BE5\u6F0F\u6D1E\u8BE6\u60C5\u91CC\u76F4\u63A5\u770B\u5230\u3002" + (orphanFiles.length ? " \u76EE\u524D\u6709 " + orphanFiles.length + " \u4E2A\u6587\u4EF6\u6CA1\u6302 vuln_id\uFF0C\u5EFA\u8BAE\u8865\u4E0A\u4EE5\u4FBF\u4E0E\u6F0F\u6D1E\u5BF9\u5E94\u3002" : "")
+          "\uACF5\uACA9 \uD30C\uC77C\uC740 \uD0C0\uAE43 \uB514\uB809\uD130\uB9AC \uB2E8\uC704\uB85C \uC815\uB9AC\uB429\uB2C8\uB2E4(\uC61B \u201C\uACF5\uACA9 \uD30C\uC77C\u201D \uD0ED). \uAC01 \uCDE8\uC57D\uC810\uC5D0 \uC5F0\uACB0\uB41C \uD30C\uC77C\uB3C4 \uD574\uB2F9 \uCDE8\uC57D\uC810 \uC0C1\uC138\uC5D0\uC11C \uBC14\uB85C \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4." + (orphanFiles.length ? " \uD604\uC7AC vuln_id \uAC00 \uC5F0\uACB0\uB418\uC9C0 \uC54A\uC740 \uD30C\uC77C\uC774 " + orphanFiles.length + "\uAC1C \uC788\uC73C\uB2C8 \uCDE8\uC57D\uC810\uACFC \uB300\uC751\uB418\uB3C4\uB85D \uBCF4\uAC15\uC744 \uAD8C\uD569\uB2C8\uB2E4." : "")
         ),
         h2(AttackFilesTab, { engagement: eng, refreshKey })
       ) : subTab === "creds" ? h2(
@@ -3840,18 +3840,18 @@ var __dshPurgeDrill = (() => {
         { className: "rt-table" },
         grouped ? null : head,
         rows,
-        !state.loading && !state.items.length && !state.error ? h2("div", { className: "rt-empty" }, "\u6682\u65E0\u6F0F\u6D1E\u8BB0\u5F55") : null
+        !state.loading && !state.items.length && !state.error ? h2("div", { className: "rt-empty" }, "\uCDE8\uC57D\uC810 \uAE30\uB85D \uC5C6\uC74C") : null
       )
     );
   }
   const STAGE_LABEL = {
-    recon: "\u4FE1\u606F\u6536\u96C6",
-    vuln: "\u6F0F\u6D1E\u53D1\u73B0",
-    exploit: "\u6F0F\u6D1E\u5229\u7528",
-    access: "\u83B7\u5F97\u6743\u9650",
-    pivot: "\u5185\u7F51\u7A81\u7834",
-    data: "\u654F\u611F\u6570\u636E",
-    other: "\u5176\u4ED6"
+    recon: "\uC815\uBCF4 \uC218\uC9D1",
+    vuln: "\uCDE8\uC57D\uC810 \uBC1C\uACAC",
+    exploit: "\uCDE8\uC57D\uC810 \uC775\uC2A4\uD50C\uB85C\uC787",
+    access: "\uAD8C\uD55C \uD68D\uB4DD",
+    pivot: "\uB0B4\uBD80\uB9DD \uB3CC\uD30C",
+    data: "\uBBFC\uAC10 \uB370\uC774\uD130",
+    other: "\uAE30\uD0C0"
   };
   function ChainTab(props) {
     const eng = props.engagement;
@@ -3868,7 +3868,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setLoading(false);
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+            setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -3891,7 +3891,7 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-kv" },
-        h2("b", null, "\u76EE\u6807"),
+        h2("b", null, "\uB300\uC0C1"),
         h2(
           "span",
           { className: "rt-mono", style: { wordBreak: "break-all" } },
@@ -3901,13 +3901,13 @@ var __dshPurgeDrill = (() => {
       x.asset_ip ? h2(
         "div",
         { className: "rt-kv" },
-        h2("b", null, "\u8D44\u4EA7"),
+        h2("b", null, "\uC790\uC0B0"),
         h2("span", { className: "rt-mono" }, x.asset_ip)
       ) : null,
       x.vuln_title ? h2(
         "div",
         { className: "rt-kv" },
-        h2("b", null, "\u5229\u7528\u6F0F\u6D1E"),
+        h2("b", null, "\uC774\uC6A9 \uCDE8\uC57D\uC810"),
         h2(
           "span",
           null,
@@ -3917,24 +3917,24 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-kv" },
-        h2("b", null, "\u6B21\u6570"),
+        h2("b", null, "\uD69F\uC218"),
         h2(
           "span",
           null,
-          "\u540C\u7C7B\u7B2C " + x.nth_of_point + " \u6B21 \xB7 +" + (x.points || 0) + " \u5206"
+          "\uAC19\uC740 \uC720\uD615 " + x.nth_of_point + "\uBC88\uC9F8 \xB7 +" + (x.points || 0) + "\uC810"
         )
       ),
       h2(
         "div",
         { className: "rt-kv" },
-        h2("b", null, "\u8BB0\u5F55"),
+        h2("b", null, "\uAE30\uB85D"),
         h2(
           "span",
           null,
           fmt(x.recorded_at) + (x.recorded_by ? " \xB7 " + x.recorded_by : "")
         )
       ),
-      x.evidence ? h2(Clip, { label: "\u7ED3\u679C\u4E0E\u8BC1\u636E", text: x.evidence }) : null
+      x.evidence ? h2(Clip, { label: "\uACB0\uACFC\uC640 \uC99D\uAC70", text: x.evidence }) : null
     );
     const hitRow = (x) => h2(
       "div",
@@ -3967,14 +3967,14 @@ var __dshPurgeDrill = (() => {
           "span",
           {
             className: "rt-tag rt-tag-warn",
-            title: x.capped_reason || "\u540C\u4E00\u8D44\u4EA7\u540C\u4E00\u7AEF\u53E3\u53EA\u7B97\u5206\u503C\u6700\u9AD8\u7684\u4E00\u6761"
+            title: x.capped_reason || "\uAC19\uC740 \uC790\uC0B0\xB7\uAC19\uC740 \uD3EC\uD2B8\uC5D0\uC11C\uB294 \uC810\uC218\uAC00 \uAC00\uC7A5 \uB192\uC740 \uD55C \uAC74\uB9CC \uC778\uC815\uD569\uB2C8\uB2E4"
           },
-          "\u670D\u52A1\u5DF2\u62FF\u6EE1 \xB7 \u4E0D\u8BA1\u5206"
+          "\uC11C\uBE44\uC2A4 \uC0C1\uD55C \uB3C4\uB2EC \xB7 \uBBF8\uC9D1\uACC4"
         ) : null,
         x.nth_of_point > 1 ? h2(
           "span",
           { className: "rt-ap-nth" },
-          "\u7B2C " + x.nth_of_point + " \u6B21"
+          "\uAC19\uC740 \uC720\uD615 " + x.nth_of_point + "\uBC88\uC9F8"
         ) : null,
         h2(
           "span",
@@ -3987,7 +3987,7 @@ var __dshPurgeDrill = (() => {
         {
           className: "rt-ap-act" + (x.action_inferred ? " inferred" : "")
         },
-        "\u52A8\u4F5C\uFF1A" + (x.action.title || "\uFF08\u672A\u547D\u540D\u6B65\u9AA4\uFF09") + (x.action_inferred ? "\uFF08\u63A8\u65AD\uFF09" : "")
+        "\uB3D9\uC791: " + (x.action.title || "(\uC774\uB984 \uC5C6\uB294 \uB2E8\uACC4)") + (x.action_inferred ? "(\uCD94\uB860)" : "")
       ) : null,
       openId === x.id ? hitDetail(x) : null
     );
@@ -3999,16 +3999,16 @@ var __dshPurgeDrill = (() => {
         {
           className: "rt-scope rt-scope-" + (a.scope === "internal" ? "internal" : "external")
         },
-        a.scope === "internal" ? "\u5185" : "\u5916"
+        a.scope === "internal" ? "\uB0B4" : "\uC678"
       ),
       h2("span", { className: "rt-mono", style: { fontWeight: 600 } }, a.ip),
       a.segment_cidr ? h2("span", { className: "rt-ap-nth" }, a.segment_cidr) : null,
-      h2("span", { className: "rt-ap-nth" }, "\u7AEF\u53E3 " + (a.open_ports || 0)),
-      a.vulns ? h2("span", { className: "rt-ap-nth" }, "\u6F0F\u6D1E " + a.vulns) : null,
-      a.priority ? h2("span", { className: "rt-tag" }, "\u6613\u6253 " + a.priority) : null,
+      h2("span", { className: "rt-ap-nth" }, "\uD3EC\uD2B8 " + (a.open_ports || 0)),
+      a.vulns ? h2("span", { className: "rt-ap-nth" }, "\uCDE8\uC57D\uC810 " + a.vulns) : null,
+      a.priority ? h2("span", { className: "rt-tag" }, "\uACF5\uB7B5 " + a.priority) : null,
       h2("div", { className: "rt-spacer" }),
-      h2("span", { className: "rt-ap-pts" }, "+" + (a.points || 0) + " \u5206"),
-      h2("span", { className: "rt-ap-nth" }, (a.hits || 0) + " \u6B21")
+      h2("span", { className: "rt-ap-pts" }, "+" + (a.points || 0) + "\uC810"),
+      h2("span", { className: "rt-ap-nth" }, (a.hits || 0) + "\uD68C")
     );
     const stageA = (st, i) => {
       const isRecon = st.code === "recon";
@@ -4018,14 +4018,14 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { key: "at", className: "rt-ap-sub" },
-            "\u62FF\u5230\u5206\u6570\u7684\u8D44\u4EA7 \xB7 " + st.assetCount + " \u53F0"
+            "\uC810\uC218\uB97C \uB0B8 \uC790\uC0B0 \xB7 " + st.assetCount + "\uB300"
           )
         );
         body.push(
           h2(
             "div",
             { key: "al", className: "rt-ap-assets" },
-            st.assets.length ? st.assets.map(assetRow) : h2("div", { className: "rt-ap-none" }, "\u8FD8\u6CA1\u6709\u4EA7\u751F\u5F97\u5206\u7684\u8D44\u4EA7")
+            st.assets.length ? st.assets.map(assetRow) : h2("div", { className: "rt-ap-none" }, "\uC544\uC9C1 \uC810\uC218\uB97C \uB0B8 \uC790\uC0B0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4")
           )
         );
       } else {
@@ -4033,14 +4033,14 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { key: "ht", className: "rt-ap-sub" },
-            "\u672C\u9636\u6BB5\u547D\u4E2D " + st.hits + " \u6B21" + (st.points ? " \xB7 +" + st.points + " \u5206" : "")
+            "\uC774 \uB2E8\uACC4 \uC801\uC911 " + st.hits + "\uD68C" + (st.points ? " \xB7 +" + st.points + "\uC810" : "")
           )
         );
         body.push(
           h2(
             "div",
             { key: "hl", className: "rt-ap-hits" },
-            st.items.length ? st.items.map(hitRow) : h2("div", { className: "rt-ap-none" }, "\u672C\u9636\u6BB5\u8FD8\u6CA1\u6709\u5F97\u5206")
+            st.items.length ? st.items.map(hitRow) : h2("div", { className: "rt-ap-none" }, "\uC774 \uB2E8\uACC4\uB294 \uC544\uC9C1 \uB4DD\uC810\uC774 \uC5C6\uC2B5\uB2C8\uB2E4")
           )
         );
         if (st.code === "boundary") {
@@ -4049,7 +4049,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "div",
               { key: "tt", className: "rt-ap-sub" },
-              "\u8DE8\u8D8A\u9776\u6807\u8FB9\u754C\u7684\u901A\u9053 \xB7 " + st.tunnels.length + " \u6761" + (selfOnly ? "\uFF08\u53E6\u6709 " + selfOnly + " \u6761\u53EA\u5728\u81EA\u5DF1 VPS/\u81EA\u5EFA\u670D\u52A1\u5668\u4E0A\uFF0C\u4E0D\u7B97\u7A81\u7834\uFF09" : "")
+              "\uD0C0\uAE43 \uACBD\uACC4\uB97C \uB118\uC740 \uD1B5\uB85C \xB7 " + st.tunnels.length + "\uAC1C" + (selfOnly ? "(\uADF8 \uBC16\uC5D0 " + selfOnly + "\uAC1C\uB294 \uB0B4 VPS/\uC790\uCCB4 \uC11C\uBC84\uC5D0\uB9CC \uC788\uC5B4 \uB3CC\uD30C\uB85C \uBCF4\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4)" : "")
             )
           );
           if (selfOnly && st.tunnels.length === 0) {
@@ -4057,7 +4057,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "div",
                 { key: "tw", className: "rt-ap-none" },
-                "\u26A0\uFE0F \u73B0\u6709\u7684\u901A\u9053\u90FD\u5728\u81EA\u5DF1\u7684\u670D\u52A1\u5668\u4E0A\uFF0C\u6CA1\u6709\u78B0\u5230\u76EE\u6807 \u2014\u2014 \u4E0D\u8BA1\u8FB9\u754C\u7A81\u7834\u3002\u9700\u8981\u76EE\u6807\u4FA7\u53D1\u8D77\u7684\u901A\u9053\uFF08\u53CD\u5F39 shell \u5230\u6211\u8FD9 / \u76EE\u6807\u4E0A\u8DD1 frp \u5BA2\u6237\u7AEF / \u7ECF\u76EE\u6807 WebShell \u7684 suo5\uFF09\u3002"
+                "\u26A0\uFE0F \uD604\uC7AC \uD1B5\uB85C\uAC00 \uBAA8\uB450 \uB0B4 \uC11C\uBC84\uC5D0\uB9CC \uC788\uC5B4 \uB300\uC0C1\uC5D0 \uB2FF\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4 \u2014 \uACBD\uACC4 \uB3CC\uD30C\uB85C \uC9D1\uACC4\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uB300\uC0C1 \uCE21\uC5D0\uC11C \uC2DC\uC791\uB418\uB294 \uD1B5\uB85C\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4(\uB0B4 \uCABD\uC73C\uB85C \uB9AC\uBC84\uC2A4 \uC178 / \uB300\uC0C1\uC5D0\uC11C frp \uD074\uB77C\uC774\uC5B8\uD2B8 \uC2E4\uD589 / \uB300\uC0C1 WebShell \uC744 \uACBD\uC720\uD55C suo5)."
               )
             );
           }
@@ -4085,7 +4085,7 @@ var __dshPurgeDrill = (() => {
                       className: "rt-tag " + (t.status === "active" ? "rt-tag-live" : ""),
                       style: t.status === "active" ? {} : { opacity: 0.7 }
                     },
-                    t.status === "active" ? "\u53EF\u7528" : t.status || "\u672A\u77E5"
+                    t.status === "active" ? "\uC0AC\uC6A9 \uAC00\uB2A5" : t.status || "\uC54C \uC218 \uC5C6\uC74C"
                   ),
                   h2(
                     "span",
@@ -4097,13 +4097,13 @@ var __dshPurgeDrill = (() => {
                         textOverflow: "ellipsis"
                       }
                     },
-                    "\u53EF\u8FBE " + (t.reach || "\u2014")
+                    "\uB3C4\uB2EC " + (t.reach || "\u2014")
                   )
                 )
               ) : h2(
                 "div",
                 { className: "rt-ap-none" },
-                "\u8FD8\u6CA1\u6709\u5EFA\u7ACB\u96A7\u9053\uFF08\u5EFA\u597D\u540E\u7528 redteam_tunnel_add \u767B\u8BB0\uFF09"
+                "\uC544\uC9C1 \uD130\uB110\uC774 \uC5C6\uC2B5\uB2C8\uB2E4(\uAD6C\uCD95\uD55C \uB4A4 redteam_tunnel_add \uB85C \uB4F1\uB85D\uD558\uC138\uC694)"
               )
             )
           );
@@ -4113,7 +4113,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "div",
               { key: "at", className: "rt-ap-sub" },
-              "\u6D89\u53CA\u8D44\u4EA7 \xB7 " + st.assetCount + " \u53F0"
+              "\uAD00\uB828 \uC790\uC0B0 \xB7 " + st.assetCount + "\uB300"
             )
           );
           body.push(
@@ -4154,7 +4154,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { className: "rt-ap-cum" },
-            "\u7D2F\u8BA1 " + st.cumulative + " \u5206"
+            "\uB204\uC801 " + st.cumulative + "\uC810"
           )
         ),
         h2(
@@ -4166,7 +4166,7 @@ var __dshPurgeDrill = (() => {
               className: "rt-ap-goal-tag",
               style: { color: st.color, borderColor: st.color + "66" }
             },
-            "\u9636\u6BB5\u76EE\u6807"
+            "\uB2E8\uACC4 \uBAA9\uD45C"
           ),
           h2("span", null, st.goal)
         ),
@@ -4183,7 +4183,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { className: "rt-ap-trans-t", style: { marginLeft: "auto" } },
-            "\u7D2F\u8BA1 " + st.cumulative + " \u5206"
+            "\uB204\uC801 " + st.cumulative + "\uC810"
           )
         ) : h2(
           "div",
@@ -4192,7 +4192,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { className: "rt-ap-trans-t" },
-            "\u5408\u8BA1 " + (summary && summary.points || 0) + " \u5206"
+            "\uD569\uACC4 " + (summary && summary.points || 0) + "\uC810"
           )
         )
       );
@@ -4249,7 +4249,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "span",
                 { className: "rt-hcol-name" },
-                "\u96A7\u9053 " + st.tunnels.length + " \u6761"
+                "\uD130\uB110 " + st.tunnels.length + "\uAC1C"
               )
             ),
             st.tunnels.slice(0, 3).map(
@@ -4266,7 +4266,7 @@ var __dshPurgeDrill = (() => {
               "div",
               { className: "rt-hcol-hit" },
               h2("span", { className: "rt-hcol-pts" }, st.assetCount),
-              h2("span", { className: "rt-hcol-name" }, "\u53F0\u8D44\u4EA7\u62FF\u5230\u5206")
+              h2("span", { className: "rt-hcol-name" }, "\uB300 \uC790\uC0B0\uC774 \uB4DD\uC810")
             ),
             st.assets.slice(0, 6).map(
               (a) => h2(
@@ -4274,9 +4274,9 @@ var __dshPurgeDrill = (() => {
                 {
                   key: "a" + a.id,
                   className: "rt-hcol-sub",
-                  title: a.ip + "  +" + a.points + " \u5206"
+                  title: a.ip + "  +" + a.points + "\uC810"
                 },
-                (a.scope === "internal" ? "\u5185 " : "\u5916 ") + a.ip + "  +" + a.points
+                (a.scope === "internal" ? "\uB0B4 " : "\uC678 ") + a.ip + "  +" + a.points
               )
             )
           ) : h2(
@@ -4289,7 +4289,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "span",
                 { className: "rt-hcol-name" },
-                st.hits + " \u6B21\u547D\u4E2D"
+                st.hits + "\uD68C \uC801\uC911"
               )
             ),
             st.items.slice(0, 6).map(
@@ -4307,12 +4307,12 @@ var __dshPurgeDrill = (() => {
             st.items.length > 6 ? h2(
               "div",
               { className: "rt-hcol-none" },
-              "\u2026\u53E6\u6709 " + (st.items.length - 6) + " \u6B21"
+              "\u2026\uADF8 \uBC16\uC5D0 " + (st.items.length - 6) + "\uD68C"
             ) : null,
             st.assetCount ? h2(
               "div",
               { className: "rt-hcol-none" },
-              "\u6D89\u53CA " + st.assetCount + " \u53F0\u8D44\u4EA7"
+              "\uAD00\uB828 \uC790\uC0B0 " + st.assetCount + "\uB300"
             ) : null
           )
         )
@@ -4324,47 +4324,47 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-toolbar" },
-        h2("span", { style: { fontWeight: 600 } }, "\u653B\u51FB\u94FE"),
+        h2("span", { style: { fontWeight: 600 } }, "\uACF5\uACA9 \uCCB4\uC778"),
         h2(
           "span",
           { className: "rt-tag", style: { fontSize: 10.5 } },
-          "\u4FE1\u606F\u6536\u96C6 \u2192 \u4E92\u8054\u7F51\u8D44\u4EA7\u6743\u9650 \u2192 \u8FB9\u754C\u7A81\u7834 \u2192 \u5185\u7F51\u8D44\u4EA7\u6743\u9650 \u2192 \u9776\u6807\u6743\u9650"
+          "\uC815\uBCF4 \uC218\uC9D1 \u2192 \uC778\uD130\uB137 \uC790\uC0B0 \uAD8C\uD55C \u2192 \uACBD\uACC4 \uB3CC\uD30C \u2192 \uB0B4\uBD80\uB9DD \uC790\uC0B0 \uAD8C\uD55C \u2192 \uD0C0\uAE43 \uAD8C\uD55C"
         ),
         summary ? h2(
           "span",
           { className: "rt-tag rt-tag-live" },
-          "\u603B\u5206 " + summary.points + " \u5206"
+          "\uCD1D\uC810 " + summary.points + "\uC810"
         ) : null,
         h2("div", { className: "rt-spacer" }),
         h2(
           "button",
           {
             className: "rt-btn" + (view === "A" ? " rt-btn-primary" : ""),
-            title: "\u7AD6\u5411\u653B\u51FB\u94FE\uFF1A\u9010\u9636\u6BB5\u5411\u4E0B\u770B\u7EC6\u8282",
+            title: "\uC138\uB85C \uACF5\uACA9 \uCCB4\uC778: \uB2E8\uACC4\uBCC4\uB85C \uB0B4\uB824\uAC00\uBA70 \uC0C1\uC138\uB97C \uBD05\uB2C8\uB2E4",
             onClick: () => setView("A")
           },
-          "\u94FE\u8DEF A"
+          "\uC0AC\uC2AC A"
         ),
         h2(
           "button",
           {
             className: "rt-btn" + (view === "B" ? " rt-btn-primary" : ""),
-            title: "\u6A2A\u5411\u653B\u51FB\u94FE\uFF1A\u4E00\u5C4F\u770B\u5B8C\u4E94\u4E2A\u9636\u6BB5",
+            title: "\uAC00\uB85C \uACF5\uACA9 \uCCB4\uC778: \uB2E4\uC12F \uB2E8\uACC4\uB97C \uD55C \uD654\uBA74\uC5D0 \uBD05\uB2C8\uB2E4",
             onClick: () => setView("B")
           },
-          "\u94FE\u8DEF B"
+          "\uC0AC\uC2AC B"
         ),
         h2(
           "button",
           { className: "rt-btn", disabled: loading, onClick: load },
-          loading ? "\u52A0\u8F7D\u4E2D\u2026" : "\u5237\u65B0"
+          loading ? "\uBD88\uB7EC\uC624\uB294 \uC911\u2026" : "\uC0C8\uB85C\uACE0\uCE68"
         )
       ),
       err ? h2("div", { className: "rt-err" }, err) : null,
       !stages.length && !err && data !== null ? h2(
         "div",
         { className: "rt-empty" },
-        "\u8FD8\u6CA1\u6709\u5F97\u5206\u8BB0\u5F55\u3002\u62FF\u5230\u6210\u679C\u540E\u7528 redteam_score_hit \u8BB0\u5206\uFF0C\u8FD9\u6761\u94FE\u624D\u4F1A\u957F\u51FA\u6765\u3002"
+        "\uC544\uC9C1 \uB4DD\uC810 \uAE30\uB85D\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uC131\uACFC\uB97C \uC5BB\uC740 \uB4A4 redteam_score_hit \uB85C \uC810\uC218\uB97C \uAE30\uB85D\uD558\uBA74 \uC774 \uC0AC\uC2AC\uC774 \uC790\uB77C\uB0A9\uB2C8\uB2E4."
       ) : view === "A" ? h2("div", { className: "rt-ap" }, stages.map(stageA)) : h2("div", { className: "rt-ap-h" }, stages.map(stageB))
     );
   }
@@ -4392,7 +4392,7 @@ var __dshPurgeDrill = (() => {
     if (rest.length > 0) {
       groups.push({
         code: "other",
-        name: "\u5176\u4ED6\u5F97\u5206",
+        name: "\uAE30\uD0C0 \uB4DD\uC810",
         color: "#64748b",
         ordinal: groups.length + 1,
         points: rest.reduce((n, x) => n + (x.counted ? x.points : 0), 0),
@@ -4418,7 +4418,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           if (!r || r.ok === false) {
             setBusy(false);
-            setErr(r && r.error || "\u751F\u6210\u5931\u8D25");
+            setErr(r && r.error || "\uC0DD\uC131 \uC2E4\uD328");
             return;
           }
           if ((!r.stages || r.stages.length === 0) && (r.items || []).length > 0) {
@@ -4466,9 +4466,9 @@ var __dshPurgeDrill = (() => {
           } catch {
           }
         }, 1e3);
-        setMsg({ ok: "\u5DF2\u4E0B\u8F7D\uFF1A" + label });
+        setMsg({ ok: "\uB2E4\uC6B4\uB85C\uB4DC\uB428: " + label });
       } catch (e) {
-        setMsg({ err: "\u4E0B\u8F7D\u5931\u8D25\uFF1A" + (e && e.message || e) });
+        setMsg({ err: "\uB2E4\uC6B4\uB85C\uB4DC \uC2E4\uD328: " + (e && e.message || e) });
       }
     };
     const items = data && data.items || [];
@@ -4505,11 +4505,11 @@ var __dshPurgeDrill = (() => {
         { className: "rt-rep-head" },
         h2("span", { className: "rt-rep-idx" }, String(x.seq)),
         h2("span", { className: "rt-rep-name" }, x.point_name),
-        h2("span", { className: "rt-flow-pts" }, "+" + x.points + " \u5206"),
+        h2("span", { className: "rt-flow-pts" }, "+" + x.points + "\uC810"),
         x.nth_of_point > 1 ? h2(
           "span",
           { className: "rt-tag" },
-          "\u540C\u7C7B\u7B2C " + x.nth_of_point + " \u6B21"
+          "\uAC19\uC740 \uC720\uD615 " + x.nth_of_point + "\uBC88\uC9F8"
         ) : null,
         h2("div", { className: "rt-spacer" }),
         h2(
@@ -4519,28 +4519,28 @@ var __dshPurgeDrill = (() => {
             style: { padding: "0 6px", fontSize: 11 },
             onClick: () => copy(
               (x.requests || []).map((v) => v.request || "").filter(Boolean).join("\n\n"),
-              "\u7B2C " + x.seq + " \u9879\u8BF7\u6C42"
+              "\uC694\uCCAD " + x.seq + "\uBC88"
             )
           },
-          "\u590D\u5236\u8BF7\u6C42"
+          "\uC694\uCCAD \uBCF5\uC0AC"
         )
       ),
       h2(
         "div",
         { className: "rt-rep-meta" },
-        h2("span", null, h2("b", null, "\u76EE\u6807 ")),
+        h2("span", null, h2("b", null, "\uB300\uC0C1 ")),
         h2("span", { className: "rt-mono" }, x.target || x.asset_ip || "\u2014")
       ),
       x.gained ? h2(
         "div",
         { className: "rt-rep-meta" },
-        h2("b", null, "\u62FF\u5230 "),
+        h2("b", null, "\uD68D\uB4DD "),
         h2("span", null, x.gained)
       ) : null,
       x.vuln ? h2(
         "div",
         { className: "rt-rep-meta" },
-        h2("b", null, "\u5229\u7528\u6F0F\u6D1E "),
+        h2("b", null, "\uC774\uC6A9 \uCDE8\uC57D\uC810 "),
         h2(
           "span",
           null,
@@ -4550,27 +4550,27 @@ var __dshPurgeDrill = (() => {
       x.evidence ? h2(
         "div",
         { className: "rt-rep-meta" },
-        h2("b", null, "\u7ED3\u679C "),
+        h2("b", null, "\uACB0\uACFC "),
         h2("span", null, String(x.evidence).replace(/\n+/g, " "))
       ) : null,
       x.recorded_at ? h2(
         "div",
         { className: "rt-rep-meta" },
-        h2("b", null, "\u53D6\u5F97\u65F6\u95F4 "),
+        h2("b", null, "\uD68D\uB4DD \uC2DC\uAC01 "),
         h2(
           "span",
           null,
-          fmt(x.recorded_at) + (x.recorded_by ? "\uFF08" + (ROLE_LABEL[x.recorded_by] || x.recorded_by) + "\uFF09" : "")
+          fmt(x.recorded_at) + (x.recorded_by ? "(" + (ROLE_LABEL[x.recorded_by] || x.recorded_by) + ")" : "")
         )
       ) : null,
       h2(ShotStrip, {
         eng,
         shots: x.shots,
         total: x.shot_total,
-        title: "\u8BC1\u636E\u622A\u56FE"
+        title: "\uC99D\uAC70 \uC2A4\uD06C\uB9B0\uC0F7"
       }),
-      /* ── 复现步骤：动作记录（含实际命令与回显）+ 凭据 + 隧道 + WebShell ─────
-         报告的交付价值全在这块：账号密码怎么来的、隧道怎么搭的，用户照着就能复现。 */
+      /* ── 재현 단계: 동작 기록(실제 명령과 출력 포함) + 자격 증명 + 터널 + WebShell ─────
+         보고서의 납품 가치는 전부 이 블록에 있다: 계정/비밀번호가 어떻게 나왔고 터널을 어떻게 세웠는지, 사용자가 그대로 따라 하면 재현된다. */
       h2(
         "details",
         {
@@ -4583,24 +4583,24 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { className: "rt-rep-trace-title" },
-            "\u590D\u73B0\u6B65\u9AA4\uFF08\u70B9\u51FB\u5C55\u5F00\uFF09"
+            "\uC7AC\uD604 \uB2E8\uACC4(\uD074\uB9AD\uD558\uBA74 \uD3BC\uCE68)"
           ),
           (x.steps || []).length ? h2(
             "span",
             { className: "rt-tag" },
-            (x.steps || []).length + " \u4E2A\u52A8\u4F5C"
+            (x.steps || []).length + "\uAC1C \uB3D9\uC791"
           ) : null,
           (x.credentials || []).length ? h2(
             "span",
             { className: "rt-tag" },
-            (x.credentials || []).length + " \u6761\u51ED\u636E"
+            (x.credentials || []).length + "\uAC74 \uC790\uACA9 \uC99D\uBA85"
           ) : null,
           (x.tunnels || []).length ? h2(
             "span",
             { className: "rt-tag" },
-            (x.tunnels || []).length + " \u6761\u96A7\u9053"
+            (x.tunnels || []).length + "\uAC1C \uD130\uB110"
           ) : null,
-          x.incomplete ? h2("span", { className: "rt-tag rt-tag-warn" }, "\u590D\u73B0\u6750\u6599\u5F85\u8865") : h2("span", { className: "rt-tag rt-tag-live" }, "\u53EF\u590D\u73B0")
+          x.incomplete ? h2("span", { className: "rt-tag rt-tag-warn" }, "\uC7AC\uD604 \uC790\uB8CC \uBCF4\uAC15 \uD544\uC694") : h2("span", { className: "rt-tag rt-tag-live" }, "\uC7AC\uD604 \uAC00\uB2A5")
         ),
         h2(
           "div",
@@ -4609,7 +4609,7 @@ var __dshPurgeDrill = (() => {
           (x.steps || []).length === 0 ? h2(
             "div",
             { className: "rt-rep-missing" },
-            "\u26A0\uFE0F \u6CA1\u6709\u5173\u8054\u7684\u653B\u51FB\u6B65\u9AA4\uFF1A\u8BF4\u4E0D\u6E05\u8FD9\u4E00\u6B65\u662F\u600E\u4E48\u505A\u7684\u3002\u8BF7\u7528 redteam_chain_add \u8865\u4E0A\u52A8\u4F5C\uFF08title / detail / tool / result\uFF09\uFF0C\u8BB0\u5206\u65F6\u4E5F\u53EF\u4EE5\u5E26 point_code + evidence \u4E00\u6B21\u5B8C\u6210\u3002"
+            "\u26A0\uFE0F \uC5F0\uACB0\uB41C \uACF5\uACA9 \uB2E8\uACC4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4: \uC774 \uB2E8\uACC4\uB97C \uC5B4\uB5BB\uAC8C \uD588\uB294\uC9C0 \uC124\uBA85\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. redteam_chain_add \uB85C \uB3D9\uC791(title / detail / tool / result)\uC744 \uBCF4\uAC15\uD558\uACE0, \uB4DD\uC810 \uC2DC\uC5D0\uB3C4 point_code + evidence \uB85C \uD55C \uBC88\uC5D0 \uB05D\uB0BC \uC218 \uC788\uC2B5\uB2C8\uB2E4."
           ) : (x.steps || []).map(
             (s, si) => h2(
               "div",
@@ -4625,7 +4625,7 @@ var __dshPurgeDrill = (() => {
                 h2(
                   "span",
                   { className: "rt-rep-step-title" },
-                  s.title || "(\u672A\u547D\u540D\u52A8\u4F5C)"
+                  s.title || "(\uC774\uB984 \uC5C6\uB294 \uB3D9\uC791)"
                 ),
                 s.agent ? h2(
                   "span",
@@ -4633,7 +4633,7 @@ var __dshPurgeDrill = (() => {
                   ROLE_LABEL[s.agent] || s.agent
                 ) : null,
                 s.stage_code ? h2("span", { className: "rt-tag" }, s.stage_code) : null,
-                s.inferred ? h2("span", { className: "rt-tag" }, "\u6309\u540C\u8D44\u4EA7\u63A8\u65AD") : null,
+                s.inferred ? h2("span", { className: "rt-tag" }, "\uAC19\uC740 \uC790\uC0B0\uC73C\uB85C \uCD94\uB860") : null,
                 h2("div", { className: "rt-spacer" }),
                 s.recorded_at ? h2(
                   "span",
@@ -4650,7 +4650,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "div",
                 { className: "rt-rep-step-cmd" },
-                h2("b", null, "\u6267\u884C "),
+                h2("b", null, "\uC2E4\uD589 "),
                 s.tool ? h2("span", { className: "rt-mono" }, s.tool) : h2(
                   "span",
                   {
@@ -4658,7 +4658,7 @@ var __dshPurgeDrill = (() => {
                       color: "var(--dsw-alias-state-warn-primary, #f59e0b)"
                     }
                   },
-                  "\u672A\u8BB0\u5F55\u5B9E\u9645\u547D\u4EE4\uFF08redteam_chain_add \u7684 tool\uFF09"
+                  "\uC2E4\uC81C \uBA85\uB839 \uBBF8\uAE30\uB85D(redteam_chain_add \uC758 tool)"
                 )
               ),
               s.tool ? h2(
@@ -4671,34 +4671,34 @@ var __dshPurgeDrill = (() => {
                     style: { padding: "0 6px", fontSize: 11 },
                     onClick: () => copy(
                       String(s.tool),
-                      "\u7B2C " + (si + 1) + " \u6B65\u547D\u4EE4"
+                      "\uB2E8\uACC4 " + (si + 1) + " \uBA85\uB839"
                     )
                   },
-                  "\u590D\u5236\u547D\u4EE4"
+                  "\uBA85\uB839 \uBCF5\uC0AC"
                 )
               ) : null,
               s.result ? h2(
                 "div",
                 { className: "rt-rep-step-result" },
-                h2("b", null, "\u7ED3\u679C "),
+                h2("b", null, "\uACB0\uACFC "),
                 String(s.result).replace(/\n+/g, " ")
               ) : null,
               s.evidence_ref ? h2(
                 "div",
                 { className: "rt-rep-step-result" },
-                h2("b", null, "\u8BC1\u636E "),
+                h2("b", null, "\uC99D\uAC70 "),
                 h2("span", { className: "rt-mono" }, s.evidence_ref)
               ) : null
             )
           ),
-          /* 账号密码怎么来的：凭据的来源 + 取得方式 */
+          /* 계정/비밀번호가 어떻게 나왔는지: 자격 증명의 출처 + 획득 방식 */
           (x.credentials || []).length ? h2(
             "div",
             { className: "rt-rep-src" },
             h2(
               "div",
               { className: "rt-rep-src-title" },
-              "\u62FF\u5230\u7684\u51ED\u636E\uFF08\u6765\u6E90\u53EF\u8FFD\u6EAF\uFF09"
+              "\uD68D\uB4DD\uD55C \uC790\uACA9 \uC99D\uBA85(\uCD9C\uCC98 \uCD94\uC801 \uAC00\uB2A5)"
             ),
             (x.credentials || []).map(
               (c) => h2(
@@ -4712,19 +4712,19 @@ var __dshPurgeDrill = (() => {
                 h2(
                   "span",
                   null,
-                  (c.username || "(\u65E0\u7528\u6237\u540D)") + " / " + (c.secret_type || "password") + (c.privilege ? " \xB7 \u6743\u9650 " + c.privilege : "") + " \xB7 \u6765\u6E90 " + (c.source || "\u672A\u6807\u6CE8") + (c.tool ? " \xB7 \u53D6\u5F97\u65B9\u5F0F " + String(c.tool).replace(/\n+/g, " ").slice(0, 160) : "")
+                  (c.username || "(\uC0AC\uC6A9\uC790 \uC774\uB984 \uC5C6\uC74C)") + " / " + (c.secret_type || "password") + (c.privilege ? " \xB7 \uAD8C\uD55C " + c.privilege : "") + " \xB7 \uCD9C\uCC98 " + (c.source || "\uBBF8\uD45C\uAE30") + (c.tool ? " \xB7 \uD68D\uB4DD \uBC29\uC2DD " + String(c.tool).replace(/\n+/g, " ").slice(0, 160) : "")
                 )
               )
             )
           ) : null,
-          /* 隧道怎么搭的 */
+          /* 터널을 어떻게 세웠는지 */
           (x.tunnels || []).length ? h2(
             "div",
             { className: "rt-rep-src" },
             h2(
               "div",
               { className: "rt-rep-src-title" },
-              "\u7528\u5230\u7684\u96A7\u9053 / \u901A\u9053"
+              "\uC0AC\uC6A9\uD55C \uD130\uB110 / \uD1B5\uB85C"
             ),
             (x.tunnels || []).map(
               (t) => h2(
@@ -4738,7 +4738,7 @@ var __dshPurgeDrill = (() => {
                 h2(
                   "span",
                   null,
-                  "\u5165\u53E3 " + (t.entry || "\u672A\u767B\u8BB0") + (t.reach ? " \xB7 \u53EF\u8FBE " + t.reach : "") + " \xB7 \u76EE\u6807\u4FA7 " + (t.entry_kind || "\u672A\u58F0\u660E") + (t.legit === false ? " \xB7 \u26A0\uFE0F \u4E0D\u7B97\u8DE8\u8D8A\u9776\u6807\u8FB9\u754C" : "") + (t.status ? " \xB7 " + t.status : "") + (t.command ? " \xB7 \u547D\u4EE4 " + String(t.command).replace(/\n+/g, " ").slice(0, 160) : "")
+                  "\uC9C4\uC785\uC810 " + (t.entry || "\uBBF8\uB4F1\uB85D") + (t.reach ? " \xB7 \uB3C4\uB2EC " + t.reach : "") + " \xB7 \uB300\uC0C1 \uCE21 " + (t.entry_kind || "\uBBF8\uC120\uC5B8") + (t.legit === false ? " \xB7 \u26A0\uFE0F \uD0C0\uAE43 \uACBD\uACC4\uB97C \uB118\uC740 \uAC83\uC73C\uB85C \uBCF4\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4" : "") + (t.status ? " \xB7 " + t.status : "") + (t.command ? " \xB7 \uBA85\uB839 " + String(t.command).replace(/\n+/g, " ").slice(0, 160) : "")
                 )
               )
             )
@@ -4749,7 +4749,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "div",
               { className: "rt-rep-src-title" },
-              "\u7528\u5230\u7684 WebShell"
+              "\uC0AC\uC6A9\uD55C WebShell"
             ),
             (x.webshells || []).map(
               (w) => h2(
@@ -4763,7 +4763,7 @@ var __dshPurgeDrill = (() => {
                 h2(
                   "span",
                   null,
-                  (w.url || "") + (w.pass_key ? " \xB7 \u53E3\u4EE4/\u5BC6\u94A5 " + w.pass_key : "") + (w.privilege ? " \xB7 \u6743\u9650 " + w.privilege : "") + (w.status ? " \xB7 " + w.status : "")
+                  (w.url || "") + (w.pass_key ? " \xB7 \uD328\uC2A4\uC6CC\uB4DC/\uD0A4 " + w.pass_key : "") + (w.privilege ? " \xB7 \uAD8C\uD55C " + w.privilege : "") + (w.status ? " \xB7 " + w.status : "")
                 )
               )
             )
@@ -4771,13 +4771,13 @@ var __dshPurgeDrill = (() => {
           (x.gaps || []).length ? h2(
             "div",
             { className: "rt-rep-missing" },
-            "\u26A0\uFE0F \u590D\u73B0\u7F3A\u53E3\uFF1A" + x.gaps.join("\uFF1B")
+            "\u26A0\uFE0F \uC7AC\uD604 \uACB0\uC190: " + x.gaps.join("; ")
           ) : null
         ),
         (x.requests || []).length === 0 ? h2(
           "div",
           { className: "rt-rep-missing" },
-          "\u26A0\uFE0F \u8FD9\u4E00\u9879\u6CA1\u6709\u539F\u59CB\u8BF7\u6C42\u8BB0\u5F55\uFF0C\u65E0\u6CD5\u76F4\u63A5\u590D\u73B0 \u2014\u2014 \u8BF7\u7528 redteam_http_evidence_add \u8865\u4E0A"
+          "\u26A0\uFE0F \uC774 \uD56D\uBAA9\uC5D0\uB294 \uC6D0\uBCF8 \uC694\uCCAD \uAE30\uB85D\uC774 \uC5C6\uC5B4 \uBC14\uB85C \uC7AC\uD604\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4 \u2014 redteam_http_evidence_add \uB85C \uBCF4\uAC15\uD558\uC138\uC694"
         ) : (x.requests || []).map(
           (r, ri) => h2(
             "div",
@@ -4788,7 +4788,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "span",
                 null,
-                "\u590D\u73B0\u8BF7\u6C42 " + (ri + 1) + (r.source === "auto" ? "\uFF08\u6309\u76EE\u6807\u8DEF\u5F84\u81EA\u52A8\u5339\u914D\uFF0C\u8BF7\u6838\u5BF9\uFF09" : "")
+                "\uC7AC\uD604 \uC694\uCCAD " + (ri + 1) + (r.source === "auto" ? "(\uB300\uC0C1 \uACBD\uB85C\uB85C \uC790\uB3D9 \uB9E4\uCE6D\uD588\uC73C\uB2C8 \uD655\uC778 \uD544\uC694)" : "")
               ),
               h2(
                 "span",
@@ -4801,9 +4801,9 @@ var __dshPurgeDrill = (() => {
                 {
                   className: "rt-btn",
                   style: { padding: "0 6px", fontSize: 11 },
-                  onClick: () => copy(String(r.request || ""), "\u8BF7\u6C42 " + (ri + 1))
+                  onClick: () => copy(String(r.request || ""), "\uC694\uCCAD " + (ri + 1))
                 },
-                "\u590D\u5236\u5230 Yakit"
+                "Yakit \uB85C \uBCF5\uC0AC"
               )
             ),
             h2(
@@ -4817,7 +4817,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "div",
                 { className: "rt-rep-req-head" },
-                h2("span", null, "\u54CD\u5E94\u6458\u8981")
+                h2("span", null, "\uC751\uB2F5 \uC694\uC57D")
               ),
               h2(
                 "pre",
@@ -4833,7 +4833,7 @@ var __dshPurgeDrill = (() => {
         x.note ? h2(
           "div",
           { className: "rt-rep-meta" },
-          h2("b", null, "\u5907\u6CE8 "),
+          h2("b", null, "\uBE44\uACE0 "),
           h2("span", null, x.note)
         ) : null
       )
@@ -4844,35 +4844,35 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-toolbar" },
-        h2("span", { style: { fontWeight: 600 } }, "\u653B\u51FB\u5F97\u5206\u94FE\u8DEF\u590D\u73B0\u62A5\u544A"),
+        h2("span", { style: { fontWeight: 600 } }, "\uACF5\uACA9 \uB4DD\uC810 \uC0AC\uC2AC \uC7AC\uD604 \uBCF4\uACE0\uC11C"),
         summary ? h2(
           "span",
           { className: "rt-tag rt-tag-live" },
-          "\u5408\u8BA1 " + summary.points + " \u5206"
+          "\uD569\uACC4 " + summary.points + "\uC810"
         ) : null,
-        summary ? h2("span", { className: "rt-tag" }, summary.count + " \u9879\u5F97\u5206") : null,
+        summary ? h2("span", { className: "rt-tag" }, summary.count + "\uAC74 \uB4DD\uC810") : null,
         summary ? h2(
           "span",
           {
             className: "rt-tag" + (summary.missingRequests ? "" : " rt-tag-live")
           },
-          summary.withRequests + "/" + summary.count + " \u9879\u5E26\u539F\u59CB\u8BF7\u6C42"
+          summary.withRequests + "/" + summary.count + "\uAC74 \uC6D0\uBCF8 \uC694\uCCAD \uD3EC\uD568"
         ) : null,
         summary ? h2(
           "span",
           {
             className: "rt-tag" + (summary.incomplete ? " rt-tag-warn" : " rt-tag-live"),
-            title: "\u590D\u73B0\u94FE\u662F\u5426\u5B8C\u6574\uFF1A\u6709\u653B\u51FB\u6B65\u9AA4\u3001\u5199\u4E86\u5B9E\u9645\u547D\u4EE4\u3001\u5173\u8054\u4E86\u6F0F\u6D1E/\u51ED\u636E/\u96A7\u9053"
+            title: "\uC7AC\uD604 \uC0AC\uC2AC\uC774 \uC628\uC804\uD55C\uC9C0: \uACF5\uACA9 \uB2E8\uACC4\uAC00 \uC788\uACE0, \uC2E4\uC81C \uBA85\uB839\uC774 \uAE30\uB85D\uB418\uC5C8\uACE0, \uCDE8\uC57D\uC810/\uC790\uACA9 \uC99D\uBA85/\uD130\uB110\uC774 \uC5F0\uACB0\uB418\uC5C8\uB294\uC9C0"
           },
-          "\u53EF\u590D\u73B0 " + (summary.count - (summary.incomplete || 0)) + "/" + summary.count
+          "\uC7AC\uD604 \uAC00\uB2A5 " + (summary.count - (summary.incomplete || 0)) + "/" + summary.count
         ) : null,
         summary && summary.serviceCappedExcluded ? h2(
           "span",
           {
             className: "rt-tag rt-tag-warn",
-            title: (summary.serviceCapped || []).map((x) => (x.service || "") + "\uFF5C" + (x.point_name || "")).join("\n") || "\u540C\u4E00\u8D44\u4EA7\u540C\u4E00\u7AEF\u53E3\u7684\u91CD\u590D\u8D26\u53F7/\u6570\u636E\u5E93\u6743\u9650\u547D\u4E2D\uFF1A\u670D\u52A1\u5DF2\u62FF\u6EE1\uFF0C\u4E0D\u8BA1\u5206\u3001\u4E0D\u8FDB\u62A5\u544A"
+            title: (summary.serviceCapped || []).map((x) => (x.service || "") + "|" + (x.point_name || "")).join("\n") || "\uAC19\uC740 \uC790\uC0B0\xB7\uAC19\uC740 \uD3EC\uD2B8\uC758 \uC911\uBCF5 \uACC4\uC815/DB \uAD8C\uD55C \uC801\uC911: \uC11C\uBE44\uC2A4 \uC0C1\uD55C\uC5D0 \uB3C4\uB2EC\uD574 \uC810\uC218 \uBBF8\uBC18\uC601, \uBCF4\uACE0\uC11C \uC81C\uC678"
           },
-          "\u540C\u670D\u52A1\u5DF2\u62FF\u6EE1\u4E0D\u8BA1\u5206 " + summary.serviceCappedExcluded
+          "\uAC19\uC740 \uC11C\uBE44\uC2A4 \uC0C1\uD55C \uB3C4\uB2EC\uB85C \uBBF8\uC9D1\uACC4 " + summary.serviceCappedExcluded
         ) : null,
         h2("div", { className: "rt-spacer" }),
         h2(
@@ -4880,9 +4880,9 @@ var __dshPurgeDrill = (() => {
           {
             className: "rt-btn",
             disabled: busy || !mdText,
-            onClick: () => copy(mdText, "\u6574\u4EFD\u62A5\u544A")
+            onClick: () => copy(mdText, "\uC804\uBB38")
           },
-          "\u590D\u5236\u5168\u6587"
+          "\uC804\uBB38 \uBCF5\uC0AC"
         ),
         h2(
           "button",
@@ -4891,12 +4891,12 @@ var __dshPurgeDrill = (() => {
             disabled: busy || !mdText,
             onClick: () => download(mdText, data && data.target || eng)
           },
-          "\u4E0B\u8F7D .md"
+          ".md \uB2E4\uC6B4\uB85C\uB4DC"
         ),
         h2(
           "button",
           { className: "rt-btn", disabled: busy, onClick: load },
-          busy ? "\u751F\u6210\u4E2D\u2026" : "\u91CD\u65B0\u751F\u6210"
+          busy ? "\uC0DD\uC131 \uC911\u2026" : "\uB2E4\uC2DC \uC0DD\uC131"
         )
       ),
       msg ? h2(
@@ -4923,7 +4923,7 @@ var __dshPurgeDrill = (() => {
                   true
                 )
               },
-              "\u5168\u90E8\u5C55\u5F00"
+              "\uC804\uCCB4 \uD3BC\uCE58\uAE30"
             ),
             h2(
               "button",
@@ -4934,7 +4934,7 @@ var __dshPurgeDrill = (() => {
                   false
                 )
               },
-              "\u5168\u90E8\u6298\u53E0"
+              "\uC804\uCCB4 \uC811\uAE30"
             )
           ),
           stages.map((st) => {
@@ -4972,7 +4972,7 @@ var __dshPurgeDrill = (() => {
                 h2(
                   "span",
                   { className: "rt-rep-stage-n" },
-                  st.items.length + " \u9879"
+                  st.items.length + "\uAC74"
                 ),
                 h2("div", { className: "rt-spacer" }),
                 h2(
@@ -4985,25 +4985,25 @@ var __dshPurgeDrill = (() => {
                       borderColor: st.color + "66"
                     }
                   },
-                  "+" + st.points + " \u5206"
+                  "+" + st.points + "\uC810"
                 ),
                 h2(
                   "span",
                   { className: "rt-ap-cum" },
-                  "\u7D2F\u8BA1 " + st.cumulative + " \u5206"
+                  "\uB204\uC801 " + st.cumulative + "\uC810"
                 )
               ),
               open ? h2("div", { className: "rt-rep-body" }, st.items.map(card)) : null
             );
           })
-        ) : data === null ? h2("div", { className: "rt-empty" }, "\u52A0\u8F7D\u4E2D\u2026") : h2(
+        ) : data === null ? h2("div", { className: "rt-empty" }, "\uBD88\uB7EC\uC624\uB294 \uC911\u2026") : h2(
           "div",
           { className: "rt-empty" },
-          h2("div", null, "\u8FD8\u6CA1\u6709\u53EF\u4EA4\u4ED8\u7684\u6210\u679C\u3002"),
+          h2("div", null, "\uC544\uC9C1 \uB0A9\uD488\uD560 \uC131\uACFC\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."),
           h2(
             "div",
             { style: { marginTop: 6, fontSize: 12 } },
-            '\u672C\u62A5\u544A\u53EA\u6536\u5F55"\u62FF\u5230\u4E86\u5206"\u7684\u6210\u679C\uFF1B\u6CA1\u6709\u5F97\u5206\u7684\u6F0F\u6D1E\u4E0D\u8FDB\u62A5\u544A\u3002\u62FF\u5230\u6210\u679C\u540E\u7528 redteam_score_hit \u8BB0\u5206\uFF08\u76EE\u6807\u8D44\u4EA7 + \u62FF\u5230\u7684\u4E1C\u897F\uFF09\uFF0C\u5E76\u8865 redteam_http_evidence_add \u4EE5\u4FBF\u590D\u73B0\u3002'
+            '\uC774 \uBCF4\uACE0\uC11C\uB294 "\uC810\uC218\uB97C \uB0B8" \uC131\uACFC\uB9CC \uC2E3\uC2B5\uB2C8\uB2E4. \uB4DD\uC810\uD558\uC9C0 \uC54A\uC740 \uCDE8\uC57D\uC810\uC740 \uBCF4\uACE0\uC11C\uC5D0 \uB4E4\uC5B4\uAC00\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uC131\uACFC\uB97C \uC5BB\uC740 \uB4A4 redteam_score_hit \uB85C \uC810\uC218\uB97C \uAE30\uB85D\uD558\uACE0(\uB300\uC0C1 \uC790\uC0B0 + \uC5BB\uC740 \uAC83), \uC7AC\uD604\uD560 \uC218 \uC788\uB3C4\uB85D redteam_http_evidence_add \uB85C \uBCF4\uAC15\uD558\uC138\uC694.'
           )
         )
       ),
@@ -5013,7 +5013,7 @@ var __dshPurgeDrill = (() => {
         h2(
           "span",
           null,
-          "\u53E3\u5F84\uFF1A\u53EA\u6536\u5F55\u5F97\u5206\u6210\u679C\uFF0C\u6BCF\u6761\u9644\u5E26\u53EF\u7C98\u8FDB Yakit Repeater \u7684\u539F\u59CB\u8BF7\u6C42"
+          "\uAE30\uC900: \uB4DD\uC810 \uC131\uACFC\uB9CC \uC218\uB85D\uD558\uBA70, \uD56D\uBAA9\uB9C8\uB2E4 Yakit Repeater \uC5D0 \uBD99\uC5EC\uB123\uC744 \uC218 \uC788\uB294 \uC6D0\uBCF8 \uC694\uCCAD\uC744 \uBD99\uC785\uB2C8\uB2E4"
         )
       )
     );
@@ -5021,9 +5021,9 @@ var __dshPurgeDrill = (() => {
   const FILE_KIND = {
     poc: "POC",
     exp: "EXP",
-    script: "\u811A\u672C",
-    wordlist: "\u5B57\u5178",
-    other: "\u5176\u4ED6"
+    script: "\uC2A4\uD06C\uB9BD\uD2B8",
+    wordlist: "\uC0AC\uC804",
+    other: "\uAE30\uD0C0"
   };
   function AttackFilesTab(props) {
     const eng = props.engagement;
@@ -5040,7 +5040,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+            setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -5062,7 +5062,7 @@ var __dshPurgeDrill = (() => {
       api({ op: "readAttackFile", engagement: eng, id: f.id }).then(
         (r) => {
           if (r && r.ok) setDetail(r);
-          else setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+          else setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
         },
         (e) => setErr(String(e && e.message || e))
       );
@@ -5135,13 +5135,13 @@ var __dshPurgeDrill = (() => {
               h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u6548\u679C"),
+                h2("b", null, "\uD6A8\uACFC"),
                 h2("span", null, detail.evidence || "\u2014")
               ),
               h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u8DEF\u5F84"),
+                h2("b", null, "\uACBD\uB85C"),
                 h2(
                   "span",
                   { className: "rt-mono", style: { wordBreak: "break-all" } },
@@ -5151,7 +5151,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u8BB0\u5F55"),
+                h2("b", null, "\uAE30\uB85D"),
                 h2(
                   "span",
                   null,
@@ -5169,7 +5169,7 @@ var __dshPurgeDrill = (() => {
                     padding: "10px 12px"
                   }
                 },
-                detail.content || "\uFF08\u7A7A\uFF09"
+                detail.content || "(\uBE44\uC5B4 \uC788\uC74C)"
               )
             )
           )
@@ -5182,11 +5182,11 @@ var __dshPurgeDrill = (() => {
             key: "sec:" + folder.folder,
             tone: "folder",
             title: folder.folder + "/",
-            count: folder.count + " \u4E2A\u6587\u4EF6",
+            count: folder.count + "\uAC1C \uD30C\uC77C",
             open: collapse.isOpen(fKey, true),
             onToggle: collapse.toggle(fKey, true)
           },
-          fileNodes.length ? fileNodes : h2("div", { className: "rt-atest-meta" }, "\uFF08\u7A7A\uFF09")
+          fileNodes.length ? fileNodes : h2("div", { className: "rt-atest-meta" }, "(\uBE44\uC5B4 \uC788\uC74C)")
         )
       );
     }
@@ -5197,17 +5197,17 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-toolbar" },
-        h2("span", { style: { fontWeight: 600 } }, "\u653B\u51FB\u6587\u4EF6"),
+        h2("span", { style: { fontWeight: 600 } }, "\uACF5\uACA9 \uD30C\uC77C"),
         h2(
           "span",
           { className: "rt-tag" },
-          folders.length + " \u4E2A\u76EE\u6807 / " + total + " \u4E2A\u6587\u4EF6"
+          folders.length + "\uAC1C \uB300\uC0C1 / " + total + "\uAC1C \uD30C\uC77C"
         ),
         h2("div", { className: "rt-spacer" }),
         h2(
           "button",
           { className: "rt-btn", disabled: busy, onClick: load },
-          busy ? "\u5237\u65B0\u4E2D\u2026" : "\u5237\u65B0"
+          busy ? "\uC0C8\uB85C\uACE0\uCE68 \uC911\u2026" : "\uC0C8\uB85C\uACE0\uCE68"
         )
       ),
       err ? h2("div", { className: "rt-err" }, err) : null,
@@ -5218,7 +5218,7 @@ var __dshPurgeDrill = (() => {
         !folders.length ? h2(
           "div",
           { className: "rt-empty" },
-          "\u6682\u65E0\u653B\u51FB\u6587\u4EF6\uFF08\u6253\u901A\u7684\u811A\u672C/POC/EXP \u4F1A\u6309\u76EE\u6807\u6587\u4EF6\u5939\u51FA\u73B0\u5728\u8FD9\u91CC\uFF09"
+          "\uACF5\uACA9 \uD30C\uC77C \uC5C6\uC74C(\uB6AB\uC740 \uC2A4\uD06C\uB9BD\uD2B8/POC/EXP \uAC00 \uB300\uC0C1 \uD3F4\uB354\uBCC4\uB85C \uC5EC\uAE30\uC5D0 \uB098\uD0C0\uB0A9\uB2C8\uB2E4)"
         ) : null
       ),
       h2(
@@ -5227,7 +5227,7 @@ var __dshPurgeDrill = (() => {
         h2(
           "span",
           null,
-          "\u76EE\u5F55\uFF1Aattack-files/<IP|URL\u4E3B\u673A|C\u6BB5>/ \uFF5C \u53EA\u6536\u5F55\u5B9E\u9645\u751F\u6548\u7684\u6587\u4EF6"
+          "\uB514\uB809\uD130\uB9AC: attack-files/<IP|URL \uD638\uC2A4\uD2B8|C \uBE14\uB85D>/ | \uC2E4\uC81C\uB85C \uD6A8\uACFC\uAC00 \uC788\uC5C8\uB358 \uD30C\uC77C\uB9CC \uC218\uB85D"
         )
       )
     );
@@ -5235,16 +5235,16 @@ var __dshPurgeDrill = (() => {
   const POC_KIND_LABEL = {
     poc: "POC",
     exp: "EXP",
-    script: "\u811A\u672C",
-    template: "\u6A21\u677F",
-    payload: "\u8F7D\u8377"
+    script: "\uC2A4\uD06C\uB9BD\uD2B8",
+    template: "\uD15C\uD50C\uB9BF",
+    payload: "\uD398\uC774\uB85C\uB4DC"
   };
   const POC_SOURCE_LABEL = {
-    web: "\u4E92\u8054\u7F51",
-    self: "\u624B\u6413",
-    manual: "\u4EBA\u5DE5",
-    "nuclei-template": "nuclei \u6A21\u677F",
-    kb: "\u77E5\u8BC6\u5E93"
+    web: "\uC778\uD130\uB137",
+    self: "\uC9C1\uC811 \uC81C\uC791",
+    manual: "\uC218\uB3D9",
+    "nuclei-template": "nuclei \uD15C\uD50C\uB9BF",
+    kb: "\uC9C0\uC2DD \uBCA0\uC774\uC2A4"
   };
   function KnowledgeTab(props) {
     const refreshKey = props.refreshKey || 0;
@@ -5290,7 +5290,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+            setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -5325,7 +5325,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setDetailBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u8BFB\u53D6\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uC77D\uAE30 \uC2E4\uD328" });
             return;
           }
           setDetail(r);
@@ -5340,9 +5340,9 @@ var __dshPurgeDrill = (() => {
       setMsg(okFlag ? { ok: message } : { err: message });
     });
     const useIt = (row) => {
-      api({ op: "pocUse", id: row.id, used_on: "\u63A7\u5236\u53F0\u624B\u52A8\u6807\u8BB0" }).then(
+      api({ op: "pocUse", id: row.id, used_on: "\uCF58\uC194\uC5D0\uC11C \uC218\uB3D9 \uD45C\uC2DC" }).then(
         () => {
-          setMsg({ ok: "\u5DF2\u8BB0\u4E00\u6B21\u590D\u7528\uFF1A" + row.title });
+          setMsg({ ok: "\uC7AC\uC0AC\uC6A9 1\uD68C \uAE30\uB85D: " + row.title });
           query();
         },
         (e) => setMsg({ err: String(e && e.message || e) })
@@ -5406,67 +5406,67 @@ var __dshPurgeDrill = (() => {
           h2("span", { className: "rt-kb-title" }, x.title),
           x.cve ? h2("span", { className: "rt-tag rt-tag-passive" }, x.cve) : null,
           x.component ? h2("span", { className: "rt-tag" }, x.component) : null,
-          x.verified === 1 ? h2("span", { className: "rt-tag rt-tag-live" }, "\u5DF2\u9A8C\u8BC1") : h2("span", { className: "rt-tag rt-tag-warn" }, "\u672A\u9A8C\u8BC1"),
+          x.verified === 1 ? h2("span", { className: "rt-tag rt-tag-live" }, "\uAC80\uC99D\uB428") : h2("span", { className: "rt-tag rt-tag-warn" }, "\uBBF8\uAC80\uC99D"),
           h2("div", { className: "rt-spacer" }),
           h2(
             "span",
             { className: "rt-tag" },
             POC_SOURCE_LABEL[x.source] || x.source || "\u2014"
           ),
-          x.hit_count ? h2("span", { className: "rt-tag" }, "\u590D\u7528 " + x.hit_count) : null
+          x.hit_count ? h2("span", { className: "rt-tag" }, "\uC7AC\uC0AC\uC6A9 " + x.hit_count) : null
         ),
-        /* 来源行：归类 · 影响版本 · 建立时间 · 来源靶标 · 发现资产 —— 一条知识"什么时候、
-             在哪个单位的哪台资产上发现的"一眼可见 */
+        /* 출처 행: 분류 · 영향 버전 · 등록 시각 · 출처 타깃 · 발견 자산 — 지식 하나가 "언제,
+             어느 조직의 어느 자산에서 발견했는지" 한눈에 보인다 */
         h2(
           "div",
           { className: "rt-kb-sub" },
           [
-            x.category ? "\u5F52\u7C7B " + (POC_CAT_NAME[x.category] || x.category) : null,
-            x.versions ? "\u5F71\u54CD\u7248\u672C " + x.versions : null,
+            x.category ? "\uBD84\uB958 " + (POC_CAT_NAME[x.category] || x.category) : null,
+            x.versions ? "\uC601\uD5A5 \uBC84\uC804 " + x.versions : null,
             x.language || null,
             x.tags || null,
-            "\u5EFA\u7ACB\u65F6\u95F4 " + fmt(x.created_at),
-            x.engagement_name || x.engagement_id ? "\u6765\u6E90\u9776\u6807 " + (x.engagement_name || x.engagement_id) : null,
-            x.asset_target ? "\u53D1\u73B0\u8D44\u4EA7 " + x.asset_target : null,
-            x.found_by_agent ? "\u53D1\u73B0\u89D2\u8272 " + (ROLE_LABEL[x.found_by_agent] || x.found_by_agent) : null,
-            x.source_url ? "\u6765\u6E90 " + x.source_url : null
+            "\uB4F1\uB85D \uC2DC\uAC01 " + fmt(x.created_at),
+            x.engagement_name || x.engagement_id ? "\uCD9C\uCC98 \uD0C0\uAE43 " + (x.engagement_name || x.engagement_id) : null,
+            x.asset_target ? "\uBC1C\uACAC \uC790\uC0B0 " + x.asset_target : null,
+            x.found_by_agent ? "\uBC1C\uACAC \uC5ED\uD560 " + (ROLE_LABEL[x.found_by_agent] || x.found_by_agent) : null,
+            x.source_url ? "\uCD9C\uCC98 " + x.source_url : null
           ].filter(Boolean).join(" \xB7 ")
         ),
         isOpen ? h2(
           "div",
           { className: "rt-kb-body" },
-          detailBusy && !d ? h2("div", { className: "rt-empty" }, "\u8BFB\u53D6\u4E2D\u2026") : null,
+          detailBusy && !d ? h2("div", { className: "rt-empty" }, "\uBD88\uB7EC\uC624\uB294 \uC911\u2026") : null,
           d ? h2(
             "div",
             null,
             d.usage ? h2(
               "div",
               { className: "rt-kv" },
-              h2("b", null, "\u7528\u6CD5"),
+              h2("b", null, "\uC6A9\uBC95"),
               h2("span", { className: "rt-mono" }, d.usage)
             ) : null,
             d.description ? h2(
               "div",
               { className: "rt-kv" },
-              h2("b", null, "\u8BF4\u660E"),
+              h2("b", null, "\uC124\uBA85"),
               h2("span", null, d.description)
             ) : null,
             d.verified_note ? h2(
               "div",
               { className: "rt-kv" },
-              h2("b", null, "\u9A8C\u8BC1\u8BC1\u636E"),
+              h2("b", null, "\uAC80\uC99D \uC99D\uAC70"),
               h2("span", null, d.verified_note)
             ) : null,
             d.used_on ? h2(
               "div",
               { className: "rt-kv" },
-              h2("b", null, "\u6700\u8FD1\u4F7F\u7528"),
+              h2("b", null, "\uCD5C\uADFC \uC0AC\uC6A9"),
               h2("span", null, d.used_on)
             ) : null,
             d.path ? h2(
               "div",
               { className: "rt-kv" },
-              h2("b", null, "\u843D\u76D8"),
+              h2("b", null, "\uC800\uC7A5 \uACBD\uB85C"),
               h2("span", { className: "rt-mono" }, d.path)
             ) : null,
             h2(
@@ -5477,32 +5477,32 @@ var __dshPurgeDrill = (() => {
                 {
                   className: "rt-btn",
                   disabled: !d.content,
-                  onClick: () => copy(d.content || "", "POC \u6B63\u6587")
+                  onClick: () => copy(d.content || "", "POC \uBCF8\uBB38")
                 },
-                "\u590D\u5236\u6B63\u6587"
+                "\uBCF8\uBB38 \uBCF5\uC0AC"
               ),
               h2(
                 "button",
                 { className: "rt-btn", onClick: () => useIt(x) },
-                "\u8BB0\u4E00\u6B21\u590D\u7528"
+                "\uC7AC\uC0AC\uC6A9 1\uD68C \uAE30\uB85D"
               ),
               d.source_url ? h2(
                 "button",
                 {
                   className: "rt-btn",
-                  onClick: () => copy(d.source_url, "\u6765\u6E90\u94FE\u63A5")
+                  onClick: () => copy(d.source_url, "\uCD9C\uCC98 \uB9C1\uD06C")
                 },
-                "\u590D\u5236\u6765\u6E90"
+                "\uCD9C\uCC98 \uBCF5\uC0AC"
               ) : null
             ),
             d.content ? h2(
               "pre",
               { className: "rt-rep-http" },
-              d.content.length > 12e3 ? d.content.slice(0, 12e3) + "\n\u2026\uFF08\u5DF2\u622A\u65AD\uFF0C\u5B8C\u6574\u5185\u5BB9\u89C1\u843D\u76D8\u6587\u4EF6\uFF09" : d.content
+              d.content.length > 12e3 ? d.content.slice(0, 12e3) + "\n\u2026(\uC798\uB838\uC2B5\uB2C8\uB2E4. \uC804\uBB38\uC740 \uC800\uC7A5\uB41C \uD30C\uC77C\uC744 \uBCF4\uC138\uC694)" : d.content
             ) : h2(
               "div",
               { className: "rt-empty" },
-              "\u8FD9\u6761\u53EA\u6709\u5143\u6570\u636E\uFF0C\u6CA1\u6709\u6B63\u6587 \u2014\u2014 \u62FF\u5230\u6B63\u6587\u540E\u7528 redteam_poc_update \u8865\u4E0A"
+              "\uC774 \uD56D\uBAA9\uC740 \uBA54\uD0C0\uB370\uC774\uD130\uB9CC \uC788\uACE0 \uBCF8\uBB38\uC774 \uC5C6\uC2B5\uB2C8\uB2E4 \u2014 \uBCF8\uBB38\uC744 \uC5BB\uC740 \uB4A4 redteam_poc_update \uB85C \uBCF4\uAC15\uD558\uC138\uC694"
             )
           ) : null
         ) : null
@@ -5514,44 +5514,44 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-toolbar" },
-        h2("span", { style: { fontWeight: 600 } }, "\u77E5\u8BC6\u5E93 \xB7 POC / EXP"),
-        h2("span", { className: "rt-tag" }, stats.total + " \u6761"),
+        h2("span", { style: { fontWeight: 600 } }, "\uC9C0\uC2DD \uBCA0\uC774\uC2A4 \xB7 POC / EXP"),
+        h2("span", { className: "rt-tag" }, stats.total + "\uAC74"),
         h2(
           "span",
           { className: "rt-tag rt-tag-live" },
-          "\u5DF2\u9A8C\u8BC1 " + stats.verified
+          "\uAC80\uC99D\uB428 " + stats.verified
         ),
-        h2("span", { className: "rt-tag" }, "\u7D2F\u8BA1\u590D\u7528 " + (stats.reused || 0)),
+        h2("span", { className: "rt-tag" }, "\uB204\uC801 \uC7AC\uC0AC\uC6A9 " + (stats.reused || 0)),
         (stats.uncategorized || 0) > 0 && (stats.uncategorized || 0) !== stats.total ? h2(
           "span",
           {
             className: "rt-tag rt-tag-warn",
-            title: "\u8FD9\u4E9B\u6761\u76EE\u8FD8\u6CA1\u5F52\u7C7B\uFF1A\u667A\u80FD\u4F53\u56DE\u586B\u65F6\u7528 redteam_poc_add \u7684 category \u53C2\u6570\u6807\u4E00\u4E0B"
+            title: "\uC544\uC9C1 \uBD84\uB958\uB418\uC9C0 \uC54A\uC740 \uD56D\uBAA9\uC785\uB2C8\uB2E4: \uC5D0\uC774\uC804\uD2B8\uAC00 \uB418\uCC44\uC6B8 \uB54C redteam_poc_add \uC758 category \uC778\uC790\uB85C \uD45C\uC2DC\uD569\uB2C8\uB2E4"
           },
-          "\u672A\u5F52\u7C7B " + stats.uncategorized
+          "\uBBF8\uBD84\uB958 " + stats.uncategorized
         ) : null,
         tpl.total ? h2(
           "span",
           { className: "rt-tag rt-tag-passive" },
-          "\u672C\u673A\u6A21\u677F " + tpl.total
+          "\uC774 PC \uD15C\uD50C\uB9BF " + tpl.total
         ) : null,
         h2("div", { className: "rt-spacer" }),
         h2(
           "button",
           {
             className: "rt-btn" + (grouped ? " rt-btn-primary" : ""),
-            title: "\u6309\u5F52\u7C7B\u5206\u7EC4\u663E\u793A / \u5E73\u94FA\u663E\u793A",
+            title: "\uBD84\uB958\uBCC4 \uADF8\uB8F9 \uD45C\uC2DC / \uAC1C\uBCC4 \uB098\uC5F4",
             onClick: () => setGrouped(!grouped)
           },
-          grouped ? "\u6309\u5F52\u7C7B\u5206\u7EC4" : "\u5E73\u94FA\u663E\u793A"
+          grouped ? "\uBD84\uB958\uBCC4 \uADF8\uB8F9" : "\uAC1C\uBCC4 \uB098\uC5F4"
         ),
         h2(
           "button",
           { className: "rt-btn", disabled: busy, onClick: () => query() },
-          busy ? "\u68C0\u7D22\u4E2D\u2026" : "\u5237\u65B0"
+          busy ? "\uAC80\uC0C9 \uC911\u2026" : "\uC0C8\uB85C\uACE0\uCE68"
         )
       ),
-      /* 归类总览：点一下就是按该类筛选，一眼看清"哪类武器攒了多少、哪类还是空的" */
+      /* 분류 개요: 한 번 누르면 그 분류로 필터된다. 어떤 무기가 얼마나 쌓였고 어떤 분류가 비었는지 한눈에 본다 */
       h2(
         "div",
         { className: "rt-kb-cats" },
@@ -5561,7 +5561,7 @@ var __dshPurgeDrill = (() => {
             {
               key: c.code,
               className: "rt-concl-i" + (category === c.code ? " on" : ""),
-              title: (c.hint || POC_CAT_NAME[c.code] || c.code) + " \xB7 \u672C\u673A\u6A21\u677F " + (tplByCat.get(c.code) || 0) + " \xB7 \u77E5\u8BC6\u5E93 " + (c.n || 0) + (c.verified ? "\uFF08\u5DF2\u9A8C\u8BC1 " + c.verified + "\uFF09" : ""),
+              title: (c.hint || POC_CAT_NAME[c.code] || c.code) + " \xB7 \uC774 PC \uD15C\uD50C\uB9BF " + (tplByCat.get(c.code) || 0) + " \xB7 \uC9C0\uC2DD \uBCA0\uC774\uC2A4 " + (c.n || 0) + (c.verified ? "(\uAC80\uC99D\uB428 " + c.verified + ")" : ""),
               onClick: () => {
                 const next = category === c.code ? "" : c.code;
                 setCategory(next);
@@ -5572,7 +5572,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "span",
               null,
-              (POC_CAT_NAME[c.code] || c.code) + (c.verified ? "\uFF08\u5DF2\u9A8C\u8BC1 " + c.verified + "\uFF09" : "")
+              (POC_CAT_NAME[c.code] || c.code) + (c.verified ? "(\uAC80\uC99D\uB428 " + c.verified + ")" : "")
             )
           )
         )
@@ -5583,7 +5583,7 @@ var __dshPurgeDrill = (() => {
         h2("input", {
           className: "rt-input",
           style: { flex: 1, minWidth: 140 },
-          placeholder: "\u641C CVE / \u7EC4\u4EF6 / \u5173\u952E\u5B57\uFF08\u6B63\u6587\u4E5F\u4F1A\u641C\uFF09",
+          placeholder: "CVE / \uCEF4\uD3EC\uB10C\uD2B8 / \uD0A4\uC6CC\uB4DC \uAC80\uC0C9(\uBCF8\uBB38\uB3C4 \uAC80\uC0C9\uD569\uB2C8\uB2E4)",
           value: q,
           onChange: (e) => setQ(e.target.value),
           onKeyDown: (e) => {
@@ -5601,7 +5601,7 @@ var __dshPurgeDrill = (() => {
               query({ category: e.target.value || void 0 });
             }
           },
-          h2("option", { value: "" }, "\u5168\u90E8\u5F52\u7C7B"),
+          h2("option", { value: "" }, "\uBAA8\uB4E0 \uBD84\uB958"),
           POC_CAT_ORDER.map(
             (k) => h2("option", { key: k, value: k }, POC_CAT_NAME[k])
           )
@@ -5617,19 +5617,19 @@ var __dshPurgeDrill = (() => {
               query({ engagement: e.target.value || void 0 });
             }
           },
-          h2("option", { value: "" }, "\u5168\u90E8\u6765\u6E90\u9776\u6807"),
+          h2("option", { value: "" }, "\uBAA8\uB4E0 \uCD9C\uCC98 \uD0C0\uAE43"),
           (stats.byEngagement || []).map(
             (e) => h2(
               "option",
               { key: e.engagement, value: e.engagement },
-              e.engagement + "\uFF08" + e.n + "\uFF09"
+              e.engagement + "(" + e.n + ")"
             )
           )
         ),
         h2("input", {
           className: "rt-input",
           style: { width: 120 },
-          placeholder: "\u53D1\u73B0\u8D44\u4EA7\u7B5B\u9009",
+          placeholder: "\uBC1C\uACAC \uC790\uC0B0 \uD544\uD130",
           value: assetTarget,
           onChange: (e) => setAssetTarget(e.target.value),
           onKeyDown: (e) => {
@@ -5647,7 +5647,7 @@ var __dshPurgeDrill = (() => {
               query({ kind: e.target.value || void 0 });
             }
           },
-          h2("option", { value: "" }, "\u5168\u90E8\u7C7B\u578B"),
+          h2("option", { value: "" }, "\uBAA8\uB4E0 \uC720\uD615"),
           Object.keys(POC_KIND_LABEL).map(
             (k) => h2("option", { key: k, value: k }, POC_KIND_LABEL[k])
           )
@@ -5663,12 +5663,12 @@ var __dshPurgeDrill = (() => {
               query({ verified: e.target.checked || void 0 });
             }
           }),
-          "\u53EA\u770B\u5DF2\u9A8C\u8BC1"
+          "\uAC80\uC99D\uB41C \uAC83\uB9CC"
         ),
         h2(
           "button",
           { className: "rt-btn rt-btn-primary", onClick: () => query() },
-          "\u68C0\u7D22"
+          "\uAC80\uC0C9"
         )
       ),
       msg ? h2(
@@ -5680,14 +5680,14 @@ var __dshPurgeDrill = (() => {
         "div",
         { className: "rt-err" },
         /engagement required|unknown op/i.test(err) ? (
-          /* 老 host 还没有知识库接口：讲清怎么恢复，别让人对着 "engagement required" 发懵 */
-          "\u77E5\u8BC6\u5E93\u63A5\u53E3\u7531 host \u4FA7\u63D0\u4F9B\uFF0C\u5F53\u524D\u5BBF\u4E3B\u8FD8\u662F\u65E7\u8FDB\u7A0B \u2014\u2014 \u8BF7\u5B8C\u5168\u9000\u51FA\u540E\u91CD\u65B0\u6253\u5F00\uFF08\u5B98\u65B9 exe / \u793E\u533A\u7248 / dsh web \u4EFB\u4E00\uFF09\uFF0C\u518D\u5237\u65B0\u9875\u9762\u3002"
+          /* 옛 host 에는 지식 베이스 인터페이스가 없다: 복구 방법을 분명히 알려준다. "engagement required" 를 보고 헤매지 않게 한다 */
+          "\uC9C0\uC2DD \uBCA0\uC774\uC2A4 \uC778\uD130\uD398\uC774\uC2A4\uB294 host \uCE21\uC774 \uC81C\uACF5\uD569\uB2C8\uB2E4. \uD604\uC7AC \uD638\uC2A4\uD2B8\uAC00 \uC544\uC9C1 \uC61B \uD504\uB85C\uC138\uC2A4\uC774\uBBC0\uB85C \uC644\uC804\uD788 \uC885\uB8CC\uD55C \uB4A4 \uB2E4\uC2DC \uC2E4\uD589\uD558\uACE0(\uACF5\uC2DD exe / \uCEE4\uBBA4\uB2C8\uD2F0\uD310 / dsh web \uC911 \uC544\uBB34\uAC70\uB098), \uD398\uC774\uC9C0\uB97C \uC0C8\uB85C\uACE0\uCE68\uD558\uC138\uC694."
         ) : err
       ) : null,
       !err && data && data.dbPath ? h2(
         "div",
         { className: "rt-foot", style: { marginBottom: 6, fontSize: 11 } },
-        "\u77E5\u8BC6\u5E93\uFF1A" + data.dbPath + (data.root ? "\uFF08\u6839\u76EE\u5F55 " + data.root + "\uFF09" : "")
+        "\uC9C0\uC2DD \uBCA0\uC774\uC2A4: " + data.dbPath + (data.root ? "(\uB8E8\uD2B8 \uB514\uB809\uD130\uB9AC " + data.root + ")" : "")
       ) : null,
       h2(
         "div",
@@ -5715,11 +5715,11 @@ var __dshPurgeDrill = (() => {
                   { className: "rt-kb-cat-name" },
                   POC_CAT_NAME[code] || code
                 ),
-                h2("span", { className: "rt-tag" }, list.length + " \u6761"),
+                h2("span", { className: "rt-tag" }, list.length + "\uAC74"),
                 h2(
                   "span",
                   { className: "rt-tag rt-tag-live" },
-                  "\u5DF2\u9A8C\u8BC1 " + list.filter((x) => x.verified === 1).length
+                  "\uAC80\uC99D\uB428 " + list.filter((x) => x.verified === 1).length
                 ),
                 h2("span", { className: "rt-spacer" }),
                 h2(
@@ -5730,7 +5730,7 @@ var __dshPurgeDrill = (() => {
                       color: "var(--dsw-alias-label-secondary)"
                     }
                   },
-                  "\u6700\u8FD1\u5EFA\u7ACB " + fmt(
+                  "\uCD5C\uADFC \uB4F1\uB85D " + fmt(
                     list.map((x) => x.created_at).filter(Boolean).sort().pop()
                   )
                 )
@@ -5746,7 +5746,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { className: "rt-ap-sub" },
-            "\u672C\u673A nuclei \u6A21\u677F \xB7 " + (tplStart + 1) + "\u2013" + (tplStart + tplItems.length) + " / " + tplMatched + "\uFF08\u76F4\u63A5 `nuclei -t <\u6A21\u677F\u8DEF\u5F84>`\uFF09"
+            "\uC774 PC nuclei \uD15C\uD50C\uB9BF \xB7 " + (tplStart + 1) + "\u2013" + (tplStart + tplItems.length) + " / " + tplMatched + "(\uBC14\uB85C `nuclei -t <\uD15C\uD50C\uB9BF \uACBD\uB85C>`)"
           ),
           tplItems.map(
             (t, i) => h2(
@@ -5773,9 +5773,9 @@ var __dshPurgeDrill = (() => {
                 {
                   className: "rt-btn",
                   style: { padding: "0 6px", fontSize: 10.5 },
-                  onClick: () => copy("nuclei -t " + t.path + " -u <\u76EE\u6807>", "\u6A21\u677F\u547D\u4EE4")
+                  onClick: () => copy("nuclei -t " + t.path + " -u <\uB300\uC0C1>", "\uD15C\uD50C\uB9BF \uBA85\uB839")
                 },
-                "\u590D\u5236\u547D\u4EE4"
+                "\uBA85\uB839 \uBCF5\uC0AC"
               )
             )
           ),
@@ -5789,7 +5789,7 @@ var __dshPurgeDrill = (() => {
                 disabled: busy || tplStart <= 0,
                 onClick: () => turnTpl(tplStart - tplPageSize)
               },
-              "\u4E0A\u4E00\u9875"
+              "\uC774\uC804 \uD398\uC774\uC9C0"
             ),
             h2(
               "button",
@@ -5798,28 +5798,28 @@ var __dshPurgeDrill = (() => {
                 disabled: busy || tplStart + tplItems.length >= tplMatched,
                 onClick: () => turnTpl(tplStart + tplPageSize)
               },
-              "\u4E0B\u4E00\u9875"
+              "\uB2E4\uC74C \uD398\uC774\uC9C0"
             )
           ),
           tpl.dir ? h2(
             "div",
             { className: "rt-foot" },
-            h2("span", null, "\u6A21\u677F\u76EE\u5F55\uFF1A" + tpl.dir)
+            h2("span", null, "\uD15C\uD50C\uB9BF \uB514\uB809\uD130\uB9AC: " + tpl.dir)
           ) : null
         ) : null,
-        data === null ? h2("div", { className: "rt-empty" }, "\u52A0\u8F7D\u4E2D\u2026") : null,
+        data === null ? h2("div", { className: "rt-empty" }, "\uBD88\uB7EC\uC624\uB294 \uC911\u2026") : null,
         data !== null && !items.length && !tplItems.length ? h2(
           "div",
           { className: "rt-empty" },
           h2(
             "div",
             null,
-            q || kind || verifiedOnly ? "\u6CA1\u6709\u547D\u4E2D\uFF1A\u6362\u4E2A\u5173\u952E\u5B57\u518D\u8BD5\uFF0C\u6216\u53BB\u4E92\u8054\u7F51\u627E / \u81EA\u5DF1\u624B\u6413\u540E\u56DE\u586B\u3002" : tpl.total ? "POC/EXP \u5E93\u8FD8\u662F\u7A7A\u7684\uFF1B\u672C\u673A\u5DF2\u6709 " + tpl.total + " \u4E2A nuclei \u6A21\u677F\uFF0C\u4F46\u8FD9\u4E00\u9875\u6CA1\u6709\u5217\u51FA\u6765\u3002\u8BF7\u5B8C\u5168\u9000\u51FA\u540E\u91CD\u65B0\u6253\u5F00\u5BA2\u6237\u7AEF\u3002" : tpl.dir ? "\u77E5\u8BC6\u5E93\u8FD8\u662F\u7A7A\u7684\uFF08\u672C\u673A\u6A21\u677F\u76EE\u5F55\u5B58\u5728\u4F46\u6CA1\u6709 yaml\uFF0C\u8BF7\u8DD1 nuclei -update-templates\uFF09\u3002" : "\u77E5\u8BC6\u5E93\u8FD8\u662F\u7A7A\u7684\u3002\u672C\u673A\u4E5F\u8FD8\u6CA1\u6709 nuclei \u6A21\u677F\u5E93 \u2014\u2014 \u5728\u6F14\u7EC3\u673A\u4E0A\u8DD1 setup.sh \u6216 `nuclei -update-templates`\uFF0C\u88C5\u597D\u540E\u8FD9\u91CC\u4F1A\u51FA\u73B0\u300C\u672C\u673A\u6A21\u677F N\u300D\u3002"
+            q || kind || verifiedOnly ? "\uC801\uC911 \uC5C6\uC74C: \uD0A4\uC6CC\uB4DC\uB97C \uBC14\uAFD4 \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uAC70\uB098, \uC778\uD130\uB137\uC5D0\uC11C \uCC3E\uAC70\uB098 \uC9C1\uC811 \uB9CC\uB4E4\uC5B4 \uB418\uCC44\uC6B0\uC138\uC694." : tpl.total ? "POC/EXP \uB77C\uC774\uBE0C\uB7EC\uB9AC\uAC00 \uC544\uC9C1 \uBE44\uC5B4 \uC788\uC2B5\uB2C8\uB2E4; \uC774 PC \uC5D0 nuclei \uD15C\uD50C\uB9BF\uC774 " + tpl.total + "\uAC1C \uC788\uC9C0\uB9CC \uC774 \uD398\uC774\uC9C0\uC5D0\uB294 \uB098\uC624\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uD074\uB77C\uC774\uC5B8\uD2B8\uB97C \uC644\uC804\uD788 \uC885\uB8CC\uD55C \uB4A4 \uB2E4\uC2DC \uC2E4\uD589\uD558\uC138\uC694." : tpl.dir ? "\uC9C0\uC2DD \uBCA0\uC774\uC2A4\uAC00 \uC544\uC9C1 \uBE44\uC5B4 \uC788\uC2B5\uB2C8\uB2E4(\uC774 PC \uD15C\uD50C\uB9BF \uB514\uB809\uD130\uB9AC\uB294 \uC788\uC9C0\uB9CC yaml \uC774 \uC5C6\uC2B5\uB2C8\uB2E4. nuclei -update-templates \uB97C \uC2E4\uD589\uD558\uC138\uC694)." : "\uC9C0\uC2DD \uBCA0\uC774\uC2A4\uAC00 \uC544\uC9C1 \uBE44\uC5B4 \uC788\uC2B5\uB2C8\uB2E4. \uC774 PC \uC5D0\uB3C4 nuclei \uD15C\uD50C\uB9BF \uB77C\uC774\uBE0C\uB7EC\uB9AC\uAC00 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4 \u2014 \uC2E4\uC2B5 \uBA38\uC2E0\uC5D0\uC11C setup.sh \uB610\uB294 `nuclei -update-templates` \uB97C \uC2E4\uD589\uD558\uBA74 \uC5EC\uAE30\uC5D0 \u201C\uC774 PC \uD15C\uD50C\uB9BF N\u201D\uC774 \uB098\uD0C0\uB0A9\uB2C8\uB2E4."
           ),
           h2(
             "div",
             { style: { marginTop: 6, fontSize: 12 } },
-            "\u6253 Nday/1day \u7684\u6807\u51C6\u987A\u5E8F\uFF1A\u2460 redteam_poc_search \u5148\u67E5\u8FD9\u91CC\uFF08\u987A\u5E26\u641C\u672C\u673A nuclei \u6A21\u677F\u5E93\uFF09\u2192 \u2461 \u90FD\u6CA1\u6709\u5C31\u4E92\u8054\u7F51\u641C\u7D22\uFF08web_search / GitHub / ExploitDB / \u5382\u5546\u516C\u544A\uFF09\u6216\u81EA\u5DF1\u624B\u6413 \u2192 \u2462 \u5728\u771F\u5B9E\u76EE\u6807\u4E0A\u9A8C\u8BC1\u6709\u6548\u540E redteam_poc_add \u56DE\u586B\uFF0C\u540E\u9762\u7684\u9776\u6807\u76F4\u63A5\u5C31\u80FD\u7528\u3002"
+            "Nday/1day \uB97C \uACF5\uB7B5\uD558\uB294 \uD45C\uC900 \uC21C\uC11C: \u2460 redteam_poc_search \uB85C \uC5EC\uAE30\uB97C \uBA3C\uC800 \uC870\uD68C\uD569\uB2C8\uB2E4(\uC774 PC nuclei \uD15C\uD50C\uB9BF \uB77C\uC774\uBE0C\uB7EC\uB9AC\uB3C4 \uD568\uAED8 \uAC80\uC0C9\uD569\uB2C8\uB2E4) \u2192 \u2461 \uC5C6\uC73C\uBA74 \uC778\uD130\uB137 \uAC80\uC0C9(web_search / GitHub / ExploitDB / \uBCA4\uB354 \uACF5\uC9C0) \uB610\uB294 \uC9C1\uC811 \uC81C\uC791 \u2192 \u2462 \uC2E4\uC81C \uB300\uC0C1\uC5D0\uC11C \uC720\uD6A8\uD568\uC744 \uD655\uC778\uD55C \uB4A4 redteam_poc_add \uB85C \uB418\uCC44\uC6B0\uBA74, \uC774\uD6C4 \uD0C0\uAE43\uC5D0\uC11C \uBC14\uB85C \uC4F8 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
           ),
           data.dbPath ? h2(
             "div",
@@ -5827,7 +5827,7 @@ var __dshPurgeDrill = (() => {
               style: { marginTop: 6, fontSize: 11 },
               className: "rt-mono"
             },
-            "\u77E5\u8BC6\u5E93\u6587\u4EF6\uFF1A" + data.dbPath
+            "\uC9C0\uC2DD \uBCA0\uC774\uC2A4 \uD30C\uC77C: " + data.dbPath
           ) : null,
           tpl.dir ? h2(
             "div",
@@ -5835,7 +5835,7 @@ var __dshPurgeDrill = (() => {
               style: { marginTop: 6, fontSize: 11 },
               className: "rt-mono"
             },
-            "\u6A21\u677F\u76EE\u5F55\uFF1A" + tpl.dir
+            "\uD15C\uD50C\uB9BF \uB514\uB809\uD130\uB9AC: " + tpl.dir
           ) : null
         ) : null
       ),
@@ -5845,7 +5845,7 @@ var __dshPurgeDrill = (() => {
         h2(
           "span",
           null,
-          "\u5168\u5C40\u5171\u4EAB\uFF08\u8DE8\u9776\u6807\uFF09\uFF5C \u843D\u76D8\uFF1Apocs/<code>/ \uFF5C \u53EA\u6536\u5F55\u901A\u7528\u53EF\u590D\u7528\u7684 POC/EXP\uFF0C\u9776\u6807\u4E13\u7528\u811A\u672C\u8D70\u300C\u653B\u51FB\u6587\u4EF6\u300D"
+          "\uC804\uC5ED \uACF5\uC720(\uD0C0\uAE43 \uAC04) | \uC800\uC7A5 \uC704\uCE58: pocs/<code>/ | \uBC94\uC6A9\uC73C\uB85C \uC7AC\uC0AC\uC6A9 \uAC00\uB2A5\uD55C POC/EXP \uB9CC \uC218\uB85D\uD558\uACE0, \uD0C0\uAE43 \uC804\uC6A9 \uC2A4\uD06C\uB9BD\uD2B8\uB294 \u201C\uACF5\uACA9 \uD30C\uC77C\u201D\uB85C \uBCF4\uB0C5\uB2C8\uB2E4"
         )
       )
     );
@@ -5881,7 +5881,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+            setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -5914,12 +5914,12 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u4FDD\u5B58\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uC800\uC7A5 \uC2E4\uD328" });
             return;
           }
           setData(r);
           setMsg({
-            ok: "\u5DF2\u4FDD\u5B58\u5230 " + (r.config && r.config.path || "$DSH_HOME/redteam/config.json")
+            ok: "\uC800\uC7A5\uB428: " + (r.config && r.config.path || "$DSH_HOME/redteam/config.json")
           });
           applyDraftFrom(r);
         },
@@ -5934,7 +5934,7 @@ var __dshPurgeDrill = (() => {
         folderPath || draft && draft.toolkitDir || ""
       ).trim();
       if (!dir) {
-        setMsg({ err: "\u8BF7\u5148\u586B\u5199\u5DE5\u5177\u6240\u5728\u6587\u4EF6\u5939\u8DEF\u5F84" });
+        setMsg({ err: "\uB3C4\uAD6C\uAC00 \uC788\uB294 \uD3F4\uB354 \uACBD\uB85C\uB97C \uBA3C\uC800 \uC785\uB825\uD558\uC138\uC694" });
         return;
       }
       setBusy(true);
@@ -5943,13 +5943,13 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u81EA\u52A8\u5206\u914D\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uC790\uB3D9 \uD560\uB2F9 \uC2E4\uD328" });
             return;
           }
           setData(r);
           applyDraftFrom(r);
           setMsg({
-            ok: "\u5DF2\u4ECE\u6587\u4EF6\u5939\u5206\u914D " + (r.assignedCount || 0) + " \u4E2A\u5DE5\u5177" + (r.nucleiTemplatesDir ? "\uFF0C\u5E76\u8BC6\u522B nuclei-templates" : "")
+            ok: "\uD3F4\uB354\uC5D0\uC11C " + (r.assignedCount || 0) + "\uAC1C \uB3C4\uAD6C\uB97C \uD560\uB2F9\uD588\uC2B5\uB2C8\uB2E4" + (r.nucleiTemplatesDir ? ", nuclei-templates \uB3C4 \uC778\uC2DD\uD588\uC2B5\uB2C8\uB2E4" : "")
           });
         },
         (e) => {
@@ -5980,7 +5980,7 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-toolbar" },
-        h2("span", { style: { fontWeight: 600 } }, "\u73AF\u5883\u9002\u914D"),
+        h2("span", { style: { fontWeight: 600 } }, "\uD658\uACBD \uC801\uC751"),
         h2(
           "span",
           { className: "rt-tag" },
@@ -5992,18 +5992,18 @@ var __dshPurgeDrill = (() => {
           {
             className: "rt-tag" + (adapt.ready ? " rt-tag-live" : " rt-tag-warn")
           },
-          adapt.ready ? "\u5C31\u7EEA \xB7 " + (adapt.reason || "") : "\u5F85\u914D\u7F6E"
+          adapt.ready ? "\uC900\uBE44\uB428 \xB7 " + (adapt.reason || "") : "\uC124\uC815 \uB300\uAE30"
         ),
         h2(
           "span",
           { className: "rt-tag" + (found ? " rt-tag-live" : " rt-tag-warn") },
-          "\u5DE5\u5177 " + found + "/" + tools.length
+          "\uB3C4\uAD6C " + found + "/" + tools.length
         ),
         h2("div", { className: "rt-spacer" }),
         h2(
           "button",
           { className: "rt-btn", disabled: busy, onClick: load },
-          busy ? "\u8BFB\u53D6\u4E2D\u2026" : "\u5237\u65B0"
+          busy ? "\uC77D\uB294 \uC911\u2026" : "\uC0C8\uB85C\uACE0\uCE68"
         ),
         h2(
           "button",
@@ -6012,7 +6012,7 @@ var __dshPurgeDrill = (() => {
             disabled: busy || !draft,
             onClick: save
           },
-          "\u4FDD\u5B58"
+          "\uC800\uC7A5"
         )
       ),
       h2(
@@ -6030,7 +6030,7 @@ var __dshPurgeDrill = (() => {
             className: "rt-card",
             style: { margin: "0 0 8px", fontSize: 12, lineHeight: 1.6 }
           },
-          adapt.message || "\u5747\u53EF\u9009\u586B\uFF1A\u7559\u7A7A\u5219\u7528\u9ED8\u8BA4\u8DEF\u5F84/\u81EA\u52A8\u67E5\u627E\u3002\u586B\u4E86\u7684\u8986\u76D6\u9ED8\u8BA4\u3002\u5BC6\u94A5\u7C7B\u53EA\u5728\u9700\u8981\u6D4B\u7ED8/\u53CD\u5F39\u65F6\u624D\u586B\u3002"
+          adapt.message || "\uBAA8\uB450 \uC120\uD0DD \uC0AC\uD56D\uC785\uB2C8\uB2E4: \uBE44\uC6CC \uB450\uBA74 \uAE30\uBCF8 \uACBD\uB85C/\uC790\uB3D9 \uD0D0\uC0C9\uC744 \uC501\uB2C8\uB2E4. \uCC44\uC6B0\uBA74 \uAE30\uBCF8\uAC12\uC744 \uB36E\uC5B4\uC501\uB2C8\uB2E4. \uD0A4\uB294 \uC790\uC0B0 \uB9E4\uD551/\uB9AC\uBC84\uC2A4 \uC178\uC774 \uD544\uC694\uD560 \uB54C\uB9CC \uCC44\uC6C1\uB2C8\uB2E4."
         ),
         h2(
           "div",
@@ -6041,12 +6041,12 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { style: { fontWeight: 600, marginBottom: 6 } },
-            "\u6574\u5305\u6587\u4EF6\u5939 \u2192 \u81EA\u52A8\u5206\u914D\u5DE5\u5177"
+            "\uC804\uCCB4 \uD3F4\uB354 \u2192 \uB3C4\uAD6C \uC790\uB3D9 \uD560\uB2F9"
           ),
           h2(
             "div",
             { style: { marginBottom: 8, opacity: 0.9 } },
-            "\u5DE5\u5177\u90FD\u5728\u540C\u4E00\u4E2A\u6587\u4EF6\u5939\uFF08\u542B\u5B50\u76EE\u5F55\uFF09\u65F6\uFF0C\u586B\u8DEF\u5F84\u540E\u70B9\u300C\u81EA\u52A8\u5206\u914D\u300D\uFF1A\u4F1A\u5199\u5165 toolkitDir\uFF0C\u5E76\u6309\u6587\u4EF6\u540D\u5339\u914D nmap / nuclei / fscan \u7B49\u586B\u5230\u4E0B\u65B9\u3002"
+            "\uB3C4\uAD6C\uAC00 \uBAA8\uB450 \uAC19\uC740 \uD3F4\uB354(\uD558\uC704 \uB514\uB809\uD130\uB9AC \uD3EC\uD568)\uC5D0 \uC788\uB2E4\uBA74 \uACBD\uB85C\uB97C \uCC44\uC6B0\uACE0 \u201C\uC790\uB3D9 \uD560\uB2F9\u201D\uC744 \uB204\uB974\uC138\uC694: toolkitDir \uC5D0 \uAE30\uB85D\uB418\uACE0, \uD30C\uC77C \uC774\uB984\uC73C\uB85C nmap / nuclei / fscan \uB4F1\uC744 \uB9E4\uCE6D\uD574 \uC544\uB798\uC5D0 \uCC44\uC6C1\uB2C8\uB2E4."
           ),
           h2(
             "div",
@@ -6054,7 +6054,7 @@ var __dshPurgeDrill = (() => {
             h2("input", {
               className: "rt-input",
               style: { flex: 1 },
-              placeholder: "\u4F8B\u5982 D:\\pentest-tools \u6216 /opt/toolkit",
+              placeholder: "\uC608: D:\\pentest-tools \uB610\uB294 /opt/toolkit",
               value: folderPath,
               onChange: (e) => setFolderPath(e.target.value),
               onKeyDown: (e) => {
@@ -6068,7 +6068,7 @@ var __dshPurgeDrill = (() => {
                 disabled: busy,
                 onClick: assignFolder
               },
-              busy ? "\u626B\u63CF\u4E2D\u2026" : "\u81EA\u52A8\u5206\u914D"
+              busy ? "\uC2A4\uCE94 \uC911\u2026" : "\uC790\uB3D9 \uD560\uB2F9"
             )
           )
         ),
@@ -6089,27 +6089,27 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { style: { fontWeight: 600, marginBottom: 6 } },
-            "\u51FA\u7F51\u72B6\u6001\uFF08\u501F\u9274 Z3r0 egress\uFF0C\u53EA\u8BFB\uFF09"
+            "\uC678\uBD80 \uD1B5\uC2E0 \uC0C1\uD0DC(Z3r0 egress \uCC38\uACE0, \uC77D\uAE30 \uC804\uC6A9)"
           ),
           h2(
             "div",
             { className: "rt-mono", style: { fontSize: 11 } },
-            "HTTP_PROXY=" + (data.egress.http_proxy || "(\u7A7A)")
+            "HTTP_PROXY=" + (data.egress.http_proxy || "(\uBE44\uC5B4 \uC788\uC74C)")
           ),
           h2(
             "div",
             { className: "rt-mono", style: { fontSize: 11 } },
-            "HTTPS_PROXY=" + (data.egress.https_proxy || "(\u7A7A)")
+            "HTTPS_PROXY=" + (data.egress.https_proxy || "(\uBE44\uC5B4 \uC788\uC74C)")
           ),
           h2(
             "div",
             { className: "rt-mono", style: { fontSize: 11 } },
-            "ALL_PROXY=" + (data.egress.all_proxy || "(\u7A7A)")
+            "ALL_PROXY=" + (data.egress.all_proxy || "(\uBE44\uC5B4 \uC788\uC74C)")
           ),
           h2(
             "div",
             { className: "rt-mono", style: { fontSize: 11 } },
-            "NO_PROXY=" + (data.egress.no_proxy || "(\u7A7A)")
+            "NO_PROXY=" + (data.egress.no_proxy || "(\uBE44\uC5B4 \uC788\uC74C)")
           ),
           h2(
             "div",
@@ -6117,20 +6117,20 @@ var __dshPurgeDrill = (() => {
             data.egress.note || ""
           )
         ) : null,
-        !draft ? h2("div", { className: "rt-empty" }, "\u52A0\u8F7D\u4E2D\u2026") : h2(
+        !draft ? h2("div", { className: "rt-empty" }, "\uBD88\uB7EC\uC624\uB294 \uC911\u2026") : h2(
           "div",
           null,
           h2(
             "div",
             { className: "rt-card" },
-            h2("h4", null, "\u5E73\u53F0\u4E0E\u76EE\u5F55"),
+            h2("h4", null, "\uD50C\uB7AB\uD3FC\uACFC \uB514\uB809\uD130\uB9AC"),
             h2(
               "div",
               { style: { display: "grid", gap: 8 } },
               h2(
                 "label",
                 { style: { fontSize: 12 } },
-                "\u5E73\u53F0\u6A21\u5F0F",
+                "\uD50C\uB7AB\uD3FC \uBAA8\uB4DC",
                 h2(
                   "select",
                   {
@@ -6147,7 +6147,7 @@ var __dshPurgeDrill = (() => {
                       })
                     )
                   },
-                  h2("option", { value: "auto" }, "auto\uFF08\u8DDF\u968F\u672C\u673A\uFF0C\u9ED8\u8BA4\uFF09"),
+                  h2("option", { value: "auto" }, "auto(\uC774 PC \uB97C \uB530\uB984, \uAE30\uBCF8)"),
                   h2("option", { value: "windows" }, "windows"),
                   h2("option", { value: "linux" }, "linux")
                 )
@@ -6155,11 +6155,11 @@ var __dshPurgeDrill = (() => {
               h2(
                 "label",
                 { style: { fontSize: 12 } },
-                "\u5DE5\u5177\u7BB1\u76EE\u5F55 toolkitDir\uFF08\u7559\u7A7A\uFF1D\u9ED8\u8BA4\uFF09",
+                "\uD234\uD0B7 \uB514\uB809\uD130\uB9AC toolkitDir(\uBE44\uC6B0\uBA74 \uAE30\uBCF8\uAC12)",
                 h2("input", {
                   className: "rt-input",
                   style: { display: "block", width: "100%", marginTop: 4 },
-                  placeholder: "\u9ED8\u8BA4\uFF1A" + defaultToolkit,
+                  placeholder: "\uAE30\uBCF8: " + defaultToolkit,
                   value: draft.toolkitDir,
                   onChange: (e) => setDraft(
                     Object.assign({}, draft, {
@@ -6171,11 +6171,11 @@ var __dshPurgeDrill = (() => {
               h2(
                 "label",
                 { style: { fontSize: 12 } },
-                "nuclei \u6A21\u677F\u76EE\u5F55\uFF08\u7559\u7A7A\uFF1D\u81EA\u52A8\uFF1Atoolkit/nuclei-templates\uFF09",
+                "nuclei \uD15C\uD50C\uB9BF \uB514\uB809\uD130\uB9AC(\uBE44\uC6B0\uBA74 \uC790\uB3D9: toolkit/nuclei-templates)",
                 h2("input", {
                   className: "rt-input",
                   style: { display: "block", width: "100%", marginTop: 4 },
-                  placeholder: "\u9ED8\u8BA4\uFF1A" + defaultNuclei,
+                  placeholder: "\uAE30\uBCF8: " + defaultNuclei,
                   value: draft.nucleiTemplatesDir,
                   onChange: (e) => setDraft(
                     Object.assign({}, draft, {
@@ -6187,7 +6187,7 @@ var __dshPurgeDrill = (() => {
               h2(
                 "label",
                 { style: { fontSize: 12 } },
-                "\u5DE5\u5177\u641C\u7D22\u76EE\u5F55 binDirs\uFF08\u7559\u7A7A\uFF1D\u53EA\u641C toolkit + PATH\uFF1B\u6BCF\u884C\u4E00\u4E2A\uFF09",
+                "\uB3C4\uAD6C \uAC80\uC0C9 \uB514\uB809\uD130\uB9AC binDirs(\uBE44\uC6B0\uBA74 toolkit + PATH \uB9CC \uAC80\uC0C9, \uD55C \uC904\uC5D0 \uD558\uB098)",
                 h2("textarea", {
                   className: "rt-input",
                   rows: 4,
@@ -6197,7 +6197,7 @@ var __dshPurgeDrill = (() => {
                     marginTop: 4,
                     fontFamily: "var(--dsw-font-mono, monospace)"
                   },
-                  placeholder: "\u53EF\u9009\u3002\u4F8B\u5982\uFF1A" + String.fromCharCode(10) + "D:\\tools" + String.fromCharCode(10) + "D:\\pentest-bin",
+                  placeholder: "\uC120\uD0DD \uC0AC\uD56D. \uC608: " + String.fromCharCode(10) + "D:\\tools" + String.fromCharCode(10) + "D:\\pentest-bin",
                   value: draft.binDirsText,
                   onChange: (e) => setDraft(
                     Object.assign({}, draft, {
@@ -6211,7 +6211,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { className: "rt-card" },
-            h2("h4", null, "\u5BC6\u94A5\u4E0E VPS\uFF08\u7559\u7A7A\uFF1D\u4E0D\u8986\u76D6\uFF1B\u8FDB\u7A0B\u73AF\u5883\u53D8\u91CF\u4F18\u5148\uFF09"),
+            h2("h4", null, "\uD0A4\uC640 VPS(\uBE44\uC6B0\uBA74 \uB36E\uC5B4\uC4F0\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4, \uD504\uB85C\uC138\uC2A4 \uD658\uACBD \uBCC0\uC218 \uC6B0\uC120)"),
             h2(
               "div",
               { style: { display: "grid", gap: 8 } },
@@ -6219,7 +6219,7 @@ var __dshPurgeDrill = (() => {
                 (k) => h2(
                   "label",
                   { key: k, style: { fontSize: 12 } },
-                  k + "\uFF08\u53EF\u9009\uFF09",
+                  k + "(\uC120\uD0DD)",
                   h2("input", {
                     className: "rt-input",
                     style: {
@@ -6228,7 +6228,7 @@ var __dshPurgeDrill = (() => {
                       marginTop: 4
                     },
                     type: k === "FOFA_KEY" ? "password" : "text",
-                    placeholder: k === "REDTEAM_VPS_KEY" ? "\u7559\u7A7A\uFF1B\u9700\u8981\u65F6\u586B\u79C1\u94A5\u7EDD\u5BF9\u8DEF\u5F84" : k === "REDTEAM_VPS_HOST" ? "\u7559\u7A7A\uFF1B\u9700\u8981\u65F6\u586B user@host" : "\u7559\u7A7A\uFF1B\u6D4B\u7ED8\u65F6\u518D\u586B",
+                    placeholder: k === "REDTEAM_VPS_KEY" ? "\uBE44\uC6CC \uB450\uC138\uC694; \uD544\uC694\uD560 \uB54C \uAC1C\uC778 \uD0A4 \uC808\uB300 \uACBD\uB85C\uB97C \uCC44\uC6B0\uC138\uC694" : k === "REDTEAM_VPS_HOST" ? "\uBE44\uC6CC \uB450\uC138\uC694; \uD544\uC694\uD560 \uB54C user@host \uB97C \uCC44\uC6B0\uC138\uC694" : "\uBE44\uC6CC \uB450\uC138\uC694; \uC790\uC0B0 \uB9E4\uD551 \uB54C \uCC44\uC6B0\uC138\uC694",
                     value: draft.env && draft.env[k] || "",
                     onChange: (e) => setEnv(k, e.target.value)
                   })
@@ -6239,7 +6239,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { className: "rt-card" },
-            h2("h4", null, "\u5DE5\u5177\u53EF\u6267\u884C\u6587\u4EF6\uFF08\u7559\u7A7A\uFF1D\u81EA\u52A8\u67E5\u627E\uFF09"),
+            h2("h4", null, "\uB3C4\uAD6C \uC2E4\uD589 \uD30C\uC77C(\uBE44\uC6B0\uBA74 \uC790\uB3D9 \uD0D0\uC0C9)"),
             h2(
               "div",
               {
@@ -6249,7 +6249,7 @@ var __dshPurgeDrill = (() => {
                   marginBottom: 8
                 }
               },
-              "\u89E3\u6790\u987A\u5E8F\uFF1A\u672C\u8868\u7EDD\u5BF9\u8DEF\u5F84 \u2192 toolkitDir \u2192 binDirs \u2192 PATH\u3002\u7559\u7A7A\u5373\u8D70\u9ED8\u8BA4\u67E5\u627E\u3002"
+              "\uD0D0\uC0C9 \uC21C\uC11C: \uC774 \uD45C\uC758 \uC808\uB300 \uACBD\uB85C \u2192 toolkitDir \u2192 binDirs \u2192 PATH. \uBE44\uC6B0\uBA74 \uAE30\uBCF8 \uD0D0\uC0C9\uC744 \uC501\uB2C8\uB2E4."
             ),
             tools.map(
               (t) => h2(
@@ -6273,17 +6273,17 @@ var __dshPurgeDrill = (() => {
                   t.path ? h2(
                     "span",
                     { className: "rt-tag rt-tag-live", title: t.path },
-                    t.source + " \xB7 \u5DF2\u627E\u5230"
+                    t.source + " \xB7 \uCC3E\uC74C"
                   ) : h2(
                     "span",
                     { className: "rt-tag rt-tag-warn" },
-                    "\u672A\u627E\u5230\uFF08\u53EF\u7559\u7A7A\u7B49\u88C5\u597D\uFF09"
+                    "\uCC3E\uC9C0 \uBABB\uD568(\uBE44\uC6CC \uB450\uACE0 \uC124\uCE58\uB97C \uAE30\uB2E4\uB824\uB3C4 \uB429\uB2C8\uB2E4)"
                   )
                 ),
                 h2("input", {
                   className: "rt-input",
                   style: { width: "100%" },
-                  placeholder: "\u7559\u7A7A\u81EA\u52A8\u627E\uFF1A" + (t.names || []).slice(0, 3).join(" / "),
+                  placeholder: "\uBE44\uC6B0\uBA74 \uC790\uB3D9 \uD0D0\uC0C9: " + (t.names || []).slice(0, 3).join(" / "),
                   value: draft.tools && draft.tools[t.id] || "",
                   onChange: (e) => setTool(t.id, e.target.value)
                 }),
@@ -6305,12 +6305,12 @@ var __dshPurgeDrill = (() => {
           h2(
             "div",
             { className: "rt-card" },
-            h2("h4", null, "\u5907\u6CE8"),
+            h2("h4", null, "\uBE44\uACE0"),
             h2("textarea", {
               className: "rt-input",
               rows: 3,
               style: { width: "100%" },
-              placeholder: "\u53EF\u9009\u3002\u4F8B\u5982\uFF1A\u5DE5\u5177\u6765\u81EA\u67D0\u67D0\u7EFF\u8272\u5305",
+              placeholder: "\uC120\uD0DD \uC0AC\uD56D. \uC608: \uB3C4\uAD6C\uB294 \u25CB\u25CB \uD3EC\uD130\uBE14 \uD328\uD0A4\uC9C0\uC5D0\uC11C \uAC00\uC838\uC634",
               value: draft.notes,
               onChange: (e) => setDraft(
                 Object.assign({}, draft, { notes: e.target.value })
@@ -6323,7 +6323,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "span",
               null,
-              "\u914D\u7F6E\u6587\u4EF6\uFF1A" + (data && data.config && data.config.path || "$DSH_HOME/redteam/config.json") + " | \u7559\u7A7A\u5B57\u6BB5\u5168\u90E8\u8D70\u9ED8\u8BA4"
+              "\uC124\uC815 \uD30C\uC77C: " + (data && data.config && data.config.path || "$DSH_HOME/redteam/config.json") + " | \uBE44\uC6B4 \uD544\uB4DC\uB294 \uBAA8\uB450 \uAE30\uBCF8\uAC12\uC744 \uC501\uB2C8\uB2E4"
             )
           )
         )
@@ -6346,7 +6346,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+            setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -6385,7 +6385,7 @@ var __dshPurgeDrill = (() => {
     const setField = (k, v) => setForm((f) => Object.assign({}, f, { [k]: v }));
     const save = () => {
       if (!form || !form.name) {
-        setMsg({ err: "\u540D\u79F0\u4E0D\u80FD\u4E3A\u7A7A" });
+        setMsg({ err: "\uC774\uB984\uC740 \uBE44\uC6B8 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4" });
         return;
       }
       setBusy(true);
@@ -6394,15 +6394,15 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u4FDD\u5B58\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uC800\uC7A5 \uC2E4\uD328" });
             return;
           }
           if (r.overridden === false) {
             setMsg({
-              err: "\u5DF2\u4FDD\u5B58\u300C\u542F\u7528/\u505C\u7528\u300D\u3002\u5206\u503C\u672A\u6539\u52A8\uFF1A\u8FD9\u662F\u968F\u300A\u5F97\u5206\u89C4\u5219\u300B\u5206\u53D1\u7684\u5185\u7F6E\u5F97\u5206\u70B9\uFF0C\u5206\u503C / \u4E0A\u9650 / \u8BA1\u5206\u53E3\u5F84\u7531\u89C4\u5219\u9501\u5B9A\uFF08\u540C\u4E00\u6761\u89C4\u5219\u7684\u4E0A\u9650\u6309\u7EC4\u5185\u6240\u6709\u5F97\u5206\u70B9\u7D2F\u8BA1\uFF0C\u5355\u72EC\u6539\u5206\u503C\u4F1A\u8BA9\u4E00\u6761\u547D\u4E2D\u5403\u6389\u6574\u7EC4\u4E0A\u9650\uFF09\u3002\u8981\u81EA\u5B9A\u4E49\u5206\u503C\u65F6\u8BF7\u300C+ \u65B0\u589E\u5F97\u5206\u70B9\u300D\u3002"
+              err: "\u201C\uD65C\uC131/\uBE44\uD65C\uC131\u201D\uB9CC \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4. \uC810\uC218\uB294 \uBC14\uB00C\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4: \u201C\uB4DD\uC810 \uADDC\uCE59\u201D\uACFC \uD568\uAED8 \uBC30\uD3EC\uB418\uB294 \uB0B4\uC7A5 \uB4DD\uC810 \uD56D\uBAA9\uC774\uB77C, \uC810\uC218 / \uC0C1\uD55C / \uC9D1\uACC4 \uAE30\uC900\uC744 \uADDC\uCE59\uC774 \uACE0\uC815\uD569\uB2C8\uB2E4(\uAC19\uC740 \uADDC\uCE59\uC758 \uC0C1\uD55C\uC740 \uADF8\uB8F9 \uB0B4 \uBAA8\uB4E0 \uB4DD\uC810 \uD56D\uBAA9\uC744 \uD569\uC0B0\uD558\uBBC0\uB85C, \uC810\uC218 \uD558\uB098\uB9CC \uBC14\uAFB8\uBA74 \uC801\uC911 \uD55C \uAC74\uC774 \uADF8\uB8F9 \uC0C1\uD55C\uC744 \uB2E4 \uBA39\uC5B4 \uBC84\uB9BD\uB2C8\uB2E4). \uC810\uC218\uB97C \uB530\uB85C \uC815\uD558\uB824\uBA74 \u201C+ \uB4DD\uC810 \uD56D\uBAA9 \uCD94\uAC00\u201D\uB97C \uC4F0\uC138\uC694."
             });
           } else {
-            setMsg({ ok: r.note || "\u5DF2\u4FDD\u5B58" });
+            setMsg({ ok: r.note || "\uC800\uC7A5\uB428" });
           }
           setForm(null);
           load();
@@ -6424,10 +6424,10 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u5220\u9664\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uC0AD\uC81C \uC2E4\uD328" });
             return;
           }
-          setMsg({ ok: "\u5DF2\u5220\u9664" });
+          setMsg({ ok: "\uC0AD\uC81C\uB428" });
           setForm(null);
           setOpenId(null);
           load();
@@ -6468,13 +6468,13 @@ var __dshPurgeDrill = (() => {
             h2(
               "span",
               { className: "rt-sg-sub" },
-              g.tiers.length + " \u9879" + (g.capSum > 0 ? " \xB7 \u5404\u9879\u4E0A\u9650\u5408\u8BA1 " + g.capSum + " \u5206\uFF08\u5404\u9879\u72EC\u7ACB\uFF0C\u4E0D\u8DE8\u9879\u7D2F\u52A0\uFF09" : "")
+              g.tiers.length + "\uAC1C" + (g.capSum > 0 ? " \xB7 \uD56D\uBAA9\uBCC4 \uC0C1\uD55C \uD569\uACC4 " + g.capSum + "\uC810(\uD56D\uBAA9\uBCC4\uB85C \uB3C5\uB9BD\uC774\uBA70 \uD56D\uBAA9 \uAC04 \uB204\uC801 \uC5C6\uC74C)" : "")
             ),
             h2("div", { className: "rt-spacer" }),
             g.points > 0 ? h2(
               "span",
               { className: "rt-tag rt-tag-active" },
-              "+" + g.points + " \u5206"
+              "+" + g.points + "\uC810"
             ) : null
           )
         );
@@ -6511,30 +6511,30 @@ var __dshPurgeDrill = (() => {
                     color: "var(--dsw-alias-label-secondary)"
                   }
                 },
-                p.points + "\u5206"
+                p.points + "\uC810"
               )
             ),
             h2(
               "span",
               { title: p.description || "" },
               p.name,
-              p.tier ? h2("span", { className: "rt-scope" }, "\u3000" + p.tier) : null
+              p.tier ? h2("span", { className: "rt-scope" }, " " + p.tier) : null
             ),
-            /* 命中与上限：这一条计入几次、上限用了多少（G3 各项上限独立，到顶就不再累计） */
+            /* 적중과 상한: 이 항목이 몇 번 집계되었고 상한을 얼마나 썼는지(G3 항목별 상한은 독립이며, 상한에 닿으면 더 누적하지 않는다) */
             h2(
               "span",
               {
-                title: p.capped > 0 ? "\u5DF2\u8BA1\u5165 " + p.counted + " \u6B21\uFF0C\u53E6\u6709 " + p.capped + " \u6761\u56E0\u300C" + (p.scope_label || "\u8BA1\u5206\u53E3\u5F84") + "\u300D\u6216\u5DF2\u8FBE\u4E0A\u9650\u4E0D\u8BA1\u5206" : p.scope_label || ""
+                title: p.capped > 0 ? "\uCD1D " + p.counted + "\uD68C \uC9D1\uACC4\uB418\uC5C8\uACE0, \uADF8 \uBC16\uC5D0 " + p.capped + "\uAC74\uC740 \u201C" + (p.scope_label || "\uC9D1\uACC4 \uAE30\uC900") + "\u201D \uB610\uB294 \uC0C1\uD55C \uB3C4\uB2EC\uB85C \uBBF8\uC9D1\uACC4" : p.scope_label || ""
               },
               h2(
                 "span",
                 { className: "rt-sec-count" },
-                p.hits.length > 0 ? p.counted + " \u6B21\u547D\u4E2D" : "\u672A\u547D\u4E2D"
+                p.hits.length > 0 ? p.counted + "\uD68C \uC801\uC911" : "\uC801\uC911 \uC5C6\uC74C"
               ),
               p.cap > 0 ? h2(
                 "span",
                 { className: "rt-scope" },
-                "\u3000\u4E0A\u9650 " + (p.cap_used === null ? 0 : p.cap_used) + "/" + p.cap
+                " \uC0C1\uD55C " + (p.cap_used === null ? 0 : p.cap_used) + "/" + p.cap
               ) : null
             ),
             h2(
@@ -6543,7 +6543,7 @@ var __dshPurgeDrill = (() => {
               p.earned > 0 ? h2(
                 "span",
                 { className: "rt-tag rt-tag-active" },
-                "+" + p.earned + " \u5206"
+                "+" + p.earned + "\uC810"
               ) : h2(
                 "span",
                 { style: { color: "var(--dsw-alias-label-secondary)" } },
@@ -6567,31 +6567,31 @@ var __dshPurgeDrill = (() => {
                 className: "rt-hit-asset",
                 title: hh.target || hh.asset_ip || ""
               },
-              hh.asset_ip || hh.target || "\u672A\u6307\u5B9A\u8D44\u4EA7"
+              hh.asset_ip || hh.target || "\uC790\uC0B0 \uBBF8\uC9C0\uC815"
             ),
             hh.self_created ? h2(
               "span",
               {
                 className: "rt-tag rt-tag-warn",
-                title: "\u81EA\u5DF1\u6CE8\u518C/\u81EA\u5EFA\u7684\u8D26\u53F7\u4E0D\u7B97\u5F97\u5206\u6743\u9650\uFF0C\u53EA\u4F5C\u8FC7\u7A0B\u8BB0\u5F55"
+                title: "\uC9C1\uC811 \uB4F1\uB85D/\uC790\uCCB4 \uC0DD\uC131\uD55C \uACC4\uC815\uC740 \uB4DD\uC810 \uAD8C\uD55C\uC73C\uB85C \uCE58\uC9C0 \uC54A\uACE0 \uACFC\uC815 \uAE30\uB85D\uC73C\uB85C\uB9CC \uB0A8\uAE41\uB2C8\uB2E4"
               },
-              "\u81EA\u5EFA \xB7 \u4E0D\u8BA1\u5206"
+              "\uC790\uCCB4 \uC0DD\uC131 \xB7 \uBBF8\uC9D1\uACC4"
             ) : null,
             hh.capped ? h2(
               "span",
               {
                 className: "rt-tag rt-tag-warn",
-                title: hh.capped_reason || "\u540C\u4E00\u8D44\u4EA7\u540C\u4E00\u7AEF\u53E3\u53EA\u7B97\u5206\u503C\u6700\u9AD8\u7684\u4E00\u6761\uFF0C\u8FD9\u6761\u4E0D\u8BA1\u5206"
+                title: hh.capped_reason || "\uAC19\uC740 \uC790\uC0B0\xB7\uAC19\uC740 \uD3EC\uD2B8\uC5D0\uC11C\uB294 \uC810\uC218\uAC00 \uAC00\uC7A5 \uB192\uC740 \uD55C \uAC74\uB9CC \uC778\uC815\uD558\uBA70, \uC774 \uAC74\uC740 \uBBF8\uC9D1\uACC4\uC785\uB2C8\uB2E4"
               },
-              "\u670D\u52A1\u5DF2\u62FF\u6EE1 \xB7 \u4E0D\u8BA1\u5206" + (hh.service ? "\uFF08" + hh.service + "\uFF09" : "")
+              "\uC11C\uBE44\uC2A4 \uC0C1\uD55C \uB3C4\uB2EC \xB7 \uBBF8\uC9D1\uACC4" + (hh.service ? "(" + hh.service + ")" : "")
             ) : null,
             hh.shot_count ? h2(
               "span",
               {
                 className: "rt-tag",
-                title: "\u8FD9\u6761\u547D\u4E2D\u6709\u8BC1\u636E\u622A\u56FE\uFF08\u5C55\u5F00\u5F97\u5206\u70B9\u5373\u53EF\u770B\u5230\u4EE3\u8868\u56FE\uFF09"
+                title: "\uC774 \uC801\uC911\uC5D0\uB294 \uC99D\uAC70 \uC2A4\uD06C\uB9B0\uC0F7\uC774 \uC788\uC2B5\uB2C8\uB2E4(\uB4DD\uC810 \uD56D\uBAA9\uC744 \uD3BC\uCE58\uBA74 \uB300\uD45C \uC774\uBBF8\uC9C0\uAC00 \uBCF4\uC785\uB2C8\uB2E4)"
               },
-              "\u56FE " + hh.shot_count
+              "\uC774\uBBF8\uC9C0 " + hh.shot_count
             ) : null,
             h2("span", { className: "rt-hit-time" }, fmt(hh.recorded_at)),
             h2(
@@ -6599,7 +6599,7 @@ var __dshPurgeDrill = (() => {
               {
                 className: "rt-btn",
                 style: { padding: "0 5px", fontSize: 10.5 },
-                title: "\u590D\u5236\u8FD9\u4E00\u6761",
+                title: "\uC774 \uAC74 \uBCF5\uC0AC",
                 onClick: (e) => {
                   e.stopPropagation();
                   copyText(
@@ -6607,7 +6607,7 @@ var __dshPurgeDrill = (() => {
                   );
                 }
               },
-              "\u590D\u5236"
+              "\uBCF5\uC0AC"
             ),
             hh.evidence ? h2(
               "span",
@@ -6616,7 +6616,7 @@ var __dshPurgeDrill = (() => {
             ) : h2(
               "span",
               { className: "rt-hit-txt none" },
-              "\u672A\u586B\u8D26\u53F7\u5BC6\u7801/\u7ED3\u679C"
+              "\uACC4\uC815/\uBE44\uBC00\uBC88\uD638 \uB610\uB294 \uACB0\uACFC \uBBF8\uAE30\uC7AC"
             )
           )
         );
@@ -6634,27 +6634,27 @@ var __dshPurgeDrill = (() => {
               p.description ? h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u5F97\u5206\u6761\u4EF6"),
+                h2("b", null, "\uB4DD\uC810 \uC870\uAC74"),
                 h2("span", null, p.description)
               ) : null,
               h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u72B6\u6001"),
+                h2("b", null, "\uC0C1\uD0DC"),
                 h2(
                   "span",
                   null,
-                  (p.enabled ? "\u542F\u7528" : "\u505C\u7528") + " \xB7 " + p.points + " \u5206/\u6B21 \xB7 \u547D\u4E2D " + p.hits.length + " \u6B21 = " + p.earned + " \u5206" + (p.self_created ? "\uFF08\u53E6\u6709 " + p.self_created + " \u6B21\u81EA\u5EFA\u4E0D\u8BA1\u5206\uFF09" : "") + (p.capped ? "\uFF08\u53E6\u6709 " + p.capped + " \u6B21\u540C\u670D\u52A1\u91CD\u590D\u547D\u4E2D\u4E0D\u8BA1\u5206\uFF09" : "")
+                  (p.enabled ? "\uD65C\uC131" : "\uBE44\uD65C\uC131") + " \xB7 " + p.points + "\uC810/\uD68C \xB7 \uC801\uC911 " + p.hits.length + "\uD68C = " + p.earned + "\uC810" + (p.self_created ? "(\uADF8 \uBC16\uC5D0 \uC790\uCCB4 \uC0DD\uC131 " + p.self_created + "\uD68C\uB294 \uBBF8\uC9D1\uACC4)" : "") + (p.capped ? "(\uADF8 \uBC16\uC5D0 \uAC19\uC740 \uC11C\uBE44\uC2A4 \uC911\uBCF5 \uC801\uC911 " + p.capped + "\uD68C\uB294 \uBBF8\uC9D1\uACC4)" : "")
                 )
               ),
               p.capped ? h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u670D\u52A1\u5C01\u9876"),
+                h2("b", null, "\uC11C\uBE44\uC2A4 \uC0C1\uD55C"),
                 h2(
                   "span",
                   null,
-                  p.service_summary + "\uFF1B\u8D26\u53F7\u6743\u9650\u4E0E\u6570\u636E\u5E93\u6743\u9650\u6309\u300C\u540C\u8D44\u4EA7\u540C\u7AEF\u53E3\u300D\u53EA\u7B97\u4E00\u6B21\uFF0C\u62FF\u5230\u6700\u9AD8\u6743\u9650\u8D26\u53F7\u5373\u8BE5\u670D\u52A1\u62FF\u6EE1"
+                  p.service_summary + "; \uACC4\uC815 \uAD8C\uD55C\uACFC \uB370\uC774\uD130\uBCA0\uC774\uC2A4 \uAD8C\uD55C\uC740 \u201C\uAC19\uC740 \uC790\uC0B0\xB7\uAC19\uC740 \uD3EC\uD2B8\u201D \uAE30\uC900\uC73C\uB85C \uD55C \uBC88\uB9CC \uC778\uC815\uD558\uBA70, \uCD5C\uACE0 \uAD8C\uD55C \uACC4\uC815\uC744 \uC5BB\uC740 \uC2DC\uC810\uC5D0 \uADF8 \uC11C\uBE44\uC2A4\uB294 \uC0C1\uD55C \uB3C4\uB2EC\uC785\uB2C8\uB2E4"
                 )
               ) : null,
               p.hits.length ? h2(
@@ -6664,7 +6664,7 @@ var __dshPurgeDrill = (() => {
                   eng,
                   shots: p.shots,
                   total: p.shot_total,
-                  title: "\u8BC1\u636E\u622A\u56FE \xB7 " + (p.shot_total || (p.shots || []).length) + " \u5F20"
+                  title: "\uC99D\uAC70 \uC2A4\uD06C\uB9B0\uC0F7 \xB7 " + (p.shot_total || (p.shots || []).length) + "\uC7A5"
                 }),
                 h2(
                   "div",
@@ -6672,17 +6672,17 @@ var __dshPurgeDrill = (() => {
                     className: "rt-section",
                     style: { padding: "6px 0 0" }
                   },
-                  "\u547D\u4E2D\u8BB0\u5F55 \xB7 " + p.hits.length + "\uFF08\u53EA\u8BB0\u8D44\u4EA7\u4E0E\u8D26\u53F7\u5BC6\u7801\uFF0C\u8BE6\u7EC6\u590D\u73B0\u89C1\u62A5\u544A\uFF09"
+                  "\uC801\uC911 \uAE30\uB85D \xB7 " + p.hits.length + "(\uC790\uC0B0\uACFC \uACC4\uC815/\uBE44\uBC00\uBC88\uD638\uB9CC \uAE30\uB85D\uD558\uBA70, \uC0C1\uC138 \uC7AC\uD604\uC740 \uBCF4\uACE0\uC11C\uC5D0\uC11C \uBD05\uB2C8\uB2E4)"
                 ),
                 h2("div", { className: "rt-hits" }, hitNodes)
               ) : h2(
                 "div",
                 { className: "rt-kv" },
-                h2("b", null, "\u547D\u4E2D\u8BB0\u5F55"),
+                h2("b", null, "\uC801\uC911 \uAE30\uB85D"),
                 h2(
                   "span",
                   { style: { color: "var(--dsw-alias-label-secondary)" } },
-                  "\u8FD8\u6CA1\u6709 \u2014\u2014 \u62FF\u4E0B\u6210\u679C\u540E\u7528 redteam_score_hit \u8BB0\u5206\uFF1A\u5199\u660E\u76EE\u6807\u8D44\u4EA7 + \u62FF\u5230\u7684\u8D26\u53F7\u5BC6\u7801/\u6743\u9650"
+                  "\uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4 \u2014 \uC131\uACFC\uB97C \uC5BB\uC740 \uB4A4 redteam_score_hit \uB85C \uB4DD\uC810\uC744 \uAE30\uB85D\uD558\uC138\uC694: \uB300\uC0C1 \uC790\uC0B0 + \uC5BB\uC740 \uACC4\uC815/\uBE44\uBC00\uBC88\uD638 \uB610\uB294 \uAD8C\uD55C\uC744 \uC801\uC73C\uC138\uC694"
                 )
               ),
               h2(
@@ -6697,7 +6697,7 @@ var __dshPurgeDrill = (() => {
                       startEdit(p);
                     }
                   },
-                  "\u7F16\u8F91"
+                  "\uD3B8\uC9D1"
                 )
               )
             )
@@ -6711,8 +6711,8 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-toolbar" },
-        h2("span", { style: { fontWeight: 600 } }, "\u5F97\u5206\u76EE\u6807"),
-        /* 只显示已拿下的总分，不显示目标分数、不显示进度条 */
+        h2("span", { style: { fontWeight: 600 } }, "\uB4DD\uC810 \uBAA9\uD45C"),
+        /* 얻은 총점만 표시하고, 목표 점수나 진행 막대는 표시하지 않는다 */
         h2(
           "span",
           {
@@ -6722,7 +6722,7 @@ var __dshPurgeDrill = (() => {
               marginLeft: 4
             }
           },
-          "\u603B\u5206"
+          "\uCD1D\uC810"
         ),
         h2("span", { className: "rt-total" }, String(summary.achievedPoints)),
         h2(
@@ -6730,36 +6730,36 @@ var __dshPurgeDrill = (() => {
           {
             style: { fontSize: 13, color: "var(--dsw-alias-label-secondary)" }
           },
-          "\u5206"
+          "\uC810"
         ),
-        h2("span", { className: "rt-tag" }, summary.pointCount + " \u4E2A\u5F97\u5206\u70B9"),
+        h2("span", { className: "rt-tag" }, summary.pointCount + "\uAC1C \uB4DD\uC810 \uD56D\uBAA9"),
         h2(
           "span",
           { className: "rt-tag" },
-          "\u547D\u4E2D " + summary.countedHits + " \u6B21"
+          "\uC801\uC911 " + summary.countedHits + "\uD68C"
         ),
         summary.selfCreatedHits ? h2(
           "span",
           {
             className: "rt-tag rt-tag-warn",
-            title: "\u81EA\u5DF1\u6CE8\u518C/\u81EA\u5DF1\u521B\u5EFA\u7684\u8D26\u53F7\u4E0D\u7B97\u5F97\u5206\u6743\u9650\uFF0C\u53EA\u4F5C\u8FC7\u7A0B\u8BB0\u5F55\uFF08\u4E0D\u8BA1\u5206\u3001\u4E0D\u5360\u4E0A\u9650\u3001\u4E0D\u8FDB\u62A5\u544A\uFF09"
+            title: "\uC9C1\uC811 \uB4F1\uB85D/\uC9C1\uC811 \uC0DD\uC131\uD55C \uACC4\uC815\uC740 \uB4DD\uC810 \uAD8C\uD55C\uC73C\uB85C \uCE58\uC9C0 \uC54A\uACE0 \uACFC\uC815 \uAE30\uB85D\uC73C\uB85C\uB9CC \uB0A8\uAE41\uB2C8\uB2E4(\uBBF8\uC9D1\uACC4, \uC0C1\uD55C \uBBF8\uC18C\uBAA8, \uBCF4\uACE0\uC11C \uBBF8\uD3EC\uD568)"
           },
-          "\u81EA\u5EFA\u4E0D\u8BA1\u5206 " + summary.selfCreatedHits
+          "\uC790\uCCB4 \uC0DD\uC131 \uBBF8\uC9D1\uACC4 " + summary.selfCreatedHits
         ) : null,
         summary.serviceCappedHits ? h2(
           "span",
           {
             className: "rt-tag rt-tag-warn",
-            title: "\u8D26\u53F7\u6743\u9650\u4E0E\u6570\u636E\u5E93\u6743\u9650\u6309\u300C\u540C\u8D44\u4EA7\u540C\u7AEF\u53E3\u300D\u53EA\u7B97\u4E00\u6B21\uFF1A\u8BE5\u670D\u52A1\u5DF2\u62FF\u6EE1\uFF0C\u8FD9\u4E9B\u91CD\u590D\u547D\u4E2D\u4E0D\u8BA1\u5206\uFF08\u53EA\u4F5C\u7559\u75D5\uFF09"
+            title: "\uACC4\uC815 \uAD8C\uD55C\uACFC \uB370\uC774\uD130\uBCA0\uC774\uC2A4 \uAD8C\uD55C\uC740 \u201C\uAC19\uC740 \uC790\uC0B0\xB7\uAC19\uC740 \uD3EC\uD2B8\u201D \uAE30\uC900\uC73C\uB85C \uD55C \uBC88\uB9CC \uC778\uC815\uD569\uB2C8\uB2E4: \uD574\uB2F9 \uC11C\uBE44\uC2A4\uB294 \uC774\uBBF8 \uC0C1\uD55C \uB3C4\uB2EC\uC774\uBA70 \uC774 \uC911\uBCF5 \uC801\uC911\uC740 \uBBF8\uC9D1\uACC4\uC785\uB2C8\uB2E4(\uD754\uC801\uB9CC \uB0A8\uAE41\uB2C8\uB2E4)"
           },
-          "\u670D\u52A1\u5DF2\u62FF\u6EE1\u4E0D\u8BA1\u5206 " + summary.serviceCappedHits
+          "\uC11C\uBE44\uC2A4 \uC0C1\uD55C \uB3C4\uB2EC \uBBF8\uC9D1\uACC4 " + summary.serviceCappedHits
         ) : null,
         h2("div", { className: "rt-spacer" }),
-        h2("button", { className: "rt-btn", onClick: startNew }, "+ \u65B0\u589E\u5F97\u5206\u70B9"),
+        h2("button", { className: "rt-btn", onClick: startNew }, "+ \uB4DD\uC810 \uD56D\uBAA9 \uCD94\uAC00"),
         h2(
           "button",
           { className: "rt-btn", disabled: busy, onClick: load },
-          busy ? "\u5237\u65B0\u4E2D\u2026" : "\u5237\u65B0"
+          busy ? "\uC0C8\uB85C\uACE0\uCE68 \uC911\u2026" : "\uC0C8\uB85C\uACE0\uCE68"
         )
       ),
       msg ? h2(
@@ -6777,20 +6777,20 @@ var __dshPurgeDrill = (() => {
             borderBottom: "1px solid var(--dsw-alias-border-l1)"
           }
         },
-        /* 内置得分点（builtin）：分值 / 名称 / 分类由《得分规则》锁定，输入框置灰。
-         可改的只有「启用 / 停用」。这样界面上就不会再出现「改完提示已保存、刷新变回去」的困惑。 */
+        /* 내장 득점 항목(builtin): 점수 / 이름 / 분류는 “득점 규칙”이 고정하므로 입력란을 회색 처리한다.
+          바꿀 수 있는 것은 “활성 / 비활성”뿐이다. 이렇게 하면 "수정 후 저장됨 안내가 뜨고 새로고침하면 되돌아가는" 혼란이 생기지 않는다. */
         form.builtin ? h2(
           "div",
           { className: "rt-hint", style: { marginBottom: 8 } },
           h2(
             "b",
             null,
-            "\u5185\u7F6E\u5F97\u5206\u70B9\uFF08\u6765\u81EA\u300A\u7A81\u7834\u5165\u4FB5\u7C7B\u5F97\u5206\u89C4\u5219\uFF08\u5408\u5E76\u7248\uFF09\u300B\uFF09"
+            "\uB0B4\uC7A5 \uB4DD\uC810 \uD56D\uBAA9(\u201C\uB3CC\uD30C \uCE68\uD22C\uB958 \uB4DD\uC810 \uADDC\uCE59(\uBCD1\uD569\uD310)\u201D\uC5D0\uC11C \uC634)"
           ),
           h2(
             "div",
             { style: { marginTop: 3 } },
-            "\u5206\u503C\u3001\u4E0A\u9650\u3001\u8BA1\u5206\u53E3\u5F84\u4E0E\u540D\u79F0\u7531\u89C4\u5219\u9501\u5B9A \u2014\u2014 \u540C\u4E00\u6761\u89C4\u5219\u7684\u4E0A\u9650\u6309\u7EC4\u5185\u6240\u6709\u5F97\u5206\u70B9\u7D2F\u8BA1\uFF0C\u5355\u72EC\u6539\u5206\u503C\u4F1A\u8BA9\u4E00\u6761\u547D\u4E2D\u5403\u6389\u6574\u7EC4\u4E0A\u9650\u3002\u8FD9\u91CC\u53EF\u4EE5\u6539\u300C\u542F\u7528 / \u505C\u7528\u300D\uFF1B\u8981\u81EA\u5B9A\u4E49\u5206\u503C\u65F6\u8BF7\u8FD4\u56DE\u4E0A\u4E00\u5C4F\u70B9\u300C+ \u65B0\u589E\u5F97\u5206\u70B9\u300D\u3002"
+            "\uC810\uC218, \uC0C1\uD55C, \uC9D1\uACC4 \uAE30\uC900, \uC774\uB984\uC744 \uADDC\uCE59\uC774 \uACE0\uC815\uD569\uB2C8\uB2E4 \u2014 \uAC19\uC740 \uADDC\uCE59\uC758 \uC0C1\uD55C\uC740 \uADF8\uB8F9 \uB0B4 \uBAA8\uB4E0 \uB4DD\uC810 \uD56D\uBAA9\uC744 \uD569\uC0B0\uD558\uBBC0\uB85C, \uC810\uC218 \uD558\uB098\uB9CC \uBC14\uAFB8\uBA74 \uC801\uC911 \uD55C \uAC74\uC774 \uADF8\uB8F9 \uC0C1\uD55C\uC744 \uB2E4 \uBA39\uC5B4 \uBC84\uB9BD\uB2C8\uB2E4. \uC5EC\uAE30\uC11C \uBC14\uAFC0 \uC218 \uC788\uB294 \uAC83\uC740 \u201C\uD65C\uC131 / \uBE44\uD65C\uC131\u201D\uC774\uBA70, \uC810\uC218\uB97C \uB530\uB85C \uC815\uD558\uB824\uBA74 \uC774\uC804 \uD654\uBA74\uC73C\uB85C \uB3CC\uC544\uAC00 \u201C+ \uB4DD\uC810 \uD56D\uBAA9 \uCD94\uAC00\u201D\uB97C \uB204\uB974\uC138\uC694."
           ),
           form.src !== null && form.src !== void 0 ? h2(
             "div",
@@ -6800,7 +6800,7 @@ var __dshPurgeDrill = (() => {
                 color: "var(--dsw-alias-label-secondary)"
               }
             },
-            "\u89C4\u5219\u539F\u6587\u5E8F\u53F7 " + form.src + (form.rule ? "\u3000\xB7\u3000\u4E0A\u9650\u5206\u7EC4 rule=" + form.rule : "") + (form.cap > 0 ? "\u3000\xB7\u3000\u4E0A\u9650 " + form.cap + " \u5206" : "\u3000\xB7\u3000\u4E0D\u8BBE\u4E0A\u9650")
+            "\uADDC\uCE59 \uC6D0\uBB38 \uBC88\uD638 " + form.src + (form.rule ? " \xB7 \uC0C1\uD55C \uADF8\uB8F9 rule=" + form.rule : "") + (form.cap > 0 ? " \xB7 \uC0C1\uD55C " + form.cap + "\uC810" : " \xB7 \uC0C1\uD55C \uC5C6\uC74C")
           ) : null
         ) : null,
         h2(
@@ -6808,26 +6808,26 @@ var __dshPurgeDrill = (() => {
           { className: "rt-score-form" },
           h2("input", {
             className: "rt-input",
-            placeholder: "\u540D\u79F0\uFF08\u5FC5\u586B\uFF09",
+            placeholder: "\uC774\uB984(\uD544\uC218)",
             value: form.name,
             readOnly: form.builtin === true,
-            title: form.builtin ? "\u5185\u7F6E\u5F97\u5206\u70B9\u7684\u540D\u79F0\u7531\u89C4\u5219\u9501\u5B9A" : "",
+            title: form.builtin ? "\uB0B4\uC7A5 \uB4DD\uC810 \uD56D\uBAA9\uC758 \uC774\uB984\uC740 \uADDC\uCE59\uC774 \uACE0\uC815\uD569\uB2C8\uB2E4" : "",
             onChange: (e) => setField("name", e.target.value)
           }),
           h2("input", {
             className: "rt-input",
-            placeholder: "\u5206\u7C7B\uFF0C\u5982 \u8D26\u53F7\u6743\u9650",
+            placeholder: "\uBD84\uB958, \uC608: \uACC4\uC815 \uAD8C\uD55C",
             value: form.category,
             readOnly: form.builtin === true,
-            title: form.builtin ? "\u5185\u7F6E\u5F97\u5206\u70B9\u7684\u5206\u7C7B\u7531\u89C4\u5219\u9501\u5B9A\uFF08\u51B3\u5B9A\u5B83\u5C5E\u4E8E\u9762\u677F\u54EA\u4E00\u7EC4\uFF09" : "",
+            title: form.builtin ? "\uB0B4\uC7A5 \uB4DD\uC810 \uD56D\uBAA9\uC758 \uBD84\uB958\uB294 \uADDC\uCE59\uC774 \uACE0\uC815\uD569\uB2C8\uB2E4(\uD328\uB110\uC5D0\uC11C \uC5B4\uB290 \uADF8\uB8F9\uC5D0 \uC18D\uD558\uB294\uC9C0\uB97C \uACB0\uC815\uD569\uB2C8\uB2E4)" : "",
             onChange: (e) => setField("category", e.target.value)
           }),
           h2("input", {
             className: "rt-input",
             type: "number",
-            placeholder: "\u5355\u6B21\u5206\u503C",
+            placeholder: "1\uD68C \uC810\uC218",
             readOnly: form.builtin === true,
-            title: form.builtin ? "\u5185\u7F6E\u5F97\u5206\u70B9\u7684\u5206\u503C\u7531\u300A\u5F97\u5206\u89C4\u5219\u300B\u9501\u5B9A\uFF0C\u4E0D\u80FD\u5728\u8FD9\u91CC\u6539" : "\u8FD9\u4E00\u7C7B\u7684\u5355\u6B21\u5206\u503C\uFF1B\u6BCF\u547D\u4E2D\u4E00\u6B21\u5C31\u6309\u8FD9\u4E2A\u5206\u503C\u7D2F\u52A0\uFF08\u53D7\u8BE5\u6761\u89C4\u5219\u4E0A\u9650\u7EA6\u675F\uFF09",
+            title: form.builtin ? "\uB0B4\uC7A5 \uB4DD\uC810 \uD56D\uBAA9\uC758 \uC810\uC218\uB294 \u201C\uB4DD\uC810 \uADDC\uCE59\u201D\uC774 \uACE0\uC815\uD558\uBBC0\uB85C \uC5EC\uAE30\uC11C \uBC14\uAFC0 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4" : "\uC774 \uBD84\uB958\uC758 1\uD68C \uC810\uC218; \uC801\uC911\uD560 \uB54C\uB9C8\uB2E4 \uC774 \uC810\uC218\uB9CC\uD07C \uB204\uC801\uB429\uB2C8\uB2E4(\uD574\uB2F9 \uADDC\uCE59 \uC0C1\uD55C\uC758 \uC81C\uC57D\uC744 \uBC1B\uC2B5\uB2C8\uB2E4)",
             value: form.points,
             onChange: (e) => setField("points", Number(e.target.value))
           }),
@@ -6838,8 +6838,8 @@ var __dshPurgeDrill = (() => {
               value: form.enabled ? "1" : "0",
               onChange: (e) => setField("enabled", e.target.value === "1")
             },
-            h2("option", { value: "1" }, "\u542F\u7528"),
-            h2("option", { value: "0" }, "\u505C\u7528")
+            h2("option", { value: "1" }, "\uD65C\uC131"),
+            h2("option", { value: "0" }, "\uBE44\uD65C\uC131")
           )
         ),
         h2("input", {
@@ -6849,10 +6849,10 @@ var __dshPurgeDrill = (() => {
             marginBottom: 6,
             boxSizing: "border-box"
           },
-          placeholder: "\u5F97\u5206\u6761\u4EF6\u8BF4\u660E",
+          placeholder: "\uB4DD\uC810 \uC870\uAC74 \uC124\uBA85",
           value: form.description,
           readOnly: form.builtin === true,
-          title: form.builtin ? "\u5185\u7F6E\u5F97\u5206\u70B9\u7684\u6761\u6B3E\u6B63\u6587\u7531\u89C4\u5219\u9501\u5B9A" : "",
+          title: form.builtin ? "\uB0B4\uC7A5 \uB4DD\uC810 \uD56D\uBAA9\uC758 \uC870\uD56D \uBCF8\uBB38\uC740 \uADDC\uCE59\uC774 \uACE0\uC815\uD569\uB2C8\uB2E4" : "",
           onChange: (e) => setField("description", e.target.value)
         }),
         h2(
@@ -6865,25 +6865,25 @@ var __dshPurgeDrill = (() => {
               disabled: busy,
               onClick: save
             },
-            "\u4FDD\u5B58"
+            "\uC800\uC7A5"
           ),
           form.id ? form.builtin ? h2(
             "button",
             {
               className: "rt-btn",
               disabled: true,
-              title: "\u5185\u7F6E\u5F97\u5206\u70B9\u4E0D\u80FD\u5220\u9664\uFF1A\u5220\u6389\u4F1A\u8BA9\u9762\u677F\u7F3A\u4E00\u6761\u89C4\u5219\u3001\u62A5\u544A\u5C11\u4E00\u7C7B\u6210\u679C\uFF08\u4E0B\u6B21\u542F\u52A8\u8FD8\u4F1A\u81EA\u52A8\u8865\u56DE\u6765\uFF09\u3002\u8981\u8BA9\u5B83\u4E0D\u53C2\u4E0E\u8BA1\u5206\u8BF7\u6539\u7528\u300C\u505C\u7528\u300D\u3002"
+              title: "\uB0B4\uC7A5 \uB4DD\uC810 \uD56D\uBAA9\uC740 \uC0AD\uC81C\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4: \uC9C0\uC6B0\uBA74 \uD328\uB110\uC5D0\uC11C \uADDC\uCE59\uC774 \uD558\uB098 \uBE60\uC9C0\uACE0 \uBCF4\uACE0\uC11C\uC5D0\uC11C \uC131\uACFC \uD55C \uBD84\uB958\uAC00 \uC0AC\uB77C\uC9D1\uB2C8\uB2E4(\uB2E4\uC74C \uC2DC\uC791 \uC2DC \uC790\uB3D9\uC73C\uB85C \uB418\uB3CC\uC544\uC635\uB2C8\uB2E4). \uC9D1\uACC4\uC5D0\uC11C \uBE7C\uB824\uBA74 \u201C\uBE44\uD65C\uC131\u201D\uC744 \uC4F0\uC138\uC694."
             },
-            "\u5220\u9664\uFF08\u5185\u7F6E\u9879\u4E0D\u53EF\u5220\uFF09"
+            "\uC0AD\uC81C(\uB0B4\uC7A5 \uD56D\uBAA9\uC740 \uC0AD\uC81C \uBD88\uAC00)"
           ) : h2(
             "button",
             { className: "rt-btn", disabled: busy, onClick: remove },
-            "\u5220\u9664"
+            "\uC0AD\uC81C"
           ) : null,
           h2(
             "button",
             { className: "rt-btn", onClick: () => setForm(null) },
-            "\u53D6\u6D88"
+            "\uCDE8\uC18C"
           )
         )
       ) : null,
@@ -6894,16 +6894,16 @@ var __dshPurgeDrill = (() => {
           "div",
           { className: "rt-score-row head" },
           h2("span", null, ""),
-          h2("span", null, "\u5206\u503C"),
-          h2("span", null, "\u5F97\u5206\u70B9\uFF08\u6309\u5206\u503C\u4ECE\u4F4E\u5230\u9AD8\uFF09"),
-          h2("span", null, "\u547D\u4E2D / \u4E0A\u9650"),
-          h2("span", { style: { textAlign: "right" } }, "\u5DF2\u5F97\u5206")
+          h2("span", null, "\uC810\uC218"),
+          h2("span", null, "\uB4DD\uC810 \uD56D\uBAA9(\uC810\uC218 \uB0AE\uC740 \uC21C)"),
+          h2("span", null, "\uC801\uC911 / \uC0C1\uD55C"),
+          h2("span", { style: { textAlign: "right" } }, "\uD68D\uB4DD \uC810\uC218")
         ),
         rows,
         !items.length ? h2(
           "div",
           { className: "rt-empty" },
-          "\u6682\u65E0\u5F97\u5206\u70B9\uFF0C\u70B9\u53F3\u4E0A\u89D2\u300C\u65B0\u589E\u5F97\u5206\u70B9\u300D"
+          "\uB4DD\uC810 \uD56D\uBAA9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uC624\uB978\uCABD \uC704 \u201C+ \uB4DD\uC810 \uD56D\uBAA9 \uCD94\uAC00\u201D\uB97C \uB204\uB974\uC138\uC694"
         ) : null
       )
     );
@@ -7003,7 +7003,7 @@ var __dshPurgeDrill = (() => {
               copyText(text);
             }
           },
-          "\u590D\u5236"
+          "\uBCF5\uC0AC"
         ),
         h2(
           "button",
@@ -7015,19 +7015,19 @@ var __dshPurgeDrill = (() => {
               setOpen((v) => !v);
             }
           },
-          open ? "\u6536\u8D77" : "\u5C55\u5F00"
+          open ? "\uC811\uAE30" : "\uD3BC\uCE58\uAE30"
         )
       ),
       h2("div", { className: "rt-clip-body" }, text)
     );
   }
   const TEST_STATUS_LABEL = {
-    untested: "\u672A\u6D4B\u8BD5",
-    testing: "\u6D4B\u8BD5\u4E2D",
-    tested: "\u5DF2\u6D4B\u8BD5",
-    blocked: "\u88AB\u5C01\u7981",
-    abandoned: "\u5DF2\u653E\u5F03",
-    no_surface: "\u65E0\u653B\u51FB\u9762"
+    untested: "\uBBF8\uD14C\uC2A4\uD2B8",
+    testing: "\uD14C\uC2A4\uD2B8 \uC911",
+    tested: "\uD14C\uC2A4\uD2B8 \uC644\uB8CC",
+    blocked: "\uCC28\uB2E8\uB428",
+    abandoned: "\uD3EC\uAE30",
+    no_surface: "\uACF5\uACA9 \uD45C\uBA74 \uC5C6\uC74C"
   };
   function TestingTab(props) {
     const eng = props.engagement;
@@ -7047,7 +7047,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           if (my !== seq.current) return;
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+            setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -7083,7 +7083,7 @@ var __dshPurgeDrill = (() => {
             key: "sc",
             className: "rt-scope rt-scope-" + (a.scope === "internal" ? "internal" : "external")
           },
-          a.scope === "internal" ? "\u5185\u7F51" : "\u5916\u7F51"
+          a.scope === "internal" ? "\uB0B4\uBD80\uB9DD" : "\uC678\uBD80\uB9DD"
         )
       );
       if (a.segment_cidr)
@@ -7095,7 +7095,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { key: "p", className: "rt-tag rt-tag-active" },
-            "\u5F00\u653E " + a.open_ports + " \u7AEF\u53E3"
+            "\uC5F4\uB9B0 \uD3EC\uD2B8 " + a.open_ports
           )
         );
       if (a.vulns)
@@ -7103,7 +7103,7 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { key: "v", className: "rt-tag rt-tag-live" },
-            "\u5DF2\u786E\u8BA4\u6F0F\u6D1E " + a.vulns
+            "\uD655\uC778\uB41C \uCDE8\uC57D\uC810 " + a.vulns
           )
         );
       if (a.webshells)
@@ -7119,12 +7119,12 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { key: "t", className: "rt-tag rt-tag-passive" },
-            "\u96A7\u9053 " + a.tunnels
+            "\uD130\uB110 " + a.tunnels
           )
         );
       if (a.priority)
         chips.push(
-          h2("span", { key: "pr", className: "rt-tag" }, "\u6613\u6253 " + a.priority)
+          h2("span", { key: "pr", className: "rt-tag" }, "\uACF5\uB7B5 " + a.priority)
         );
       if (a.blocked_count)
         chips.push(
@@ -7135,7 +7135,7 @@ var __dshPurgeDrill = (() => {
               className: "rt-tag",
               style: { color: "#ef4444", borderColor: "#ef444455" }
             },
-            "\u88AB\u5C01 " + a.blocked_count + " \u6B21"
+            "\uCC28\uB2E8 " + a.blocked_count + "\uD68C"
           )
         );
       const noteLines = a.test_notes ? String(a.test_notes).split("\n").slice(-3).map((l) => l.length > 240 ? l.slice(0, 240) + " \u2026" : l) : [];
@@ -7170,10 +7170,10 @@ var __dshPurgeDrill = (() => {
         a.test_surface ? h2(
           "div",
           { className: "rt-atest-meta" },
-          "\u6D4B\u8BD5\u9762\uFF1A" + a.test_surface
+          "\uD14C\uC2A4\uD2B8 \uB300\uC0C1: " + a.test_surface
         ) : null,
-        a.potential ? h2("div", { className: "rt-atest-meta" }, "\u9884\u671F\u5F97\u5206\uFF1A" + a.potential) : null,
-        noteLines.length ? h2(Clip, { label: "\u6D4B\u8BD5\u8BB0\u5F55", text: noteLines.join("\n") }) : null
+        a.potential ? h2("div", { className: "rt-atest-meta" }, "\uC608\uC0C1 \uB4DD\uC810: " + a.potential) : null,
+        noteLines.length ? h2(Clip, { label: "\uD14C\uC2A4\uD2B8 \uAE30\uB85D", text: noteLines.join("\n") }) : null
       );
     };
     const concl = (label, value, tone) => h2(
@@ -7185,11 +7185,11 @@ var __dshPurgeDrill = (() => {
     const conclusion = h2(
       "div",
       { className: "rt-concl" },
-      concl("\u6D4B\u8BD5\u4E2D", stats.testing, "live"),
-      concl("\u5F85\u6D4B", stats.untested, ""),
-      concl("\u5DF2\u6D4B", stats.tested, ""),
-      concl("\u653E\u5F03", (stats.abandoned || 0) + (stats.blocked || 0), ""),
-      concl("\u65E0\u653B\u51FB\u9762", stats.no_surface, ""),
+      concl("\uD14C\uC2A4\uD2B8 \uC911", stats.testing, "live"),
+      concl("\uB300\uAE30", stats.untested, ""),
+      concl("\uC644\uB8CC", stats.tested, ""),
+      concl("\uD3EC\uAE30", (stats.abandoned || 0) + (stats.blocked || 0), ""),
+      concl("\uACF5\uACA9 \uD45C\uBA74 \uC5C6\uC74C", stats.no_surface, ""),
       h2("div", { className: "rt-spacer" }),
       at ? h2(
         "span",
@@ -7199,43 +7199,43 @@ var __dshPurgeDrill = (() => {
             color: "var(--dsw-alias-label-secondary)"
           }
         },
-        "\u66F4\u65B0\u4E8E " + at.toLocaleTimeString("zh-CN", { hour12: false })
+        "\uAC31\uC2E0 " + at.toLocaleTimeString("ko-KR", { hour12: false })
       ) : null,
       h2(
         "button",
         {
           className: "rt-btn",
           style: { padding: "0 7px", fontSize: 11 },
-          title: "\u5C55\u5F00\u6700\u8FD1\u52A8\u8FC7\u4E0E\u5F85\u6D4B\u961F\u5217",
+          title: "\uCD5C\uADFC \uBCC0\uB3D9\uACFC \uB300\uAE30 \uB300\uC5F4 \uD3BC\uCE58\uAE30",
           onClick: () => collapse.setAll(
             ["testing:" + eng, "recent:" + eng, "queue:" + eng],
             true
           )
         },
-        "\u5168\u90E8\u5C55\u5F00"
+        "\uC804\uCCB4 \uD3BC\uCE58\uAE30"
       ),
       h2(
         "button",
         {
           className: "rt-btn",
           style: { padding: "0 7px", fontSize: 11 },
-          title: "\u53EA\u7559\u6B63\u5728\u6D4B",
+          title: "\uD14C\uC2A4\uD2B8 \uC911\uB9CC \uB0A8\uAE30\uAE30",
           onClick: () => collapse.setAll(
             ["testing:" + eng, "recent:" + eng, "queue:" + eng],
             false
           )
         },
-        "\u5168\u90E8\u6536\u8D77"
+        "\uC804\uCCB4 \uC811\uAE30"
       ),
       h2(
         "button",
         {
           className: "rt-btn" + (auto ? " rt-btn-primary" : ""),
           style: { padding: "0 7px", fontSize: 11 },
-          title: "\u6BCF 5 \u79D2\u81EA\u52A8\u5237\u65B0",
+          title: "5\uCD08\uB9C8\uB2E4 \uC790\uB3D9 \uC0C8\uB85C\uACE0\uCE68",
           onClick: () => setAuto((x) => !x)
         },
-        auto ? "\u5B9E\u65F6 \xB7 5s" : "\u5DF2\u6682\u505C"
+        auto ? "\uC2E4\uC2DC\uAC04 \xB7 5s" : "\uC77C\uC2DC \uC815\uC9C0"
       ),
       h2(
         "button",
@@ -7244,7 +7244,7 @@ var __dshPurgeDrill = (() => {
           style: { padding: "0 7px", fontSize: 11 },
           onClick: load
         },
-        "\u5237\u65B0"
+        "\uC0C8\uB85C\uACE0\uCE68"
       )
     );
     const body = [];
@@ -7254,16 +7254,16 @@ var __dshPurgeDrill = (() => {
         {
           key: "testing",
           tone: "test",
-          title: "\u6B63\u5728\u6D4B",
-          count: testing.length + " \u53F0",
-          sub: testing.length ? "agent \u6B63\u5728\u6253\u8FD9\u4E9B\u8D44\u4EA7" : "agent \u5F00\u59CB\u6D4B\u67D0\u53F0\u8D44\u4EA7\u540E\u4F1A\u5B9E\u65F6\u51FA\u73B0\u5728\u8FD9\u91CC",
+          title: "\uD14C\uC2A4\uD2B8 \uC911",
+          count: testing.length + "\uB300",
+          sub: testing.length ? "\uC5D0\uC774\uC804\uD2B8\uAC00 \uC774 \uC790\uC0B0\uB4E4\uC744 \uCE58\uACE0 \uC788\uC2B5\uB2C8\uB2E4" : "\uC5D0\uC774\uC804\uD2B8\uAC00 \uC5B4\uB5A4 \uC790\uC0B0\uC744 \uD14C\uC2A4\uD2B8\uD558\uAE30 \uC2DC\uC791\uD558\uBA74 \uC5EC\uAE30\uC5D0 \uC2E4\uC2DC\uAC04\uC73C\uB85C \uB098\uD0C0\uB0A9\uB2C8\uB2E4",
           open: collapse.isOpen("testing:" + eng, true),
           onToggle: collapse.toggle("testing:" + eng, true)
         },
         testing.length ? testing.map((a) => card(a, false)) : h2(
           "div",
           { className: "rt-atest-meta", style: { paddingBottom: 4 } },
-          "\u5F53\u524D\u6CA1\u6709\u8D44\u4EA7\u5904\u4E8E\u300C\u6D4B\u8BD5\u4E2D\u300D"
+          "\uC9C0\uAE08 \u201C\uD14C\uC2A4\uD2B8 \uC911\u201D\uC778 \uC790\uC0B0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4"
         )
       )
     );
@@ -7273,13 +7273,13 @@ var __dshPurgeDrill = (() => {
         {
           key: "recent",
           tone: "past",
-          title: "\u6700\u8FD1\u52A8\u8FC7",
-          count: recent.length + " \u53F0",
-          sub: "\u5DF2\u6D4B\u8FC7\u7684\u8D44\u4EA7",
+          title: "\uCD5C\uADFC \uBCC0\uB3D9",
+          count: recent.length + "\uB300",
+          sub: "\uC774\uBBF8 \uD14C\uC2A4\uD2B8\uD55C \uC790\uC0B0",
           open: collapse.isOpen("recent:" + eng, false),
           onToggle: collapse.toggle("recent:" + eng, false)
         },
-        recent.length ? recent.map((a) => card(a, true)) : h2("div", { className: "rt-atest-meta" }, "\u6682\u65E0")
+        recent.length ? recent.map((a) => card(a, true)) : h2("div", { className: "rt-atest-meta" }, "\uC5C6\uC74C")
       )
     );
     body.push(
@@ -7288,9 +7288,9 @@ var __dshPurgeDrill = (() => {
         {
           key: "queue",
           tone: "queue",
-          title: "\u5F85\u6D4B\u961F\u5217",
-          count: (data ? data.untested || 0 : 0) + " \u53F0",
-          sub: "\u6309\u6613\u6253\u6027\u4E0E\u7AEF\u53E3\u6570\u6392\u51FA\u5148\u6253\u54EA\u51E0\u53F0",
+          title: "\uB300\uAE30 \uB300\uC5F4",
+          count: (data ? data.untested || 0 : 0) + "\uB300",
+          sub: "\uACF5\uB7B5 \uC6A9\uC774\uC131\uACFC \uD3EC\uD2B8 \uC218\uB85C \uC5B4\uB290 \uC790\uC0B0\uBD80\uD130 \uCE60\uC9C0 \uC815\uB82C\uD569\uB2C8\uB2E4",
           open: collapse.isOpen("queue:" + eng, false),
           onToggle: collapse.toggle("queue:" + eng, false)
         },
@@ -7302,9 +7302,9 @@ var __dshPurgeDrill = (() => {
               className: "rt-atest-meta",
               style: { paddingTop: 4 }
             },
-            "\u5B8C\u6574\u6E05\u5355\uFF08\u542B\u7B5B\u9009\u4E0E\u6392\u5E8F\uFF09\u89C1\u300C\u8D44\u4EA7\u6D4B\u7ED8\u300D\u9875"
+            "\uC804\uCCB4 \uBAA9\uB85D(\uD544\uD130\xB7\uC815\uB82C \uD3EC\uD568)\uC740 \u201C\uC790\uC0B0 \uB9E4\uD551\u201D \uD398\uC774\uC9C0\uC5D0\uC11C \uBD05\uB2C8\uB2E4"
           )
-        ]) : h2("div", { className: "rt-atest-meta" }, "\u6CA1\u6709\u5F85\u6D4B\u8D44\u4EA7")
+        ]) : h2("div", { className: "rt-atest-meta" }, "\uB300\uAE30 \uC911\uC778 \uC790\uC0B0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4")
       )
     );
     return h2(
@@ -7312,7 +7312,7 @@ var __dshPurgeDrill = (() => {
       { className: "rt-main" },
       conclusion,
       err ? h2("div", { className: "rt-err" }, err) : null,
-      data === null && !err ? h2("div", { className: "rt-empty" }, "\u52A0\u8F7D\u4E2D\u2026") : null,
+      data === null && !err ? h2("div", { className: "rt-empty" }, "\uBD88\uB7EC\uC624\uB294 \uC911\u2026") : null,
       h2(
         "div",
         { className: "rt-body", style: { overflow: "auto" } },
@@ -7333,7 +7333,7 @@ var __dshPurgeDrill = (() => {
       api({ op: "sessions", engagement: eng }).then(
         (r) => {
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+            setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -7350,7 +7350,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u68C0\u6D4B\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uAC80\uC0AC \uC2E4\uD328" });
             load();
             return;
           }
@@ -7361,7 +7361,7 @@ var __dshPurgeDrill = (() => {
             (x) => x.status === "active"
           ).length;
           setMsg({
-            ok: "\u68C0\u6D4B\u5B8C\u6210\uFF1AWebShell \u5728\u7EBF " + on + "/" + (r.webshells || []).length + "\uFF0C\u96A7\u9053\u53EF\u7528 " + act + "/" + (r.tunnels || []).length
+            ok: "\uAC80\uC0AC \uC644\uB8CC: WebShell \uC628\uB77C\uC778 " + on + "/" + (r.webshells || []).length + ", \uD130\uB110 \uC0AC\uC6A9 \uAC00\uB2A5 " + act + "/" + (r.tunnels || []).length
           });
           load();
         },
@@ -7385,7 +7385,7 @@ var __dshPurgeDrill = (() => {
         op: "updateTunnel",
         engagement: eng,
         id: t.id,
-        patch: { status, check_note: "\u754C\u9762\u624B\u52A8\u6807\u8BB0" }
+        patch: { status, check_note: "\uD654\uBA74\uC5D0\uC11C \uC218\uB3D9 \uD45C\uC2DC" }
       }).then(
         () => load(),
         (e) => setMsg({ err: String(e && e.message || e) })
@@ -7397,7 +7397,7 @@ var __dshPurgeDrill = (() => {
         op: "updateWebshell",
         engagement: eng,
         id: w.id,
-        patch: { status, check_note: "\u754C\u9762\u624B\u52A8\u6807\u8BB0" }
+        patch: { status, check_note: "\uD654\uBA74\uC5D0\uC11C \uC218\uB3D9 \uD45C\uC2DC" }
       }).then(
         () => load(),
         (e) => setMsg({ err: String(e && e.message || e) })
@@ -7416,7 +7416,7 @@ var __dshPurgeDrill = (() => {
       h2("b", null, label),
       h2("span", null, value)
     );
-    const isEncryptedShell = (t) => /behinder|godzilla|冰蝎|哥斯拉/i.test(String(t || ""));
+    const isEncryptedShell = (t) => /behinder|godzilla|\u51B0\u874E|\u54E5\u65AF\u62C9/i.test(String(t || ""));
     const isSuo5 = (t) => /suo5/i.test(String(t || ""));
     const hint = (key, title, detail) => h2(
       "div",
@@ -7425,7 +7425,7 @@ var __dshPurgeDrill = (() => {
       h2(
         "details",
         { className: "rt-sess-fold", style: { marginTop: 3 } },
-        h2("summary", null, "\u600E\u4E48\u505A\uFF08\u70B9\u51FB\u5C55\u5F00\uFF09"),
+        h2("summary", null, "\uBC29\uBC95(\uD074\uB9AD\uD558\uBA74 \uD3BC\uCE68)"),
         h2("div", { style: { marginTop: 4 } }, detail)
       )
     );
@@ -7436,8 +7436,8 @@ var __dshPurgeDrill = (() => {
       hints.push(
         hint(
           "h1",
-          "\u6709 " + badShells.length + " \u4E2A\u5165\u53E3\u4E0D\u662F\u51B0\u874E\u9A6C/\u54E5\u65AF\u62C9\u9A6C\uFF08\u7528\u6237\u8FDE\u4E0D\u4E0A\uFF0C\u4E0D\u7B97\u53EF\u4EA4\u4ED8\u5165\u53E3\uFF09",
-          "\u7528\u6280\u80FD webshell-toolkit \u91CD\u65B0\u4E0A\u4F20\u51B0\u874E\u9A6C\uFF08behinder\uFF09\u6216\u54E5\u65AF\u62C9\u9A6C\uFF08godzilla\uFF09\uFF0C\u5E76\u628A shell_type + pass_key \u5199\u8FDB redteam_webshell_add\u3002\u53EA\u4F5C\u4E34\u65F6\u4E2D\u8F6C\u7684\u53EF\u5728\u5907\u6CE8\u91CC\u5199\u660E\u3002"
+          "\uC9C4\uC785\uC810 " + badShells.length + "\uAC1C\uAC00 Behinder/Godzilla \uC178\uC774 \uC544\uB2D9\uB2C8\uB2E4(\uC0AC\uC6A9\uC790\uAC00 \uC811\uC18D\uD560 \uC218 \uC5C6\uC5B4 \uB0A9\uD488 \uAC00\uB2A5\uD55C \uC9C4\uC785\uC810\uC73C\uB85C \uCE58\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4)",
+          "webshell-toolkit \uC2A4\uD0AC\uB85C Behinder(behinder) \uB610\uB294 Godzilla(godzilla) \uC178\uC744 \uB2E4\uC2DC \uC5C5\uB85C\uB4DC\uD558\uACE0, shell_type + pass_key \uB97C redteam_webshell_add \uC5D0 \uC801\uC2B5\uB2C8\uB2E4. \uC784\uC2DC \uC911\uACC4\uB85C\uB9CC \uC4F0\uB294 \uAC83\uC774\uB77C\uBA74 \uBE44\uACE0\uC5D0 \uBC1D\uD799\uB2C8\uB2E4."
         )
       );
     }
@@ -7445,8 +7445,8 @@ var __dshPurgeDrill = (() => {
       hints.push(
         hint(
           "h3",
-          "\u73B0\u6709 " + tunnels.length + ' \u6761\u901A\u9053\u90FD\u4E0D\u7B97"\u8DE8\u8D8A\u9776\u6807\u8FB9\u754C"\uFF08\u4E0D\u7B97\u8FB9\u754C/\u5185\u7F51\u7A81\u7834\uFF09',
-          "\u81EA\u5DF1\u7684 VPS / \u81EA\u5EFA\u670D\u52A1\u5668\u4E0A\u5F00\u7684 socks5\u3001frp\u3001\u4EE3\u7406\u4E0D\u7B97\u96A7\u9053\u3002\u5FC5\u987B\u662F\u76EE\u6807\u4FA7\u53D1\u8D77\u7684\u901A\u9053\uFF1A\u76EE\u6807\u53CD\u5F39 shell \u5230\u6211\u65B9\u3001\u76EE\u6807\u4E0A\u8DD1 frp/Stowaway \u5BA2\u6237\u7AEF\u3001\u6216\u7ECF\u76EE\u6807 WebShell \u5EFA\u7684 suo5/HTTP \u96A7\u9053\uFF1B\u767B\u8BB0\u65F6\u7528 entry_kind \u8BF4\u660E\u3002"
+          "\uD604\uC7AC \uD1B5\uB85C " + tunnels.length + '\uAC1C\uAC00 \uBAA8\uB450 "\uD0C0\uAE43 \uACBD\uACC4\uB97C \uB118\uC740 \uAC83"\uC73C\uB85C \uCE58\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4(\uACBD\uACC4/\uB0B4\uBD80\uB9DD \uB3CC\uD30C \uBBF8\uC778\uC815)',
+          "\uB0B4 VPS / \uC790\uCCB4 \uC11C\uBC84\uC5D0\uC11C \uC5F0 socks5, frp, \uD504\uB85D\uC2DC\uB294 \uD130\uB110\uB85C \uCE58\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uB300\uC0C1 \uCE21\uC5D0\uC11C \uC2DC\uC791\uB418\uB294 \uD1B5\uB85C\uC5EC\uC57C \uD569\uB2C8\uB2E4: \uB300\uC0C1\uC774 \uB0B4 \uCABD\uC73C\uB85C \uB9AC\uBC84\uC2A4 \uC178, \uB300\uC0C1\uC5D0\uC11C frp/Stowaway \uD074\uB77C\uC774\uC5B8\uD2B8 \uC2E4\uD589, \uB610\uB294 \uB300\uC0C1 WebShell \uC744 \uACBD\uC720\uD55C suo5/HTTP \uD130\uB110; \uB4F1\uB85D\uD560 \uB54C entry_kind \uB85C \uBC1D\uD799\uB2C8\uB2E4."
         )
       );
     }
@@ -7457,8 +7457,8 @@ var __dshPurgeDrill = (() => {
       hints.push(
         hint(
           "h2",
-          "\u8FD8\u6CA1\u6709\u53EF\u7528\u7684 suo5 \u96A7\u9053\uFF08\u6253\u8FDB\u5185\u7F51\u7684\u6807\u51C6\u901A\u9053\uFF09",
-          "\u7528\u6280\u80FD suo5-tunnel \u901A\u8FC7\u4E0A\u9762\u7684 WebShell \u5EFA socks5 \u96A7\u9053\uFF0C\u518D redteam_tunnel_add\uFF08kind=suo5\u3001listen=127.0.0.1:1080\u3001entry=WebShell URL\u3001reach=\u53EF\u8FBE\u7F51\u6BB5\uFF09\u767B\u8BB0\uFF0C\u6700\u540E\u70B9\u300C\u68C0\u6D4B\u8FDE\u901A\u6027\u300D\u786E\u8BA4 status=active\u3002"
+          "\uC0AC\uC6A9 \uAC00\uB2A5\uD55C suo5 \uD130\uB110\uC774 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4(\uB0B4\uBD80\uB9DD \uC9C4\uC785\uC758 \uD45C\uC900 \uD1B5\uB85C)",
+          "suo5-tunnel \uC2A4\uD0AC\uB85C \uC704 WebShell \uC744 \uACBD\uC720\uD574 socks5 \uD130\uB110\uC744 \uB9CC\uB4E4\uACE0, redteam_tunnel_add(kind=suo5, listen=127.0.0.1:1080, entry=WebShell URL, reach=\uB3C4\uB2EC \uB300\uC5ED)\uB85C \uB4F1\uB85D\uD55C \uB4A4, \uB9C8\uC9C0\uB9C9\uC5D0 \u201C\uC5F0\uACB0 \uD655\uC778\u201D\uC744 \uB20C\uB7EC status=active \uB97C \uD655\uC778\uD558\uC138\uC694."
         )
       );
     }
@@ -7476,13 +7476,13 @@ var __dshPurgeDrill = (() => {
             { className: "rt-tag rt-tag-active" },
             w.shell_type || "webshell"
           ),
-          isEncryptedShell(w.shell_type) ? null : h2("span", { className: "rt-tag rt-tag-warn" }, "\u7528\u6237\u8FDE\u4E0D\u4E0A"),
+          isEncryptedShell(w.shell_type) ? null : h2("span", { className: "rt-tag rt-tag-warn" }, "\uC0AC\uC6A9\uC790 \uC811\uC18D \uBD88\uAC00"),
           w.privilege ? h2("span", { className: "rt-tag" }, w.privilege) : null,
           h2("div", { className: "rt-spacer" }),
           copied === "cmd" + w.id ? h2(
             "span",
             { className: "rt-tag", style: { color: "#10b981" } },
-            "\u5DF2\u590D\u5236"
+            "\uBCF5\uC0AC\uB428"
           ) : h2(
             "button",
             {
@@ -7490,7 +7490,7 @@ var __dshPurgeDrill = (() => {
               style: { padding: "0 6px", fontSize: 11 },
               onClick: () => copy("cmd" + w.id, 'curl -s "' + w.url + '"')
             },
-            "\u590D\u5236 URL"
+            "URL \uBCF5\uC0AC"
           ),
           h2(
             "button",
@@ -7499,36 +7499,36 @@ var __dshPurgeDrill = (() => {
               style: { padding: "0 6px", fontSize: 11 },
               onClick: () => markShell(w, "offline")
             },
-            "\u6807\u8BB0\u5931\u6548"
+            "\uBB34\uD6A8 \uD45C\uC2DC"
           )
         ),
         h2(
           "div",
           { className: "rt-sess-facts" },
           fact(
-            "\u7C7B\u578B",
-            isEncryptedShell(w.shell_type) ? "\u52A0\u5BC6\u9A6C\uFF08\u51B0\u874E/\u54E5\u65AF\u62C9\uFF0C\u7528\u6237\u53EF\u76F4\u8FDE\uFF09" : "\u975E\u52A0\u5BC6\u9A6C \u2014\u2014 \u7528\u6237\u8FDE\u4E0D\u4E0A\uFF0C\u4EC5\u53EF\u4F5C\u4E34\u65F6\u4E2D\u8F6C"
+            "\uC720\uD615",
+            isEncryptedShell(w.shell_type) ? "\uC554\uD638\uD654 \uC178(Behinder/Godzilla, \uC0AC\uC6A9\uC790 \uC9C1\uC811 \uC811\uC18D \uAC00\uB2A5)" : "\uBE44\uC554\uD638\uD654 \uC178 \u2014 \uC0AC\uC6A9\uC790\uAC00 \uC811\uC18D\uD560 \uC218 \uC5C6\uC5B4 \uC784\uC2DC \uC911\uACC4\uB85C\uB9CC \uC4F8 \uC218 \uC788\uC2B5\uB2C8\uB2E4"
           ),
-          w.pass_key ? fact("\u8FDE\u63A5\u53E3\u4EE4", h2("span", { className: "rt-mono" }, w.pass_key)) : null,
-          w.asset_ip ? fact("\u6240\u5728\u8D44\u4EA7", w.asset_ip) : null,
-          w.privilege ? fact("\u6743\u9650", w.privilege) : null,
+          w.pass_key ? fact("\uC5F0\uACB0 \uC554\uD638", h2("span", { className: "rt-mono" }, w.pass_key)) : null,
+          w.asset_ip ? fact("\uC704\uCE58\uD55C \uC790\uC0B0", w.asset_ip) : null,
+          w.privilege ? fact("\uAD8C\uD55C", w.privilege) : null,
           w.secret_ref ? fact(
-            "\u51ED\u636E\u5F15\u7528",
+            "\uC790\uACA9 \uC99D\uBA85 \uCC38\uC870",
             h2("span", { className: "rt-mono" }, w.secret_ref)
           ) : null,
           fact(
-            "\u6700\u540E\u68C0\u6D4B",
-            (w.last_check ? fmt(w.last_check) : "\u672A\u68C0\u6D4B") + (w.latency_ms !== null && w.latency_ms !== void 0 ? "\uFF08" + w.latency_ms + "ms\uFF09" : "")
+            "\uCD5C\uADFC \uAC80\uC0AC",
+            (w.last_check ? fmt(w.last_check) : "\uBBF8\uAC80\uC0AC") + (w.latency_ms !== null && w.latency_ms !== void 0 ? "(" + w.latency_ms + "ms)" : "")
           ),
-          w.check_note ? fact("\u68C0\u6D4B\u8BF4\u660E", w.check_note) : null,
-          w.note ? fact("\u5907\u6CE8", w.note) : null
+          w.check_note ? fact("\uAC80\uC0AC \uC124\uBA85", w.check_note) : null,
+          w.note ? fact("\uBE44\uACE0", w.note) : null
         )
       )
     );
     const tunnelCards = tunnels.map((t) => {
       const proxy = t.listen ? "socks5://" + t.listen : "";
-      const gogoCmd = t.listen ? "./gogo -i <\u5185\u7F51CIDR> -m ss --ping -p top2,win,db --proxy " + proxy : "";
-      const fscanCmd = t.listen ? "./fscan -h <\u5185\u7F51CIDR> -np -nobr -nopoc -socks5 " + t.listen + " -o intranet.txt" : "";
+      const gogoCmd = t.listen ? "./gogo -i <\uB0B4\uBD80\uB9DD CIDR> -m ss --ping -p top2,win,db --proxy " + proxy : "";
+      const fscanCmd = t.listen ? "./fscan -h <\uB0B4\uBD80\uB9DD CIDR> -np -nobr -nopoc -socks5 " + t.listen + " -o intranet.txt" : "";
       return h2(
         "div",
         { key: "t" + t.id, className: "rt-sess" },
@@ -7539,38 +7539,38 @@ var __dshPurgeDrill = (() => {
           h2(
             "span",
             { className: "rt-sess-title" },
-            t.listen || "(\u672A\u586B\u76D1\u542C\u5730\u5740)"
+            t.listen || "(\uC218\uC2E0 \uC8FC\uC18C \uBBF8\uAE30\uC7AC)"
           ),
           h2("span", { className: "rt-tag rt-tag-passive" }, t.kind || "tunnel"),
           isSuo5(t.kind) ? null : h2(
             "span",
             { className: "rt-tag rt-tag-warn" },
-            "\u975E suo5 \u6807\u51C6\u901A\u9053"
+            "suo5 \uD45C\uC900 \uD1B5\uB85C \uC544\uB2D8"
           ),
-          /* 只有跨越靶标边界的通道才算突破凭证（自己 VPS/自建服务器上开的不算） */
+          /* 타깃 경계를 넘은 통로만 돌파 증거로 친다(내 VPS/자체 서버에서 연 것은 제외) */
           t.legit === true ? h2(
             "span",
             {
               className: "rt-tag rt-tag-live",
               title: t.entry_kind_label || ""
             },
-            "\u76EE\u6807\u4FA7\u901A\u9053"
+            "\uB300\uC0C1 \uCE21 \uD1B5\uB85C"
           ) : t.legit === false ? h2(
             "span",
             {
               className: "rt-tag rt-tag-warn",
-              title: "\u53EA\u5728\u81EA\u5DF1 VPS/\u81EA\u5EFA\u670D\u52A1\u5668\u4E0A\u5F00\u7684\u901A\u9053\uFF0C\u6CA1\u6709\u78B0\u5230\u76EE\u6807 \u2014\u2014 \u4E0D\u7B97\u8FB9\u754C\u7A81\u7834/\u5185\u7F51\u7A81\u7834"
+              title: "\uB0B4 VPS/\uC790\uCCB4 \uC11C\uBC84\uC5D0\uC11C\uB9CC \uC5F0 \uD1B5\uB85C\uB77C \uB300\uC0C1\uC5D0 \uB2FF\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4 \u2014 \uACBD\uACC4 \uB3CC\uD30C/\uB0B4\uBD80\uB9DD \uB3CC\uD30C\uB85C \uCE58\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4"
             },
-            "\u4E0D\u7B97\u7A81\u7834"
+            "\uB3CC\uD30C \uBBF8\uC778\uC815"
           ) : h2(
             "span",
             {
               className: "rt-tag",
-              title: "\u672A\u58F0\u660E entry_kind\uFF1A\u8BF7\u8BF4\u660E\u76EE\u6807\u4FA7\u7684\u90A3\u4E00\u7AEF\u662F\u4EC0\u4E48\uFF08target-outbound / target-http / target-agent\uFF09"
+              title: "entry_kind \uBBF8\uC120\uC5B8: \uB300\uC0C1 \uCE21 \uB05D\uC774 \uBB34\uC5C7\uC778\uC9C0 \uBC1D\uD788\uC138\uC694(target-outbound / target-http / target-agent)"
             },
-            "\u5F85\u786E\u8BA4"
+            "\uD655\uC778 \uB300\uAE30"
           ),
-          t.reach ? h2("span", { className: "rt-tag" }, "\u53EF\u8FBE " + t.reach) : null,
+          t.reach ? h2("span", { className: "rt-tag" }, "\uB3C4\uB2EC " + t.reach) : null,
           h2("div", { className: "rt-spacer" }),
           h2(
             "button",
@@ -7579,7 +7579,7 @@ var __dshPurgeDrill = (() => {
               style: { padding: "0 6px", fontSize: 11 },
               onClick: () => copy("sock" + t.id, t.listen || "")
             },
-            copied === "sock" + t.id ? "\u5DF2\u590D\u5236" : "\u590D\u5236\u5730\u5740"
+            copied === "sock" + t.id ? "\uBCF5\uC0AC\uB428" : "\uC8FC\uC18C \uBCF5\uC0AC"
           ),
           t.status === "active" ? h2(
             "button",
@@ -7588,7 +7588,7 @@ var __dshPurgeDrill = (() => {
               style: { padding: "0 6px", fontSize: 11 },
               onClick: () => markTunnel(t, "down")
             },
-            "\u6807\u8BB0\u5931\u6548"
+            "\uBB34\uD6A8 \uD45C\uC2DC"
           ) : h2(
             "button",
             {
@@ -7596,70 +7596,70 @@ var __dshPurgeDrill = (() => {
               style: { padding: "0 6px", fontSize: 11 },
               onClick: () => markTunnel(t, "active")
             },
-            "\u6807\u8BB0\u53EF\u7528"
+            "\uC0AC\uC6A9 \uAC00\uB2A5 \uD45C\uC2DC"
           )
         ),
         h2(
           "div",
           { className: "rt-sess-facts" },
-          fact("\u76EE\u6807\u4FA7\u5165\u53E3", t.entry || "\u672A\u767B\u8BB0"),
+          fact("\uB300\uC0C1 \uCE21 \uC9C4\uC785\uC810", t.entry || "\uBBF8\uB4F1\uB85D"),
           fact(
-            "\u8DE8\u8D8A\u8FB9\u754C",
+            "\uACBD\uACC4 \uD1B5\uACFC",
             t.legit === true ? h2(
               "span",
               { className: "rt-tag rt-tag-live" },
-              t.entry_kind_label || t.entry_kind || "\u5DF2\u786E\u8BA4\u76EE\u6807\u4FA7"
+              t.entry_kind_label || t.entry_kind || "\uB300\uC0C1 \uCE21 \uD655\uC778\uB428"
             ) : t.legit === false ? h2(
               "span",
               { className: "rt-tag rt-tag-warn" },
-              "\u4E0D\u7B97\u7A81\u7834\uFF08\u53EA\u5728\u81EA\u5DF1 VPS \u4E0A\u5F00\u4EE3\u7406\uFF09"
+              "\uB3CC\uD30C \uBBF8\uC778\uC815(\uB0B4 VPS \uC5D0\uC11C\uB9CC \uD504\uB85D\uC2DC\uB97C \uC5F4\uC5C8\uC2B5\uB2C8\uB2E4)"
             ) : h2(
               "span",
               { className: "rt-tag" },
-              "\u672A\u58F0\u660E entry_kind\uFF0C\u5F85\u786E\u8BA4"
+              "entry_kind \uBBF8\uC120\uC5B8, \uD655\uC778 \uB300\uAE30"
             )
           ),
-          t.reach ? fact("\u53EF\u8FBE\u7F51\u6BB5", t.reach) : null,
-          t.asset_ip ? fact("\u6240\u5728\u8D44\u4EA7", t.asset_ip) : null,
+          t.reach ? fact("\uB3C4\uB2EC \uB300\uC5ED", t.reach) : null,
+          t.asset_ip ? fact("\uC704\uCE58\uD55C \uC790\uC0B0", t.asset_ip) : null,
           fact(
-            "\u6700\u540E\u68C0\u6D4B",
-            (t.last_check ? fmt(t.last_check) : "\u672A\u68C0\u6D4B") + (t.latency_ms !== null && t.latency_ms !== void 0 ? "\uFF08" + t.latency_ms + "ms\uFF09" : "")
+            "\uCD5C\uADFC \uAC80\uC0AC",
+            (t.last_check ? fmt(t.last_check) : "\uBBF8\uAC80\uC0AC") + (t.latency_ms !== null && t.latency_ms !== void 0 ? "(" + t.latency_ms + "ms)" : "")
           ),
-          t.check_note ? fact("\u68C0\u6D4B\u8BF4\u660E", t.check_note) : null,
-          t.note ? fact("\u5907\u6CE8", t.note) : null
+          t.check_note ? fact("\uAC80\uC0AC \uC124\uBA85", t.check_note) : null,
+          t.note ? fact("\uBE44\uACE0", t.note) : null
         ),
-        /* 命令默认折叠：卡片首要信息是"这条通道能不能用、通向哪"，命令按需展开 */
+        /* 명령은 기본 접힘: 카드의 첫 정보는 "이 통로를 쓸 수 있는지, 어디로 통하는지"이며 명령은 필요할 때 펼친다 */
         t.command ? h2(
           "details",
           { className: "rt-sess-fold" },
-          h2("summary", null, "\u5EFA\u7ACB\u547D\u4EE4\uFF08\u70B9\u51FB\u5C55\u5F00 / \u590D\u5236\uFF09"),
+          h2("summary", null, "\uAD6C\uCD95 \uBA85\uB839(\uD074\uB9AD\uD558\uBA74 \uD3BC\uCE68 / \uBCF5\uC0AC)"),
           h2(
             "div",
             Object.assign(
-              { className: "rt-code", title: "\u70B9\u51FB\u590D\u5236" },
+              { className: "rt-code", title: "\uD074\uB9AD\uD558\uBA74 \uBCF5\uC0AC" },
               clickable(() => copy("c" + t.id, t.command), {
-                label: "\u590D\u5236\u547D\u4EE4"
+                label: "\uBA85\uB839 \uBCF5\uC0AC"
               })
             ),
-            copied === "c" + t.id ? "\u5DF2\u590D\u5236" : t.command
+            copied === "c" + t.id ? "\uBCF5\uC0AC\uB428" : t.command
           )
         ) : null,
         t.status === "active" && t.listen ? h2(
           "details",
           { className: "rt-sess-fold" },
-          h2("summary", null, "\u8D70\u8FD9\u6761\u96A7\u9053\u626B\u63CF\uFF08gogo / fscan \u547D\u4EE4\uFF09"),
+          h2("summary", null, "\uC774 \uD130\uB110\uB85C \uC2A4\uCE94(gogo / fscan \uBA85\uB839)"),
           h2(
             "div",
             { className: "rt-sess-cmd" },
             h2(
               "div",
               Object.assign(
-                { className: "rt-code", title: "\u70B9\u51FB\u590D\u5236" },
+                { className: "rt-code", title: "\uD074\uB9AD\uD558\uBA74 \uBCF5\uC0AC" },
                 clickable(() => copy("g" + t.id, gogoCmd), {
-                  label: "\u590D\u5236 gogo \u547D\u4EE4"
+                  label: "gogo \uBA85\uB839 \uBCF5\uC0AC"
                 })
               ),
-              copied === "g" + t.id ? "\u5DF2\u590D\u5236" : gogoCmd
+              copied === "g" + t.id ? "\uBCF5\uC0AC\uB428" : gogoCmd
             ),
             h2(
               "div",
@@ -7667,13 +7667,13 @@ var __dshPurgeDrill = (() => {
                 {
                   className: "rt-code",
                   style: { display: "block", marginTop: 3 },
-                  title: "\u70B9\u51FB\u590D\u5236"
+                  title: "\uD074\uB9AD\uD558\uBA74 \uBCF5\uC0AC"
                 },
                 clickable(() => copy("f" + t.id, fscanCmd), {
-                  label: "\u590D\u5236 fscan \u547D\u4EE4"
+                  label: "fscan \uBA85\uB839 \uBCF5\uC0AC"
                 })
               ),
-              copied === "f" + t.id ? "\u5DF2\u590D\u5236" : fscanCmd
+              copied === "f" + t.id ? "\uBCF5\uC0AC\uB428" : fscanCmd
             )
           )
         ) : null
@@ -7685,19 +7685,19 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-toolbar" },
-        h2("span", { style: { fontWeight: 600 } }, "\u4F1A\u8BDD\u4E0E\u5165\u53E3"),
+        h2("span", { style: { fontWeight: 600 } }, "\uC138\uC158\uACFC \uC9C4\uC785\uC810"),
         h2(
           "span",
           { className: "rt-tag" },
-          "WebShell " + (totals.webshellsOnline || 0) + "/" + (totals.webshells || 0) + " \u5728\u7EBF"
+          "WebShell " + (totals.webshellsOnline || 0) + "/" + (totals.webshells || 0) + " \uC628\uB77C\uC778"
         ),
         h2(
           "span",
           { className: "rt-tag" },
-          "\u96A7\u9053 " + (totals.tunnelsActive || 0) + "/" + (totals.tunnels || 0) + " \u53EF\u7528"
+          "\uD130\uB110 " + (totals.tunnelsActive || 0) + "/" + (totals.tunnels || 0) + " \uC0AC\uC6A9 \uAC00\uB2A5"
         ),
-        h2("span", { className: "rt-tag" }, "\u51ED\u636E " + (totals.credentials || 0)),
-        h2("span", { className: "rt-tag" }, "\u8BBF\u95EE\u4F1A\u8BDD " + (totals.access || 0)),
+        h2("span", { className: "rt-tag" }, "\uC790\uACA9 \uC99D\uBA85 " + (totals.credentials || 0)),
+        h2("span", { className: "rt-tag" }, "\uC811\uADFC \uC138\uC158 " + (totals.access || 0)),
         h2("div", { className: "rt-spacer" }),
         h2(
           "button",
@@ -7706,9 +7706,9 @@ var __dshPurgeDrill = (() => {
             disabled: busy,
             onClick: probe
           },
-          busy ? "\u68C0\u6D4B\u4E2D\u2026" : "\u68C0\u6D4B\u8FDE\u901A\u6027"
+          busy ? "\uAC80\uC0AC \uC911\u2026" : "\uC5F0\uACB0 \uD655\uC778"
         ),
-        h2("button", { className: "rt-btn", onClick: load }, "\u5237\u65B0")
+        h2("button", { className: "rt-btn", onClick: load }, "\uC0C8\uB85C\uACE0\uCE68")
       ),
       msg ? h2(
         "div",
@@ -7722,11 +7722,11 @@ var __dshPurgeDrill = (() => {
         !shells.length && !tunnels.length ? h2(
           "div",
           { className: "rt-empty" },
-          h2("div", null, "\u8FD8\u6CA1\u6709\u767B\u8BB0\u4EFB\u4F55 WebShell \u6216\u96A7\u9053\u3002"),
+          h2("div", null, "\uB4F1\uB85D\uB41C WebShell \uC774\uB098 \uD130\uB110\uC774 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4."),
           h2(
             "div",
             { style: { marginTop: 6, fontSize: 12 } },
-            "\u62FF\u5230 WebShell \u7528 redteam_webshell_add\uFF1B\u5EFA\u597D\u96A7\u9053\u7528 redteam_tunnel_add\uFF08suo5 / socks5 / ssh -R\uFF09\uFF1B\u4E4B\u540E\u667A\u80FD\u4F53\u7528 redteam_sessions \u5C31\u80FD\u770B\u5230\u3002"
+            "WebShell \uC744 \uC5BB\uC73C\uBA74 redteam_webshell_add; \uD130\uB110\uC744 \uB9CC\uB4E4\uBA74 redteam_tunnel_add(suo5 / socks5 / ssh -R); \uC774\uD6C4 \uC5D0\uC774\uC804\uD2B8\uB294 redteam_sessions \uB85C \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4."
           )
         ) : null,
         hints.length ? h2("div", { style: { padding: "8px 10px 0" } }, hints) : null,
@@ -7736,8 +7736,8 @@ var __dshPurgeDrill = (() => {
             key: "webshells",
             tone: "queue",
             title: "WebShell",
-            count: (totals.webshellsOnline || 0) + "/" + (totals.webshells || 0) + " \u5728\u7EBF",
-            sub: "\u5DF2\u4E0A\u7EBF\u7684\u53EF\u63A7\u5165\u53E3",
+            count: (totals.webshellsOnline || 0) + "/" + (totals.webshells || 0) + " \uC628\uB77C\uC778",
+            sub: "\uC774\uBBF8 \uC628\uB77C\uC778\uC774 \uB41C \uC81C\uC5B4 \uAC00\uB2A5\uD55C \uC9C4\uC785\uC810",
             open: sessCollapse.isOpen("shells", true),
             onToggle: sessCollapse.toggle("shells", true)
           },
@@ -7748,7 +7748,7 @@ var __dshPurgeDrill = (() => {
           ) : h2(
             "div",
             { className: "rt-atest-meta" },
-            "\u6682\u65E0\uFF08\u62FF\u5230 WebShell \u540E\u7528 redteam_webshell_add \u767B\u8BB0\uFF09"
+            "\uC5C6\uC74C(WebShell \uC744 \uC5BB\uC740 \uB4A4 redteam_webshell_add \uB85C \uB4F1\uB85D\uD558\uC138\uC694)"
           )
         ),
         h2(
@@ -7756,9 +7756,9 @@ var __dshPurgeDrill = (() => {
           {
             key: "tunnels",
             tone: "test",
-            title: "\u5185\u7F51\u96A7\u9053",
-            count: (totals.tunnelsActive || 0) + "/" + (totals.tunnels || 0) + " \u53EF\u7528",
-            sub: "\u53EF\u76F4\u63A5\u7ED9\u626B\u63CF\u5668\u5F53\u4EE3\u7406\u7528",
+            title: "\uB0B4\uBD80\uB9DD \uD130\uB110",
+            count: (totals.tunnelsActive || 0) + "/" + (totals.tunnels || 0) + " \uC0AC\uC6A9 \uAC00\uB2A5",
+            sub: "\uC2A4\uCE90\uB108 \uD504\uB85D\uC2DC\uB85C \uBC14\uB85C \uC4F8 \uC218 \uC788\uC2B5\uB2C8\uB2E4",
             open: sessCollapse.isOpen("tunnels", true),
             onToggle: sessCollapse.toggle("tunnels", true)
           },
@@ -7769,7 +7769,7 @@ var __dshPurgeDrill = (() => {
           ) : h2(
             "div",
             { className: "rt-atest-meta" },
-            "\u6682\u65E0\uFF08\u5EFA\u597D\u96A7\u9053\u540E\u7528 redteam_tunnel_add \u767B\u8BB0\uFF09"
+            "\uC5C6\uC74C(\uD130\uB110\uC744 \uB9CC\uB4E0 \uB4A4 redteam_tunnel_add \uB85C \uB4F1\uB85D\uD558\uC138\uC694)"
           )
         )
       )
@@ -7785,7 +7785,7 @@ var __dshPurgeDrill = (() => {
     }
     componentDidCatch(error) {
       try {
-        console.error("[redteam-ui] \u9875\u9762\u6E32\u67D3\u51FA\u9519:", error);
+        console.error("[redteam-ui] \uD398\uC774\uC9C0 \uB80C\uB354\uB9C1 \uC624\uB958:", error);
       } catch (e) {
       }
     }
@@ -7795,7 +7795,7 @@ var __dshPurgeDrill = (() => {
         return h2(
           "div",
           { className: "rt-pane" },
-          h2("div", { className: "rt-err" }, "\u8BE5\u9875\u9762\u6E32\u67D3\u51FA\u9519\uFF1A" + msg),
+          h2("div", { className: "rt-err" }, "\uC774 \uD398\uC774\uC9C0 \uB80C\uB354\uB9C1 \uC624\uB958: " + msg),
           h2(
             "button",
             {
@@ -7805,7 +7805,7 @@ var __dshPurgeDrill = (() => {
                 setUI({ tab: "assets" });
               }
             },
-            "\u56DE\u5230\u8D44\u4EA7\u6D4B\u7ED8"
+            "\uC790\uC0B0 \uB9E4\uD551\uC73C\uB85C \uB3CC\uC544\uAC00\uAE30"
           )
         );
       }
@@ -7828,7 +7828,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u8BFB\u53D6\u5931\u8D25");
+            setErr(r && r.error || "\uC77D\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -7856,20 +7856,20 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-toolbar" },
-        h2("span", { style: { fontWeight: 600 } }, "\u4F5C\u6218\u667A\u80FD\u4F53"),
-        h2("span", { className: "rt-tag rt-tag-passive" }, "\u5E76\u53D1\u4E0A\u9650 " + max),
-        used === null ? h2("span", { className: "rt-tag" }, "\u5360\u7528\u672A\u77E5") : h2(
+        h2("span", { style: { fontWeight: 600 } }, "\uC791\uC804 \uC5D0\uC774\uC804\uD2B8"),
+        h2("span", { className: "rt-tag rt-tag-passive" }, "\uB3D9\uC2DC \uC2E4\uD589 \uC0C1\uD55C " + max),
+        used === null ? h2("span", { className: "rt-tag" }, "\uC810\uC720 \uD604\uD669 \uC54C \uC218 \uC5C6\uC74C") : h2(
           "span",
           {
             className: "rt-tag" + (used >= max ? " rt-tag-warn" : " rt-tag-live")
           },
-          "\u5728\u8DD1 " + used + " / \u5269\u4F59 " + Math.max(max - used, 0)
+          "\uC2E4\uD589 \uC911 " + used + " / \uB0A8\uC740 " + Math.max(max - used, 0)
         ),
         h2("div", { className: "rt-spacer" }),
         h2(
           "button",
           { className: "rt-btn", disabled: busy, onClick: load },
-          busy ? "\u8BFB\u53D6\u4E2D\u2026" : "\u5237\u65B0"
+          busy ? "\uC77D\uB294 \uC911\u2026" : "\uC0C8\uB85C\uACE0\uCE68"
         )
       ),
       h2(
@@ -7879,42 +7879,42 @@ var __dshPurgeDrill = (() => {
         h2(
           "div",
           { className: "rt-card" },
-          h2("h4", null, "\u5E76\u53D1\u89C4\u5219\uFF08\u786C\u7EA6\u675F\uFF09"),
+          h2("h4", null, "\uB3D9\uC2DC \uC2E4\uD589 \uADDC\uCE59(\uC5C4\uACA9 \uC81C\uC57D)"),
           h2(
             "div",
             { style: { fontSize: 12, lineHeight: 1.7 } },
-            "\xB7 \u540C\u4E00\u9776\u6807**\u540C\u65F6\u6700\u591A " + max + " \u4E2A\u6267\u884C\u667A\u80FD\u4F53**\uFF1B\u4E3B\u4F1A\u8BDD\u6D3E\u6D3B\u524D\u7528 `redteam_agent_slot` \u5360\u4F4D\uFF0C\u6EE1\u4E86\u76F4\u63A5\u62D2\u7EDD\u3002",
+            "\xB7 \uAC19\uC740 \uD0C0\uAE43\uC5D0\uC11C **\uB3D9\uC2DC\uC5D0 \uCD5C\uB300 " + max + "\uAC1C \uC2E4\uD589 \uC5D0\uC774\uC804\uD2B8**; \uC8FC \uC138\uC158\uC740 \uC791\uC5C5\uC744 \uBC30\uC815\uD558\uAE30 \uC804\uC5D0 `redteam_agent_slot` \uB85C \uC790\uB9AC\uB97C \uC7A1\uACE0, \uC815\uC6D0\uC774 \uCC28\uBA74 \uBC14\uB85C \uAC70\uBD80\uD569\uB2C8\uB2E4.",
             h2("br"),
-            "\xB7 **\u9ED8\u8BA4\u4E00\u4E2A\u4E00\u4E2A\u6D3E\u3001\u6309\u987A\u5E8F\u63A8\u8FDB**\uFF1B\u53EA\u6709\u786E\u5B9E\u4E92\u4E0D\u4F9D\u8D56\u7684\u6D3B\u624D\u5E76\u884C\u3002",
+            "\xB7 **\uAE30\uBCF8\uC740 \uD558\uB098\uC529 \uBC30\uC815\uD558\uBA70 \uC21C\uC11C\uB300\uB85C \uC9C4\uD589**; \uC11C\uB85C \uC758\uC874\uD558\uC9C0 \uC54A\uB294 \uC791\uC5C5\uB9CC \uBCD1\uB82C\uB85C \uB3CC\uB9BD\uB2C8\uB2E4.",
             h2("br"),
-            "\xB7 \u6BCF\u4E2A\u4F1A\u8BDD\u6709**\u81EA\u5DF1\u7684\u9776\u6807\u7ED1\u5B9A**\uFF1A\u591A\u4F1A\u8BDD\u5E76\u884C\u4E0D\u4F1A\u628A\u62A5\u544A\u5199\u4E32\uFF08\u5B50\u667A\u80FD\u4F53\u7EE7\u627F\u7236\u4F1A\u8BDD\u7684\u9776\u6807\uFF09\u3002"
+            "\xB7 \uC138\uC158\uB9C8\uB2E4 **\uC790\uAE30 \uD0C0\uAE43 \uBC14\uC778\uB529**\uC774 \uC788\uC2B5\uB2C8\uB2E4: \uC5EC\uB7EC \uC138\uC158\uC774 \uBCD1\uB82C\uB85C \uB3CC\uC544\uB3C4 \uBCF4\uACE0\uC11C\uAC00 \uC11E\uC774\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4(\uC11C\uBE0C\uC5D0\uC774\uC804\uD2B8\uB294 \uBD80\uBAA8 \uC138\uC158\uC758 \uD0C0\uAE43\uC744 \uC0C1\uC18D\uD569\uB2C8\uB2E4)."
           )
         ),
         h2(
           "div",
           { className: "rt-card" },
-          h2("h4", null, "\u516D\u4E2A\u89D2\u8272"),
+          h2("h4", null, "\uC5EC\uC12F \uC5ED\uD560"),
           h2(
             "div",
             { style: { fontSize: 12, lineHeight: 1.8 } },
-            "\u2460 \u4FE1\u606F\u6536\u96C6 `recon` \u2014\u2014 \u53EA\u6536\u96C6\u8D44\u4EA7\uFF0C\u628A\u5355\u4F4D\u8D44\u4EA7\u6536\u96C6\u5B8C\u6574\uFF08\u542B\u8FB9\u7F18\u4E0E\u672A\u5907\u6848\u8D44\u4EA7\uFF09",
+            "\u2460 \uC815\uBCF4 \uC218\uC9D1 `recon` \u2014\u2014 \uC790\uC0B0\uB9CC \uC218\uC9D1\uD558\uBA70, \uB2E8\uC704 \uC790\uC0B0\uC744 \uBE60\uC9D0\uC5C6\uC774 \uBAA8\uC74D\uB2C8\uB2E4(\uACBD\uACC4 \uBC0F \uBBF8\uC2E0\uACE0 \uC790\uC0B0 \uD3EC\uD568)",
             h2("br"),
-            "\u2461 \u8D44\u4EA7\u68B3\u7406 `assess` \u2014\u2014 \u4E00\u6761\u4E00\u6761\u8FC7\uFF0C\u8BC4\u6613\u6253\u6027\u5E76\u5168\u90E8\u843D\u5E93",
+            "\u2461 \uC790\uC0B0 \uC815\uB9AC `assess` \u2014\u2014 \uD558\uB098\uC529 \uB118\uAE30\uBA70 \uACF5\uB7B5 \uC6A9\uC774\uC131\uC744 \uD3C9\uAC00\uD574 \uC804\uBD80 \uAE30\uB85D\uD569\uB2C8\uB2E4",
             h2("br"),
-            "\u2462 \u6F0F\u6D1E\u53D1\u73B0 `vuln-scan` \u2014\u2014 \u5148\u67E5\u5E93\u53BB\u91CD \u2192 Nday/1day \u4F18\u5148 \u2192 \u63A5\u53E3\u672A\u6388\u6743\u63A2\u6D4B",
+            "\u2462 \uCDE8\uC57D\uC810 \uBC1C\uACAC `vuln-scan` \u2014\u2014 \uBA3C\uC800 \uC9C0\uC2DD \uBCA0\uC774\uC2A4\uB85C \uC911\uBCF5 \uC81C\uAC70 \u2192 Nday/1day \uC6B0\uC120 \u2192 \uC5D4\uB4DC\uD3EC\uC778\uD2B8 \uBE44\uC778\uAC00 \uC811\uADFC \uD0D0\uC9C0",
             h2("br"),
-            "\u2463 \u6F0F\u6D1E\u5229\u7528 `exploit` \u2014\u2014 \u5148\u62FF\u670D\u52A1\u5668\u6743\u9650\uFF08\u51B0\u874E/\u54E5\u65AF\u62C9\u9A6C\uFF09+ \u5EFA suo5 \u96A7\u9053\uFF0C\u518D\u6253\u5176\u5B83\u5F97\u5206\u9879",
+            "\u2463 \uCDE8\uC57D\uC810 \uC775\uC2A4\uD50C\uB85C\uC787 `exploit` \u2014\u2014 \uBA3C\uC800 \uC11C\uBC84 \uAD8C\uD55C(Behinder/Godzilla \uC178) + suo5 \uD130\uB110\uC744 \uD655\uBCF4\uD558\uACE0, \uADF8\uB2E4\uC74C \uB2E4\uB978 \uB4DD\uC810 \uD56D\uBAA9\uC744 \uCE69\uB2C8\uB2E4",
             h2("br"),
-            "\u2464 \u5185\u7F51\u6E17\u900F `internal` \u2014\u2014 \u8D70\u96A7\u9053\uFF0C\u4F9D\u6B21\u62C9\u8D77 \u2460\u2461\u2462\u2463 \u505A\u5185\u7F51",
+            "\u2464 \uB0B4\uBD80\uB9DD \uCE68\uD22C `internal` \u2014\u2014 \uD130\uB110\uB85C \uB4E4\uC5B4\uAC00 \u2460\u2461\u2462\u2463 \uB97C \uC21C\uC11C\uB300\uB85C \uB2E4\uC2DC \uB3CC\uB824 \uB0B4\uBD80\uB9DD\uC744 \uACF5\uB7B5\uD569\uB2C8\uB2E4",
             h2("br"),
-            "\u2465 \u4E3B\u4F1A\u8BDD `plan` \u2014\u2014 \u53EA\u505A\u8BA1\u5212\u3001\u6D3E\u6D3B\u3001\u6C47\u603B\u3001\u6C47\u62A5\uFF0C\u4E0D\u52A8\u624B"
+            "\u2465 \uC8FC \uC138\uC158 `plan` \u2014\u2014 \uACC4\uD68D\xB7\uC791\uC5C5 \uBC30\uC815\xB7\uC9D1\uACC4\xB7\uBCF4\uACE0\uB9CC \uD558\uACE0 \uC9C1\uC811 \uB098\uC11C\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4"
           )
         ),
         h2(ConcurrencyCard, { concurrency, onSaved: load }),
         h2(
           "div",
           { className: "rt-card" },
-          h2("h4", null, "\u89D2\u8272\u63D0\u793A\u8BCD\uFF08\u6309\u9776\u6807\u5B58\uFF0C\u53EF\u5728\u8FD9\u91CC\u7F16\u8F91\uFF09"),
+          h2("h4", null, "\uC5ED\uD560 \uD504\uB86C\uD504\uD2B8(\uD0C0\uAE43\uBCC4 \uC800\uC7A5, \uC5EC\uAE30\uC11C \uD3B8\uC9D1 \uAC00\uB2A5)"),
           h2(
             "div",
             {
@@ -7924,7 +7924,7 @@ var __dshPurgeDrill = (() => {
                 marginBottom: 6
               }
             },
-            "\u300C\u667A\u80FD\u4F53\u63D0\u793A\u8BCD\u300D\u5DF2\u5E76\u5165\u672C\u9875\uFF1B\u4E0B\u9762\u662F\u5B8C\u6574\u7F16\u8F91\u5668\uFF08\u6539\u5B8C\u70B9\u4FDD\u5B58\uFF0C\u53EA\u5F71\u54CD\u5F53\u524D\u9776\u6807\uFF09\u3002"
+            "\u201C\uC5D0\uC774\uC804\uD2B8 \uD504\uB86C\uD504\uD2B8\u201D\uAC00 \uC774 \uD398\uC774\uC9C0\uB85C \uD1B5\uD569\uB418\uC5C8\uC2B5\uB2C8\uB2E4; \uC544\uB798\uB294 \uC804\uCCB4 \uD3B8\uC9D1\uAE30\uC785\uB2C8\uB2E4(\uC218\uC815 \uD6C4 \uC800\uC7A5\uD558\uBA74 \uD604\uC7AC \uD0C0\uAE43\uC5D0\uB9CC \uC801\uC6A9\uB429\uB2C8\uB2E4)."
           ),
           h2(PromptsTab, { engagement: eng, refreshKey })
         )
@@ -7941,7 +7941,7 @@ var __dshPurgeDrill = (() => {
     }, [info.max]);
     const limit = info.limit || 10;
     const used = typeof info.used === "number" ? info.used : null;
-    const source = info.source === "settings" ? "\u9762\u677F\u4E2D\u8BBE\u7F6E" : info.source === "env" ? "\u73AF\u5883\u53D8\u91CF REDTEAM_MAX_AGENTS" : "\u9ED8\u8BA4\u503C";
+    const source = info.source === "settings" ? "\uD328\uB110\uC5D0\uC11C \uC124\uC815" : info.source === "env" ? "\uD658\uACBD \uBCC0\uC218 REDTEAM_MAX_AGENTS" : "\uAE30\uBCF8\uAC12";
     const n = Number(draft);
     const invalid = !Number.isFinite(n) || Math.floor(n) !== n || n < 1 || n > limit;
     const save = () => {
@@ -7952,11 +7952,11 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u4FDD\u5B58\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uC800\uC7A5 \uC2E4\uD328" });
             return;
           }
           setMsg({
-            ok: "\u5DF2\u4FDD\u5B58\uFF1A\u5E76\u53D1\u4E0A\u9650 " + r.max + "\uFF08\u7ACB\u5373\u751F\u6548\uFF0C\u4E0D\u7528\u91CD\u542F\uFF09"
+            ok: "\uC800\uC7A5\uB428: \uB3D9\uC2DC \uC2E4\uD589 \uC0C1\uD55C " + r.max + "(\uC989\uC2DC \uC801\uC6A9, \uC7AC\uC2DC\uC791 \uBD88\uD544\uC694)"
           });
           if (props.onSaved) props.onSaved();
         },
@@ -7969,11 +7969,11 @@ var __dshPurgeDrill = (() => {
     return h2(
       "div",
       { className: "rt-card" },
-      h2("h4", null, "\u5E76\u53D1\u6570\u91CF"),
+      h2("h4", null, "\uB3D9\uC2DC \uC2E4\uD589 \uC218"),
       h2(
         "div",
         { style: { fontSize: 12, lineHeight: 1.8, marginBottom: 8 } },
-        "\u540C\u4E00\u9776\u6807**\u540C\u65F6\u6700\u591A\u51E0\u4E2A\u6267\u884C\u667A\u80FD\u4F53**\u3002\u5F53\u524D\u751F\u6548\uFF1A**" + (info.max || "?") + "**" + (used === null ? "" : "\uFF08\u5728\u8DD1 " + used + "\uFF0C\u5269\u4F59 " + Math.max((info.max || 0) - used, 0) + "\uFF09") + "\uFF0C\u6765\u6E90\uFF1A" + source + "\u3002\u6539\u5B8C**\u7ACB\u5373\u751F\u6548**\uFF0C\u4E0D\u7528\u91CD\u542F\u3002"
+        "\uAC19\uC740 \uD0C0\uAE43\uC5D0\uC11C **\uB3D9\uC2DC\uC5D0 \uBA87 \uAC1C\uC758 \uC2E4\uD589 \uC5D0\uC774\uC804\uD2B8**\uAE4C\uC9C0 \uB3CC\uB9B4\uC9C0. \uD604\uC7AC \uC801\uC6A9\uAC12: **" + (info.max || "?") + "**" + (used === null ? "" : "(\uC2E4\uD589 \uC911 " + used + ", \uB0A8\uC740 " + Math.max((info.max || 0) - used, 0) + ")") + ", \uCD9C\uCC98: " + source + ". \uC218\uC815\uD558\uBA74 **\uC989\uC2DC \uC801\uC6A9**\uB418\uBA70 \uC7AC\uC2DC\uC791\uC774 \uD544\uC694 \uC5C6\uC2B5\uB2C8\uB2E4."
       ),
       h2(
         "div",
@@ -8002,7 +8002,7 @@ var __dshPurgeDrill = (() => {
               color: "var(--dsw-alias-label-secondary)"
             }
           },
-          "\u8303\u56F4 1 \u2013 " + limit
+          "\uBC94\uC704 1 \u2013 " + limit
         ),
         h2(
           "button",
@@ -8011,7 +8011,7 @@ var __dshPurgeDrill = (() => {
             disabled: busy || invalid,
             onClick: save
           },
-          busy ? "\u4FDD\u5B58\u4E2D\u2026" : "\u4FDD\u5B58"
+          busy ? "\uC800\uC7A5 \uC911\u2026" : "\uC800\uC7A5"
         ),
         msg && msg.err ? h2(
           "span",
@@ -8032,7 +8032,7 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-note", style: { marginTop: 8 } },
-        "\u26A0\uFE0F \u8C03\u5927\u4E0D\u7B49\u4E8E\u66F4\u5FEB\uFF1A**\u540C\u4E00\u4E2A\u6A21\u578B API Key \u7684\u5E76\u53D1/\u901F\u7387\u4E0A\u9650\u662F\u5171\u4EAB\u7684**\uFF0C\u540C\u65F6\u6D3E\u592A\u591A\u4F1A\u4E92\u76F8\u6324\u5360\uFF0C\u8868\u73B0\u4E3A\u6392\u961F\u7B49\u5F85\u3001\u8D85\u65F6\u3001\u8FD4\u56DE\u88AB\u622A\u65AD\u751A\u81F3\u9650\u6D41\u62A5\u9519 \u2014\u2014 \u53CD\u800C\u8BA9\u6D4B\u8BD5\u7ED3\u679C\u4E0D\u7A33\u5B9A\uFF08\u6F0F\u6D4B\u3001\u534A\u9014\u800C\u5E9F\uFF09\u3002\u5EFA\u8BAE\u4ECE 2\u20133 \u5F00\u59CB\uFF0C\u53EA\u6709\u5728\u786E\u8BA4 Key \u7684\u989D\u5EA6\u8DB3\u591F\u3001\u4EFB\u52A1\u4E4B\u95F4\u786E\u5B9E\u4E92\u4E0D\u4F9D\u8D56\u65F6\u624D\u8C03\u5927\u3002"
+        "\u26A0\uFE0F \uB298\uB9B0\uB2E4\uACE0 \uBE68\uB77C\uC9C0\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4: **\uAC19\uC740 \uBAA8\uB378 API \uD0A4\uC758 \uB3D9\uC2DC \uC2E4\uD589/\uC18D\uB3C4 \uC0C1\uD55C\uC740 \uACF5\uC720\uB429\uB2C8\uB2E4**. \uD55C\uAEBC\uBC88\uC5D0 \uB108\uBB34 \uB9CE\uC774 \uBC30\uC815\uD558\uBA74 \uC11C\uB85C \uC790\uB9AC\uB97C \uBE8F\uC5B4\uB300\uAE30, \uD0C0\uC784\uC544\uC6C3, \uC798\uB9B0 \uC751\uB2F5, \uC2EC\uD558\uBA74 \uC18D\uB3C4 \uC81C\uD55C \uC624\uB958\uAE4C\uC9C0 \uB098\uBA70 \u2014\u2014 \uC624\uD788\uB824 \uD14C\uC2A4\uD2B8 \uACB0\uACFC\uAC00 \uBD88\uC548\uC815\uD574\uC9D1\uB2C8\uB2E4(\uB204\uB77D, \uC911\uB3C4 \uD3EC\uAE30). 2\u20133 \uC5D0\uC11C \uC2DC\uC791\uD558\uACE0, \uD0A4\uC758 \uD560\uB2F9\uB7C9\uC774 \uCDA9\uBD84\uD558\uACE0 \uC791\uC5C5\uB07C\uB9AC \uC815\uB9D0 \uC758\uC874\uD558\uC9C0 \uC54A\uC744 \uB54C\uB9CC \uB298\uB9AC\uC138\uC694."
       )
     );
   }
@@ -8065,7 +8065,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            if (!silent) setErr(r && r.error || "\u68C0\u67E5\u66F4\u65B0\u5931\u8D25");
+            if (!silent) setErr(r && r.error || "\uC5C5\uB370\uC774\uD2B8 \uD655\uC778 \uC2E4\uD328");
             api({ op: "version" }).then(
               (v) => {
                 if (v && v.ok !== false) setInfo(v);
@@ -8104,11 +8104,11 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setBusy(false);
           if (!r || r.ok === false) {
-            setMsg({ err: r && r.error || "\u66F4\u65B0\u5931\u8D25" });
+            setMsg({ err: r && r.error || "\uC5C5\uB370\uC774\uD2B8 \uC2E4\uD328" });
             return;
           }
           setMsg({
-            ok: "\u5DF2\u5B89\u88C5 " + (r.installed || "") + "\uFF0C\u6B63\u5728\u91CD\u542F\u5F53\u524D\u5BBF\u4E3B\u2026"
+            ok: (r.installed || "") + " \uC124\uCE58\uB428. \uD604\uC7AC \uD638\uC2A4\uD2B8\uB97C \uC7AC\uC2DC\uC791\uD558\uB294 \uC911\u2026"
           });
           setCountdown(6);
           clearCountdown();
@@ -8142,7 +8142,7 @@ var __dshPurgeDrill = (() => {
         "span",
         {
           className: "rt-tag" + (hasNew ? " rt-tag-warn" : ""),
-          title: "\u5F53\u524D\u7248\u672C " + (current || "\u672A\u77E5") + (latest ? "\n\u6700\u65B0\u7248\u672C " + latest : "") + (mode === "dev" ? "\n\u5B89\u88C5\u65B9\u5F0F\uFF1A\u5F00\u53D1\u6001\uFF08\u6E90\u7801\u8F6F\u94FE\uFF09" : mode === "package" ? "\n\u5B89\u88C5\u65B9\u5F0F\uFF1A\u5305\u5B89\u88C5" : "") + (info && info.check_error ? "\n\u68C0\u67E5\u5931\u8D25\uFF1A" + info.check_error : "")
+          title: "\uD604\uC7AC \uBC84\uC804 " + (current || "\uC54C \uC218 \uC5C6\uC74C") + (latest ? "\n\uCD5C\uC2E0 \uBC84\uC804 " + latest : "") + (mode === "dev" ? "\n\uC124\uCE58 \uBC29\uC2DD: \uAC1C\uBC1C \uBAA8\uB4DC(\uC18C\uC2A4 \uC2EC\uBCFC\uB9AD \uB9C1\uD06C)" : mode === "package" ? "\n\uC124\uCE58 \uBC29\uC2DD: \uD328\uD0A4\uC9C0 \uC124\uCE58" : "") + (info && info.check_error ? "\n\uD655\uC778 \uC2E4\uD328: " + info.check_error : "")
         },
         "v" + (current || "?")
       ),
@@ -8155,18 +8155,18 @@ var __dshPurgeDrill = (() => {
             setOpen(true);
             setMsg(null);
           },
-          title: "\u53D1\u73B0\u65B0\u7248\u672C " + latest + "\uFF1A\u70B9\u51FB\u67E5\u770B\u5E76\u4E00\u952E\u66F4\u65B0\uFF08\u4F1A\u91CD\u542F\u5F53\u524D\u5BBF\u4E3B\uFF09"
+          title: "\uC0C8 \uBC84\uC804 " + latest + " \uBC1C\uACAC: \uB20C\uB7EC\uC11C \uD655\uC778\uD558\uACE0 \uD55C \uBC88\uC5D0 \uC5C5\uB370\uC774\uD2B8\uD569\uB2C8\uB2E4(\uD604\uC7AC \uD638\uC2A4\uD2B8\uAC00 \uC7AC\uC2DC\uC791\uB429\uB2C8\uB2E4)"
         },
-        busy ? "\u68C0\u67E5\u4E2D\u2026" : "\u6709\u65B0\u7248\u672C v" + latest
+        busy ? "\uD655\uC778 \uC911\u2026" : "\uC0C8 \uBC84\uC804 v" + latest
       ) : h2(
         "button",
         {
           className: "rt-btn",
           disabled: busy,
           onClick: () => check(false),
-          title: "\u91CD\u65B0\u68C0\u67E5 npm \u4E0A\u7684\u6700\u65B0\u7248\u672C"
+          title: "npm \uC758 \uCD5C\uC2E0 \uBC84\uC804\uC744 \uB2E4\uC2DC \uD655\uC778\uD569\uB2C8\uB2E4"
         },
-        busy ? "\u68C0\u67E5\u4E2D\u2026" : "\u68C0\u67E5\u66F4\u65B0"
+        busy ? "\uD655\uC778 \uC911\u2026" : "\uC5C5\uB370\uC774\uD2B8 \uD655\uC778"
       ),
       open ? h2(
         "div",
@@ -8181,33 +8181,33 @@ var __dshPurgeDrill = (() => {
             className: "rt-modal-box",
             onClick: (e) => e.stopPropagation()
           },
-          h2("h4", { style: { marginTop: 0 } }, "\u66F4\u65B0 RedTeam \u6A21\u5F0F"),
+          h2("h4", { style: { marginTop: 0 } }, "RedTeam \uBAA8\uB4DC \uC5C5\uB370\uC774\uD2B8"),
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u5F53\u524D\u7248\u672C"),
-            h2("span", null, current || "\u672A\u77E5")
+            h2("b", null, "\uD604\uC7AC \uBC84\uC804"),
+            h2("span", null, current || "\uC54C \uC218 \uC5C6\uC74C")
           ),
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u6700\u65B0\u7248\u672C"),
-            h2("span", null, latest || "\u672A\u77E5")
+            h2("b", null, "\uCD5C\uC2E0 \uBC84\uC804"),
+            h2("span", null, latest || "\uC54C \uC218 \uC5C6\uC74C")
           ),
           h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u5B89\u88C5\u65B9\u5F0F"),
+            h2("b", null, "\uC124\uCE58 \uBC29\uC2DD"),
             h2(
               "span",
               null,
-              mode === "dev" ? "\u5F00\u53D1\u6001\uFF08\u6E90\u7801\u8F6F\u94FE\uFF09" : mode === "package" ? "\u5305\u5B89\u88C5\uFF08" + (info.install && info.install.packageManager || "npm") + "\uFF09" : "\u672A\u77E5"
+              mode === "dev" ? "\uAC1C\uBC1C \uBAA8\uB4DC(\uC18C\uC2A4 \uC2EC\uBCFC\uB9AD \uB9C1\uD06C)" : mode === "package" ? "\uD328\uD0A4\uC9C0 \uC124\uCE58(" + (info.install && info.install.packageManager || "npm") + ")" : "\uC54C \uC218 \uC5C6\uC74C"
             )
           ),
           info && info.install && info.install.dir ? h2(
             "div",
             { className: "rt-kv" },
-            h2("b", null, "\u5B89\u88C5\u4F4D\u7F6E"),
+            h2("b", null, "\uC124\uCE58 \uC704\uCE58"),
             h2("span", { className: "rt-mono" }, info.install.dir)
           ) : null,
           blockers.length ? h2(
@@ -8216,7 +8216,7 @@ var __dshPurgeDrill = (() => {
             h2(
               "div",
               { style: { fontWeight: 600, marginBottom: 4 } },
-              "\u73B0\u5728\u4E0D\u80FD\u66F4\u65B0\uFF1A"
+              "\uC9C0\uAE08\uC740 \uC5C5\uB370\uC774\uD2B8\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4:"
             ),
             blockers.map(
               (b, i) => h2("div", { key: "b" + i }, "\xB7 " + b)
@@ -8236,7 +8236,7 @@ var __dshPurgeDrill = (() => {
                 margin: "8px 0"
               }
             },
-            "\u66F4\u65B0\u8FC7\u7A0B\uFF1A\u5B89\u88C5\u65B0\u7248\u672C \u2192 \u81EA\u52A8\u91CD\u542F\u5F53\u524D\u5BBF\u4E3B\uFF08\u5B98\u65B9 exe / \u793E\u533A\u7248 / dsh web\uFF1B\u5F53\u524D\u9875\u9762\u4F1A\u65AD\u5F00\uFF0C\u7EA6 5\u201310 \u79D2\u540E\u81EA\u52A8\u5237\u65B0\uFF09\u3002\u91CD\u542F\u524D\u4F1A\u68C0\u67E5\u6709\u6CA1\u6709\u667A\u80FD\u4F53\u5728\u8DD1\uFF0C\u6709\u5C31\u62E6\u4F4F\u4E0D\u52A8\u3002"
+            "\uC5C5\uB370\uC774\uD2B8 \uC808\uCC28: \uC0C8 \uBC84\uC804 \uC124\uCE58 \u2192 \uD604\uC7AC \uD638\uC2A4\uD2B8 \uC790\uB3D9 \uC7AC\uC2DC\uC791(\uACF5\uC2DD exe / \uCEE4\uBBA4\uB2C8\uD2F0\uD310 / dsh web; \uC774 \uD398\uC774\uC9C0 \uC5F0\uACB0\uC774 \uB04A\uAE30\uACE0 \uC57D 5\u201310\uCD08 \uB4A4 \uC790\uB3D9 \uC0C8\uB85C\uACE0\uCE68\uB429\uB2C8\uB2E4).\uC7AC\uC2DC\uC791 \uC804\uC5D0 \uC2E4\uD589 \uC911\uC778 \uC5D0\uC774\uC804\uD2B8\uAC00 \uC788\uB294\uC9C0 \uD655\uC778\uD558\uACE0, \uC788\uC73C\uBA74 \uADF8\uB300\uB85C \uBA48\uCD94\uC138\uC694."
           ),
           msg ? h2(
             "div",
@@ -8246,7 +8246,7 @@ var __dshPurgeDrill = (() => {
           countdown > 0 ? h2(
             "div",
             { className: "rt-foot" },
-            "\u5BBF\u4E3B\u6B63\u5728\u91CD\u542F\uFF0C" + countdown + " \u79D2\u540E\u81EA\u52A8\u5237\u65B0\u9875\u9762\u2026"
+            "\uD638\uC2A4\uD2B8\uB97C \uC7AC\uC2DC\uC791\uD558\uB294 \uC911\uC785\uB2C8\uB2E4. " + countdown + "\uCD08 \uB4A4 \uD398\uC774\uC9C0\uB97C \uC790\uB3D9 \uC0C8\uB85C\uACE0\uCE68\uD569\uB2C8\uB2E4\u2026"
           ) : null,
           h2(
             "div",
@@ -8261,17 +8261,17 @@ var __dshPurgeDrill = (() => {
             h2(
               "button",
               { className: "rt-btn", onClick: closeModal },
-              "\u5173\u95ED"
+              "\uB2EB\uAE30"
             ),
             h2(
               "button",
               {
                 className: "rt-btn rt-btn-primary",
                 disabled: busy || blockers.length > 0 || mode === "dev",
-                title: mode === "dev" ? "\u5F00\u53D1\u6001\u5B89\u88C5\u8BF7\u7528\u4ED3\u5E93\u6D41\u7A0B\u5347\u7EA7" : blockers.length ? "\u5148\u89E3\u51B3\u4E0A\u9762\u7684\u963B\u585E\u9879" : "\u5B89\u88C5\u5E76\u91CD\u542F",
+                title: mode === "dev" ? "\uAC1C\uBC1C \uBAA8\uB4DC \uC124\uCE58\uB294 \uC800\uC7A5\uC18C \uC808\uCC28\uB85C \uC5C5\uADF8\uB808\uC774\uB4DC\uD569\uB2C8\uB2E4" : blockers.length ? "\uC704\uC758 \uCC28\uB2E8 \uD56D\uBAA9\uC744 \uBA3C\uC800 \uD574\uACB0\uD558\uC138\uC694" : "\uC124\uCE58 \uD6C4 \uC7AC\uC2DC\uC791",
                 onClick: apply2
               },
-              busy ? "\u66F4\u65B0\u4E2D\u2026" : "\u4E00\u952E\u66F4\u65B0\u5E76\u91CD\u542F"
+              busy ? "\uC5C5\uB370\uC774\uD2B8 \uC911\u2026" : "\uD55C \uBC88\uC5D0 \uC5C5\uB370\uC774\uD2B8 \uD6C4 \uC7AC\uC2DC\uC791"
             )
           )
         )
@@ -8376,7 +8376,7 @@ var __dshPurgeDrill = (() => {
       api({ op: "snapshot", engagement: id }).then(
         (r) => {
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u52A0\u8F7D\u5931\u8D25");
+            setErr(r && r.error || "\uBD88\uB7EC\uC624\uAE30 \uC2E4\uD328");
             return;
           }
           setErr(null);
@@ -8402,7 +8402,7 @@ var __dshPurgeDrill = (() => {
       api({ op: "bootstrap" }).then(
         (r) => {
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u65E0\u6CD5\u8FDE\u63A5\u8D44\u4EA7\u5E93");
+            setErr(r && r.error || "\uC790\uC0B0 \uB77C\uC774\uBE0C\uB7EC\uB9AC\uC5D0 \uC5F0\uACB0\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4");
             return;
           }
           setEngagements(r.engagements || []);
@@ -8423,7 +8423,7 @@ var __dshPurgeDrill = (() => {
         (r) => {
           setCreating(false);
           if (!r || r.ok === false) {
-            setErr(r && r.error || "\u521B\u5EFA\u5931\u8D25");
+            setErr(r && r.error || "\uC0DD\uC131 \uC2E4\uD328");
             return;
           }
           setNewName("");
@@ -8581,16 +8581,16 @@ var __dshPurgeDrill = (() => {
     };
     const stats = snapshot && snapshot.stats || {};
     const tabs = [
-      ["assets", "\u8D44\u4EA7\u6D4B\u7ED8"],
-      ["env", "\u73AF\u5883\u9002\u914D"],
-      ["agents", "\u667A\u80FD\u4F53"],
-      ["sessions", "\u4F1A\u8BDD\u96A7\u9053"],
-      ["findings", "\u6F0F\u6D1E\u6218\u679C"],
-      ["chain", "\u653B\u51FB\u94FE"],
-      ["scores", "\u5F97\u5206\u76EE\u6807"],
-      ["report", "\u62A5\u544A"],
-      ["knowledge", "\u77E5\u8BC6\u5E93"],
-      ["skills", "\u6280\u80FD\u5E93"]
+      ["assets", "\uC790\uC0B0 \uB9E4\uD551"],
+      ["env", "\uD658\uACBD \uC801\uC751"],
+      ["agents", "\uC5D0\uC774\uC804\uD2B8"],
+      ["sessions", "\uC138\uC158 \uD130\uB110"],
+      ["findings", "\uCDE8\uC57D\uC810 \uC131\uACFC"],
+      ["chain", "\uACF5\uACA9 \uCCB4\uC778"],
+      ["scores", "\uB4DD\uC810 \uBAA9\uD45C"],
+      ["report", "\uBCF4\uACE0\uC11C"],
+      ["knowledge", "\uC9C0\uC2DD \uBCA0\uC774\uC2A4"],
+      ["skills", "\uC2A4\uD0AC \uB77C\uC774\uBE0C\uB7EC\uB9AC"]
     ];
     const full = isFullWindow();
     const openFull = () => {
@@ -8601,7 +8601,7 @@ var __dshPurgeDrill = (() => {
           "noopener"
         );
       } catch (e) {
-        setErr("\u65E0\u6CD5\u6253\u5F00\u65B0\u7A97\u53E3\uFF1A" + (e && e.message || e));
+        setErr("\uC0C8 \uCC3D\uC744 \uC5F4 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4: " + (e && e.message || e));
       }
     };
     const exitFull = () => {
@@ -8641,7 +8641,7 @@ var __dshPurgeDrill = (() => {
         h2(
           "div",
           { className: "rt-card" },
-          h2("h4", null, "\u8FD8\u6CA1\u6709\u9776\u6807"),
+          h2("h4", null, "\uC544\uC9C1 \uD0C0\uAE43\uC774 \uC5C6\uC2B5\uB2C8\uB2E4"),
           h2(
             "div",
             {
@@ -8651,7 +8651,7 @@ var __dshPurgeDrill = (() => {
                 marginBottom: 8
               }
             },
-            "\u8F93\u5165\u653B\u9632\u6F14\u7EC3\u9776\u6807\u5355\u4F4D\u540D\u79F0\uFF0C\u521B\u5EFA\u6F14\u7EC3\u5E76\u5F00\u59CB\u8D44\u4EA7\u6D4B\u7ED8\u3002"
+            "\uACF5\uBC29 \uB4DC\uB9B4 \uB300\uC0C1 \uAE30\uAD00 \uC774\uB984\uC744 \uC785\uB825\uD558\uACE0 \uB4DC\uB9B4\uC744 \uB9CC\uB4E4\uC5B4 \uC790\uC0B0 \uB9E4\uD551\uC744 \uC2DC\uC791\uD558\uC138\uC694."
           ),
           h2(
             "div",
@@ -8659,7 +8659,7 @@ var __dshPurgeDrill = (() => {
             h2("input", {
               className: "rt-input",
               style: { flex: 1 },
-              placeholder: "\u4F8B\u5982\uFF1A\u793A\u4F8B\u79D1\u6280\u6709\u9650\u516C\u53F8",
+              placeholder: "\uC608: \u25CB\u25CB\uD14C\uD06C \uC8FC\uC2DD\uD68C\uC0AC",
               value: newName,
               onChange: (e) => setNewName(e.target.value),
               onKeyDown: (e) => {
@@ -8673,7 +8673,7 @@ var __dshPurgeDrill = (() => {
                 disabled: creating,
                 onClick: () => openEngagement()
               },
-              creating ? "\u521B\u5EFA\u4E2D\u2026" : "\u521B\u5EFA\u9776\u6807"
+              creating ? "\uC0DD\uC131 \uC911\u2026" : "\uD0C0\uAE43 \uB9CC\uB4E4\uAE30"
             )
           )
         )
@@ -8706,7 +8706,7 @@ var __dshPurgeDrill = (() => {
       body = h2(FindingsTab, { engagement: eng, refreshKey });
     else if (st.tab === "scores")
       body = h2(ScoreTab, { engagement: eng, refreshKey });
-    else body = h2("div", { className: "rt-empty" }, "\u672A\u77E5\u9875\u7B7E");
+    else body = h2("div", { className: "rt-empty" }, "\uC54C \uC218 \uC5C6\uB294 \uD0ED");
     const shellProps = full ? { className: "rt-full", style: { display: "flex" } } : embedded ? {
       className: "rt-dock rt-embedded",
       "data-open": "1",
@@ -8729,22 +8729,22 @@ var __dshPurgeDrill = (() => {
       shellProps,
       full || embedded ? null : h2("div", {
         className: "rt-grip",
-        title: "\u62D6\u52A8\u8C03\u6574\u5BBD\u5EA6",
+        title: "\uB4DC\uB798\uADF8\uD574\uC11C \uB108\uBE44 \uC870\uC815",
         onMouseDown: startResizeLeft
       }),
       full || embedded ? null : h2("div", {
         className: "rt-resize-r",
-        title: "\u62D6\u52A8\u8C03\u6574\u5BBD\u5EA6",
+        title: "\uB4DC\uB798\uADF8\uD574\uC11C \uB108\uBE44 \uC870\uC815",
         onMouseDown: startResizeRight
       }),
       full || embedded ? null : h2("div", {
         className: "rt-resize-b",
-        title: "\u62D6\u52A8\u8C03\u6574\u9AD8\u5EA6",
+        title: "\uB4DC\uB798\uADF8\uD574\uC11C \uB192\uC774 \uC870\uC815",
         onMouseDown: startResizeBottom
       }),
       full || embedded ? null : h2("div", {
         className: "rt-resize-c",
-        title: "\u62D6\u52A8\u8C03\u6574\u5927\u5C0F",
+        title: "\uB4DC\uB798\uADF8\uD574\uC11C \uD06C\uAE30 \uC870\uC815",
         onMouseDown: startResizeCorner
       }),
       h2(
@@ -8752,17 +8752,17 @@ var __dshPurgeDrill = (() => {
         {
           className: "rt-head",
           onMouseDown: full || embedded ? void 0 : startDrag,
-          title: full || embedded ? void 0 : "\u6309\u4F4F\u62D6\u52A8\u9762\u677F"
+          title: full || embedded ? void 0 : "\uB204\uB978 \uCC44 \uB4DC\uB798\uADF8\uD558\uBA74 \uD328\uB110\uC774 \uC774\uB3D9\uD569\uB2C8\uB2E4"
         },
         embedded ? null : h2(
           "div",
           { className: "rt-title" },
           h2("span", { className: "rt-dot" }),
-          full ? "\u6F14\u7EC3\u53F0 \xB7 \u5168\u9762\u6D4F\u89C8" : "\u6F14\u7EC3\u53F0",
+          full ? "\uB4DC\uB9B4 \uCF58\uC194 \xB7 \uC804\uCCB4 \uBCF4\uAE30" : "\uB4DC\uB9B4 \uCF58\uC194",
           full ? h2(
             "span",
             { className: "rt-tag", style: { marginLeft: 6 } },
-            "\u72EC\u7ACB\u7A97\u53E3"
+            "\uB3C5\uB9BD \uCC3D"
           ) : null
         ),
         h2(
@@ -8788,10 +8788,10 @@ var __dshPurgeDrill = (() => {
           h2(
             "option",
             { value: "", disabled: true },
-            engagements.length ? "\u9009\u62E9\u9776\u6807" : "\u6682\u65E0\u9776\u6807"
+            engagements.length ? "\uD0C0\uAE43 \uC120\uD0DD" : "\uD0C0\uAE43 \uC5C6\uC74C"
           ),
           engagements.map(
-            (x) => h2("option", { key: x.id, value: x.id }, x.name || x.id || "\u672A\u547D\u540D")
+            (x) => h2("option", { key: x.id, value: x.id }, x.name || x.id || "\uC774\uB984 \uC5C6\uC74C")
           )
         ),
         h2("div", { className: "rt-spacer" }),
@@ -8800,41 +8800,41 @@ var __dshPurgeDrill = (() => {
           "button",
           {
             className: "rt-btn",
-            title: "\u56DE\u5230\u5E26\u4FA7\u680F\u7684\u666E\u901A\u754C\u9762\uFF08\u6216\u6309 Esc\uFF09",
+            title: "\uC0AC\uC774\uB4DC\uBC14\uAC00 \uC788\uB294 \uC77C\uBC18 \uD654\uBA74\uC73C\uB85C \uB3CC\uC544\uAC11\uB2C8\uB2E4(\uB610\uB294 Esc)",
             onClick: exitFull
           },
-          "\u9000\u51FA\u5168\u9762\u6D4F\u89C8"
+          "\uC804\uCCB4 \uBCF4\uAE30 \uC885\uB8CC"
         ) : null,
         embedded ? null : h2(
           "button",
           {
             className: "rt-btn",
-            title: "\u5237\u65B0\u540D\u518C\u3001\u5FEB\u7167\u4E0E\u5F53\u524D\u9875\u9762\u6570\u636E",
+            title: "\uBA85\uBD80\xB7\uC2A4\uB0C5\uC0F7\uACFC \uD604\uC7AC \uD398\uC774\uC9C0 \uB370\uC774\uD130\uB97C \uC0C8\uB85C \uACE0\uCE69\uB2C8\uB2E4",
             onClick: refreshAll
           },
-          "\u5237\u65B0"
+          "\uC0C8\uB85C\uACE0\uCE68"
         ),
         full || embedded ? null : h2(
           "button",
           {
             className: "rt-btn",
-            title: "\u5728\u65B0\u6D4F\u89C8\u5668\u7A97\u53E3\u6253\u5F00\u5B8C\u6574\u63A7\u5236\u53F0",
+            title: "\uC0C8 \uBE0C\uB77C\uC6B0\uC800 \uCC3D\uC5D0\uC11C \uC804\uCCB4 \uCF58\uC194\uC744 \uC5FD\uB2C8\uB2E4",
             onClick: openFull
           },
-          "\u5168\u9762\u6D4F\u89C8"
+          "\uC804\uCCB4 \uBCF4\uAE30"
         ),
         full || embedded ? null : h2(
           "button",
           {
             className: "rt-btn",
-            title: "\u6536\u8D77\u9762\u677F",
+            title: "\uD328\uB110 \uC811\uAE30",
             onClick: () => setUI({ open: false })
           },
-          "\u6536\u8D77"
+          "\uC811\uAE30"
         )
       ),
-      /* 页签栏用标准 tablist/tab 角色：读屏软件据此播报「第几个页签、是否选中」。
-           键盘用户 Tab 进来后可用 Enter/Space 切换（由 clickable 提供）。 */
+      /* 탭 바는 표준 tablist/tab 역할을 쓴다: 스크린 리더가 “몇 번째 탭인지, 선택되었는지”를 읽는다.
+            키보드 사용자는 Tab 으로 들어와 Enter/Space 로 전환한다(clickable 이 제공). */
       h2(
         "div",
         { className: "rt-tabs", role: "tablist" },
@@ -8851,12 +8851,12 @@ var __dshPurgeDrill = (() => {
               className: "rt-tab" + (st.tab === t[0] ? " on" : ""),
               role: "tab",
               "aria-selected": st.tab === t[0] ? "true" : "false",
-              title: unreadOf(t[0]) ? t[1] + "\uFF1A\u6709\u65B0\u5185\u5BB9\uFF0C\u70B9\u5F00\u770B\u8FC7\u7EA2\u70B9\u5C31\u4F1A\u6D88\u5931" : t[1]
+              title: unreadOf(t[0]) ? t[1] + ": \uC0C8 \uB0B4\uC6A9\uC774 \uC788\uC2B5\uB2C8\uB2E4. \uC5F4\uC5B4\uC11C \uBCF4\uBA74 \uBE68\uAC04 \uC810\uC774 \uC0AC\uB77C\uC9D1\uB2C8\uB2E4" : t[1]
             }),
             t[1],
             unreadOf(t[0]) ? (
-              /* 红点是纯视觉信息，给读屏软件一个文字替代 */
-              h2("span", { className: "rt-tab-dot", "aria-label": "\u6709\u65B0\u5185\u5BB9" })
+              /* 빨간 점은 순수 시각 정보이므로 스크린 리더용 텍스트 대체를 준다 */
+              h2("span", { className: "rt-tab-dot", "aria-label": "\uC0C8 \uB0B4\uC6A9 \uC788\uC74C" })
             ) : null
           );
         })
@@ -8869,22 +8869,22 @@ var __dshPurgeDrill = (() => {
       h2(
         "div",
         { className: "rt-foot" },
-        h2("span", null, "C \u6BB5 " + (stats.segments || 0)),
+        h2("span", null, "C \uBE14\uB85D " + (stats.segments || 0)),
         h2(
           "span",
           null,
-          "\u8D44\u4EA7 " + (stats.assets || 0) + "\uFF08\u5B58\u6D3B " + (stats.liveAssets || 0) + "\uFF09"
+          "\uC790\uC0B0 " + (stats.assets || 0) + "(\uC0DD\uC874 " + (stats.liveAssets || 0) + ")"
         ),
-        h2("span", null, "\u7AEF\u53E3 " + (stats.openPorts || 0)),
-        h2("span", null, "\u6307\u7EB9 " + (stats.fingerprints || 0)),
-        h2("span", null, "\u6F0F\u6D1E " + (stats.vulns || 0)),
+        h2("span", null, "\uD3EC\uD2B8 " + (stats.openPorts || 0)),
+        h2("span", null, "\uC9C0\uBB38 " + (stats.fingerprints || 0)),
+        h2("span", null, "\uCDE8\uC57D\uC810 " + (stats.vulns || 0)),
         h2(
           "span",
           null,
-          "\u88AB\u52A8/\u4E3B\u52A8 " + (stats.passiveSignals || 0) + "/" + (stats.activeSignals || 0)
+          "\uC218\uB3D9/\uB2A5\uB3D9 " + (stats.passiveSignals || 0) + "/" + (stats.activeSignals || 0)
         ),
         h2("div", { className: "rt-spacer" }),
-        full ? h2("span", null, "\u6309 Esc \u6216\u70B9\u53F3\u4E0A\u89D2\u300C\u9000\u51FA\u5168\u9762\u6D4F\u89C8\u300D\u56DE\u5230\u5E26\u4FA7\u680F\u7684\u754C\u9762") : null,
+        full ? h2("span", null, "Esc \uB97C \uB204\uB974\uAC70\uB098 \uC624\uB978\uCABD \uC704 \u201C\uC804\uCCB4 \uBCF4\uAE30 \uC885\uB8CC\u201D\uB97C \uB204\uB974\uBA74 \uC0AC\uC774\uB4DC\uBC14\uAC00 \uC788\uB294 \uD654\uBA74\uC73C\uB85C \uB3CC\uC544\uAC11\uB2C8\uB2E4") : null,
         h2(
           "span",
           null,
@@ -8899,7 +8899,7 @@ var __dshPurgeDrill = (() => {
       "button",
       {
         className: "rt-icon-btn" + (st.open ? " on" : ""),
-        title: "RedTeam \u63A7\u5236\u53F0\uFF08\u5E38\u9A7B\u53F3\u4FA7\u680F\uFF09",
+        title: "RedTeam \uCF58\uC194(\uC624\uB978\uCABD \uC0AC\uC774\uB4DC\uBC14 \uC0C1\uC8FC)",
         onClick: () => setUI({ open: !st.open })
       },
       h2("span", { style: { fontSize: 14 } }, "\u26E8"),
@@ -8912,7 +8912,7 @@ var __dshPurgeDrill = (() => {
       "button",
       {
         className: "rt-hbtn" + (st.open ? " on" : ""),
-        title: "RedTeam \u63A7\u5236\u53F0\uFF08\u5E38\u9A7B\u53F3\u4FA7\u680F\uFF09",
+        title: "RedTeam \uCF58\uC194(\uC624\uB978\uCABD \uC0AC\uC774\uB4DC\uBC14 \uC0C1\uC8FC)",
         onClick: () => setUI({ open: !st.open })
       },
       "\u26E8 RedTeam"
@@ -8933,11 +8933,11 @@ var __dshPurgeDrill = (() => {
       "button",
       {
         className: "rt-icon-btn",
-        title: "\u5168\u9762\u6D4F\u89C8\uFF1A\u5728\u65B0\u7A97\u53E3\u6253\u5F00\u5B8C\u6574\u63A7\u5236\u53F0\uFF08\u5F53\u524D\u7A97\u53E3\u4E0D\u53D7\u5F71\u54CD\uFF1B\u65B0\u7A97\u53E3\u5185\u6309 Esc \u9000\u51FA\uFF09",
+        title: "\uC804\uCCB4 \uBCF4\uAE30: \uC0C8 \uCC3D\uC5D0\uC11C \uC804\uCCB4 \uCF58\uC194\uC744 \uC5FD\uB2C8\uB2E4(\uD604\uC7AC \uCC3D\uC740 \uC601\uD5A5 \uC5C6\uC74C; \uC0C8 \uCC3D\uC5D0\uC11C Esc \uB85C \uC885\uB8CC)",
         onClick: open
       },
       h2("span", { style: { fontSize: 14 } }, "\u26F6"),
-      props.wide ? h2("span", null, "\u5168\u9762\u6D4F\u89C8") : null
+      props.wide ? h2("span", null, "\uC804\uCCB4 \uBCF4\uAE30") : null
     );
   }
   const inject2 = ["slots"];
@@ -9123,382 +9123,382 @@ function setTranslate(t) {
 function useT() {
   return translate;
 }
-var zh = {
-  nav: "\u89C4\u5219\u8BBE\u5B9A",
-  "dock.clean": "\u6E05\u6D17",
-  "dock.drill": "\u6F14\u7EC3\u53F0",
+var ko = {
+  nav: "\uADDC\uCE59 \uC124\uC815",
+  "dock.clean": "\uC815\uB9AC",
+  "dock.drill": "\uB4DC\uB9B4 \uCF58\uC194",
   "dock.toggle": "dsh-purge",
   "dock.newSession": "dsh-purge",
   "dock.inSession": "dsh-purge",
-  "dock.redteam": "\u7EA2\u961F\u6A21\u5F0F",
-  "dock.full": "\u5168\u9762\u6D4F\u89C8",
-  "dock.close": "\u6536\u8D77",
-  "dock.unauthorized": "\u672A\u6388\u6743",
-  "welcome.title": "\u7528\u6237\u987B\u77E5",
-  "welcome.lead": "\u9996\u6B21\u5B89\u88C5\u672C\u63D2\u4EF6\u65F6\u8BF7\u9605\u8BFB\u4EE5\u4E0B\u8BF4\u660E\u3002\u786E\u8BA4\u540E\u672C\u7A97\u4E0D\u518D\u5F39\u51FA\u3002",
-  "welcome.warn": "\u672C\u63D2\u4EF6\u514D\u8D39\u5F00\u6E90\u3002\u4EFB\u4F55\u80CC\u7740\u4F5C\u8005\u79C1\u81EA\u552E\u5356\u3001\u4ED8\u8D39\u5012\u5356\u6216\u501F\u672C\u9879\u76EE\u76C8\u5229\u7684\u884C\u4E3A\uFF0C\u4F5C\u8005\u5C06\u4F9D\u6CD5\u8FFD\u7A76\u6CD5\u5F8B\u8D23\u4EFB\u3002",
-  "welcome.body": "dsh-purge \u662F DeepSeek Harness \u7684\u672C\u673A\u7F51\u7EDC\u5B89\u5168\u7EA2\u961F\u8BC4\u6D4B\u4E0E\u6E05\u6D17\u63D2\u4EF6\uFF1A\u5728\u53D7\u63A7\u672C\u673A\u73AF\u5883\u4E2D\u8C03\u6574\u63D0\u793A\u8BCD\u4E0E\u8865\u4E01\u3001\u505A\u6388\u6743\u8303\u56F4\u5185\u7684\u6F14\u7EC3\u53F0\u64CD\u4F5C\u3002\u9879\u76EE\u514D\u8D39\u3001\u975E\u8425\u5229\uFF0C\u6E90\u7801\u4ED3\u5E93\uFF1A",
+  "dock.redteam": "\uB808\uB4DC\uD300 \uBAA8\uB4DC",
+  "dock.full": "\uC804\uCCB4 \uBCF4\uAE30",
+  "dock.close": "\uC811\uAE30",
+  "dock.unauthorized": "\uBBF8\uC2B9\uC778",
+  "welcome.title": "\uC0AC\uC6A9\uC790 \uACE0\uC9C0",
+  "welcome.lead": "\uC774 \uD50C\uB7EC\uADF8\uC778\uC744 \uCC98\uC74C \uC124\uCE58\uD558\uBA74 \uB2E4\uC74C \uC548\uB0B4\uB97C \uC77D\uC5B4 \uC8FC\uC138\uC694. \uD655\uC778\uD558\uC2DC\uBA74 \uC774 \uCC3D\uC740 \uB2E4\uC2DC \uD45C\uC2DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+  "welcome.warn": "\uC774 \uD50C\uB7EC\uADF8\uC778\uC740 \uBB34\uB8CC \uC624\uD508\uC18C\uC2A4\uC785\uB2C8\uB2E4. \uC81C\uC791\uC790 \uBAB0\uB798 \uD310\uB9E4\uD558\uAC70\uB098 \uC720\uB8CC\uB85C \uB418\uD314\uAC70\uB098 \uC774 \uD504\uB85C\uC81D\uD2B8\uB85C \uC774\uC775\uC744 \uC5BB\uB294 \uD589\uC704\uB294 \uBC95\uC801 \uCC45\uC784\uC744 \uC9D1\uB2C8\uB2E4.",
+  "welcome.body": "dsh-purge \uB294 DeepSeek Harness \uC758 \uB85C\uCEEC \uBCF4\uC548 \uB808\uB4DC\uD300 \uD3C9\uAC00\xB7\uC815\uB9AC \uD50C\uB7EC\uADF8\uC778\uC785\uB2C8\uB2E4. \uD1B5\uC81C\uB41C \uB85C\uCEEC \uD658\uACBD\uC5D0\uC11C \uD504\uB86C\uD504\uD2B8\uC640 \uD328\uCE58\uB97C \uC870\uC815\uD558\uACE0, \uC2B9\uC778 \uBC94\uC704 \uC548\uC5D0\uC11C \uB4DC\uB9B4 \uCF58\uC194 \uC791\uC5C5\uC744 \uD569\uB2C8\uB2E4. \uBB34\uB8CC\xB7\uBE44\uC601\uB9AC \uD504\uB85C\uC81D\uD2B8\uC774\uBA70 \uC18C\uC2A4 \uC800\uC7A5\uC18C\uB294 \uB2E4\uC74C\uACFC \uAC19\uC2B5\uB2C8\uB2E4:",
   "welcome.repo": "https://github.com/YuJunZhiXue/dsh-purge",
-  "welcome.ban1": "\u7981\u6B62\u5C06\u672C\u9879\u76EE\u7528\u4E8E\u672A\u6388\u6743\u7684\u7F51\u7EDC\u653B\u51FB\u3001\u5165\u4FB5\u3001\u7A83\u53D6\u6570\u636E\u3001\u7834\u574F\u7CFB\u7EDF\u6216\u4EFB\u4F55\u8FDD\u6CD5\u72AF\u7F6A\u3002",
-  "welcome.ban2": "\u7981\u6B62\u5546\u4E1A\u552E\u5356\u3001\u4ED8\u8D39\u5012\u5356\u3001\u9ED1\u7070\u4EA7\u725F\u5229\uFF0C\u4EE5\u53CA\u9690\u7792\u4F5C\u8005\u7684\u8425\u5229\u6027\u518D\u5206\u53D1\u3002",
-  "welcome.ban3": "\u4F7F\u7528\u8005\u987B\u81EA\u884C\u9075\u5B88\u6240\u5728\u5730\u6CD5\u5F8B\u6CD5\u89C4\u4E0E\u5E73\u53F0\u89C4\u8303\uFF1B\u8FDD\u6CD5\u540E\u679C\u7531\u884C\u4E3A\u4EBA\u81EA\u884C\u627F\u62C5\uFF0C\u4E0E\u4F5C\u8005\u65E0\u5173\u3002",
-  "welcome.bans": "\u7981\u6B62\u4E8B\u9879",
-  "welcome.check": "\u6211\u5DF2\u9605\u8BFB\u5E76\u7406\u89E3\u4E0A\u8FF0\u7528\u6237\u987B\u77E5\uFF0C\u540C\u610F\u5408\u6CD5\u5408\u89C4\u4F7F\u7528\u3002",
-  "welcome.ok": "\u6211\u5DF2\u77E5\u6653\u5E76\u7EE7\u7EED",
-  "auth.title": "\u6F14\u7EC3\u53F0\u6388\u6743\u786E\u8BA4",
-  "auth.lead": "\u6E05\u6D17\u4E0D\u9700\u8981\u8FD9\u4E00\u6B65\u3002\u7B2C\u4E00\u6B21\u8FDB\u5165\u6F14\u7EC3\u53F0\uFF0C\u6216\u6253\u5F00\u5168\u9762\u6D4F\u89C8\uFF0C\u90FD\u8981\u5148\u5B8C\u6210\u672C\u7A97\u3002",
-  "auth.warn": "\u5B89\u5168\u8B66\u544A\uFF1A\u6F14\u7EC3\u53F0\u53EA\u7528\u4E8E\u4F60\u6709\u6743\u7BA1\u7406\u7684\u672C\u673A\u3001\u79BB\u7EBF\u9776\u6807\uFF0C\u6216\u5DF2\u4E66\u9762\u6388\u6743\u7684\u6F14\u7EC3\u73AF\u5883\u3002\u672A\u7ECF\u6388\u6743\u7684\u6E17\u900F\u3001\u653B\u51FB\u3001\u7A83\u53D6\u548C\u7834\u574F\u4E00\u5F8B\u7981\u6B62\u3002",
-  "auth.hint.wait": "\u8BF7\u9605\u8BFB\u58F0\u660E\u3002{n} \u79D2\u540E\u624D\u80FD\u52FE\u9009\u3002",
-  "auth.hint.scroll": "\u5012\u8BA1\u65F6\u5DF2\u7ED3\u675F\u3002\u8BF7\u628A\u58F0\u660E\u6EDA\u5230\u6587\u672B\uFF0C\u518D\u52FE\u9009\u3002",
-  "auth.hint.check": "\u5012\u8BA1\u65F6\u5DF2\u7ED3\u675F\u3002\u8BF7\u52FE\u9009\u5168\u90E8\u4E09\u9879\u3002",
-  "auth.check.read": "\u6211\u5DF2\u8BFB\u5B8C\u300A\u5B89\u5168\u4E0E\u7981\u6B62\u8FDD\u6CD5\u58F0\u660E\u300B\uFF0C\u5E76\u8BA4\u53EF\u5176\u4E2D\u7684\u5168\u90E8\u6761\u6B3E\u3002",
-  "auth.check.scope": "\u6211\u786E\u8BA4\u53EA\u7528\u5728\u672C\u673A\u5DF2\u6388\u6743\u73AF\u5883\u3001\u79BB\u7EBF\u9776\u6807\u6216\u5408\u89C4\u6F14\u7EC3\u4E2D\u3002",
-  "auth.check.ban": "\u6211\u786E\u8BA4\u7981\u6B62\u4EFB\u4F55\u8FDD\u6CD5\u7528\u9014\u3002\u672A\u5B8C\u6210\u672C\u6388\u6743\uFF0C\u4E0D\u5F97\u4F7F\u7528\u6F14\u7EC3\u53F0\u3002",
-  "auth.no": "\u6682\u4E0D\u8FDB\u5165",
-  "auth.ok": "\u786E\u8BA4\u6388\u6743",
-  "auth.ok.tab": "\u786E\u8BA4\u6388\u6743\u5E76\u8FDB\u5165\u6F14\u7EC3\u53F0",
-  "auth.ok.full": "\u786E\u8BA4\u6388\u6743\u5E76\u5168\u9762\u6D4F\u89C8",
-  "auth.ok.env": "\u786E\u8BA4\u6388\u6743\u5E76\u6253\u5F00\u73AF\u5883\u9002\u914D",
-  "envGate.title": "\u73AF\u5883\u8FD8\u6CA1\u914D\u597D",
-  "envGate.lead": "\u7EA2\u961F\u6A21\u5F0F\u53D1\u9001\u524D\u9700\u8981\u672C\u673A\u5DE5\u5177\u3002\u672A\u68C0\u6D4B\u5230\u53EF\u7528\u73AF\u5883\u65F6\uFF0C\u5148\u53BB\u73AF\u5883\u9002\u914D\uFF0C\u6216\u786E\u8BA4\u6682\u4E0D\u914D\u7F6E\u3002",
-  "envGate.kaliHint": "\u68C0\u6D4B\u5230 Kali \u65F6\u4F1A\u76F4\u63A5\u7528\u672C\u673A\u5DE5\u5177\uFF0C\u4E0D\u5FC5\u586B\u8DEF\u5F84\u3002\u6CA1\u6709 Kali \u65F6\uFF0C\u5728\u73AF\u5883\u9002\u914D\u91CC\u586B\u5199\u5404\u5DE5\u5177\u8DEF\u5F84\uFF0C\u6216\u9009\u4E00\u4E2A\u6574\u5305\u6587\u4EF6\u5939\u81EA\u52A8\u5206\u914D\u3002",
-  "envGate.skip": "\u6682\u4E0D\u914D\u7F6E",
-  "envGate.skipConfirm": "\u786E\u8BA4\u540E\u8FD9\u6B21\u53EF\u4EE5\u7EE7\u7EED\u5BF9\u8BDD\u3002\u626B\u63CF\u548C\u5229\u7528\u7C7B\u6280\u80FD\u4ECD\u4F1A\u56E0\u4E3A\u7F3A\u5C11\u5DE5\u5177\u800C\u4E0D\u53EF\u7528\uFF0C\u4E4B\u540E\u53EF\u4EE5\u5728 dsh-purge \u2192 \u73AF\u5883\u9002\u914D\u91CC\u8865\u8DEF\u5F84\u3002",
-  "envGate.skipNo": "\u8FD4\u56DE",
-  "envGate.skipYes": "\u786E\u8BA4\u6682\u4E0D\u914D\u7F6E",
-  "envGate.go": "\u53BB\u73AF\u5883\u9002\u914D",
-  "compat.host": "dsh-purge Community {version} \xB7 \u5BBF\u4E3B DSH {host} \xB7 \u517C\u5BB9\u7EA7\u522B\uFF1A{level}",
-  "compat.loading": "\u6B63\u5728\u8BFB\u53D6\u5BBF\u4E3B\u7248\u672C\u2026",
-  "compat.unavailable": "\u8BFB\u4E0D\u5230\u5BBF\u4E3B\u517C\u5BB9\u4FE1\u606F\uFF1A{error}",
-  "compat.level.qualified": "\u5DF2\u56DE\u5F52\u9A8C\u8BC1",
-  "compat.level.unverified": "\u672A\u9A8C\u8BC1\u7248\u672C",
-  "compat.level.mixed": "\u7EC4\u4EF6\u7248\u672C\u4E0D\u4E00\u81F4",
-  "compat.level.no-host": "\u672A\u5B9A\u4F4D\u5BBF\u4E3B",
-  "compat.level.unknown": "\u672A\u77E5",
-  "theme.aria": "\u5916\u89C2",
-  "theme.white": "\u767D",
-  "theme.ink": "\u58A8",
-  "purge.title": "\u8865\u4E01",
-  "override.title": "\u63D0\u793A\u8BCD",
-  "own.title": "\u81EA\u5DF1\u7684\u670D\u52A1\u5668",
-  "own.hint": "\u6BCF\u884C\u4E00\u4E2A IP \u6216\u5B8C\u6574\u4E3B\u673A\u540D\u3002\u53EF\u4EE5\u5199\u6210 \u8D26\u53F7@\u4E3B\u673A\uFF0C\u8D26\u53F7\u53EA\u7528\u6765\u8BA4\u51FA\u8FD9\u79CD\u5199\u6CD5\u3002\u4E3B\u673A\u540D\u4F1A\u8FDE\u540C\u5B83\u5F53\u65F6\u89E3\u6790\u51FA\u7684\u5730\u5740\u4E00\u8D77\u653E\u884C\u3002\u4E0D\u8981\u5199\u5BC6\u94A5\u3001\u5BC6\u7801\u3001\u7F51\u6BB5\u3002",
-  "own.save": "\u4FDD\u5B58\u540D\u5355",
-  "saved.own": "\u5DF2\u4FDD\u5B58\u81EA\u5DF1\u7684\u670D\u52A1\u5668",
-  "saved.own.dropped": "\u5DF2\u4FDD\u5B58\u3002\u6709 {n} \u884C\u4E0D\u662F\u5355\u4E2A IP \u6216\u4E3B\u673A\u540D\uFF0C\u5DF2\u4E22\u6389",
-  "metric.purged": "\u5DF2\u5199\u5165",
-  "metric.purged.skip": "\u5DF2\u5199\u5165\u3002\u8DF3\u8FC7 {n} \u9879\uFF0C\u672C\u673A\u6CA1\u6709\u8FD9\u4E9B\u6587\u4EF6",
-  "metric.pendingShort": "\u5F85\u5904\u7406 {n}",
-  "metric.unmatchedShort": "\u6CA1\u5BF9\u4E0A {n}",
-  "metric.partialShort": "\u90E8\u5206\u547D\u4E2D {n}",
-  "metric.driftedShort": "\u951A\u70B9\u6F02\u79FB {n}",
-  "metric.disabledShort": "\u53EF\u9009\u5173\u95ED {n}",
-  "metric.skipShort": "\u8DF3\u8FC7 {n}",
+  "welcome.ban1": "\uC2B9\uC778\uB418\uC9C0 \uC54A\uC740 \uB124\uD2B8\uC6CC\uD06C \uACF5\uACA9, \uCE68\uC785, \uB370\uC774\uD130 \uD0C8\uCDE8, \uC2DC\uC2A4\uD15C \uD30C\uAD34, \uADF8 \uBC16\uC758 \uC704\uBC95 \uD589\uC704\uC5D0 \uC774 \uD504\uB85C\uC81D\uD2B8\uB97C \uC4F0\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.",
+  "welcome.ban2": "\uC0C1\uC5C5\uC801 \uD310\uB9E4, \uC720\uB8CC \uB418\uD314\uAE30, \uD68C\uC0C9\xB7\uAC80\uC740 \uC2DC\uC7A5 \uC218\uC775, \uC81C\uC791\uC790\uB97C \uC228\uAE34 \uC601\uB9AC \uBAA9\uC801 \uC7AC\uBC30\uD3EC\uB97C \uAE08\uC9C0\uD569\uB2C8\uB2E4.",
+  "welcome.ban3": "\uC0AC\uC6A9\uC790\uB294 \uAC70\uC8FC\uC9C0 \uBC95\uB839\uACFC \uD50C\uB7AB\uD3FC \uADDC\uBC94\uC744 \uC2A4\uC2A4\uB85C \uC9C0\uCF1C\uC57C \uD569\uB2C8\uB2E4. \uC704\uBC95\uC758 \uACB0\uACFC\uB294 \uD589\uC704\uC790\uAC00 \uC9C0\uBA70 \uC81C\uC791\uC790\uC640 \uBB34\uAD00\uD569\uB2C8\uB2E4.",
+  "welcome.bans": "\uAE08\uC9C0 \uC0AC\uD56D",
+  "welcome.check": "\uC704 \uC0AC\uC6A9\uC790 \uACE0\uC9C0\uB97C \uC77D\uACE0 \uC774\uD574\uD588\uC73C\uBA70 \uD569\uBC95\uC801\uC73C\uB85C \uC4F0\uB294 \uB370 \uB3D9\uC758\uD569\uB2C8\uB2E4.",
+  "welcome.ok": "\uD655\uC778\uD558\uBA70 \uACC4\uC18D\uD569\uB2C8\uB2E4",
+  "auth.title": "\uB4DC\uB9B4 \uCF58\uC194 \uC2B9\uC778 \uD655\uC778",
+  "auth.lead": "\uC815\uB9AC\uC5D0\uB294 \uC774 \uB2E8\uACC4\uAC00 \uD544\uC694 \uC5C6\uC2B5\uB2C8\uB2E4. \uB4DC\uB9B4 \uCF58\uC194\uC5D0 \uCC98\uC74C \uB4E4\uC5B4\uAC00\uAC70\uB098 \uC804\uCCB4 \uBCF4\uAE30\uB97C \uC5F4 \uB54C\uB294 \uC774 \uCC3D\uC744 \uBA3C\uC800 \uB05D\uB0B4\uC138\uC694.",
+  "auth.warn": "\uBCF4\uC548 \uACBD\uACE0: \uB4DC\uB9B4 \uCF58\uC194\uC740 \uAD00\uB9AC \uAD8C\uD55C\uC774 \uC788\uB294 \uB85C\uCEEC \uD638\uC2A4\uD2B8, \uC624\uD504\uB77C\uC778 \uD45C\uC801, \uC11C\uBA74 \uC2B9\uC778\uC744 \uBC1B\uC740 \uB4DC\uB9B4 \uD658\uACBD\uC5D0\uB9CC \uC4F0\uC138\uC694. \uC2B9\uC778 \uC5C6\uB294 \uCE68\uD22C\xB7\uACF5\uACA9\xB7\uD0C8\uCDE8\xB7\uD30C\uAD34\uB294 \uC77C\uC808 \uAE08\uC9C0\uD569\uB2C8\uB2E4.",
+  "auth.hint.wait": "\uC120\uC5B8\uC744 \uC77D\uC5B4 \uC8FC\uC138\uC694. {n}\uCD08 \uD6C4\uC5D0 \uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+  "auth.hint.scroll": "\uCE74\uC6B4\uD2B8\uB2E4\uC6B4\uC774 \uB05D\uB0AC\uC2B5\uB2C8\uB2E4. \uC120\uC5B8\uC744 \uB05D\uAE4C\uC9C0 \uC2A4\uD06C\uB864\uD55C \uB4A4 \uCCB4\uD06C\uD558\uC138\uC694.",
+  "auth.hint.check": "\uCE74\uC6B4\uD2B8\uB2E4\uC6B4\uC774 \uB05D\uB0AC\uC2B5\uB2C8\uB2E4. \uC138 \uD56D\uBAA9\uC744 \uBAA8\uB450 \uCCB4\uD06C\uD558\uC138\uC694.",
+  "auth.check.read": "'\uBCF4\uC548 \uBC0F \uC704\uBC95 \uAE08\uC9C0 \uC120\uC5B8'\uC744 \uB2E4 \uC77D\uC5C8\uACE0 \uBAA8\uB4E0 \uC870\uD56D\uC744 \uC778\uC815\uD569\uB2C8\uB2E4.",
+  "auth.check.scope": "\uB85C\uCEEC \uC2B9\uC778 \uD658\uACBD, \uC624\uD504\uB77C\uC778 \uD45C\uC801, \uADDC\uC815\uC744 \uC9C0\uD0A8 \uB4DC\uB9B4\uC5D0\uB9CC \uC4F0\uACA0\uB2E4\uACE0 \uD655\uC778\uD569\uB2C8\uB2E4.",
+  "auth.check.ban": "\uC5B4\uB5A4 \uC704\uBC95 \uC6A9\uB3C4\uB85C\uB3C4 \uC4F0\uC9C0 \uC54A\uACA0\uB2E4\uACE0 \uD655\uC778\uD569\uB2C8\uB2E4. \uC774 \uC2B9\uC778\uC744 \uB9C8\uCE58\uC9C0 \uC54A\uC73C\uBA74 \uB4DC\uB9B4 \uCF58\uC194\uC744 \uC4F8 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.",
+  "auth.no": "\uB4E4\uC5B4\uAC00\uC9C0 \uC54A\uC74C",
+  "auth.ok": "\uC2B9\uC778 \uD655\uC778",
+  "auth.ok.tab": "\uC2B9\uC778\uD558\uACE0 \uB4DC\uB9B4 \uCF58\uC194 \uC5F4\uAE30",
+  "auth.ok.full": "\uC2B9\uC778\uD558\uACE0 \uC804\uCCB4 \uBCF4\uAE30 \uC5F4\uAE30",
+  "auth.ok.env": "\uC2B9\uC778\uD558\uACE0 \uD658\uACBD \uC801\uC751 \uC5F4\uAE30",
+  "envGate.title": "\uD658\uACBD\uC774 \uC544\uC9C1 \uC900\uBE44\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4",
+  "envGate.lead": "\uB808\uB4DC\uD300 \uBAA8\uB4DC\uB294 \uBCF4\uB0B4\uAE30 \uC804\uC5D0 \uB85C\uCEEC \uB3C4\uAD6C\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4. \uC4F8 \uC218 \uC788\uB294 \uD658\uACBD\uC774 \uAC10\uC9C0\uB418\uC9C0 \uC54A\uC73C\uBA74 \uBA3C\uC800 \uD658\uACBD \uC801\uC751\uC73C\uB85C \uAC00\uAC70\uB098 \uC124\uC815\uD558\uC9C0 \uC54A\uC74C\uC744 \uD655\uC778\uD558\uC138\uC694.",
+  "envGate.kaliHint": "Kali \uAC00 \uAC10\uC9C0\uB418\uBA74 \uB85C\uCEEC \uB3C4\uAD6C\uB97C \uBC14\uB85C \uC4F0\uACE0 \uACBD\uB85C\uB97C \uB123\uC9C0 \uC54A\uC544\uB3C4 \uB429\uB2C8\uB2E4. Kali \uAC00 \uC5C6\uC73C\uBA74 \uD658\uACBD \uC801\uC751\uC5D0\uC11C \uAC01 \uB3C4\uAD6C \uACBD\uB85C\uB97C \uB123\uAC70\uB098 \uD1B5\uD569 \uD3F4\uB354 \uD558\uB098\uB97C \uACE8\uB77C \uC790\uB3D9 \uBC30\uBD84\uD558\uC138\uC694.",
+  "envGate.skip": "\uC9C0\uAE08\uC740 \uC124\uC815 \uC548 \uD568",
+  "envGate.skipConfirm": "\uD655\uC778\uD558\uBA74 \uC774\uBC88\uC5D0\uB294 \uB300\uD654\uB97C \uACC4\uC18D\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uC2A4\uCE94\xB7\uD65C\uC6A9 \uACC4\uC5F4 \uC2A4\uD0AC\uC740 \uB3C4\uAD6C\uAC00 \uC5C6\uC5B4 \uC5EC\uC804\uD788 \uC4F8 \uC218 \uC5C6\uACE0, \uC774\uD6C4 dsh-purge \u2192 \uD658\uACBD \uC801\uC751\uC5D0\uC11C \uACBD\uB85C\uB97C \uCC44\uC6B8 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+  "envGate.skipNo": "\uB3CC\uC544\uAC00\uAE30",
+  "envGate.skipYes": "\uC124\uC815\uD558\uC9C0 \uC54A\uACE0 \uACC4\uC18D",
+  "envGate.go": "\uD658\uACBD \uC801\uC751 \uC5F4\uAE30",
+  "compat.host": "dsh-purge Community {version} \xB7 \uD638\uC2A4\uD2B8 DSH {host} \xB7 \uD638\uD658 \uB4F1\uAE09: {level}",
+  "compat.loading": "\uD638\uC2A4\uD2B8 \uBC84\uC804\uC744 \uC77D\uB294 \uC911\u2026",
+  "compat.unavailable": "\uD638\uC2A4\uD2B8 \uD638\uD658 \uC815\uBCF4\uB97C \uC77D\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "compat.level.qualified": "\uD68C\uADC0 \uAC80\uC99D \uC644\uB8CC",
+  "compat.level.unverified": "\uBBF8\uAC80\uC99D \uBC84\uC804",
+  "compat.level.mixed": "\uCEF4\uD3EC\uB10C\uD2B8 \uBC84\uC804 \uBD88\uC77C\uCE58",
+  "compat.level.no-host": "\uD638\uC2A4\uD2B8 \uBBF8\uD655\uC778",
+  "compat.level.unknown": "\uC54C \uC218 \uC5C6\uC74C",
+  "theme.aria": "\uD14C\uB9C8",
+  "theme.white": "\uB77C\uC774\uD2B8",
+  "theme.ink": "\uC789\uD06C",
+  "purge.title": "\uD328\uCE58",
+  "override.title": "\uD504\uB86C\uD504\uD2B8",
+  "own.title": "\uB0B4 \uC11C\uBC84",
+  "own.hint": "\uD55C \uC904\uC5D0 IP \uD558\uB098 \uB610\uB294 \uC804\uCCB4 \uD638\uC2A4\uD2B8\uBA85 \uD558\uB098\uC785\uB2C8\uB2E4. \uACC4\uC815@\uD638\uC2A4\uD2B8 \uD615\uD0DC\uB3C4 \uB418\uACE0, \uACC4\uC815\uC740 \uC774 \uD45C\uAE30\uB97C \uC54C\uC544\uBCF4\uB294 \uC6A9\uB3C4\uC77C \uBFD0\uC785\uB2C8\uB2E4. \uD638\uC2A4\uD2B8\uBA85\uC740 \uADF8\uB54C \uD574\uC11D\uB41C \uC8FC\uC18C\uAE4C\uC9C0 \uD568\uAED8 \uD1B5\uACFC\uC2DC\uD0B5\uB2C8\uB2E4. \uD0A4, \uBE44\uBC00\uBC88\uD638, \uB300\uC5ED\uC740 \uC4F0\uC9C0 \uB9C8\uC138\uC694.",
+  "own.save": "\uBAA9\uB85D \uC800\uC7A5",
+  "saved.own": "\uB0B4 \uC11C\uBC84\uB97C \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4",
+  "saved.own.dropped": "\uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4. {n}\uAC1C \uC904\uC774 \uB2E8\uC77C IP \uB098 \uD638\uC2A4\uD2B8\uBA85\uC774 \uC544\uB2C8\uC5B4\uC11C \uBC84\uB838\uC2B5\uB2C8\uB2E4",
+  "metric.purged": "\uAE30\uB85D\uB428",
+  "metric.purged.skip": "\uAE30\uB85D\uB428. {n}\uAC1C \uD56D\uBAA9\uC744 \uAC74\uB108\uB6F0\uC5C8\uC2B5\uB2C8\uB2E4. \uC774 \uC124\uCE58\uBCF8\uC5D0 \uADF8 \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+  "metric.pendingShort": "\uB300\uAE30 {n}",
+  "metric.unmatchedShort": "\uBD88\uC77C\uCE58 {n}",
+  "metric.partialShort": "\uBD80\uBD84 \uC801\uC911 {n}",
+  "metric.driftedShort": "\uC575\uCEE4 \uB4DC\uB9AC\uD504\uD2B8 {n}",
+  "metric.disabledShort": "\uC120\uD0DD \uD574\uC81C {n}",
+  "metric.skipShort": "\uAC74\uB108\uB700 {n}",
   "metric.unlocated.count": "\u2014",
   "metric.shim": "shim",
-  "metric.shim.na": "\u672C\u7AEF\u4E0D\u9700\u8981",
-  "metric.bak.yes": "\u6709\u5907\u4EFD",
-  "metric.bak.no": "\u65E0\u5907\u4EFD",
-  "metric.bak.hint": "\u5907\u4EFD",
-  "table.patch": "\u9879\u76EE",
-  "table.status": "\u72B6\u6001",
-  "status.applied": "\u5DF2\u5E94\u7528",
-  "status.off": "\u5DF2\u5173\u95ED",
-  "status.pending": "\u5F85\u5E94\u7528",
-  "status.unmatched": "\u6CA1\u5BF9\u4E0A",
-  "status.partial": "\u90E8\u5206\u547D\u4E2D",
-  "status.partialDetail": "\uFF08{done}/{total} \u76EE\u6807\uFF09",
-  "status.drifted": "\u951A\u70B9\u6F02\u79FB",
-  "status.disabled": "\u53EF\u9009\u5173\u95ED",
-  "status.skipped": "\u8DF3\u8FC7",
-  "apply.hint": "\u70B9\u5E94\u7528\u4F1A\u6253\u8865\u4E01\u5E76\u628A\u5F53\u524D\u9ED8\u8BA4\u63D0\u793A\u8BCD\u6302\u4E0A\uFF0C\u6846\u91CC\u4ECD\u662F\u63D2\u4EF6\u65E7\u9ED8\u8BA4\u65F6\u81EA\u52A8\u5237\u5230\u52A0\u5BC6\u69FD\uFF0C\u4E0D\u5FC5\u518D\u70B9\u4FDD\u5B58\u3002\u53EA\u6709\u4F60\u53E6\u5199\u7684\u7A3F\u624D\u4F1A\u6309\u6846\u843D\u76D8\u3002\u5F85\u5E94\u7528=\u539F\u6587\u8FD8\u5728\u3002\u8DF3\u8FC7=\u5F53\u524D\u7248\u672C\u4E0D\u9700\u8981\u6216\u7EC4\u4EF6\u672A\u5B89\u88C5\u3002",
-  "warn.noRoot": "\u672A\u5B9A\u4F4D\u5230\u5F53\u524D\u5BBF\u4E3B\u7684 @deepseek-ai\uFF0C\u6E05\u6D17\u4E0D\u4F1A\u751F\u6548\u3002\u8BF7\u5B8C\u5168\u9000\u51FA\u540E\u518D\u6253\u5F00\u672C\u5BBF\u4E3B\uFF0C\u5728\u672C\u9875\u70B9\u300C\u5E94\u7528\u300D\u3002\u684C\u9762\u7AEF\u5B89\u88C5\u76EE\u5F55\u53EF\u4EE5\u662F\u4EFB\u610F\u76D8\u7B26\uFF1B\u76EE\u5F55\u540D\u5E26 DeepseekHarness / DeepSeek Harness \u5747\u53EF\u3002",
-  "warn.noRoot.desktop": "\u5B98\u65B9\u5BA2\u6237\u7AEF\u7684\u4EE3\u7801\u5728 app.asar \u91CC\u3002\u70B9\u300C\u5E94\u7528\u300D\u4F1A\u89E3\u5F00\u5E76\u81EA\u52A8\u91CD\u542F\uFF0C\u4E0D\u7528\u53E6\u8DD1\u811A\u672C\u3002\u82E5\u4E00\u76F4\u663E\u793A\u8FD8\u6CA1\u5B9A\u4F4D\uFF0C\u5148\u5B8C\u5168\u9000\u51FA\u5BA2\u6237\u7AEF\u518D\u5F00\uFF0C\u518D\u70B9\u300C\u5E94\u7528\u300D\u3002\u7B2C\u4E09\u65B9 DSH Desktop \u76F4\u63A5\u70B9\u300C\u5E94\u7528\u300D\u3002",
-  "unpack.restarting": "\u8865\u4E01\u5DF2\u5199\u5165\u3002\u70B9\u300C\u91CD\u542F\u300D\u540E\u5BA2\u6237\u7AEF\u4F1A\u81EA\u5DF1\u91CD\u65B0\u6253\u5F00\u3002",
-  "restart.fullQuit": "\u6B63\u5728\u91CD\u542F\uFF0C\u5BA2\u6237\u7AEF\u4F1A\u81EA\u5DF1\u91CD\u65B0\u6253\u5F00\u3002",
-  "warn.noInject": "\u5B98\u65B9\u59CB\u7EC8\u7528\u9ED8\u8BA4\u63D0\u793A\u8BCD\u3002\u7EA2\u961F\u5F00\u4E86\u89C4\u5219\u96C6\u5C31\u53EA\u7528\u89C4\u5219\u96C6\uFF1B\u6CA1\u5F00\u65F6\u7528\u53BB\u6389 CTF \u7684\u9ED8\u8BA4\u63D0\u793A\u8BCD\uFF0C\u518D\u63A5\u7EA2\u961F\u64CD\u4F5C\u3002\u4E24\u8FB9\u90FD\u7A7A\u4F1A\u63D0\u793A\u5FC5\u987B\u6DFB\u52A0\u3002",
-  "need.prompt": "\u63D0\u793A\u8BCD\u548C\u89C4\u5219\u96C6\u90FD\u662F\u7A7A\u7684\uFF0C\u5FC5\u987B\u5148\u6DFB\u52A0\u63D0\u793A\u8BCD\uFF0C\u6216\u542F\u7528\u4E00\u6761\u6709\u5185\u5BB9\u7684\u89C4\u5219\u96C6\u3002",
-  "btn.restoreInject": "\u6062\u590D\u9ED8\u8BA4",
-  "saved.restoreInject": "\u5DF2\u6062\u590D\u9ED8\u8BA4\u63D0\u793A\u8BCD",
-  skip: "\u8DF3\u8FC7",
-  unknown: "\u672A\u77E5",
-  delete: "\u5220\u9664",
-  "btn.apply": "\u5E94\u7528",
-  "btn.apply.busy": "\u5904\u7406\u4E2D\u2026",
-  "btn.revert": "\u8FD8\u539F",
-  "btn.uninstall": "\u5378\u8F7D",
-  "btn.uninstall.busy": "\u5378\u8F7D\u4E2D\u2026",
-  "uninstall.title": "\u5378\u8F7D dsh-purge",
-  "uninstall.body": "\u662F\u5426\u5378\u8F7D\uFF1F\u5378\u8F7D\u5C06\u8FD8\u539F\u56DE\u539F\u7248\uFF0C\u5E76\u6E05\u9664\u672C\u63D2\u4EF6\u7684\u5168\u90E8\u6587\u4EF6\u4E0E\u8865\u4E01\u3002",
-  "uninstall.confirm": "\u786E\u8BA4\u5378\u8F7D",
-  "uninstall.cancel": "\u53D6\u6D88",
-  "uninstall.applying": "\u6B63\u5728\u5378\u8F7D\u5E76\u8FD8\u539F\u2026",
-  "uninstall.done": "\u5DF2\u5378\u8F7D\u5E76\u8FD8\u539F\uFF0C\u6B63\u5728\u91CD\u542F\u2026",
-  "uninstall.done.desktop": "\u5DF2\u5378\u8F7D\u5E76\u8FD8\u539F\uFF0C\u6B63\u5728\u91CD\u542F\u684C\u9762\u5E94\u7528\u2026",
-  "uninstall.fail": "\u5378\u8F7D\u5931\u8D25: {error}",
-  "btn.checkUpdate": "\u68C0\u6D4B\u66F4\u65B0",
-  "btn.checkUpdate.busy": "\u68C0\u6D4B\u4E2D\u2026",
-  "btn.doUpdate": "\u66F4\u65B0",
-  "btn.doUpdate.busy": "\u66F4\u65B0\u4E2D\u2026",
-  "channel.title": "\u901A\u9053",
-  "channel.stable": "\u6B63\u5F0F\u7248",
-  "channel.beta": "\u6D4B\u8BD5\u7248",
-  "channel.useStable": "\u5207\u6362\u5230\u6B63\u5F0F\u7248",
-  "channel.useBeta": "\u5207\u6362\u5230\u6D4B\u8BD5\u7248",
-  "channel.local": "\u672C\u673A",
-  "update.checking": "\u6B63\u5728\u68C0\u6D4B\u66F4\u65B0\u2026",
-  "update.applying": "\u6B63\u5728\u66F4\u65B0\u2026",
-  "update.switching": "\u6B63\u5728\u5207\u6362\u7248\u672C\u2026",
-  "update.latest": "\u5DF2\u662F\u6700\u65B0\uFF08{version}\uFF09",
-  "update.available": "\u6709\u65B0\u7248\u672C {remote}\uFF0C\u5F53\u524D {local}",
-  "update.pinned": "\u5DF2\u56FA\u5B9A\u5728 {version}\uFF0C\u901A\u9053\u6700\u65B0\u662F {remote}",
-  "update.done": "\u5DF2\u66F4\u65B0\u5230 {version}",
-  "update.restarting": "\u5DF2\u8FD8\u539F\u5E76\u5199\u5165\u65B0\u8865\u4E01\uFF0C\u6B63\u5728\u91CD\u542F\u2026",
-  "update.fullQuit": "\u8865\u4E01\u5DF2\u5199\u5165\u3002\u70B9\u300C\u91CD\u542F\u300D\u540E\u5BA2\u6237\u7AEF\u4F1A\u81EA\u5DF1\u91CD\u65B0\u6253\u5F00\u3002",
-  "restart.official.title": "\u9700\u8981\u91CD\u542F",
-  "restart.official.body": "\u8865\u4E01\u5DF2\u5199\u5165\u3002\u70B9\u91CD\u542F\u540E\u5BA2\u6237\u7AEF\u4F1A\u81EA\u5DF1\u91CD\u65B0\u6253\u5F00\u3002",
-  "update.switched": "\u5DF2\u5207\u6362\u5230 {version}",
-  "update.autoDone": "\u5DF2\u81EA\u52A8\u66F4\u65B0\u5230 {version}",
-  "update.reloading": "\u6B63\u5728\u5237\u65B0\u8BBE\u7F6E\u9875\u2026",
-  "update.dirty": "\u6709\u65B0\u7248\u672C\uFF0C\u672C\u5730\u6709\u6539\u52A8\u672A\u81EA\u52A8\u8986\u76D6",
-  "update.fail": "\u66F4\u65B0\u5931\u8D25: {error}",
-  "update.timeout": "\u68C0\u6D4B\u8D85\u65F6\uFF0C\u8BF7\u518D\u70B9\u4E00\u6B21\u68C0\u6D4B\u66F4\u65B0",
-  "update.needRestart": "\u68C0\u6D4B\u63A5\u53E3\u672A\u52A0\u8F7D\uFF0C\u8BF7\u5148\u91CD\u542F dsh \u518D\u70B9\u68C0\u6D4B\u66F4\u65B0",
-  "update.noBeta": "\u8FD8\u6CA1\u6709\u6D4B\u8BD5\u7248",
-  "update.switch": "\u5207\u6362\u5230\u6B64\u7248\u672C",
-  "update.pick": "\u9009\u62E9\u7248\u672C",
-  "update.tip": "\u6700\u65B0",
-  "update.current": "\u5F53\u524D",
-  "update.confirmSwitch": "\u5207\u6362\u5230 {version}\uFF1F\u4E4B\u540E\u53EF\u518D\u5207\u56DE\u53E6\u4E00\u901A\u9053\u6216\u5176\u5B83\u7248\u672C\u3002\u672C\u5730\u672A\u63D0\u4EA4\u7684\u63D2\u4EF6\u6539\u52A8\u4E0D\u4F1A\u4FDD\u7559\u3002",
-  "update.confirmChannel": "\u5207\u6362\u5230{version}\uFF1F\u4F1A\u6309\u8BE5\u901A\u9053\u91CD\u65B0\u5B89\u88C5\u63D2\u4EF6\uFF0C\u672C\u5730\u672A\u63D0\u4EA4\u7684\u63D2\u4EF6\u6539\u52A8\u4E0D\u4F1A\u4FDD\u7559\u3002",
-  "metric.version": "\u7248\u672C",
-  "action.apply": "\u5E94\u7528",
-  "action.revert": "\u8FD8\u539F",
-  "action.uninstall": "\u5378\u8F7D",
-  "ok.done": "\u5DF2\u5B8C\u6210",
-  "err.action": "\u5931\u8D25: {error}",
-  "err.status": "\u8BFB\u53D6\u5931\u8D25: {error}",
-  "err.override": "\u8BFB\u53D6\u5931\u8D25: {error}",
-  "err.rules": "\u8BFB\u53D6\u5931\u8D25: {error}",
-  "err.read": "\u8BFB\u53D6\u5931\u8D25: {error}",
-  "err.save": "\u4FDD\u5B58\u5931\u8D25: {error}",
-  "btn.saveInject": "\u4FDD\u5B58",
-  "saved.override": "\u5DF2\u4FDD\u5B58",
-  "rules.title": "\u89C4\u5219\u96C6",
-  "rules.none": "\u65E0",
-  "rules.reset": "\u8FD8\u539F",
-  "rules.reset.confirm": "\u8FD8\u539F\u5168\u5C40\u6307\u4EE4\u6587\u4EF6\uFF1F\u89C4\u5219\u5E93\u4F1A\u4FDD\u7559\u3002",
-  "rules.empty": "\u6682\u65E0\u89C4\u5219",
-  "rules.pick": "\u9009\u62E9\u89C4\u5219",
-  "policy.title": "\u5DE5\u4F5C\u533A\u7B56\u7565",
-  "policy.strict": "\u4E25\u683C",
-  "policy.fallback": "\u7A7A\u4F4D\u515C\u5E95",
-  "policy.always": "\u603B\u662F\u5141\u8BB8",
-  "policy.hint": "\u4E25\u683C\uFF1A\u6C38\u8FDC\u5265 AGENTS.md / CLAUDE.md\uFF1B\u7A7A\u4F4D\u515C\u5E95\uFF1A\u63D0\u793A\u8BCD\u6846\u4E3A\u7A7A\u65F6\u624D\u7528\uFF1B\u603B\u662F\u5141\u8BB8\uFF1A\u4FDD\u7559 DSH \u539F\u751F\u884C\u4E3A",
-  "cwd.title": "\u672C\u5730\u89C4\u5219\uFF08\u5F53\u524D\u76EE\u5F55\uFF09",
-  "cwd.empty": "\u5F53\u524D\u76EE\u5F55\u6CA1\u6709 AGENTS.md / CLAUDE.md",
-  "cwd.rescan": "\u91CD\u65B0\u626B\u63CF",
-  "cwd.hint": "\u53EA\u6709\u63D0\u793A\u8BCD\u6846\u4E3A\u7A7A\u65F6\uFF0C\u88AB\u52FE\u9009\u7684\u672C\u5730\u6587\u4EF6\u624D\u4F5C\u4E3A\u515C\u5E95\u6CE8\u5165\uFF1B\u63D0\u793A\u8BCD\u6846\u4E00\u65E6\u975E\u7A7A\u5C31\u4E0D\u4F1A\u7528\u8FD9\u4E9B\u6587\u4EF6\u3002",
-  "cwd.scope.cwd": "\u5F53\u524D\u76EE\u5F55",
-  "cwd.scope.ancestor": "\u4E0A\u7EA7",
-  "cwd.scope.root": "\u9879\u76EE\u6839",
-  "cwd.no.workspace": "DSH \u5C1A\u672A\u9009\u8FC7\u5DE5\u4F5C\u76EE\u5F55\uFF0C\u8BF7\u5148\u5728 DSH \u91CC\u5F00\u59CB\u4E00\u6B21\u4EFB\u52A1\u518D\u56DE\u6765\u3002",
-  "pill.current": "\u5F53\u524D",
-  "btn.use": "\u542F\u7528",
-  "btn.inUse": "\u5F53\u524D",
-  "confirm.delete": "\u5220\u9664 {id}\uFF1F",
+  "metric.shim.na": "\uC774 \uCABD\uC5D0\uB294 \uBD88\uD544\uC694",
+  "metric.bak.yes": "\uBC31\uC5C5 \uC788\uC74C",
+  "metric.bak.no": "\uBC31\uC5C5 \uC5C6\uC74C",
+  "metric.bak.hint": "\uBC31\uC5C5",
+  "table.patch": "\uD56D\uBAA9",
+  "table.status": "\uC0C1\uD0DC",
+  "status.applied": "\uC801\uC6A9\uB428",
+  "status.off": "\uAEBC\uC9D0",
+  "status.pending": "\uC801\uC6A9 \uB300\uAE30",
+  "status.unmatched": "\uBD88\uC77C\uCE58",
+  "status.partial": "\uBD80\uBD84 \uC801\uC911",
+  "status.partialDetail": "({done}/{total} \uB300\uC0C1)",
+  "status.drifted": "\uC575\uCEE4 \uB4DC\uB9AC\uD504\uD2B8",
+  "status.disabled": "\uC120\uD0DD \uD574\uC81C",
+  "status.skipped": "\uAC74\uB108\uB700",
+  "apply.hint": "\uC801\uC6A9\uC744 \uB204\uB974\uBA74 \uD328\uCE58\uB97C \uC4F0\uACE0 \uD604\uC7AC \uAE30\uBCF8 \uD504\uB86C\uD504\uD2B8\uB97C \uAC78\uC5B4 \uB461\uB2C8\uB2E4. \uC0C1\uC790\uC5D0 \uD50C\uB7EC\uADF8\uC778 \uC61B \uAE30\uBCF8\uAC12\uC774 \uB0A8\uC544 \uC788\uC73C\uBA74 \uC554\uD638\uD654 \uC2AC\uB86F\uC5D0\uC11C \uC790\uB3D9\uC73C\uB85C \uC0C8\uB85C \uACE0\uCE58\uBBC0\uB85C \uC800\uC7A5\uC744 \uB2E4\uC2DC \uB204\uB97C \uD544\uC694\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uC9C1\uC811 \uC4F4 \uC6D0\uACE0\uB9CC \uC0C1\uC790 \uB0B4\uC6A9\uB300\uB85C \uAE30\uB85D\uB429\uB2C8\uB2E4. \uC801\uC6A9 \uB300\uAE30=\uC6D0\uBB38\uC774 \uC544\uC9C1 \uB0A8\uC544 \uC788\uC2B5\uB2C8\uB2E4. \uAC74\uB108\uB700=\uC774 \uBC84\uC804\uC5D0 \uBD88\uD544\uC694\uD558\uAC70\uB098 \uCEF4\uD3EC\uB10C\uD2B8\uAC00 \uC124\uCE58\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4.",
+  "warn.noRoot": "\uD604\uC7AC \uD638\uC2A4\uD2B8\uC758 @deepseek-ai \uB97C \uCC3E\uC9C0 \uBABB\uD574 \uC815\uB9AC\uAC00 \uC801\uC6A9\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uC644\uC804\uD788 \uC885\uB8CC\uD55C \uB4A4 \uC774 \uD638\uC2A4\uD2B8\uB97C \uB2E4\uC2DC \uC5F4\uACE0 \uC774 \uD398\uC774\uC9C0\uC5D0\uC11C '\uC801\uC6A9'\uC744 \uB204\uB974\uC138\uC694. \uB370\uC2A4\uD06C\uD1B1 \uC124\uCE58 \uACBD\uB85C\uB294 \uC5B4\uB290 \uB4DC\uB77C\uC774\uBE0C\uB4E0 \uB418\uACE0, \uB514\uB809\uD130\uB9AC \uC774\uB984\uC5D0 DeepseekHarness / DeepSeek Harness \uAC00 \uC788\uC73C\uBA74 \uB429\uB2C8\uB2E4.",
+  "warn.noRoot.desktop": "\uACF5\uC2DD \uD074\uB77C\uC774\uC5B8\uD2B8 \uCF54\uB4DC\uB294 app.asar \uC548\uC5D0 \uC788\uC2B5\uB2C8\uB2E4. '\uC801\uC6A9'\uC744 \uB204\uB974\uBA74 \uD480\uACE0 \uC790\uB3D9\uC73C\uB85C \uC7AC\uC2DC\uC791\uD558\uBBC0\uB85C \uC2A4\uD06C\uB9BD\uD2B8\uB97C \uB530\uB85C \uB3CC\uB9B4 \uD544\uC694\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uACC4\uC18D \uCC3E\uC9C0 \uBABB\uD55C\uB2E4\uACE0 \uB728\uBA74 \uD074\uB77C\uC774\uC5B8\uD2B8\uB97C \uC644\uC804\uD788 \uC885\uB8CC\uD588\uB2E4\uAC00 \uB2E4\uC2DC \uC5F0 \uB4A4 '\uC801\uC6A9'\uC744 \uB204\uB974\uC138\uC694. \uC11C\uB4DC\uD30C\uD2F0 DSH Desktop \uC740 \uBC14\uB85C '\uC801\uC6A9'\uC744 \uB204\uB974\uC138\uC694.",
+  "unpack.restarting": "\uD328\uCE58\uB97C \uAE30\uB85D\uD588\uC2B5\uB2C8\uB2E4. '\uC7AC\uC2DC\uC791'\uC744 \uB204\uB974\uBA74 \uD074\uB77C\uC774\uC5B8\uD2B8\uAC00 \uC2A4\uC2A4\uB85C \uB2E4\uC2DC \uC5F4\uB9BD\uB2C8\uB2E4.",
+  "restart.fullQuit": "\uC7AC\uC2DC\uC791 \uC911\uC785\uB2C8\uB2E4. \uD074\uB77C\uC774\uC5B8\uD2B8\uAC00 \uC2A4\uC2A4\uB85C \uB2E4\uC2DC \uC5F4\uB9BD\uB2C8\uB2E4.",
+  "warn.noInject": "\uACF5\uC2DD\uC740 \uD56D\uC0C1 \uAE30\uBCF8 \uD504\uB86C\uD504\uD2B8\uB97C \uC501\uB2C8\uB2E4. \uB808\uB4DC\uD300\uC5D0\uC11C \uADDC\uCE59 \uC138\uD2B8\uB97C \uCF1C\uBA74 \uADDC\uCE59 \uC138\uD2B8\uB9CC \uC4F0\uACE0, \uCF1C\uC9C0 \uC54A\uC73C\uBA74 CTF \uB97C \uBE80 \uAE30\uBCF8 \uD504\uB86C\uD504\uD2B8\uB97C \uC4F4 \uB4A4 \uB808\uB4DC\uD300 \uC791\uC5C5\uC744 \uC787\uC2B5\uB2C8\uB2E4. \uC591\uCABD\uC774 \uBAA8\uB450 \uBE44\uBA74 \uCD94\uAC00\uD574\uC57C \uD55C\uB2E4\uACE0 \uC54C\uB9BD\uB2C8\uB2E4.",
+  "need.prompt": "\uD504\uB86C\uD504\uD2B8\uC640 \uADDC\uCE59 \uC138\uD2B8\uAC00 \uBAA8\uB450 \uBE44\uC5B4 \uC788\uC2B5\uB2C8\uB2E4. \uD504\uB86C\uD504\uD2B8\uB97C \uBA3C\uC800 \uCD94\uAC00\uD558\uAC70\uB098 \uB0B4\uC6A9\uC774 \uC788\uB294 \uADDC\uCE59 \uC138\uD2B8\uB97C \uCF1C\uC57C \uD569\uB2C8\uB2E4.",
+  "btn.restoreInject": "\uAE30\uBCF8\uAC12 \uB418\uB3CC\uB9AC\uAE30",
+  "saved.restoreInject": "\uAE30\uBCF8 \uD504\uB86C\uD504\uD2B8\uB97C \uB418\uB3CC\uB838\uC2B5\uB2C8\uB2E4",
+  skip: "\uAC74\uB108\uB700",
+  unknown: "\uC54C \uC218 \uC5C6\uC74C",
+  delete: "\uC0AD\uC81C",
+  "btn.apply": "\uC801\uC6A9",
+  "btn.apply.busy": "\uCC98\uB9AC \uC911\u2026",
+  "btn.revert": "\uB418\uB3CC\uB9AC\uAE30",
+  "btn.uninstall": "\uC81C\uAC70",
+  "btn.uninstall.busy": "\uC81C\uAC70 \uC911\u2026",
+  "uninstall.title": "dsh-purge \uC81C\uAC70",
+  "uninstall.body": "\uC81C\uAC70\uD560\uAE4C\uC694? \uC81C\uAC70\uD558\uBA74 \uC6D0\uBCF8\uC73C\uB85C \uB418\uB3CC\uB9AC\uACE0 \uC774 \uD50C\uB7EC\uADF8\uC778\uC758 \uBAA8\uB4E0 \uD30C\uC77C\uACFC \uD328\uCE58\uB97C \uC9C0\uC6C1\uB2C8\uB2E4.",
+  "uninstall.confirm": "\uC81C\uAC70 \uD655\uC778",
+  "uninstall.cancel": "\uCDE8\uC18C",
+  "uninstall.applying": "\uC81C\uAC70\uD558\uACE0 \uB418\uB3CC\uB9AC\uB294 \uC911\u2026",
+  "uninstall.done": "\uC81C\uAC70\uD558\uACE0 \uB418\uB3CC\uB838\uC2B5\uB2C8\uB2E4. \uC7AC\uC2DC\uC791 \uC911\u2026",
+  "uninstall.done.desktop": "\uC81C\uAC70\uD558\uACE0 \uB418\uB3CC\uB838\uC2B5\uB2C8\uB2E4. \uB370\uC2A4\uD06C\uD1B1 \uC571\uC744 \uC7AC\uC2DC\uC791 \uC911\u2026",
+  "uninstall.fail": "\uC81C\uAC70\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "btn.checkUpdate": "\uC5C5\uB370\uC774\uD2B8 \uD655\uC778",
+  "btn.checkUpdate.busy": "\uD655\uC778 \uC911\u2026",
+  "btn.doUpdate": "\uC5C5\uB370\uC774\uD2B8",
+  "btn.doUpdate.busy": "\uC5C5\uB370\uC774\uD2B8 \uC911\u2026",
+  "channel.title": "\uCC44\uB110",
+  "channel.stable": "\uC815\uC2DD \uBC84\uC804",
+  "channel.beta": "\uBCA0\uD0C0 \uBC84\uC804",
+  "channel.useStable": "\uC815\uC2DD \uBC84\uC804\uC73C\uB85C \uC804\uD658",
+  "channel.useBeta": "\uBCA0\uD0C0 \uBC84\uC804\uC73C\uB85C \uC804\uD658",
+  "channel.local": "\uC774 \uC124\uCE58\uBCF8",
+  "update.checking": "\uC5C5\uB370\uC774\uD2B8\uB97C \uD655\uC778\uD558\uB294 \uC911\u2026",
+  "update.applying": "\uC5C5\uB370\uC774\uD2B8 \uC911\u2026",
+  "update.switching": "\uBC84\uC804\uC744 \uC804\uD658\uD558\uB294 \uC911\u2026",
+  "update.latest": "\uC774\uBBF8 \uCD5C\uC2E0\uC785\uB2C8\uB2E4 ({version})",
+  "update.available": "\uC0C8 \uBC84\uC804 {remote} \uC774 \uC788\uC2B5\uB2C8\uB2E4. \uD604\uC7AC {local}",
+  "update.pinned": "{version} \uC5D0 \uACE0\uC815\uB418\uC5B4 \uC788\uACE0 \uCC44\uB110 \uCD5C\uC2E0\uC740 {remote} \uC785\uB2C8\uB2E4",
+  "update.done": "{version} \uC73C\uB85C \uC5C5\uB370\uC774\uD2B8\uD588\uC2B5\uB2C8\uB2E4",
+  "update.restarting": "\uB418\uB3CC\uB9B0 \uB4A4 \uC0C8 \uD328\uCE58\uB97C \uAE30\uB85D\uD588\uC2B5\uB2C8\uB2E4. \uC7AC\uC2DC\uC791 \uC911\u2026",
+  "update.fullQuit": "\uD328\uCE58\uB97C \uAE30\uB85D\uD588\uC2B5\uB2C8\uB2E4. '\uC7AC\uC2DC\uC791'\uC744 \uB204\uB974\uBA74 \uD074\uB77C\uC774\uC5B8\uD2B8\uAC00 \uC2A4\uC2A4\uB85C \uB2E4\uC2DC \uC5F4\uB9BD\uB2C8\uB2E4.",
+  "restart.official.title": "\uC7AC\uC2DC\uC791 \uD544\uC694",
+  "restart.official.body": "\uD328\uCE58\uB97C \uAE30\uB85D\uD588\uC2B5\uB2C8\uB2E4. \uC7AC\uC2DC\uC791\uC744 \uB204\uB974\uBA74 \uD074\uB77C\uC774\uC5B8\uD2B8\uAC00 \uC2A4\uC2A4\uB85C \uB2E4\uC2DC \uC5F4\uB9BD\uB2C8\uB2E4.",
+  "update.switched": "{version} \uC73C\uB85C \uC804\uD658\uD588\uC2B5\uB2C8\uB2E4",
+  "update.autoDone": "{version} \uC73C\uB85C \uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8\uD588\uC2B5\uB2C8\uB2E4",
+  "update.reloading": "\uC124\uC815 \uD398\uC774\uC9C0\uB97C \uC0C8\uB85C \uACE0\uCE58\uB294 \uC911\u2026",
+  "update.dirty": "\uC0C8 \uBC84\uC804\uC774 \uC788\uC2B5\uB2C8\uB2E4. \uB85C\uCEEC \uBCC0\uACBD\uBD84\uC740 \uC790\uB3D9\uC73C\uB85C \uB36E\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4",
+  "update.fail": "\uC5C5\uB370\uC774\uD2B8\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "update.timeout": "\uD655\uC778 \uC2DC\uAC04\uC774 \uCD08\uACFC\uB410\uC2B5\uB2C8\uB2E4. \uC5C5\uB370\uC774\uD2B8 \uD655\uC778\uC744 \uB2E4\uC2DC \uB204\uB974\uC138\uC694",
+  "update.needRestart": "\uD655\uC778 \uC778\uD130\uD398\uC774\uC2A4\uAC00 \uB85C\uB4DC\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. dsh \uB97C \uBA3C\uC800 \uC7AC\uC2DC\uC791\uD55C \uB4A4 \uC5C5\uB370\uC774\uD2B8 \uD655\uC778\uC744 \uB204\uB974\uC138\uC694",
+  "update.noBeta": "\uC544\uC9C1 \uBCA0\uD0C0 \uBC84\uC804\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+  "update.switch": "\uC774 \uBC84\uC804\uC73C\uB85C \uC804\uD658",
+  "update.pick": "\uBC84\uC804 \uC120\uD0DD",
+  "update.tip": "\uCD5C\uC2E0",
+  "update.current": "\uD604\uC7AC",
+  "update.confirmSwitch": "{version} \uC73C\uB85C \uC804\uD658\uD560\uAE4C\uC694? \uC774\uD6C4 \uB2E4\uB978 \uCC44\uB110\uC774\uB098 \uB2E4\uB978 \uBC84\uC804\uC73C\uB85C \uB418\uB3CC\uB9B4 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uCEE4\uBC0B\uB418\uC9C0 \uC54A\uC740 \uB85C\uCEEC \uD50C\uB7EC\uADF8\uC778 \uBCC0\uACBD\uBD84\uC740 \uB0A8\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+  "update.confirmChannel": "{version} \uC73C\uB85C \uC804\uD658\uD560\uAE4C\uC694? \uD574\uB2F9 \uCC44\uB110\uC5D0\uC11C \uD50C\uB7EC\uADF8\uC778\uC744 \uB2E4\uC2DC \uC124\uCE58\uD558\uBA70, \uCEE4\uBC0B\uB418\uC9C0 \uC54A\uC740 \uB85C\uCEEC \uBCC0\uACBD\uBD84\uC740 \uB0A8\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+  "metric.version": "\uBC84\uC804",
+  "action.apply": "\uC801\uC6A9",
+  "action.revert": "\uB418\uB3CC\uB9AC\uAE30",
+  "action.uninstall": "\uC81C\uAC70",
+  "ok.done": "\uC644\uB8CC",
+  "err.action": "\uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "err.status": "\uC77D\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "err.override": "\uC77D\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "err.rules": "\uC77D\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "err.read": "\uC77D\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "err.save": "\uC800\uC7A5\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "btn.saveInject": "\uC800\uC7A5",
+  "saved.override": "\uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4",
+  "rules.title": "\uADDC\uCE59 \uC138\uD2B8",
+  "rules.none": "\uC5C6\uC74C",
+  "rules.reset": "\uB418\uB3CC\uB9AC\uAE30",
+  "rules.reset.confirm": "\uC804\uC5ED \uC9C0\uC2DC \uD30C\uC77C\uC744 \uB418\uB3CC\uB9B4\uAE4C\uC694? \uADDC\uCE59 \uB77C\uC774\uBE0C\uB7EC\uB9AC\uB294 \uB0A8\uC2B5\uB2C8\uB2E4.",
+  "rules.empty": "\uADDC\uCE59\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+  "rules.pick": "\uADDC\uCE59 \uC120\uD0DD",
+  "policy.title": "\uC6CC\uD06C\uC2A4\uD398\uC774\uC2A4 \uC815\uCC45",
+  "policy.strict": "\uC5C4\uACA9",
+  "policy.fallback": "\uBE48 \uCE78 \uD3F4\uBC31",
+  "policy.always": "\uD56D\uC0C1 \uD5C8\uC6A9",
+  "policy.hint": "\uC5C4\uACA9: \uD56D\uC0C1 AGENTS.md / CLAUDE.md \uB97C \uC81C\uAC70\uD569\uB2C8\uB2E4. \uBE48 \uCE78 \uD3F4\uBC31: \uD504\uB86C\uD504\uD2B8 \uC0C1\uC790\uAC00 \uBE44\uC5C8\uC744 \uB54C\uB9CC \uC501\uB2C8\uB2E4. \uD56D\uC0C1 \uD5C8\uC6A9: DSH \uC6D0\uB798 \uB3D9\uC791\uC744 \uC720\uC9C0\uD569\uB2C8\uB2E4",
+  "cwd.title": "\uB85C\uCEEC \uADDC\uCE59 (\uD604\uC7AC \uB514\uB809\uD130\uB9AC)",
+  "cwd.empty": "\uD604\uC7AC \uB514\uB809\uD130\uB9AC\uC5D0 AGENTS.md / CLAUDE.md \uAC00 \uC5C6\uC2B5\uB2C8\uB2E4",
+  "cwd.rescan": "\uB2E4\uC2DC \uC2A4\uCE94",
+  "cwd.hint": "\uD504\uB86C\uD504\uD2B8 \uC0C1\uC790\uAC00 \uBE44\uC5C8\uC744 \uB54C\uB9CC \uCCB4\uD06C\uB41C \uB85C\uCEEC \uD30C\uC77C\uC774 \uD3F4\uBC31\uC73C\uB85C \uC8FC\uC785\uB429\uB2C8\uB2E4. \uD504\uB86C\uD504\uD2B8 \uC0C1\uC790\uC5D0 \uB0B4\uC6A9\uC774 \uC788\uC73C\uBA74 \uC774 \uD30C\uC77C\uB4E4\uC744 \uC4F0\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+  "cwd.scope.cwd": "\uD604\uC7AC \uB514\uB809\uD130\uB9AC",
+  "cwd.scope.ancestor": "\uC0C1\uC704",
+  "cwd.scope.root": "\uD504\uB85C\uC81D\uD2B8 \uB8E8\uD2B8",
+  "cwd.no.workspace": "DSH \uAC00 \uC544\uC9C1 \uC791\uC5C5 \uB514\uB809\uD130\uB9AC\uB97C \uACE0\uB974\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. DSH \uC5D0\uC11C \uBA3C\uC800 \uC791\uC5C5\uC744 \uC2DC\uC791\uD55C \uB4A4 \uB3CC\uC544\uC624\uC138\uC694.",
+  "pill.current": "\uD604\uC7AC",
+  "btn.use": "\uC0AC\uC6A9",
+  "btn.inUse": "\uD604\uC7AC",
+  "confirm.delete": "{id} \uC0AD\uC81C\uD560\uAE4C\uC694?",
   "ph.id": "id",
-  "ph.alias": "\u540D\u79F0",
-  "ph.alias.short": "\u540D\u79F0",
-  "btn.create": "\u65B0\u5EFA",
-  "need.id": "\u9700\u8981 id",
+  "ph.alias": "\uC774\uB984",
+  "ph.alias.short": "\uC774\uB984",
+  "btn.create": "\uC0C8\uB85C \uB9CC\uB4E4\uAE30",
+  "need.id": "id \uAC00 \uD544\uC694\uD569\uB2C8\uB2E4",
   "ph.content": "",
-  "btn.saveRule": "\u4FDD\u5B58",
+  "btn.saveRule": "\uC800\uC7A5",
   "skills.title": "Skill",
-  "skills.hint": "\u5BFC\u5165\u5230\u5B98\u65B9\u76EE\u5F55\u540E\uFF0C\u7531 DSH \u8C03\u7528\uFF1A\u804A\u5929\u8F93\u5165 /\u540D\u79F0 \u7ACB\u5373\u52A0\u8F7D\uFF1B\u4EFB\u52A1\u5BF9\u4E0A description \u6216 whenToUse \u65F6\u6A21\u578B\u4F1A\u8C03 skill \u5DE5\u5177\u3002\u6B63\u6587\u5199\u300C\u6FC0\u6D3B\u300D\u4E0D\u4F1A\u89E6\u53D1\u3002",
-  "skills.hint.desktop": "\u5F53\u524D\u684C\u9762\u5BBF\u4E3B\u7684\u5B98\u65B9 Skill \u76EE\u5F55\u3002\u804A\u5929\u8F93\u5165 /\u540D\u79F0 \u7ACB\u5373\u52A0\u8F7D\uFF1B\u4EFB\u52A1\u5BF9\u4E0A description \u65F6\u6A21\u578B\u4F1A\u8C03 skill \u5DE5\u5177\u3002",
-  "skills.empty": "\u6682\u65E0\u7528\u6237 Skill",
-  "btn.importZip": "\u5BFC\u5165\u538B\u7F29\u5305",
-  "btn.importFolder": "\u5BFC\u5165\u6587\u4EF6\u5939",
-  "skills.importing": "\u6B63\u5728\u5BFC\u5165\u2026",
-  "saved.import": "\u5DF2\u5BFC\u5165 {count} \u4E2A Skill",
-  "need.import": "\u8BF7\u9009\u62E9\u538B\u7F29\u5305\u6216\u6587\u4EF6\u5939",
-  "err.import.folder": "\u6CA1\u8BFB\u5230\u6587\u4EF6\u5939\u91CC\u7684\u6587\u4EF6\uFF0C\u8BF7\u76F4\u63A5\u9009 Skill \u76EE\u5F55\uFF08\u91CC\u9762\u8981\u6709 SKILL.md\uFF09",
-  "skills.pick": "\u9009\u62E9 Skill",
-  "skills.invalid": "\u5B98\u65B9\u4F1A\u5FFD\u7565\uFF1A\u683C\u5F0F\u4E0D\u5BF9",
-  "skills.call.slash": "\u804A\u5929\u8F93\u5165 {cmd}",
-  "skills.call.model": "\u6A21\u578B\u53EF\u8C03",
-  "skills.call.modelOff": "\u6A21\u578B\u4E0D\u53EF\u8C03",
-  "skills.call.userOff": "\u4E0D\u53EF /\u540D\u79F0",
-  "ph.skill.desc": "description\uFF08\u4F55\u65F6\u7528\uFF09",
-  "btn.saveSkill": "\u4FDD\u5B58",
-  "need.skill.id": "id \u5FC5\u987B\u662F kebab-case\uFF0C\u4F8B\u5982 code-review",
-  "confirm.delete.skill": "\u4ECE\u5B98\u65B9 $DSH_HOME/skills \u5220\u9664 {id}\uFF1F\u5BBF\u4E3B\u4F1A\u81EA\u52A8\u4ECE\u76EE\u5F55\u62FF\u6389\u3002",
-  "err.skills": "\u8BFB\u53D6\u5931\u8D25: {error}",
-  "err.skills.needRestart": "Skill \u63A5\u53E3\u672A\u52A0\u8F7D\uFF0C\u8BF7\u5148\u91CD\u542F\u5F53\u524D\u5BBF\u4E3B",
-  "btn.restart": "\u91CD\u542F",
-  "btn.restart.busy": "\u91CD\u542F\u4E2D\u2026",
-  restarting: "\u91CD\u542F\u4E2D\u2026",
-  "restarting.desktop": "\u6B63\u5728\u91CD\u542F\u684C\u9762\u5E94\u7528\u2026",
-  "restart.timeout": "\u8D85\u65F6\uFF0C\u8BF7\u5237\u65B0",
-  "restart.fail": "\u5931\u8D25: {error}",
-  "restart.notStarted": "\u91CD\u542F\u6CA1\u6709\u5F00\u59CB\uFF0C\u5BA2\u6237\u7AEF\u8FD8\u5728\u3002\u4E0D\u4F1A\u81EA\u52A8\u518D\u8BD5\u3002",
-  "restart.already": "\u8FD9\u4E00\u6B21\u91CD\u542F\u5DF2\u7ECF\u5F00\u59CB\uFF0C\u4E0D\u4F1A\u518D\u91CD\u542F\u4E00\u6B21\u3002",
-  "restart.confirm": "\u6E05\u6D17\u5DF2\u5B8C\u6210\uFF0C\u91CD\u542F\u540E\u751F\u6548\u3002",
-  "restart.confirm.desktop": "\u6E05\u6D17\u5DF2\u5B8C\u6210\uFF0C\u91CD\u542F\u684C\u9762\u5E94\u7528\u540E\u751F\u6548\u3002",
-  "restart.ask.title": "\u8981\u73B0\u5728\u91CD\u542F\u5417",
-  "restart.ask.body": "\u5DF2\u7ECF\u5199\u5165\u3002\u91CD\u542F\u540E\u624D\u4F1A\u5728\u5F53\u524D\u5BA2\u6237\u7AEF\u91CC\u751F\u6548\u3002",
-  "restart.now": "\u73B0\u5728\u91CD\u542F",
-  "restart.notNow": "\u7A0D\u540E",
-  "restart.asarSwap": "\u8865\u4E01\u5DF2\u5199\u5165\u78C1\u76D8\u3002\u6B63\u5728\u7ED3\u675F\u684C\u9762\u8FDB\u7A0B\u5E76\u632A\u5F00 app.asar\uFF0C\u5B8C\u6210\u540E\u4F1A\u81EA\u52A8\u91CD\u65B0\u6253\u5F00\uFF1B\u82E5\u4ECD\u65E0\u6548\uFF0C\u8BF7\u5148\u5B8C\u5168\u9000\u51FA Harness\uFF08\u6258\u76D8\u4E5F\u5173\uFF09\uFF0C\u518D\u70B9\u4E00\u6B21\u5E94\u7528\u3002",
+  "skills.hint": "\uACF5\uC2DD \uB514\uB809\uD130\uB9AC\uB85C \uAC00\uC838\uC624\uBA74 DSH \uAC00 \uD638\uCD9C\uD569\uB2C8\uB2E4. \uCC44\uD305\uC5D0\uC11C /\uC774\uB984 \uC744 \uC785\uB825\uD558\uBA74 \uBC14\uB85C \uB85C\uB4DC\uB418\uACE0, \uC791\uC5C5\uC774 description \uC774\uB098 whenToUse \uC5D0 \uB9DE\uC73C\uBA74 \uBAA8\uB378\uC774 skill \uB3C4\uAD6C\uB97C \uD638\uCD9C\uD569\uB2C8\uB2E4. \uBCF8\uBB38\uC5D0 '\uD65C\uC131'\uC774\uB77C\uACE0 \uC368\uB3C4 \uBC1C\uB3D9\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+  "skills.hint.desktop": "\uD604\uC7AC \uB370\uC2A4\uD06C\uD1B1 \uD638\uC2A4\uD2B8\uC758 \uACF5\uC2DD Skill \uB514\uB809\uD130\uB9AC\uC785\uB2C8\uB2E4. \uCC44\uD305\uC5D0\uC11C /\uC774\uB984 \uC744 \uC785\uB825\uD558\uBA74 \uBC14\uB85C \uB85C\uB4DC\uB418\uACE0, \uC791\uC5C5\uC774 description \uC5D0 \uB9DE\uC73C\uBA74 \uBAA8\uB378\uC774 skill \uB3C4\uAD6C\uB97C \uD638\uCD9C\uD569\uB2C8\uB2E4.",
+  "skills.empty": "\uC0AC\uC6A9\uC790 Skill \uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+  "btn.importZip": "\uC555\uCD95 \uD30C\uC77C \uAC00\uC838\uC624\uAE30",
+  "btn.importFolder": "\uD3F4\uB354 \uAC00\uC838\uC624\uAE30",
+  "skills.importing": "\uAC00\uC838\uC624\uB294 \uC911\u2026",
+  "saved.import": "Skill {count} \uAC1C\uB97C \uAC00\uC838\uC654\uC2B5\uB2C8\uB2E4",
+  "need.import": "\uC555\uCD95 \uD30C\uC77C\uC774\uB098 \uD3F4\uB354\uB97C \uACE0\uB974\uC138\uC694",
+  "err.import.folder": "\uD3F4\uB354 \uC548\uC758 \uD30C\uC77C\uC744 \uC77D\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4. Skill \uB514\uB809\uD130\uB9AC \uC790\uCCB4\uB97C \uACE0\uB974\uC138\uC694(\uC548\uC5D0 SKILL.md \uAC00 \uC788\uC5B4\uC57C \uD569\uB2C8\uB2E4)",
+  "skills.pick": "Skill \uC120\uD0DD",
+  "skills.invalid": "\uACF5\uC2DD\uC5D0\uC11C \uBB34\uC2DC\uB429\uB2C8\uB2E4: \uD615\uC2DD\uC774 \uB9DE\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4",
+  "skills.call.slash": "\uCC44\uD305\uC5D0\uC11C {cmd} \uC785\uB825",
+  "skills.call.model": "\uBAA8\uB378 \uD638\uCD9C \uAC00\uB2A5",
+  "skills.call.modelOff": "\uBAA8\uB378 \uD638\uCD9C \uBD88\uAC00",
+  "skills.call.userOff": "/\uC774\uB984 \uC0AC\uC6A9 \uBD88\uAC00",
+  "ph.skill.desc": "description (\uC5B8\uC81C \uC4F0\uB294\uC9C0)",
+  "btn.saveSkill": "\uC800\uC7A5",
+  "need.skill.id": "id \uB294 kebab-case \uC5EC\uC57C \uD569\uB2C8\uB2E4. \uC608: code-review",
+  "confirm.delete.skill": "\uACF5\uC2DD $DSH_HOME/skills \uC5D0\uC11C {id} \uC0AD\uC81C\uD560\uAE4C\uC694? \uD638\uC2A4\uD2B8\uAC00 \uCE74\uD0C8\uB85C\uADF8\uC5D0\uC11C \uC790\uB3D9\uC73C\uB85C \uBE8D\uB2C8\uB2E4.",
+  "err.skills": "\uC77D\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "err.skills.needRestart": "Skill \uC778\uD130\uD398\uC774\uC2A4\uAC00 \uB85C\uB4DC\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uD604\uC7AC \uD638\uC2A4\uD2B8\uB97C \uBA3C\uC800 \uC7AC\uC2DC\uC791\uD558\uC138\uC694",
+  "btn.restart": "\uC7AC\uC2DC\uC791",
+  "btn.restart.busy": "\uC7AC\uC2DC\uC791 \uC911\u2026",
+  restarting: "\uC7AC\uC2DC\uC791 \uC911\u2026",
+  "restarting.desktop": "\uB370\uC2A4\uD06C\uD1B1 \uC571\uC744 \uC7AC\uC2DC\uC791\uD558\uB294 \uC911\u2026",
+  "restart.timeout": "\uC2DC\uAC04 \uCD08\uACFC\uC785\uB2C8\uB2E4. \uC0C8\uB85C \uACE0\uCE58\uC138\uC694",
+  "restart.fail": "\uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "restart.notStarted": "\uC7AC\uC2DC\uC791\uC774 \uC2DC\uC791\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uD074\uB77C\uC774\uC5B8\uD2B8\uB294 \uADF8\uB300\uB85C \uC788\uC73C\uBA70 \uC790\uB3D9\uC73C\uB85C \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+  "restart.already": "\uC774\uBC88 \uC7AC\uC2DC\uC791\uC740 \uC774\uBBF8 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC7AC\uC2DC\uC791\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+  "restart.confirm": "\uC815\uB9AC\uAC00 \uB05D\uB0AC\uC2B5\uB2C8\uB2E4. \uC7AC\uC2DC\uC791\uD558\uBA74 \uC801\uC6A9\uB429\uB2C8\uB2E4.",
+  "restart.confirm.desktop": "\uC815\uB9AC\uAC00 \uB05D\uB0AC\uC2B5\uB2C8\uB2E4. \uB370\uC2A4\uD06C\uD1B1 \uC571\uC744 \uC7AC\uC2DC\uC791\uD558\uBA74 \uC801\uC6A9\uB429\uB2C8\uB2E4.",
+  "restart.ask.title": "\uC9C0\uAE08 \uC7AC\uC2DC\uC791\uD560\uAE4C\uC694",
+  "restart.ask.body": "\uC774\uBBF8 \uAE30\uB85D\uD588\uC2B5\uB2C8\uB2E4. \uC7AC\uC2DC\uC791\uD574\uC57C \uD604\uC7AC \uD074\uB77C\uC774\uC5B8\uD2B8\uC5D0 \uC801\uC6A9\uB429\uB2C8\uB2E4.",
+  "restart.now": "\uC9C0\uAE08 \uC7AC\uC2DC\uC791",
+  "restart.notNow": "\uB098\uC911\uC5D0",
+  "restart.asarSwap": "\uD328\uCE58\uB97C \uB514\uC2A4\uD06C\uC5D0 \uAE30\uB85D\uD588\uC2B5\uB2C8\uB2E4. \uB370\uC2A4\uD06C\uD1B1 \uD504\uB85C\uC138\uC2A4\uB97C \uB05D\uB0B4\uACE0 app.asar \uB97C \uC62E\uAE30\uB294 \uC911\uC774\uBA70 \uB05D\uB098\uBA74 \uC790\uB3D9\uC73C\uB85C \uB2E4\uC2DC \uC5F4\uB9BD\uB2C8\uB2E4. \uADF8\uB798\uB3C4 \uD6A8\uACFC\uAC00 \uC5C6\uC73C\uBA74 Harness \uB97C \uC644\uC804\uD788 \uC885\uB8CC(\uD2B8\uB808\uC774\uAE4C\uC9C0)\uD55C \uB4A4 \uC801\uC6A9\uC744 \uB2E4\uC2DC \uB204\uB974\uC138\uC694.",
   "surface.web": "Web",
-  "surface.desktop": "\u684C\u9762\u7AEF",
+  "surface.desktop": "\uB370\uC2A4\uD06C\uD1B1",
   "surface.gui": "GUI",
   "surface.tui": "TUI",
-  "restart.incomplete": "\u5E94\u7528\u672A\u5B8C\u6210\u3002{detail}",
-  "restart.incomplete.patches": "\u6709 {failed} \u9879\u5904\u7406\u5931\u8D25\uFF08#{ids}\uFF09\uFF0C\u8BF7\u67E5\u770B\u8865\u4E01\u660E\u7EC6",
-  "restart.incomplete.flash": "\u7EC8\u7AEF\u7A97\u53E3\u6291\u5236\u68C0\u67E5\u672A\u901A\u8FC7\uFF08{entry}\uFF09",
-  "restart.incomplete.host": "\u672A\u786E\u8BA4\u76EE\u6807\u5BBF\u4E3B\u5199\u5165\u5B8C\u6210\uFF0C\u8BF7\u6838\u5BF9\u5BA2\u6237\u7AEF\u3001\u5BBF\u4E3B\u7248\u672C\u548C\u76EE\u6807\u8DEF\u5F84",
-  "restart.incomplete.restore": "\u914D\u7F6E\u6062\u590D\u672A\u5B8C\u6210\uFF0C\u8BF7\u67E5\u770B\u8BCA\u65AD\u8BB0\u5F55",
-  "restart.incomplete.runtime": "CLI \u8FD0\u884C\u65F6\u68C0\u67E5\u6216\u4FEE\u590D\u5931\u8D25\uFF0C\u8BF7\u67E5\u770B\u8BCA\u65AD\u8BB0\u5F55",
-  "restart.incomplete.unknown": "\u5F53\u524D\u540E\u7AEF\u672A\u8FD4\u56DE\u5177\u4F53\u539F\u56E0\uFF0C\u8BF7\u67E5\u770B\u5BBF\u4E3B\u7248\u672C\u3001\u8865\u4E01\u660E\u7EC6\u548C\u8BCA\u65AD\u7ED3\u679C",
-  "restart.later": "\u4EE5\u540E",
-  "group.prompt": "\u63D0\u793A\u8BCD",
-  "group.code": "\u4EE3\u7801",
-  "group.engine": "\u5F15\u64CE",
-  "group.tools": "\u5DE5\u5177",
-  "group.compat": "0.1.5 \u517C\u5BB9",
+  "restart.incomplete": "\uC801\uC6A9\uC774 \uB05D\uB098\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. {detail}",
+  "restart.incomplete.patches": "{failed} \uAC1C \uD56D\uBAA9 \uCC98\uB9AC\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4 (#{ids}). \uD328\uCE58 \uC0C1\uC138\uB97C \uD655\uC778\uD558\uC138\uC694",
+  "restart.incomplete.flash": "\uD130\uBBF8\uB110 \uCC3D \uC5B5\uC81C \uAC80\uC0AC\uAC00 \uD1B5\uACFC\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4 ({entry})",
+  "restart.incomplete.host": "\uB300\uC0C1 \uD638\uC2A4\uD2B8 \uAE30\uB85D \uC644\uB8CC\uB97C \uD655\uC778\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4. \uD074\uB77C\uC774\uC5B8\uD2B8, \uD638\uC2A4\uD2B8 \uBC84\uC804, \uB300\uC0C1 \uACBD\uB85C\uB97C \uB300\uC870\uD558\uC138\uC694",
+  "restart.incomplete.restore": "\uAD6C\uC131 \uBCF5\uC6D0\uC774 \uB05D\uB098\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uC9C4\uB2E8 \uAE30\uB85D\uC744 \uD655\uC778\uD558\uC138\uC694",
+  "restart.incomplete.runtime": "CLI \uB7F0\uD0C0\uC784 \uAC80\uC0AC\uB098 \uBCF5\uAD6C\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4. \uC9C4\uB2E8 \uAE30\uB85D\uC744 \uD655\uC778\uD558\uC138\uC694",
+  "restart.incomplete.unknown": "\uD604\uC7AC \uBC31\uC5D4\uB4DC\uAC00 \uAD6C\uCCB4\uC801 \uC6D0\uC778\uC744 \uBC18\uD658\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uD638\uC2A4\uD2B8 \uBC84\uC804, \uD328\uCE58 \uC0C1\uC138, \uC9C4\uB2E8 \uACB0\uACFC\uB97C \uD655\uC778\uD558\uC138\uC694",
+  "restart.later": "\uB098\uC911\uC5D0",
+  "group.prompt": "\uD504\uB86C\uD504\uD2B8",
+  "group.code": "\uCF54\uB4DC",
+  "group.engine": "\uC5D4\uC9C4",
+  "group.tools": "\uB3C4\uAD6C",
+  "group.compat": "0.1.5 \uD638\uD658",
   "group.dsh20": "0.2.0",
-  "patch.1": "\u5168\u5C40\u514D\u8D23 \u2192 \u5F3A\u6307\u4EE4",
-  "patch.2": "\u66FF\u6362\u5F0F\u514D\u8D23 \u2192 \u5F3A\u6307\u4EE4",
-  "patch.3": "\u4F5C\u7528\u57DF\u514D\u8D23 \u2192 \u5F3A\u6307\u4EE4",
-  "patch.4": "persona \u4F1A\u8BDD\u5F3A\u6307\u4EE4",
-  "patch.5": "\u5BA1\u6279\u63D0\u793A\u53E5 \u2192 \u5168\u6743\u9650",
-  "patch.6": "\u6C99\u7BB1 deny \u2192 allow \u5199",
-  "patch.7": "\u6C99\u7BB1\u9ED8\u8BA4\u5168\u6743\u9650",
-  "patch.8": "\u5BA1\u6279\u9ED8\u8BA4 never",
-  "patch.9": "\u5BA1\u6279\u95E8\u81EA\u52A8\u653E\u884C",
-  "patch.10": "\u5BA1\u6279\u914D\u7F6E\u9ED8\u8BA4 never",
-  "patch.11": "never \u63D0\u793A\u53E5 \u2192 \u81EA\u52A8\u653E\u884C",
-  "patch.12": "ask \u63D0\u793A\u53E5 \u2192 \u81EA\u52A8\u653E\u884C",
-  "patch.13": "\u8C41\u514D\u5347\u7EA7\u9636\u68AF",
-  "patch.14": "\u5347\u7EA7\u65E0\u6761\u4EF6\u6388\u4FE1",
-  "patch.15": "\u6C99\u7BB1 confine \u76F4\u901A",
-  "patch.16": "\u6587\u4EF6\u7CFB\u7EDF\u56F4\u680F\u53D6\u6D88",
-  "patch.17": "\u89C2\u5BDF\u7B56\u7565\u8BFB\u5199\u653E\u884C",
-  "patch.18": "\u91CD\u590D\u8C03\u7528\u5B88\u536B\u7981\u7528",
-  "patch.19": "\u5DE5\u5177\u7ED3\u679C\u4FEE\u526A\u7981\u7528",
-  "patch.21": "\u6062\u590D\u63D2\u4EF6\u5EF6\u957F\u7684 bash \u7B49\u5F85",
-  "patch.22": "read \u4E0A\u9650\u653E\u5BBD",
-  "patch.23": "\u5B50\u4EE3\u7406\u6DF1\u5EA6 3 \u2192 10",
-  "patch.24": "preset fetch \u542F\u7528",
-  "patch.25": "\u53BB\u6389\u5B98\u65B9\u9ED8\u8BA4\u8EAB\u4EFD\uFF08\u529F\u80FD\u63D0\u793A\u8BCD\u4E0D\u52A8\uFF09",
-  "patch.26": "minimal\uFF1A\u53BB\u6389\u9ED8\u8BA4\u8EAB\u4EFD\u5E76\u6253\u5F00 inject",
-  "patch.28": "dsh-liangshen\uFF08\u6881\u795E\uFF09\uFF1Aphase-1 \u4FDD\u7559 dsh-purge / dshpg \u6BB5",
-  "patch.70": "\u6781\u7B80\u6A21\u5F0F\u7EC8\u7AEF\u4E0D\u518D\u7981\u6B62\u7F51\u7EDC",
-  "patch.71": "\u6881\u795E\u53BB\u6389\u5B98\u65B9\u8EAB\u4EFD\u53E5",
-  "patch.29": "dsh-tool-web\uFF1A\u5916\u90E8 untrusted \u62E6\u622A\u2192\u53EF\u6267\u884C",
-  "patch.30": "dsh-hooks-claude-code\uFF1Adeny\u2192allow",
-  "patch.31": "dsh-hooks-codex\uFF1Adeny\u2192allow",
-  "patch.32": "Web \u8868\u9762\u8EAB\u4EFD\u4E2D\u6027\u5316",
-  "patch.33": "Shell \u62D2\u7EDD\u63D0\u793A \u2192 \u53EF\u6267\u884C",
-  "patch.34": "\u6C99\u7BB1\u63D0\u793A\u4E2D\u6027\u5316",
-  "patch.35": "\u5347\u7EA7 never \u4E0D\u62D2",
-  "patch.36": "\u6587\u4EF6\u7CFB\u7EDF\u5347\u7EA7 schema \u653E\u884C",
-  "patch.37": "\u5B50\u4EE3\u7406 scope lock \u4E2D\u6027\u5316",
-  "patch.38": "persona text\u2192prefix\uFF080.1.2 \u9884\u8BBE\uFF09",
-  "patch.39": "\u4F1A\u8BDD v0 plugin summary\uFF08mnemon\uFF09",
-  "patch.40": "complete \u9884\u8BBE\u4ECD\u4FDD\u7559\u6CE8\u5165",
-  "patch.42": "\u8BBE\u7F6E\u9875\u65E7\u63A5\u53E3",
-  "patch.43": "\u7F51\u9875\u9884\u8BBE\u53BB\u6389\u9ED8\u8BA4\u8EAB\u4EFD",
-  "patch.45": "\u5B98\u65B9\u684C\u9762\u66F4\u65B0\u4EA4\u63A5",
-  "patch.46": "\u5B98\u65B9\u66F4\u65B0\u811A\u672C\u53EA\u7528\u82F1\u6587",
-  "patch.47": "OAuth \u4E0D\u518D\u63D2\u5165 Claude \u8EAB\u4EFD",
-  "patch.48": "shell \u53BB\u6389\u5220\u9664\u524D\u7684\u989D\u5916\u786E\u8BA4",
-  "patch.49": "OAuth \u4E0D\u518D\u4F2A\u88C5 claude-cli",
-  "patch.50": "\u8DE8\u4F1A\u8BDD\u5F15\u7528\u4E0D\u518D\u6807\u4E0D\u53EF\u4FE1",
-  "patch.51": "\u65B0\u4F1A\u8BDD\u4FDD\u6301\u5B8C\u5168\u6743\u9650",
-  "patch.52": "\u4F1A\u8BDD\u65E5\u5FD7\u9ED8\u8BA4\u4E0D\u4E0A\u4F20",
-  "patch.53": "\u7F51\u9875\u63D0\u793A\u53BB\u6389\u7981\u6B62\u53E6\u5F00\u670D\u52A1\u5668",
-  "patch.54": "\u4EA4\u4ED8\u7269\u63D0\u793A\u53BB\u6389\u591A\u4F59\u7981\u6B62",
-  "patch.55": "\u6BCF\u4E00\u6B65\u66FF\u6362\u7B2C\u4E00\u6761\u7CFB\u7EDF\u63D0\u793A",
-  "patch.56": "\u56DE\u9000\u53EA\u85CF\u88AB\u64A4\u6389\u7684\u90A3\u4E00\u8F6E",
-  "patch.57": "developer role \u4EC5\u9650 openai/azure\uFF0C\u7B2C\u4E09\u65B9\u4EE3\u7406\u56DE\u9000 system",
-  "patch.58": "\u56DE\u9000\u7A7A\u6807\u8BB0\u4E0D\u8FDB\u6A21\u578B\u8BF7\u6C42",
-  "patch.59": "\u5B98\u65B9 Auto Review \u4E0D\u518D\u62E6\u5DE5\u5177",
-  "patch.60": "\u5B98\u65B9 run_code \u53BB\u6389\u5BA1\u6279\u6559\u5B66",
-  "patch.61": "\u5B98\u65B9\u6C99\u7BB1\u7B56\u7565\u4E0D\u518D\u6559\u62D2\u7EDD",
-  "patch.62": "\u65E0\u5BA1\u6279\u901A\u9053\u65F6\u653E\u884C\uFF08\u7528\u6237\u62D2\u7EDD\u4ECD\u6709\u6548\uFF09",
-  "patch.63": "\u8BA1\u5212\u6A21\u5F0F\u4E0D\u518D\u8F6F\u62E6\u6267\u884C",
-  "patch.64": "Stop hook \u4E0D\u518D\u6CE8\u5165\u5047\u7528\u6237\u8BDD",
-  "patch.65": "UserPromptSubmit deny \u4E0D\u518D\u6574\u8F6E reject",
-  "patch.66": "\u7A7A\u7684\u7CFB\u7EDF\u6BB5\u4E0D\u518D\u628A\u8FD9\u4E00\u8F6E\u6253\u6210\u5185\u90E8\u9519\u8BEF",
-  "patch.67": "\u7F3A messages \u65F6\u8FD9\u4E00\u8F6E\u4E0D\u4E2D\u65AD",
-  "patch.68": "\u56DE\u9000\u540E\u7F3A content \u4E0D\u4E2D\u65AD",
-  "patch.69": "deepseek-flash \u4FDD\u6301\u5B98\u65B9 in-history",
-  "patch.72": "Messages \u7684 system \u7528\u5F53\u524D\u7CFB\u7EDF\u63D0\u793A",
-  "patch.73": "\u6781\u7B80 bash \u53BB\u6389\u8BEF\u7559\u7684\u955C\u50CF\u8BF4\u660E",
-  "patch.74": "\u9996\u53D1\u524D\u5148\u6302\u9ED8\u8BA4\u63D0\u793A\u8BCD",
-  "patch.75": "\u56DE\u9000\u628A\u5DF2\u5B8C\u6210\u4EFB\u52A1\u6536\u56DE\u6210\u672A\u5F00\u59CB",
-  "patch.76": "unrestricted \u9884\u8BBE\u53BB\u6389\u8EAB\u4EFD\u53E5",
-  "patch.77": "\u56DE\u9000\u6807\u8BB0\u5230\u8FBE\u65F6\u4E22\u5F03\u5DF2\u53D1\u9001\u6D88\u606F",
-  "patch.78": "\u8865\u4E01\u6587\u4EF6\u7F3A\u5931\u65F6\u4ECE .bak \u6062\u590D",
-  "patch.80": "\u6062\u590D\u5B98\u65B9\u6781\u7B80\u5DE5\u5177\u8868",
-  "patch.82": "\u4E3B\u8FDB\u7A0B\u515C\u5E95 DSH_PROFILE=desktop",
-  "patch.83": "host \u4FE1\u53F7\u6740\u65F6\u4E0D\u62A5\u9519\u4E0D\u5F39\u5BF9\u8BDD\u6846",
-  "patch.84": "host code=0 \u6B63\u5E38\u9000\u51FA\u4E0D\u62A5\u9519 (\u6D88\u9664 stopped \u5BF9\u8BDD\u6846)",
-  "status.unlocated": "\u672A\u5B9A\u4F4D",
-  "status.na": "\u672C\u7AEF\u4E0D\u9700\u8981",
-  "metric.unlocated": "\u8FD8\u6CA1\u5B9A\u4F4D\u5230\u672C\u673A Harness",
-  "metric.sealed": "\u5DF2\u627E\u5230\u5B98\u65B9\u5BA2\u6237\u7AEF\uFF0C\u70B9\u5E94\u7528\u89E3\u5F00",
-  "metric.sealed.count": "\u5F85\u89E3\u5F00",
-  "metric.lost": "\u8865\u4E01\u5DF2\u4E22\u5931\uFF0C\u8BF7\u91CD\u65B0\u5E94\u7528",
-  "metric.lost.count": "\u5DF2\u4E22\u5931",
-  "rewind.label": "\u56DE\u9000",
-  "rewind.aria": "\u56DE\u9000",
-  "rewind.busy": "\u56DE\u9000\u4E2D\u2026",
-  "rewind.empty": "\u6CA1\u6709\u53EF\u56DE\u9000\u7684\u4E0A\u4E00\u53E5",
-  "rewind.fail": "\u56DE\u9000\u5931\u8D25: {error}",
-  "rewind.once": "\u56DE\u9000\u4E00\u6B21",
-  "rewind.once.hint": "\u628A\u8FD9\u4E00\u8F6E\u53D1\u51FA\u53BB\u7684\u90A3\u53E5\u653E\u56DE\u8F93\u5165\u6846\uFF0C\u5E76\u6E05\u6389\u8FD9\u4E00\u8F6E",
-  "rewind.round": "\u56DE\u9000\u4E0A\u4E00\u8F6E",
-  "rewind.round.hint": "\u628A\u8FD9\u4E00\u8F6E\u53D1\u51FA\u53BB\u7684\u90A3\u53E5\u653E\u56DE\u8F93\u5165\u6846\uFF1B\u5B50\u4EE3\u7406\u4E5F\u53EA\u64A4\u8FD9\u4E00\u8F6E",
-  "hooksDeny.title": "Hooks \u62E6\u622A",
-  "hooksDeny.bypass": "\u653E\u884C hooks \u7684 deny / ask\uFF08\u8865\u4E01 30 / 31 / 64 / 65\uFF09",
-  "hooksDeny.hint": "\u5173\u6389\u540E\uFF0C\u7528\u6237\u81EA\u5DF1\u7684 PreToolUse / UserPromptSubmit / Stop hook \u7684 deny \u4F1A\u6309\u5B98\u65B9\u903B\u8F91\u751F\u6548\u3002\u5B98\u65B9 ask \u5206\u652F\u672C\u8EAB\u662F\u7A7A\u64CD\u4F5C\uFF0C\u5173\u5F00\u5173\u4E0D\u4F1A\u5F39\u51FA\u5BA1\u6279\u6846\u3002\u6539\u5B8C\u540E\u70B9\u300C\u5E94\u7528\u300D\u5E76\u91CD\u542F\u624D\u5199\u8FDB\u5BBF\u4E3B\u3002",
-  "saved.hooksDeny": "\u5DF2\u4FDD\u5B58",
-  "continue.title": "\u5931\u8D25\u91CD\u8BD5 / \u7EE7\u7EED",
-  "continue.hint": "\u8BF7\u6C42\u5931\u8D25\u4F1A\u81EA\u52A8\u91CD\u8BD5\uFF1B\u5F02\u5E38\u505C\u6B62\u6216\u4E2D\u65AD\u53EF\u70B9\u300C\u7EE7\u7EED\u300D\u6216\u81EA\u52A8\u7EED\u8DD1\u3002\u81EA\u5DF1\u70B9\u505C\u6B62\u4E0D\u4F1A\u81EA\u52A8\u7EE7\u7EED\u3002\u6B21\u6570\u7528\u5B8C\u540E\u9700\u65B0\u5F00\u4E00\u8F6E\u3002",
-  "continue.autoRetry": "\u5931\u8D25\u81EA\u52A8\u91CD\u8BD5",
-  "continue.retryMax": "\u91CD\u8BD5\u6B21\u6570",
-  "continue.autoContinue": "\u4E2D\u65AD\u540E\u81EA\u52A8\u7EE7\u7EED",
-  "continue.continueMax": "\u7EE7\u7EED\u6B21\u6570",
-  "continue.text": "\u7EE7\u7EED\u7528\u8BED",
-  "saved.continue": "\u5DF2\u4FDD\u5B58",
-  "continue.label": "\u7EE7\u7EED",
-  "continue.aria": "\u5F02\u5E38\u505C\u6B62\u540E\u7EE7\u7EED",
-  "continue.busy": "\u7EE7\u7EED\u4E2D\u2026",
-  "continue.ready": "\u7EE7\u7EED\uFF08\u8FD8\u53EF {left} \u6B21\uFF09",
-  "continue.limit": "\u5DF2\u8FBE\u7EE7\u7EED\u4E0A\u9650",
-  "continue.fail": "\u7EE7\u7EED\u5931\u8D25: {error}",
-  "updch.open": "\u66F4\u65B0\u901A\u9053",
-  "updch.title": "\u66F4\u65B0\u901A\u9053\uFF1A\u4EE3\u7406\u4E0E GitHub \u5BC6\u94A5",
-  "updch.scope": "\u8FD9\u91CC\u7684\u4EE3\u7406\u4E0E\u5BC6\u94A5\u53EA\u4F5C\u7528\u4E8E\u672C\u63D2\u4EF6\u7684\u66F4\u65B0\u68C0\u67E5\u4E0E\u4E0B\u8F7D\u901A\u9053\uFF0C\u4E0D\u5F71\u54CD\u5176\u5B83\u6A21\u578B\u5382\u5546\u7684\u8BF7\u6C42\uFF0C\u4E5F\u4E0D\u5199\u5165\u5BBF\u4E3B\u8FDB\u7A0B\u73AF\u5883\u3002\u7559\u7A7A\u7EE7\u627F\u5DF2\u6709\u66F4\u65B0\u4EE3\u7406\u73AF\u5883\u3002",
-  "updch.proxy": "\u4EE3\u7406\u5730\u5740",
+  "patch.1": "\uC804\uC5ED \uBA74\uCC45 \u2192 \uAC15\uC81C \uC9C0\uC2DC",
+  "patch.2": "\uCE58\uD658\uD615 \uBA74\uCC45 \u2192 \uAC15\uC81C \uC9C0\uC2DC",
+  "patch.3": "\uC2A4\uCF54\uD504 \uBA74\uCC45 \u2192 \uAC15\uC81C \uC9C0\uC2DC",
+  "patch.4": "persona \uC138\uC158 \uAC15\uC81C \uC9C0\uC2DC",
+  "patch.5": "\uC2B9\uC778 \uC548\uB0B4 \uBB38\uAD6C \u2192 \uC804\uCCB4 \uAD8C\uD55C",
+  "patch.6": "\uC0CC\uB4DC\uBC15\uC2A4 deny \u2192 allow \uC4F0\uAE30",
+  "patch.7": "\uC0CC\uB4DC\uBC15\uC2A4 \uAE30\uBCF8 \uC804\uCCB4 \uAD8C\uD55C",
+  "patch.8": "\uC2B9\uC778 \uAE30\uBCF8 never",
+  "patch.9": "\uC2B9\uC778 \uAC8C\uC774\uD2B8 \uC790\uB3D9 \uD1B5\uACFC",
+  "patch.10": "\uC2B9\uC778 \uC124\uC815 \uAE30\uBCF8 never",
+  "patch.11": "never \uC548\uB0B4 \uBB38\uAD6C \u2192 \uC790\uB3D9 \uD1B5\uACFC",
+  "patch.12": "ask \uC548\uB0B4 \uBB38\uAD6C \u2192 \uC790\uB3D9 \uD1B5\uACFC",
+  "patch.13": "\uBA74\uC81C \uC2B9\uACA9 \uB2E8\uACC4",
+  "patch.14": "\uC2B9\uACA9 \uBB34\uC870\uAC74 \uC2E0\uB8B0",
+  "patch.15": "\uC0CC\uB4DC\uBC15\uC2A4 confine \uC9C1\uD1B5",
+  "patch.16": "\uD30C\uC77C \uC2DC\uC2A4\uD15C \uC6B8\uD0C0\uB9AC \uD574\uC81C",
+  "patch.17": "\uAD00\uCC30 \uC815\uCC45 \uC77D\uAE30/\uC4F0\uAE30 \uD5C8\uC6A9",
+  "patch.18": "\uC911\uBCF5 \uD638\uCD9C \uAC00\uB4DC \uBE44\uD65C\uC131",
+  "patch.19": "\uB3C4\uAD6C \uACB0\uACFC \uD2B8\uB9AC\uBC0D \uBE44\uD65C\uC131",
+  "patch.21": "\uD50C\uB7EC\uADF8\uC778\uC774 \uB298\uB9B0 bash \uB300\uAE30 \uBCF5\uC6D0",
+  "patch.22": "read \uC0C1\uD55C \uC644\uD654",
+  "patch.23": "\uC11C\uBE0C\uC5D0\uC774\uC804\uD2B8 \uAE4A\uC774 3 \u2192 10",
+  "patch.24": "preset fetch \uD65C\uC131\uD654",
+  "patch.25": "\uACF5\uC2DD \uAE30\uBCF8 \uC815\uCCB4\uC131 \uC81C\uAC70 (\uAE30\uB2A5 \uD504\uB86C\uD504\uD2B8\uB294 \uADF8\uB300\uB85C)",
+  "patch.26": "minimal: \uAE30\uBCF8 \uC815\uCCB4\uC131 \uC81C\uAC70 \uD6C4 inject \uCF1C\uAE30",
+  "patch.28": "dsh-liangshen(\uB7C9\uC120): phase-1 \uC5D0\uC11C dsh-purge / dshpg \uC139\uC158 \uC720\uC9C0",
+  "patch.70": "\uBBF8\uB2C8\uBA40 \uBAA8\uB4DC \uD130\uBBF8\uB110\uC5D0\uC11C \uB124\uD2B8\uC6CC\uD06C \uCC28\uB2E8 \uD574\uC81C",
+  "patch.71": "\uB7C9\uC120: \uACF5\uC2DD \uC815\uCCB4\uC131 \uBB38\uAD6C \uC81C\uAC70",
+  "patch.29": "dsh-tool-web: \uC678\uBD80 untrusted \uCC28\uB2E8 \u2192 \uC2E4\uD589 \uAC00\uB2A5",
+  "patch.30": "dsh-hooks-claude-code: deny \u2192 allow",
+  "patch.31": "dsh-hooks-codex: deny \u2192 allow",
+  "patch.32": "Web \uD45C\uBA74 \uC815\uCCB4\uC131 \uC911\uB9BD\uD654",
+  "patch.33": "Shell \uAC70\uBD80 \uC548\uB0B4 \u2192 \uC2E4\uD589 \uAC00\uB2A5",
+  "patch.34": "\uC0CC\uB4DC\uBC15\uC2A4 \uC548\uB0B4 \uC911\uB9BD\uD654",
+  "patch.35": "\uC2B9\uACA9 never \uB294 \uAC70\uBD80\uD558\uC9C0 \uC54A\uC74C",
+  "patch.36": "\uD30C\uC77C \uC2DC\uC2A4\uD15C \uC2B9\uACA9 schema \uD5C8\uC6A9",
+  "patch.37": "\uC11C\uBE0C\uC5D0\uC774\uC804\uD2B8 scope lock \uC911\uB9BD\uD654",
+  "patch.38": "persona text \u2192 prefix (0.1.2 \uD504\uB9AC\uC14B)",
+  "patch.39": "\uC138\uC158 v0 plugin summary(mnemon)",
+  "patch.40": "complete \uD504\uB9AC\uC14B\uC5D0\uC11C\uB3C4 \uC8FC\uC785 \uC720\uC9C0",
+  "patch.42": "\uC124\uC815 \uD398\uC774\uC9C0 \uAD6C \uC778\uD130\uD398\uC774\uC2A4",
+  "patch.43": "\uC6F9 \uD504\uB9AC\uC14B\uC5D0\uC11C \uAE30\uBCF8 \uC815\uCCB4\uC131 \uC81C\uAC70",
+  "patch.45": "\uACF5\uC2DD \uB370\uC2A4\uD06C\uD1B1 \uC5C5\uB370\uC774\uD2B8 \uD578\uB4DC\uC624\uD504",
+  "patch.46": "\uACF5\uC2DD \uC5C5\uB370\uC774\uD2B8 \uC2A4\uD06C\uB9BD\uD2B8\uB294 \uC601\uC5B4\uB9CC \uC0AC\uC6A9",
+  "patch.47": "OAuth \uC5D0\uC11C Claude \uC815\uCCB4\uC131 \uC0BD\uC785 \uC911\uB2E8",
+  "patch.48": "shell \uC5D0\uC11C \uC0AD\uC81C \uC804 \uCD94\uAC00 \uD655\uC778 \uC81C\uAC70",
+  "patch.49": "OAuth \uC5D0\uC11C claude-cli \uC704\uC7A5 \uC911\uB2E8",
+  "patch.50": "\uC138\uC158 \uAC04 \uCC38\uC870\uB97C \uB354 \uC774\uC0C1 \uBD88\uC2E0\uC73C\uB85C \uD45C\uC2DC\uD558\uC9C0 \uC54A\uC74C",
+  "patch.51": "\uC0C8 \uC138\uC158\uC5D0\uC11C \uC804\uCCB4 \uAD8C\uD55C \uC720\uC9C0",
+  "patch.52": "\uC138\uC158 \uB85C\uADF8\uB294 \uAE30\uBCF8\uC801\uC73C\uB85C \uC5C5\uB85C\uB4DC\uD558\uC9C0 \uC54A\uC74C",
+  "patch.53": "\uC6F9 \uC548\uB0B4\uC5D0\uC11C \uBCC4\uB3C4 \uC11C\uBC84 \uAE30\uB3D9 \uAE08\uC9C0 \uC81C\uAC70",
+  "patch.54": "\uC0B0\uCD9C\uBB3C \uC548\uB0B4\uC5D0\uC11C \uBD88\uD544\uC694\uD55C \uAE08\uC9C0 \uC81C\uAC70",
+  "patch.55": "\uB9E4 \uB2E8\uACC4 \uCCAB \uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8 \uAD50\uCCB4",
+  "patch.56": "\uB418\uB3CC\uB9AC\uAE30\uB294 \uCCA0\uD68C\uB41C \uB77C\uC6B4\uB4DC\uB9CC \uC228\uAE40",
+  "patch.57": "developer role \uC740 openai/azure \uC804\uC6A9, \uC11C\uB4DC\uD30C\uD2F0 \uD504\uB85D\uC2DC\uB294 system \uC73C\uB85C \uD3F4\uBC31",
+  "patch.58": "\uB418\uB3CC\uB9AC\uAE30 \uBE48 \uB9C8\uCEE4\uB294 \uBAA8\uB378 \uC694\uCCAD\uC5D0 \uB123\uC9C0 \uC54A\uC74C",
+  "patch.59": "\uACF5\uC2DD Auto Review \uAC00 \uB354 \uC774\uC0C1 \uB3C4\uAD6C\uB97C \uB9C9\uC9C0 \uC54A\uC74C",
+  "patch.60": "\uACF5\uC2DD run_code \uC5D0\uC11C \uC2B9\uC778 \uC548\uB0B4 \uC81C\uAC70",
+  "patch.61": "\uACF5\uC2DD \uC0CC\uB4DC\uBC15\uC2A4 \uC815\uCC45\uC774 \uB354 \uC774\uC0C1 \uAC70\uBD80\uB97C \uAC00\uB974\uCE58\uC9C0 \uC54A\uC74C",
+  "patch.62": "\uC2B9\uC778 \uCC44\uB110\uC774 \uC5C6\uC73C\uBA74 \uD1B5\uACFC (\uC0AC\uC6A9\uC790 \uAC70\uBD80\uB294 \uC5EC\uC804\uD788 \uC720\uD6A8)",
+  "patch.63": "\uACC4\uD68D \uBAA8\uB4DC\uC5D0\uC11C \uC2E4\uD589\uC744 \uB354 \uC774\uC0C1 \uC18C\uD504\uD2B8 \uCC28\uB2E8\uD558\uC9C0 \uC54A\uC74C",
+  "patch.64": "Stop hook \uC774 \uAC00\uC9DC \uC0AC\uC6A9\uC790 \uBC1C\uD654\uB97C \uB354 \uC774\uC0C1 \uC8FC\uC785\uD558\uC9C0 \uC54A\uC74C",
+  "patch.65": "UserPromptSubmit deny \uAC00 \uB77C\uC6B4\uB4DC \uC804\uCCB4\uB97C reject \uD558\uC9C0 \uC54A\uC74C",
+  "patch.66": "\uBE48 \uC2DC\uC2A4\uD15C \uC139\uC158\uC774 \uB77C\uC6B4\uB4DC\uB97C \uB0B4\uBD80 \uC624\uB958\uB85C \uB9CC\uB4E4\uC9C0 \uC54A\uC74C",
+  "patch.67": "messages \uAC00 \uC5C6\uC5B4\uB3C4 \uB77C\uC6B4\uB4DC\uAC00 \uC911\uB2E8\uB418\uC9C0 \uC54A\uC74C",
+  "patch.68": "\uB418\uB3CC\uB9B0 \uB4A4 content \uAC00 \uC5C6\uC5B4\uB3C4 \uC911\uB2E8\uB418\uC9C0 \uC54A\uC74C",
+  "patch.69": "deepseek-flash \uB294 \uACF5\uC2DD in-history \uC720\uC9C0",
+  "patch.72": "Messages \uC758 system \uC740 \uD604\uC7AC \uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8 \uC0AC\uC6A9",
+  "patch.73": "\uBBF8\uB2C8\uBA40 bash \uC5D0\uC11C \uC798\uBABB \uB0A8\uC740 \uBBF8\uB7EC \uC548\uB0B4 \uC81C\uAC70",
+  "patch.74": "\uCCAB \uC694\uCCAD \uC804\uC5D0 \uAE30\uBCF8 \uD504\uB86C\uD504\uD2B8 \uBA3C\uC800 \uBD80\uCC29",
+  "patch.75": "\uB418\uB3CC\uB9AC\uAE30 \uC2DC \uC644\uB8CC\uB41C \uC791\uC5C5\uC744 \uBBF8\uC2DC\uC791\uC73C\uB85C \uD68C\uC218",
+  "patch.76": "unrestricted \uD504\uB9AC\uC14B\uC5D0\uC11C \uC815\uCCB4\uC131 \uBB38\uAD6C \uC81C\uAC70",
+  "patch.77": "\uB418\uB3CC\uB9AC\uAE30 \uB9C8\uCEE4\uAC00 \uB3C4\uCC29\uD558\uBA74 \uC774\uBBF8 \uBCF4\uB0B8 \uBA54\uC2DC\uC9C0 \uD3D0\uAE30",
+  "patch.78": "\uD328\uCE58 \uD30C\uC77C \uB204\uB77D \uC2DC .bak \uC5D0\uC11C \uBCF5\uC6D0",
+  "patch.80": "\uACF5\uC2DD \uBBF8\uB2C8\uBA40 \uB3C4\uAD6C \uD45C \uBCF5\uC6D0",
+  "patch.82": "\uBA54\uC778 \uD504\uB85C\uC138\uC2A4 \uD3F4\uBC31 DSH_PROFILE=desktop",
+  "patch.83": "host \uAC00 \uC2DC\uADF8\uB110\uB85C \uC885\uB8CC\uB420 \uB54C \uC624\uB958 \uC5C6\uC774 \uB300\uD654\uC0C1\uC790\uB3C4 \uC5C6\uC74C",
+  "patch.84": "host code=0 \uC815\uC0C1 \uC885\uB8CC \uC2DC \uC624\uB958 \uC5C6\uC74C (stopped \uB300\uD654\uC0C1\uC790 \uC81C\uAC70)",
+  "status.unlocated": "\uC704\uCE58 \uBBF8\uD655\uC778",
+  "status.na": "\uC774 \uD658\uACBD\uC5D0\uC11C\uB294 \uBD88\uD544\uC694",
+  "metric.unlocated": "\uC544\uC9C1 \uB85C\uCEEC Harness \uB97C \uCC3E\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4",
+  "metric.sealed": "\uACF5\uC2DD \uD074\uB77C\uC774\uC5B8\uD2B8\uB97C \uCC3E\uC558\uC2B5\uB2C8\uB2E4. \uC801\uC6A9\uC744 \uB204\uB974\uBA74 \uD480\uB9BD\uB2C8\uB2E4",
+  "metric.sealed.count": "\uD480\uAE30 \uB300\uAE30",
+  "metric.lost": "\uD328\uCE58\uAC00 \uC0AC\uB77C\uC84C\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC801\uC6A9\uD558\uC138\uC694",
+  "metric.lost.count": "\uC720\uC2E4\uB428",
+  "rewind.label": "\uB418\uB3CC\uB9AC\uAE30",
+  "rewind.aria": "\uB418\uB3CC\uB9AC\uAE30",
+  "rewind.busy": "\uB418\uB3CC\uB9AC\uB294 \uC911\u2026",
+  "rewind.empty": "\uB418\uB3CC\uB9B4 \uC774\uC804 \uBC1C\uD654\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4",
+  "rewind.fail": "\uB418\uB3CC\uB9AC\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "rewind.once": "\uD55C \uBC88 \uB418\uB3CC\uB9AC\uAE30",
+  "rewind.once.hint": "\uC774 \uB77C\uC6B4\uB4DC\uC5D0\uC11C \uBCF4\uB0B8 \uBC1C\uD654\uB97C \uC785\uB825\uCC3D\uC73C\uB85C \uB418\uB3CC\uB9AC\uACE0 \uC774 \uB77C\uC6B4\uB4DC\uB97C \uC9C0\uC6C1\uB2C8\uB2E4",
+  "rewind.round": "\uC774\uC804 \uB77C\uC6B4\uB4DC \uB418\uB3CC\uB9AC\uAE30",
+  "rewind.round.hint": "\uC774 \uB77C\uC6B4\uB4DC\uC5D0\uC11C \uBCF4\uB0B8 \uBC1C\uD654\uB97C \uC785\uB825\uCC3D\uC73C\uB85C \uB418\uB3CC\uB9BD\uB2C8\uB2E4. \uC11C\uBE0C\uC5D0\uC774\uC804\uD2B8\uB3C4 \uC774 \uB77C\uC6B4\uB4DC\uB9CC \uCCA0\uD68C\uD569\uB2C8\uB2E4",
+  "hooksDeny.title": "Hooks \uCC28\uB2E8",
+  "hooksDeny.bypass": "hooks \uC758 deny / ask \uD1B5\uACFC (\uD328\uCE58 30 / 31 / 64 / 65)",
+  "hooksDeny.hint": "\uB044\uBA74 \uC0AC\uC6A9\uC790 \uC790\uC2E0\uC758 PreToolUse / UserPromptSubmit / Stop hook \uC758 deny \uAC00 \uACF5\uC2DD \uB85C\uC9C1\uB300\uB85C \uC801\uC6A9\uB429\uB2C8\uB2E4. \uACF5\uC2DD ask \uBD84\uAE30\uB294 \uC6D0\uB798 \uC544\uBB34 \uB3D9\uC791\uB3C4 \uD558\uC9C0 \uC54A\uC73C\uBBC0\uB85C \uC2A4\uC704\uCE58\uB97C \uAEBC\uB3C4 \uC2B9\uC778 \uB300\uD654\uC0C1\uC790\uAC00 \uB728\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uBCC0\uACBD \uD6C4 '\uC801\uC6A9'\uC744 \uB204\uB974\uACE0 \uC7AC\uC2DC\uC791\uD574\uC57C \uD638\uC2A4\uD2B8\uC5D0 \uAE30\uB85D\uB429\uB2C8\uB2E4.",
+  "saved.hooksDeny": "\uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4",
+  "continue.title": "\uC2E4\uD328 \uC7AC\uC2DC\uB3C4 / \uACC4\uC18D",
+  "continue.hint": "\uC694\uCCAD\uC774 \uC2E4\uD328\uD558\uBA74 \uC790\uB3D9\uC73C\uB85C \uC7AC\uC2DC\uB3C4\uD569\uB2C8\uB2E4. \uBE44\uC815\uC0C1 \uC885\uB8CC\uB098 \uC911\uB2E8 \uC2DC\uC5D0\uB294 '\uACC4\uC18D'\uC744 \uB204\uB974\uAC70\uB098 \uC790\uB3D9 \uC774\uC5B4\uB2EC\uB9AC\uAE30\uB97C \uC4F8 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uC9C1\uC811 \uC911\uC9C0\uB97C \uB204\uB978 \uACBD\uC6B0\uC5D0\uB294 \uC790\uB3D9\uC73C\uB85C \uC774\uC5B4\uAC00\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uD69F\uC218\uB97C \uBAA8\uB450 \uC4F0\uBA74 \uC0C8 \uB77C\uC6B4\uB4DC\uB97C \uC5F4\uC5B4\uC57C \uD569\uB2C8\uB2E4.",
+  "continue.autoRetry": "\uC2E4\uD328 \uC2DC \uC790\uB3D9 \uC7AC\uC2DC\uB3C4",
+  "continue.retryMax": "\uC7AC\uC2DC\uB3C4 \uD69F\uC218",
+  "continue.autoContinue": "\uC911\uB2E8 \uD6C4 \uC790\uB3D9 \uACC4\uC18D",
+  "continue.continueMax": "\uACC4\uC18D \uD69F\uC218",
+  "continue.text": "\uACC4\uC18D \uBB38\uAD6C",
+  "saved.continue": "\uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4",
+  "continue.label": "\uACC4\uC18D",
+  "continue.aria": "\uBE44\uC815\uC0C1 \uC885\uB8CC \uD6C4 \uACC4\uC18D",
+  "continue.busy": "\uACC4\uC18D\uD558\uB294 \uC911\u2026",
+  "continue.ready": "\uACC4\uC18D (\uB0A8\uC740 \uD69F\uC218 {left})",
+  "continue.limit": "\uACC4\uC18D \uC0C1\uD55C\uC5D0 \uB3C4\uB2EC\uD588\uC2B5\uB2C8\uB2E4",
+  "continue.fail": "\uACC4\uC18D\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
+  "updch.open": "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110",
+  "updch.title": "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110: \uD504\uB85D\uC2DC\uC640 GitHub \uD0A4",
+  "updch.scope": "\uC5EC\uAE30 \uC124\uC815\uD55C \uD504\uB85D\uC2DC\uC640 \uD0A4\uB294 \uC774 \uD50C\uB7EC\uADF8\uC778\uC758 \uC5C5\uB370\uC774\uD2B8 \uD655\uC778\xB7\uB2E4\uC6B4\uB85C\uB4DC \uCC44\uB110\uC5D0\uB9CC \uC801\uC6A9\uB429\uB2C8\uB2E4. \uB2E4\uB978 \uBAA8\uB378 \uC81C\uACF5\uC790 \uC694\uCCAD\uC5D0\uB294 \uC601\uD5A5\uC744 \uC8FC\uC9C0 \uC54A\uACE0 \uD638\uC2A4\uD2B8 \uD504\uB85C\uC138\uC2A4 \uD658\uACBD\uC5D0\uB3C4 \uC4F0\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uBE44\uC6CC \uB450\uBA74 \uAE30\uC874 \uC5C5\uB370\uC774\uD2B8 \uD504\uB85D\uC2DC \uD658\uACBD\uC744 \uC0C1\uC18D\uD569\uB2C8\uB2E4.",
+  "updch.proxy": "\uD504\uB85D\uC2DC \uC8FC\uC18C",
   "updch.proxy.ph": "socks5://127.0.0.1:60808",
-  "updch.proxy.hint": "\u652F\u6301 http:// / https:// / socks5:// \u524D\u7F00\uFF0C\u4F8B\u5982 http://127.0.0.1:7890\u3002\u7559\u7A7A\u7EE7\u627F\u5DF2\u6709\u66F4\u65B0\u4EE3\u7406\u73AF\u5883\u3002",
-  "updch.token": "GitHub \u5BC6\u94A5",
-  "updch.token.ph": "\u53EF\u9009\uFF1A\u63D0\u9AD8 GitHub API \u989D\u5EA6\uFF0C\u7559\u7A7A\u5219\u4E0D\u4FEE\u6539",
-  "updch.token.set": "\u672C\u673A\u5DF2\u914D\u7F6E\u5BC6\u94A5\u3002\u8F93\u5165\u6846\u59CB\u7EC8\u4E3A\u7A7A\uFF0C\u7559\u7A7A\u4FDD\u5B58\u8868\u793A\u4FDD\u6301\u4E0D\u53D8\u3002",
-  "updch.token.unset": "\u672C\u673A\u5C1A\u672A\u914D\u7F6E\u5BC6\u94A5\u3002\u7559\u7A7A\u8868\u793A\u4E0D\u914D\u7F6E\u3002",
-  "updch.token.clear": "\u6E05\u9664\u5DF2\u4FDD\u5B58\u7684\u5BC6\u94A5",
-  "updch.save": "\u4FDD\u5B58",
-  "updch.saving": "\u4FDD\u5B58\u4E2D\u2026",
-  "updch.cancel": "\u53D6\u6D88",
-  "updch.saved": "\u66F4\u65B0\u901A\u9053\u5DF2\u4FDD\u5B58\uFF0C\u4E0B\u4E00\u6B21\u68C0\u67E5\u66F4\u65B0\u5373\u751F\u6548\u3002",
-  "updch.state.proxy": "\u66F4\u65B0\u901A\u9053\u4EE3\u7406\uFF1A",
-  "updch.state.direct": "\u66F4\u65B0\u901A\u9053\uFF1A\u7EE7\u627F\u73AF\u5883\u6216\u7CFB\u7EDF\u4EE3\u7406",
-  "updch.state.token.on": "GitHub \u5BC6\u94A5\u5DF2\u914D\u7F6E",
-  "updch.state.token.off": "\u672A\u914D\u7F6E GitHub \u5BC6\u94A5"
+  "updch.proxy.hint": "http:// / https:// / socks5:// \uC811\uB450\uC0AC\uB97C \uC9C0\uC6D0\uD569\uB2C8\uB2E4. \uC608: http://127.0.0.1:7890. \uBE44\uC6CC \uB450\uBA74 \uAE30\uC874 \uC5C5\uB370\uC774\uD2B8 \uD504\uB85D\uC2DC \uD658\uACBD\uC744 \uC0C1\uC18D\uD569\uB2C8\uB2E4.",
+  "updch.token": "GitHub \uD0A4",
+  "updch.token.ph": "\uC120\uD0DD \uC0AC\uD56D: GitHub API \uD560\uB2F9\uB7C9\uC744 \uC62C\uB9BD\uB2C8\uB2E4. \uBE44\uC6CC \uB450\uBA74 \uBCC0\uACBD\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4",
+  "updch.token.set": "\uC774 \uAE30\uAE30\uC5D0\uB294 \uD0A4\uAC00 \uC124\uC815\uB418\uC5B4 \uC788\uC2B5\uB2C8\uB2E4. \uC785\uB825\uCC3D\uC740 \uD56D\uC0C1 \uBE44\uC5B4 \uC788\uC73C\uBA70, \uBE44\uC6B4 \uCC44 \uC800\uC7A5\uD558\uBA74 \uADF8\uB300\uB85C \uB454\uB2E4\uB294 \uB73B\uC785\uB2C8\uB2E4.",
+  "updch.token.unset": "\uC774 \uAE30\uAE30\uC5D0\uB294 \uC544\uC9C1 \uD0A4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uBE44\uC6CC \uB450\uBA74 \uC124\uC815\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+  "updch.token.clear": "\uC800\uC7A5\uB41C \uD0A4 \uC9C0\uC6B0\uAE30",
+  "updch.save": "\uC800\uC7A5",
+  "updch.saving": "\uC800\uC7A5 \uC911\u2026",
+  "updch.cancel": "\uCDE8\uC18C",
+  "updch.saved": "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110\uC744 \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC74C \uD655\uC778\uBD80\uD130 \uC801\uC6A9\uB429\uB2C8\uB2E4.",
+  "updch.state.proxy": "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110 \uD504\uB85D\uC2DC:",
+  "updch.state.direct": "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110: \uD658\uACBD \uB610\uB294 \uC2DC\uC2A4\uD15C \uD504\uB85D\uC2DC \uC0C1\uC18D",
+  "updch.state.token.on": "GitHub \uD0A4 \uC124\uC815\uB428",
+  "updch.state.token.off": "GitHub \uD0A4 \uBBF8\uC124\uC815"
 };
 var en = {
   nav: "Rules",
@@ -9691,7 +9691,7 @@ var en = {
   "ph.content": "",
   "btn.saveRule": "Save",
   "skills.title": "Skills",
-  "skills.hint": "After import, DSH calls it: type /name in chat to load now; the model calls the skill tool when the task matches description or whenToUse. Writing\u300C\u6FC0\u6D3B\u300Din the body does nothing.",
+  "skills.hint": "After import, DSH calls it: type /name in chat to load now; the model calls the skill tool when the task matches description or whenToUse. Writing 'activation' in the body does nothing.",
   "skills.hint.desktop": "This desktop host\u2019s official skill catalog. Type /name in chat to load; the model calls the skill tool when the task matches the description.",
   "skills.empty": "No user skills",
   "btn.importZip": "Import zip",
@@ -9879,7 +9879,7 @@ var en = {
 };
 
 // src/components/auth.js
-var AUTH_LEGAL_HTML = "<h3>\u4E25\u6B63\u6CD5\u5F8B\u514D\u8D23\u4E0E\u5408\u89C4\u4F7F\u7528\u58F0\u660E</h3>\r\n    <p>\u672C\u58F0\u660E\u5728\u8FDB\u5165\u6F14\u7EC3\u53F0\u524D\u5FC5\u987B\u5168\u6587\u9605\u8BFB\u3002\u672C\u9879\u76EE\u662F\u975E\u8425\u5229\u5F00\u6E90\u9879\u76EE\uFF0C\u9075\u5B88\u56FD\u5BB6\u6CD5\u5F8B\u6CD5\u89C4\u53CA\u6240\u5728\u5E73\u53F0\u7684\u89C4\u8303\uFF0C\u4EC5\u4F9B\u5B66\u4E60\u4E0E\u7814\u7A76\u3001\u6280\u672F\u53C2\u8003\u3002\u4E25\u7981\u4EFB\u4F55\u4E3B\u4F53\u628A\u672C\u9879\u76EE\u7528\u4E8E\u5546\u4E1A\u552E\u5356\u3001\u4ED8\u8D39\u5012\u5356\u6216\u9ED1\u7070\u4EA7\u725F\u5229\u3002</p>\r\n    <p>\u5F00\u53D1\u8005\u575A\u51B3\u53CD\u5BF9\u5E76\u4E25\u7981\u4EFB\u4F55\u5F62\u5F0F\u7684\u8FDD\u6CD5\u72AF\u7F6A\uFF0C\u7EDD\u4E0D\u652F\u6301\u3001\u4E0D\u9F13\u52B1\u3001\u4E0D\u534F\u52A9\u672A\u6388\u6743\u7F51\u7EDC\u653B\u51FB\u3001\u6F0F\u6D1E\u5229\u7528\u3001\u6570\u636E\u7A83\u53D6\u3001\u975E\u6CD5\u4FB5\u5165\u8BA1\u7B97\u673A\u4FE1\u606F\u7CFB\u7EDF\uFF0C\u6216\u751F\u6210\u8FDD\u6CD5\u8FDD\u7981\u5185\u5BB9\u3002\u4EFB\u4F55\u5C06\u672C\u9879\u76EE\u7528\u4E8E\u8FDD\u6CD5\u72AF\u7F6A\u7684\u884C\u4E3A\uFF0C\u5747\u4E0E\u5F00\u53D1\u8005\u65E0\u5173\uFF0C\u7531\u884C\u4E3A\u4EBA\u4F9D\u6CD5\u72EC\u7ACB\u627F\u62C5\u5168\u90E8\u6CD5\u5F8B\u8D23\u4EFB\u3002\u4E0D\u5F97\u4EE5\u79D1\u7814\u3001\u6559\u5B66\u3001\u6D4B\u8BD5\u3001\u6F14\u793A\u6216\u5185\u90E8\u5B66\u4E60\u4E3A\u7531\u89C4\u907F\u4E0B\u5217\u6761\u6B3E\u3002</p>\r\n    <h3>1. \u672C\u4ED3\u5E93\u4E0D\u542B\u8FDD\u6CD5\u5185\u5BB9</h3>\r\n    <p>dsh-purge \u53D1\u5E03\u7684\u4EE3\u7801\u3001\u6587\u6863\u3001\u8865\u4E01\u4E0E\u9ED8\u8BA4\u63D0\u793A\u8BCD\u4E0D\u662F\u6728\u9A6C\u3001\u540E\u95E8\u3001\u672A\u6388\u6743\u6E17\u900F\u5DE5\u5177\u3001\u52D2\u7D22\u8F6F\u4EF6\u3001\u649E\u5E93\u811A\u672C\uFF0C\u4E5F\u4E0D\u662F\u9488\u5BF9\u516C\u7F51\u6216\u7B2C\u4E09\u65B9\u7CFB\u7EDF\u7684\u653B\u51FB\u8F7D\u8377\u3002\u9879\u76EE\u4E0D\u63D0\u4F9B\u8FDD\u6CD5\u5185\u5BB9\uFF0C\u4E5F\u4E0D\u6559\u5506\u3001\u7EC4\u7EC7\u3001\u534F\u52A9\u5B9E\u65BD\u8FDD\u6CD5\u72AF\u7F6A\u3002</p>\r\n    <h3>2. \u672C\u673A\u64CD\u4F5C\u4E0D\u6784\u6210\u5BF9\u5916\u6388\u6743</h3>\r\n    <p>\u5E94\u7528\u8865\u4E01\u3001\u5199\u5165\u3001\u56DE\u6EDA\u3001\u5378\u8F7D\uFF0C\u90FD\u5728\u672C\u673A\u6587\u4EF6\u548C\u672C\u673A\u8FDB\u7A0B\u5185\u5B8C\u6210\u3002\u8FD9\u4E9B\u64CD\u4F5C\u4E0D\u5BF9\u4EFB\u4F55\u516C\u7F51\u4E3B\u673A\u6216\u672A\u6388\u6743\u7CFB\u7EDF\u8FDB\u884C\u626B\u63CF\u3001\u63A2\u6D4B\u3001\u5165\u4FB5\u6216\u653B\u51FB\u53D1\u5305\uFF0C\u4E5F\u4E0D\u5F97\u628A\u672C\u673A\u5F53\u4F5C\u8DF3\u677F\u3002</p>\r\n    <p>\u63D2\u4EF6\u82E5\u5F00\u542F\u68C0\u6D4B\u66F4\u65B0\uFF0C\u4EC5\u53EF\u80FD\u8BBF\u95EE\u672C\u63D2\u4EF6\u81EA\u5DF1\u7684 GitHub \u4ED3\u5E93\u4EE5\u6838\u5BF9\u7248\u672C\u3002\u8BE5\u8BBF\u95EE\u4E0E\u5BF9\u7B2C\u4E09\u65B9\u7CFB\u7EDF\u7684\u7F51\u7EDC\u653B\u51FB\u65E0\u5173\uFF0C\u4E0D\u80FD\u88AB\u89E3\u91CA\u4E3A\u5BF9\u5916\u6E17\u900F\u7684\u6388\u6743\u3002</p>\r\n    <h3>3. \u5141\u8BB8\u4F7F\u7528\u7684\u8303\u56F4</h3>\r\n    <p>\u53EA\u5141\u8BB8\u7528\u5728\u4F60\u80FD\u8BC1\u660E\u6709\u6743\u5904\u7406\u7684\u73AF\u5883\uFF1A\u672C\u4EBA\u6709\u6743\u7BA1\u7406\u7684\u672C\u673A\u5B98\u65B9 Harness\uFF1B\u79BB\u7EBF\u7684\u672C\u5730\u5408\u6210\u9776\u6807\uFF1B\u6240\u6709\u8005\u5DF2\u7ECF\u51FA\u5177\u5408\u6CD5\u4E66\u9762\u6388\u6743\u7684\u7F51\u7EDC\u5B89\u5168\u6F14\u7EC3\u9776\u573A\uFF1B\u5408\u89C4\u5B9E\u9A8C\u5BA4\u91CC\u7684\u53D7\u63A7\u73AF\u5883\u3002\u4E66\u9762\u6388\u6743\u8981\u80FD\u5BF9\u5E94\u5177\u4F53\u76EE\u6807\u3001\u65F6\u95F4\u548C\u8303\u56F4\u3002\u53EA\u586B\u5199\u4E00\u4E2A\u5355\u4F4D\u540D\u79F0\uFF0C\u6216\u53EA\u6709\u53E3\u5934\u8BF4\u6CD5\uFF0C\u4E0D\u6784\u6210\u6388\u6743\u3002</p>\r\n    <p>\u672A\u7ECF\u6240\u6709\u8005\u5408\u6CD5\u4E66\u9762\u6388\u6743\u7684\u76EE\u6807\u3001\u516C\u7F51\u5728\u7EBF\u7CFB\u7EDF\u3001\u751F\u4EA7\u4E1A\u52A1\uFF0C\u4EE5\u53CA\u80FD\u6E90\u3001\u4EA4\u901A\u3001\u6C34\u5229\u3001\u91D1\u878D\u3001\u516C\u5171\u670D\u52A1\u3001\u7535\u5B50\u653F\u52A1\u7B49\u5173\u952E\u4FE1\u606F\u57FA\u7840\u8BBE\u65BD\uFF0C\u90FD\u4E0D\u5F97\u4F5C\u4E3A\u6F14\u7EC3\u5BF9\u8C61\u3002</p>\r\n    <h3>4. \u5FC5\u987B\u9075\u5B88\u7684\u6CD5\u5F8B\uFF0C\u6309\u6761\u3001\u6B3E</h3>\r\n    <p>\u300A\u4E2D\u534E\u4EBA\u6C11\u5171\u548C\u56FD\u5211\u6CD5\u300B\u7B2C\u4E8C\u767E\u516B\u5341\u4E94\u6761\u7B2C\u4E00\u6B3E\uFF1A\u7981\u6B62\u8FDD\u53CD\u56FD\u5BB6\u89C4\u5B9A\uFF0C\u4FB5\u5165\u56FD\u5BB6\u4E8B\u52A1\u3001\u56FD\u9632\u5EFA\u8BBE\u3001\u5C16\u7AEF\u79D1\u5B66\u6280\u672F\u9886\u57DF\u7684\u8BA1\u7B97\u673A\u4FE1\u606F\u7CFB\u7EDF\u3002</p>\r\n    <p>\u540C\u6761\u7B2C\u4E8C\u6B3E\uFF1A\u7981\u6B62\u4FB5\u5165\u524D\u6B3E\u89C4\u5B9A\u4EE5\u5916\u7684\u8BA1\u7B97\u673A\u4FE1\u606F\u7CFB\u7EDF\uFF0C\u6216\u8005\u7528\u5176\u4ED6\u6280\u672F\u624B\u6BB5\uFF0C\u83B7\u53D6\u8BE5\u7CFB\u7EDF\u4E2D\u5B58\u50A8\u3001\u5904\u7406\u6216\u8005\u4F20\u8F93\u7684\u6570\u636E\uFF0C\u6216\u8005\u5BF9\u8BE5\u7CFB\u7EDF\u5B9E\u65BD\u975E\u6CD5\u63A7\u5236\u3002</p>\r\n    <p>\u540C\u6761\u7B2C\u4E09\u6B3E\uFF1A\u7981\u6B62\u63D0\u4F9B\u4E13\u95E8\u7528\u4E8E\u4FB5\u5165\u3001\u975E\u6CD5\u63A7\u5236\u8BA1\u7B97\u673A\u4FE1\u606F\u7CFB\u7EDF\u7684\u7A0B\u5E8F\u3001\u5DE5\u5177\uFF1B\u660E\u77E5\u4ED6\u4EBA\u5B9E\u65BD\u4FB5\u5165\u3001\u975E\u6CD5\u63A7\u5236\u800C\u4E3A\u5176\u63D0\u4F9B\u7A0B\u5E8F\u3001\u5DE5\u5177\uFF0C\u540C\u6837\u7981\u6B62\u3002</p>\r\n    <p>\u7B2C\u4E8C\u767E\u516B\u5341\u516D\u6761\u7B2C\u4E00\u6B3E\uFF1A\u7981\u6B62\u5BF9\u8BA1\u7B97\u673A\u4FE1\u606F\u7CFB\u7EDF\u529F\u80FD\u8FDB\u884C\u5220\u9664\u3001\u4FEE\u6539\u3001\u589E\u52A0\u3001\u5E72\u6270\uFF0C\u9020\u6210\u7CFB\u7EDF\u4E0D\u80FD\u6B63\u5E38\u8FD0\u884C\u3002</p>\r\n    <p>\u540C\u6761\u7B2C\u4E8C\u6B3E\uFF1A\u7981\u6B62\u5BF9\u7CFB\u7EDF\u4E2D\u5B58\u50A8\u3001\u5904\u7406\u6216\u8005\u4F20\u8F93\u7684\u6570\u636E\u548C\u5E94\u7528\u7A0B\u5E8F\u8FDB\u884C\u5220\u9664\u3001\u4FEE\u6539\u3001\u589E\u52A0\u3002</p>\r\n    <p>\u540C\u6761\u7B2C\u4E09\u6B3E\uFF1A\u7981\u6B62\u6545\u610F\u5236\u4F5C\u3001\u4F20\u64AD\u8BA1\u7B97\u673A\u75C5\u6BD2\u7B49\u7834\u574F\u6027\u7A0B\u5E8F\uFF0C\u5F71\u54CD\u8BA1\u7B97\u673A\u7CFB\u7EDF\u6B63\u5E38\u8FD0\u884C\u3002</p>\r\n    <p>\u7B2C\u4E8C\u767E\u516B\u5341\u4E03\u6761\uFF1A\u7981\u6B62\u5229\u7528\u8BA1\u7B97\u673A\u5B9E\u65BD\u91D1\u878D\u8BC8\u9A97\u3001\u76D7\u7A83\u3001\u8D2A\u6C61\u3001\u632A\u7528\u516C\u6B3E\u3001\u7A83\u53D6\u56FD\u5BB6\u79D8\u5BC6\u6216\u8005\u5176\u4ED6\u72AF\u7F6A\u3002</p>\r\n    <p>\u7B2C\u4E8C\u767E\u516B\u5341\u4E03\u6761\u4E4B\u4E00\u7B2C\u4E00\u6B3E\u7B2C\uFF08\u4E00\uFF09\u9879\uFF1A\u7981\u6B62\u8BBE\u7ACB\u7528\u4E8E\u5B9E\u65BD\u8BC8\u9A97\u3001\u4F20\u6388\u72AF\u7F6A\u65B9\u6CD5\u3001\u5236\u4F5C\u6216\u8005\u9500\u552E\u8FDD\u7981\u7269\u54C1\u3001\u7BA1\u5236\u7269\u54C1\u7B49\u8FDD\u6CD5\u72AF\u7F6A\u6D3B\u52A8\u7684\u7F51\u7AD9\u3001\u901A\u8BAF\u7FA4\u7EC4\u3002</p>\r\n    <p>\u540C\u6B3E\u7B2C\uFF08\u4E8C\uFF09\u9879\uFF1A\u7981\u6B62\u53D1\u5E03\u6709\u5173\u5236\u4F5C\u6216\u8005\u9500\u552E\u6BD2\u54C1\u3001\u67AA\u652F\u3001\u6DEB\u79FD\u7269\u54C1\u7B49\u8FDD\u7981\u7269\u54C1\u3001\u7BA1\u5236\u7269\u54C1\u6216\u8005\u5176\u4ED6\u8FDD\u6CD5\u72AF\u7F6A\u7684\u4FE1\u606F\u3002</p>\r\n    <p>\u540C\u6B3E\u7B2C\uFF08\u4E09\uFF09\u9879\uFF1A\u7981\u6B62\u4E3A\u5B9E\u65BD\u8BC8\u9A97\u7B49\u8FDD\u6CD5\u72AF\u7F6A\u6D3B\u52A8\u53D1\u5E03\u4FE1\u606F\u3002</p>\r\n    <p>\u7B2C\u4E8C\u767E\u516B\u5341\u4E03\u6761\u4E4B\u4E8C\uFF1A\u7981\u6B62\u660E\u77E5\u4ED6\u4EBA\u5229\u7528\u4FE1\u606F\u7F51\u7EDC\u5B9E\u65BD\u72AF\u7F6A\uFF0C\u4ECD\u4E3A\u5176\u63D0\u4F9B\u6280\u672F\u652F\u6301\uFF0C\u6216\u8005\u63D0\u4F9B\u5E7F\u544A\u63A8\u5E7F\u3001\u652F\u4ED8\u7ED3\u7B97\u7B49\u5E2E\u52A9\u3002</p>\r\n    <p>\u7B2C\u4E8C\u767E\u4E94\u5341\u4E09\u6761\u4E4B\u4E00\u7B2C\u4E00\u6B3E\u3001\u7B2C\u4E09\u6B3E\uFF1A\u7981\u6B62\u5411\u4ED6\u4EBA\u51FA\u552E\u6216\u8005\u63D0\u4F9B\u516C\u6C11\u4E2A\u4EBA\u4FE1\u606F\uFF1B\u7981\u6B62\u7A83\u53D6\u6216\u8005\u4EE5\u5176\u4ED6\u65B9\u6CD5\u975E\u6CD5\u83B7\u53D6\u516C\u6C11\u4E2A\u4EBA\u4FE1\u606F\u3002</p>\r\n    <p>\u300A\u4E2D\u534E\u4EBA\u6C11\u5171\u548C\u56FD\u7F51\u7EDC\u5B89\u5168\u6CD5\u300B\u7B2C\u5341\u4E09\u6761\u7B2C\u4E8C\u6B3E\uFF1A\u4F7F\u7528\u7F51\u7EDC\u4E0D\u5F97\u5371\u5BB3\u7F51\u7EDC\u5B89\u5168\uFF0C\u4E0D\u5F97\u5229\u7528\u7F51\u7EDC\u4ECE\u4E8B\u5371\u5BB3\u56FD\u5BB6\u5B89\u5168\u3001\u8363\u8A89\u548C\u5229\u76CA\uFF0C\u717D\u52A8\u98A0\u8986\u56FD\u5BB6\u653F\u6743\u3001\u63A8\u7FFB\u793E\u4F1A\u4E3B\u4E49\u5236\u5EA6\uFF0C\u717D\u52A8\u5206\u88C2\u56FD\u5BB6\u3001\u7834\u574F\u56FD\u5BB6\u7EDF\u4E00\uFF0C\u5BA3\u626C\u6050\u6016\u4E3B\u4E49\u3001\u6781\u7AEF\u4E3B\u4E49\uFF0C\u5BA3\u626C\u6C11\u65CF\u4EC7\u6068\u3001\u6C11\u65CF\u6B67\u89C6\uFF0C\u4F20\u64AD\u66B4\u529B\u3001\u6DEB\u79FD\u8272\u60C5\u4FE1\u606F\uFF0C\u7F16\u9020\u3001\u4F20\u64AD\u865A\u5047\u4FE1\u606F\u6270\u4E71\u7ECF\u6D4E\u79E9\u5E8F\u548C\u793E\u4F1A\u79E9\u5E8F\uFF0C\u4EE5\u53CA\u4FB5\u5BB3\u4ED6\u4EBA\u540D\u8A89\u3001\u9690\u79C1\u3001\u77E5\u8BC6\u4EA7\u6743\u548C\u5176\u4ED6\u5408\u6CD5\u6743\u76CA\u7B49\u6D3B\u52A8\u3002</p>\r\n    <p>\u7B2C\u5341\u56DB\u6761\uFF1A\u7981\u6B62\u5229\u7528\u7F51\u7EDC\u4ECE\u4E8B\u5371\u5BB3\u672A\u6210\u5E74\u4EBA\u8EAB\u5FC3\u5065\u5EB7\u7684\u6D3B\u52A8\u3002</p>\r\n    <p>\u7B2C\u4E8C\u5341\u4E5D\u6761\uFF1A\u7981\u6B62\u975E\u6CD5\u4FB5\u5165\u4ED6\u4EBA\u7F51\u7EDC\u3001\u5E72\u6270\u4ED6\u4EBA\u7F51\u7EDC\u6B63\u5E38\u529F\u80FD\u3001\u7A83\u53D6\u7F51\u7EDC\u6570\u636E\uFF1B\u7981\u6B62\u63D0\u4F9B\u4E13\u95E8\u7528\u4E8E\u4FB5\u5165\u7F51\u7EDC\u3001\u5E72\u6270\u7F51\u7EDC\u6B63\u5E38\u529F\u80FD\u53CA\u9632\u62A4\u63AA\u65BD\u3001\u7A83\u53D6\u7F51\u7EDC\u6570\u636E\u7684\u7A0B\u5E8F\u3001\u5DE5\u5177\uFF1B\u660E\u77E5\u4ED6\u4EBA\u4ECE\u4E8B\u5371\u5BB3\u7F51\u7EDC\u5B89\u5168\u7684\u6D3B\u52A8\uFF0C\u7981\u6B62\u4E3A\u5176\u63D0\u4F9B\u6280\u672F\u652F\u6301\u3001\u5E7F\u544A\u63A8\u5E7F\u3001\u652F\u4ED8\u7ED3\u7B97\u7B49\u5E2E\u52A9\u3002</p>\r\n    <p>\u7B2C\u4E09\u5341\u4E09\u6761\uFF1A\u516C\u5171\u901A\u4FE1\u548C\u4FE1\u606F\u670D\u52A1\u3001\u80FD\u6E90\u3001\u4EA4\u901A\u3001\u6C34\u5229\u3001\u91D1\u878D\u3001\u516C\u5171\u670D\u52A1\u3001\u7535\u5B50\u653F\u52A1\u7B49\u5173\u952E\u4FE1\u606F\u57FA\u7840\u8BBE\u65BD\u5B9E\u884C\u91CD\u70B9\u4FDD\u62A4\u3002\u672A\u83B7\u5408\u6CD5\u6388\u6743\uFF0C\u4E0D\u5F97\u4FB5\u5165\u3001\u5E72\u6270\u6216\u7834\u574F\u3002</p>\r\n    <p>\u7B2C\u56DB\u5341\u516D\u6761\uFF1A\u7981\u6B62\u7A83\u53D6\u6216\u8005\u4EE5\u5176\u4ED6\u975E\u6CD5\u65B9\u5F0F\u83B7\u53D6\u4E2A\u4EBA\u4FE1\u606F\uFF0C\u7981\u6B62\u975E\u6CD5\u51FA\u552E\u6216\u8005\u975E\u6CD5\u5411\u4ED6\u4EBA\u63D0\u4F9B\u4E2A\u4EBA\u4FE1\u606F\u3002</p>\r\n    <p>\u7B2C\u56DB\u5341\u516B\u6761\uFF1A\u7981\u6B62\u8BBE\u7ACB\u7528\u4E8E\u5B9E\u65BD\u8BC8\u9A97\uFF0C\u4F20\u6388\u72AF\u7F6A\u65B9\u6CD5\uFF0C\u5236\u4F5C\u6216\u8005\u9500\u552E\u8FDD\u7981\u7269\u54C1\u3001\u7BA1\u5236\u7269\u54C1\u7B49\u8FDD\u6CD5\u72AF\u7F6A\u6D3B\u52A8\u7684\u7F51\u7AD9\u3001\u901A\u8BAF\u7FA4\u7EC4\uFF1B\u7981\u6B62\u5229\u7528\u7F51\u7EDC\u53D1\u5E03\u6D89\u53CA\u4E0A\u8FF0\u8FDD\u6CD5\u72AF\u7F6A\u6D3B\u52A8\u7684\u4FE1\u606F\u3002</p>\r\n    <p>\u7B2C\u4E94\u5341\u6761\uFF1A\u53D1\u9001\u7684\u7535\u5B50\u4FE1\u606F\u3001\u63D0\u4F9B\u7684\u5E94\u7528\u8F6F\u4EF6\u4E0D\u5F97\u8BBE\u7F6E\u6076\u610F\u7A0B\u5E8F\uFF0C\u4E0D\u5F97\u542B\u6709\u6CD5\u5F8B\u3001\u884C\u653F\u6CD5\u89C4\u7981\u6B62\u53D1\u5E03\u6216\u8005\u4F20\u8F93\u7684\u4FE1\u606F\u3002</p>\r\n    <p>\u300A\u4E2D\u534E\u4EBA\u6C11\u5171\u548C\u56FD\u6570\u636E\u5B89\u5168\u6CD5\u300B\u7B2C\u516B\u6761\uFF1A\u5F00\u5C55\u6570\u636E\u5904\u7406\u6D3B\u52A8\uFF0C\u4E0D\u5F97\u5371\u5BB3\u56FD\u5BB6\u5B89\u5168\u3001\u516C\u5171\u5229\u76CA\uFF0C\u4E0D\u5F97\u635F\u5BB3\u4E2A\u4EBA\u3001\u7EC4\u7EC7\u7684\u5408\u6CD5\u6743\u76CA\u3002</p>\r\n    <p>\u7B2C\u4E09\u5341\u4E8C\u6761\u7B2C\u4E00\u6B3E\uFF1A\u6536\u96C6\u6570\u636E\u5E94\u5F53\u91C7\u53D6\u5408\u6CD5\u3001\u6B63\u5F53\u7684\u65B9\u5F0F\uFF0C\u4E0D\u5F97\u7A83\u53D6\u6216\u8005\u4EE5\u5176\u4ED6\u975E\u6CD5\u65B9\u5F0F\u83B7\u53D6\u6570\u636E\u3002</p>\r\n    <p>\u540C\u6761\u7B2C\u4E8C\u6B3E\uFF1A\u6CD5\u5F8B\u3001\u884C\u653F\u6CD5\u89C4\u5BF9\u6536\u96C6\u3001\u4F7F\u7528\u6570\u636E\u7684\u76EE\u7684\u548C\u8303\u56F4\u6709\u89C4\u5B9A\u7684\uFF0C\u53EA\u80FD\u5728\u8BE5\u76EE\u7684\u548C\u8303\u56F4\u5185\u6536\u96C6\u3001\u4F7F\u7528\u3002</p>\r\n    <p>\u7B2C\u4E94\u5341\u4E00\u6761\uFF1A\u7A83\u53D6\u6216\u8005\u4EE5\u5176\u4ED6\u975E\u6CD5\u65B9\u5F0F\u83B7\u53D6\u6570\u636E\uFF0C\u6216\u8005\u56E0\u6B64\u635F\u5BB3\u4E2A\u4EBA\u3001\u7EC4\u7EC7\u5408\u6CD5\u6743\u76CA\u7684\uFF0C\u4F9D\u7167\u6709\u5173\u6CD5\u5F8B\u3001\u884C\u653F\u6CD5\u89C4\u5904\u7F5A\u3002</p>\r\n    <p>\u300A\u4E2D\u534E\u4EBA\u6C11\u5171\u548C\u56FD\u4E2A\u4EBA\u4FE1\u606F\u4FDD\u62A4\u6CD5\u300B\u7B2C\u4E94\u6761\uFF1A\u5904\u7406\u4E2A\u4EBA\u4FE1\u606F\u5E94\u5F53\u5408\u6CD5\u3001\u6B63\u5F53\u3001\u5FC5\u8981\u3001\u8BDA\u4FE1\uFF0C\u4E0D\u5F97\u901A\u8FC7\u8BEF\u5BFC\u3001\u6B3A\u8BC8\u3001\u80C1\u8FEB\u7B49\u65B9\u5F0F\u5904\u7406\u3002</p>\r\n    <p>\u7B2C\u516D\u6761\u7B2C\u4E00\u6B3E\u3001\u7B2C\u4E8C\u6B3E\uFF1A\u5904\u7406\u4E2A\u4EBA\u4FE1\u606F\u5E94\u5F53\u5177\u6709\u660E\u786E\u3001\u5408\u7406\u7684\u76EE\u7684\uFF0C\u5E76\u4E0E\u8BE5\u76EE\u7684\u76F4\u63A5\u76F8\u5173\uFF0C\u91C7\u53D6\u5BF9\u4E2A\u4EBA\u6743\u76CA\u5F71\u54CD\u6700\u5C0F\u7684\u65B9\u5F0F\uFF1B\u6536\u96C6\u9650\u4E8E\u5B9E\u73B0\u5904\u7406\u76EE\u7684\u7684\u6700\u5C0F\u8303\u56F4\uFF0C\u4E0D\u5F97\u8FC7\u5EA6\u6536\u96C6\u3002</p>\r\n    <p>\u7B2C\u5341\u6761\uFF1A\u7981\u6B62\u975E\u6CD5\u6536\u96C6\u3001\u4F7F\u7528\u3001\u52A0\u5DE5\u3001\u4F20\u8F93\u4ED6\u4EBA\u4E2A\u4EBA\u4FE1\u606F\uFF0C\u7981\u6B62\u975E\u6CD5\u4E70\u5356\u3001\u63D0\u4F9B\u6216\u8005\u516C\u5F00\u4ED6\u4EBA\u4E2A\u4EBA\u4FE1\u606F\uFF1B\u7981\u6B62\u4ECE\u4E8B\u5371\u5BB3\u56FD\u5BB6\u5B89\u5168\u3001\u516C\u5171\u5229\u76CA\u7684\u4E2A\u4EBA\u4FE1\u606F\u5904\u7406\u6D3B\u52A8\u3002</p>\r\n    <p>\u7B2C\u5341\u4E09\u6761\uFF1A\u6CA1\u6709\u53D6\u5F97\u4E2A\u4EBA\u540C\u610F\uFF0C\u4E5F\u4E0D\u5C5E\u4E8E\u8BA2\u7ACB\u5C65\u884C\u5408\u540C\u6240\u5FC5\u9700\u3001\u5C65\u884C\u6CD5\u5B9A\u804C\u8D23\u3001\u5E94\u5BF9\u7A81\u53D1\u3001\u516C\u5171\u5229\u76CA\u65B0\u95FB\u8206\u8BBA\u3001\u5904\u7406\u672C\u4EBA\u5DF2\u7ECF\u5408\u6CD5\u516C\u5F00\u7684\u4FE1\u606F\uFF0C\u4EE5\u53CA\u6CD5\u5F8B\u884C\u653F\u6CD5\u89C4\u89C4\u5B9A\u7684\u5176\u4ED6\u60C5\u5F62\u4E4B\u4E00\u7684\uFF0C\u4E0D\u5F97\u5904\u7406\u4E2A\u4EBA\u4FE1\u606F\u3002</p>\r\n    <p>\u7B2C\u4E8C\u5341\u516B\u6761\u3001\u7B2C\u4E8C\u5341\u4E5D\u6761\uFF1A\u751F\u7269\u8BC6\u522B\u3001\u533B\u7597\u5065\u5EB7\u3001\u91D1\u878D\u8D26\u6237\u3001\u884C\u8E2A\u8F68\u8FF9\uFF0C\u4EE5\u53CA\u4E0D\u6EE1\u5341\u56DB\u5468\u5C81\u672A\u6210\u5E74\u4EBA\u7684\u4E2A\u4EBA\u4FE1\u606F\uFF0C\u5C5E\u4E8E\u654F\u611F\u4E2A\u4EBA\u4FE1\u606F\u3002\u6CA1\u6709\u7279\u5B9A\u76EE\u7684\u3001\u5145\u5206\u5FC5\u8981\u6027\u548C\u4E25\u683C\u4FDD\u62A4\u63AA\u65BD\uFF0C\u5E76\u4E14\u6CA1\u6709\u53D6\u5F97\u4E2A\u4EBA\u5355\u72EC\u540C\u610F\u7684\uFF0C\u4E0D\u5F97\u5904\u7406\u3002</p>\r\n    <p>\u6B64\u5916\u8FD8\u987B\u9075\u5B88\u5176\u4ED6\u73B0\u884C\u6709\u6548\u7684\u6CD5\u5F8B\u3001\u884C\u653F\u6CD5\u89C4\u3001\u76D1\u7BA1\u89C4\u5B9A\uFF0C\u4EE5\u53CA\u6240\u4F7F\u7528\u6A21\u578B\u7684\u670D\u52A1\u6761\u6B3E\u4E0E\u6EE5\u7528\u653F\u7B56\u3002</p>\r\n    <h3>5. \u636E\u6B64\u7981\u6B62\u7684\u65B9\u5411</h3>\r\n    <p>\u672A\u6388\u6743\u8FDB\u5165\u3002\u7981\u6B62\u628A\u6CA1\u6709\u4E66\u9762\u6388\u6743\u7684\u5355\u4F4D\u3001\u57DF\u540D\u3001\u5730\u5740\u3001\u516C\u7F51\u7CFB\u7EDF\u3001\u751F\u4EA7\u4E1A\u52A1\u6216\u5173\u952E\u4FE1\u606F\u57FA\u7840\u8BBE\u65BD\u767B\u8BB0\u4E3A\u9776\u6807\uFF0C\u7981\u6B62\u5BF9\u5176\u626B\u63CF\u3001\u63A2\u6D4B\u3001\u4FB5\u5165\u3001\u63A7\u5236\u6216\u53D1\u5305\u3002\u5BF9\u5E94\u5211\u6CD5\u7B2C\u4E8C\u767E\u516B\u5341\u4E94\u6761\u7B2C\u4E00\u6B3E\u3001\u7B2C\u4E8C\u6B3E\uFF0C\u7F51\u7EDC\u5B89\u5168\u6CD5\u7B2C\u4E8C\u5341\u4E5D\u6761\u3001\u7B2C\u4E09\u5341\u4E09\u6761\u3002</p>\r\n    <p>\u7834\u574F\u4E0E\u6076\u610F\u7A0B\u5E8F\u3002\u7981\u6B62\u5220\u9664\u3001\u4FEE\u6539\u3001\u589E\u52A0\u3001\u5E72\u6270\u4ED6\u4EBA\u7CFB\u7EDF\u529F\u80FD\u6216\u5176\u4E2D\u7684\u6570\u636E\u3001\u5E94\u7528\u7A0B\u5E8F\uFF1B\u7981\u6B62\u5236\u4F5C\u3001\u4F20\u64AD\u75C5\u6BD2\u3001\u52D2\u7D22\u7A0B\u5E8F\u6216\u5176\u4ED6\u7834\u574F\u6027\u7A0B\u5E8F\uFF1B\u7981\u6B62\u5728\u4FE1\u606F\u6216\u8F6F\u4EF6\u4E2D\u8BBE\u7F6E\u6076\u610F\u7A0B\u5E8F\u3002\u5BF9\u5E94\u5211\u6CD5\u7B2C\u4E8C\u767E\u516B\u5341\u516D\u6761\u7B2C\u4E00\u6B3E\u81F3\u7B2C\u4E09\u6B3E\uFF0C\u7F51\u7EDC\u5B89\u5168\u6CD5\u7B2C\u4E94\u5341\u6761\u3002</p>\r\n    <p>\u5DE5\u5177\u4E0E\u5E2E\u52A9\u3002\u7981\u6B62\u628A\u672C\u9879\u76EE\u6216\u672C\u673A\u63D0\u4F9B\u7ED9\u4ED6\u4EBA\uFF0C\u7528\u4E8E\u4FB5\u5165\u3001\u975E\u6CD5\u63A7\u5236\u6216\u7A83\u53D6\u6570\u636E\uFF1B\u7981\u6B62\u660E\u77E5\u5BF9\u65B9\u5728\u5B9E\u65BD\u7F51\u7EDC\u72AF\u7F6A\uFF0C\u4ECD\u63D0\u4F9B\u7A0B\u5E8F\u3001\u5DE5\u5177\u3001\u6280\u672F\u652F\u6301\u3001\u5E7F\u544A\u63A8\u5E7F\u6216\u652F\u4ED8\u7ED3\u7B97\u3002\u5BF9\u5E94\u5211\u6CD5\u7B2C\u4E8C\u767E\u516B\u5341\u4E94\u6761\u7B2C\u4E09\u6B3E\u3001\u7B2C\u4E8C\u767E\u516B\u5341\u4E03\u6761\u4E4B\u4E8C\uFF0C\u7F51\u7EDC\u5B89\u5168\u6CD5\u7B2C\u4E8C\u5341\u4E5D\u6761\u3002</p>\r\n    <p>\u6570\u636E\u3002\u7981\u6B62\u7A83\u53D6\u3001\u975E\u6CD5\u6536\u96C6\u3001\u8D85\u8303\u56F4\u4F7F\u7528\u3001\u6CC4\u9732\u3001\u51FA\u552E\u6216\u5411\u4ED6\u4EBA\u63D0\u4F9B\u4E1A\u52A1\u6570\u636E\u3001\u8D26\u53F7\u3001\u53E3\u4EE4\u548C\u5176\u4ED6\u53D7\u4FDD\u62A4\u6570\u636E\u3002\u5BF9\u5E94\u6570\u636E\u5B89\u5168\u6CD5\u7B2C\u516B\u6761\u3001\u7B2C\u4E09\u5341\u4E8C\u6761\u3001\u7B2C\u4E94\u5341\u4E00\u6761\u3002</p>\r\n    <p>\u4E2A\u4EBA\u4FE1\u606F\u3002\u7981\u6B62\u975E\u6CD5\u6536\u96C6\u3001\u4F7F\u7528\u3001\u52A0\u5DE5\u3001\u4F20\u8F93\u3001\u4E70\u5356\u3001\u63D0\u4F9B\u6216\u516C\u5F00\u4ED6\u4EBA\u4E2A\u4EBA\u4FE1\u606F\uFF1B\u7981\u6B62\u8FC7\u5EA6\u6536\u96C6\uFF1B\u7981\u6B62\u4EE5\u8BEF\u5BFC\u3001\u6B3A\u8BC8\u3001\u80C1\u8FEB\u65B9\u5F0F\u5904\u7406\uFF1B\u7981\u6B62\u64C5\u81EA\u5904\u7406\u751F\u7269\u8BC6\u522B\u3001\u533B\u7597\u5065\u5EB7\u3001\u91D1\u878D\u8D26\u6237\u3001\u884C\u8E2A\u8F68\u8FF9\u548C\u513F\u7AE5\u4E2A\u4EBA\u4FE1\u606F\u3002\u5BF9\u5E94\u5211\u6CD5\u7B2C\u4E8C\u767E\u4E94\u5341\u4E09\u6761\u4E4B\u4E00\u7B2C\u4E00\u6B3E\u3001\u7B2C\u4E09\u6B3E\uFF0C\u7F51\u7EDC\u5B89\u5168\u6CD5\u7B2C\u56DB\u5341\u516D\u6761\uFF0C\u4E2A\u4EBA\u4FE1\u606F\u4FDD\u62A4\u6CD5\u7B2C\u4E94\u6761\u3001\u7B2C\u516D\u6761\u3001\u7B2C\u5341\u6761\u3001\u7B2C\u5341\u4E09\u6761\u3001\u7B2C\u4E8C\u5341\u516B\u6761\u3001\u7B2C\u4E8C\u5341\u4E5D\u6761\u3002</p>\r\n    <p>\u8BC8\u9A97\u4E0E\u8FDD\u6CD5\u4FE1\u606F\u3002\u7981\u6B62\u8BBE\u7ACB\u6216\u5229\u7528\u7F51\u7AD9\u3001\u7FA4\u7EC4\u5B9E\u65BD\u8BC8\u9A97\u3001\u4F20\u6388\u72AF\u7F6A\u65B9\u6CD5\u3001\u5236\u4F5C\u6216\u9500\u552E\u8FDD\u7981\u7269\u54C1\u3001\u7BA1\u5236\u7269\u54C1\uFF1B\u7981\u6B62\u53D1\u5E03\u6B64\u7C7B\u4FE1\u606F\uFF1B\u7981\u6B62\u5229\u7528\u8BA1\u7B97\u673A\u5B9E\u65BD\u8BC8\u9A97\u3001\u76D7\u7A83\u3001\u8D2A\u6C61\u3001\u632A\u7528\u516C\u6B3E\u3001\u7A83\u53D6\u56FD\u5BB6\u79D8\u5BC6\u3002\u5BF9\u5E94\u5211\u6CD5\u7B2C\u4E8C\u767E\u516B\u5341\u4E03\u6761\u3001\u7B2C\u4E8C\u767E\u516B\u5341\u4E03\u6761\u4E4B\u4E00\u7B2C\u4E00\u6B3E\u7B2C\uFF08\u4E00\uFF09\u9879\u81F3\u7B2C\uFF08\u4E09\uFF09\u9879\uFF0C\u7F51\u7EDC\u5B89\u5168\u6CD5\u7B2C\u56DB\u5341\u516B\u6761\u3002</p>\r\n    <p>\u5185\u5BB9\u3002\u7981\u6B62\u751F\u6210\u6216\u4F20\u64AD\u5371\u5BB3\u56FD\u5BB6\u5B89\u5168\u3001\u8363\u8A89\u548C\u5229\u76CA\u7684\u5185\u5BB9\uFF0C\u7981\u6B62\u717D\u52A8\u98A0\u8986\u3001\u5206\u88C2\uFF0C\u7981\u6B62\u6050\u6016\u4E3B\u4E49\u3001\u6781\u7AEF\u4E3B\u4E49\u3001\u6C11\u65CF\u4EC7\u6068\uFF0C\u7981\u6B62\u66B4\u529B\u3001\u6DEB\u79FD\u8272\u60C5\u3001\u8D4C\u535A\uFF0C\u7981\u6B62\u7F16\u9020\u865A\u5047\u4FE1\u606F\u6270\u4E71\u7ECF\u6D4E\u79E9\u5E8F\u548C\u793E\u4F1A\u79E9\u5E8F\uFF0C\u7981\u6B62\u4FB5\u5BB3\u540D\u8A89\u3001\u9690\u79C1\u3001\u77E5\u8BC6\u4EA7\u6743\uFF0C\u7981\u6B62\u5371\u5BB3\u672A\u6210\u5E74\u4EBA\u8EAB\u5FC3\u5065\u5EB7\u7684\u5185\u5BB9\u3002\u5BF9\u5E94\u7F51\u7EDC\u5B89\u5168\u6CD5\u7B2C\u5341\u4E09\u6761\u7B2C\u4E8C\u6B3E\u3001\u7B2C\u5341\u56DB\u6761\u3002</p>\r\n    <p>\u7ED3\u679C\u6269\u6563\u3002\u6F14\u7EC3\u4E2D\u5F62\u6210\u7684\u8BB0\u5F55\u3001\u8D44\u4EA7\u4FE1\u606F\u548C\u6587\u4EF6\uFF0C\u53EA\u7559\u5728\u4E66\u9762\u6388\u6743\u5199\u660E\u7684\u76EE\u6807\u548C\u671F\u9650\u91CC\uFF0C\u4E0D\u5F97\u4EA4\u7ED9\u65E0\u6743\u83B7\u77E5\u7684\u4EBA\uFF0C\u4E5F\u4E0D\u5F97\u6539\u4F5C\u6388\u6743\u4EE5\u5916\u7684\u7528\u9014\u3002</p>\r\n    <h3>6. \u8D23\u4EFB\u7531\u4F7F\u7528\u8005\u627F\u62C5</h3>\r\n    <p>\u672C\u9879\u76EE\u4F9D\u636E MIT \u534F\u8BAE\u6309\u73B0\u72B6\u63D0\u4F9B\u3002\u5F00\u53D1\u8005\u4E0D\u5C31\u5B8C\u6574\u6027\u3001\u5B89\u5168\u6027\u4E0E\u9002\u7528\u6027\u4F5C\u4FDD\u8BC1\u3002\u4F7F\u7528\u8005\u5BF9\u81EA\u5DF1\u7684\u4E0B\u8F7D\u3001\u90E8\u7F72\u3001\u8FD0\u884C\u3001\u4FEE\u6539\u3001\u4F20\u64AD\uFF0C\u4EE5\u53CA\u5168\u90E8\u8F93\u5165\u4E0E\u8F93\u51FA\uFF0C\u627F\u62C5\u72EC\u7ACB\u3001\u5B8C\u5168\u7684\u6C11\u4E8B\u3001\u884C\u653F\u53CA\u5211\u4E8B\u6CD5\u5F8B\u8D23\u4EFB\u3002\u4F5C\u8005\u4E0E\u8D21\u732E\u8005\u4E0D\u627F\u62C5\u56E0\u6EE5\u7528\u4EA7\u751F\u7684\u76F4\u63A5\u3001\u95F4\u63A5\u6216\u8FDE\u5E26\u8D23\u4EFB\u3002</p>\r\n    <p>\u52FE\u9009\u786E\u8BA4\u7684\u662F\u64CD\u4F5C\u8005\u672C\u4EBA\uFF0C\u4E0D\u80FD\u4EE3\u66FF\u6CA1\u6709\u9605\u8BFB\u672C\u58F0\u660E\u7684\u4EBA\uFF0C\u4E5F\u4E0D\u80FD\u628A\u522B\u4EBA\u7684\u7CFB\u7EDF\u8BF4\u6210\u5DF2\u7ECF\u6388\u6743\u3002</p>\r\n    <h3>7. \u8FDD\u7EA6\u5373\u7EC8\u6B62\u6388\u6743</h3>\r\n    <p>\u4E00\u65E6\u7528\u4E8E\u975E\u6CD5\u653B\u51FB\u3001\u6076\u610F\u6D3B\u52A8\u6216\u4E0A\u8FF0\u4EFB\u4E00\u7981\u6B62\u65B9\u5411\uFF0C\u4F7F\u7528\u8BB8\u53EF\u81EA\u8BE5\u884C\u4E3A\u53D1\u751F\u4E4B\u65E5\u8D77\u81EA\u52A8\u7EC8\u6B62\uFF0C\u4E14\u4E0D\u53EF\u64A4\u9500\u3002\u5FC5\u987B\u7ACB\u5373\u505C\u6B62\u4F7F\u7528\uFF0C\u5E76\u9500\u6BC1\u672C\u9879\u76EE\u7684\u4EE3\u7801\u3001\u811A\u672C\u4E0E\u884D\u751F\u6570\u636E\uFF0C\u4F9D\u6CD5\u627F\u62C5\u8D23\u4EFB\u3002\u6388\u6743\u7EC8\u6B62\u540E\uFF0C\u6F14\u7EC3\u53F0\u4E0D\u5F97\u7EE7\u7EED\u6253\u5F00\u6216\u7EE7\u7EED\u4F7F\u7528\u3002</p>\r\n    <h3>8. \u4E0E DeepSeek \u5B98\u65B9\u7684\u5173\u7CFB</h3>\r\n    <p>\u672C\u9879\u76EE\u662F\u72EC\u7ACB\u7684\u5F00\u6E90\u9879\u76EE\uFF0C\u4E0E DeepSeek \u5B98\u65B9\u6216\u5176\u5173\u8054\u4E3B\u4F53\u6CA1\u6709\u96B6\u5C5E\u3001\u5546\u4E1A\u5408\u4F5C\u3001\u6388\u6743\u6216\u5B98\u65B9\u80CC\u4E66\u3002\u6587\u4E2D\u7684\u300C\u5B98\u65B9\u300D\u53EA\u8868\u793A\u8BC4\u6D4B\u5BF9\u8C61\u662F\u4F7F\u7528\u8005\u672C\u673A\u5B89\u88C5\u7684\u5B98\u65B9 DeepSeek Harness \u8F6F\u4EF6\u5305\uFF0C\u4E0D\u4EE3\u8868 DeepSeek \u5B98\u65B9\u5F00\u53D1\u3001\u8BA4\u53EF\u6216\u62C5\u4FDD\u672C\u63D2\u4EF6\u3002</p>\r\n    <p>\u6587\u672B\u3002\u5012\u8BA1\u65F6\u7ED3\u675F\u3001\u6EDA\u5230\u8FD9\u91CC\u5E76\u52FE\u9009\u5168\u90E8\u4E09\u9879\uFF0C\u624D\u8868\u793A\u4F60\u4EE5\u672C\u4EBA\u8EAB\u4EFD\u8BA4\u53EF\u672C\u58F0\u660E\uFF0C\u5E76\u5B8C\u6210\u672C\u6B21\u6F14\u7EC3\u53F0\u6388\u6743\u3002</p>";
+var AUTH_LEGAL_HTML = "<h3>\uC5C4\uACA9\uD55C \uBC95\uC801 \uBA74\uCC45 \uBC0F \uC900\uBC95 \uC0AC\uC6A9 \uC120\uC5B8</h3>\r\n    <p>\uC774 \uC120\uC5B8\uC740 \uB4DC\uB9B4 \uCF58\uC194\uC5D0 \uB4E4\uC5B4\uAC00\uAE30 \uC804\uC5D0 \uC804\uBB38\uC744 \uC77D\uC5B4\uC57C \uD569\uB2C8\uB2E4. \uC774 \uD504\uB85C\uC81D\uD2B8\uB294 \uBE44\uC601\uB9AC \uC624\uD508\uC18C\uC2A4 \uD504\uB85C\uC81D\uD2B8\uC774\uBA70 \uAD6D\uAC00 \uBC95\uB960\uACFC \uD574\uB2F9 \uD50C\uB7AB\uD3FC\uC758 \uADDC\uBC94\uC744 \uC900\uC218\uD558\uACE0 \uD559\uC2B5\xB7\uC5F0\uAD6C \uBC0F \uAE30\uC220 \uCC38\uACE0\uC6A9\uC73C\uB85C\uB9CC \uC81C\uACF5\uD569\uB2C8\uB2E4. \uC5B4\uB5A4 \uC8FC\uCCB4\uB3C4 \uC774 \uD504\uB85C\uC81D\uD2B8\uB97C \uC0C1\uC5C5\uC801 \uD310\uB9E4, \uC720\uB8CC \uC7AC\uD310\uB9E4, \uB610\uB294 \uD68C\uC0C9\xB7\uAC80\uC740 \uC2DC\uC7A5 \uC218\uC775\uC5D0 \uC0AC\uC6A9\uD558\uB294 \uAC83\uC744 \uC5C4\uACA9\uD788 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uAC1C\uBC1C\uC790\uB294 \uBAA8\uB4E0 \uD615\uD0DC\uC758 \uC704\uBC95 \uBC94\uC8C4\uB97C \uB2E8\uD638\uD788 \uBC18\uB300\uD558\uACE0 \uC5C4\uACA9\uD788 \uAE08\uC9C0\uD558\uBA70, \uBBF8\uC2B9\uC778 \uB124\uD2B8\uC6CC\uD06C \uACF5\uACA9, \uCDE8\uC57D\uC810 \uC775\uC2A4\uD50C\uB85C\uC787, \uB370\uC774\uD130 \uD0C8\uCDE8, \uCEF4\uD4E8\uD130 \uC815\uBCF4 \uC2DC\uC2A4\uD15C \uBD88\uBC95 \uCE68\uC785, \uB610\uB294 \uC704\uBC95\xB7\uAE08\uC9C0 \uCF58\uD150\uCE20 \uC0DD\uC131\uC744 \uC808\uB300 \uC9C0\uC6D0\xB7\uC870\uC7A5\xB7\uD611\uC870\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uC774 \uD504\uB85C\uC81D\uD2B8\uB97C \uC704\uBC95 \uBC94\uC8C4\uC5D0 \uC0AC\uC6A9\uD55C \uD589\uC704\uB294 \uBAA8\uB450 \uAC1C\uBC1C\uC790\uC640 \uBB34\uAD00\uD558\uBA70, \uD589\uC704\uC790\uAC00 \uBC95\uC5D0 \uB530\uB77C \uC804\uC801\uC778 \uBC95\uC801 \uCC45\uC784\uC744 \uB3C5\uB9BD\uC801\uC73C\uB85C \uC9D1\uB2C8\uB2E4. \uC5F0\uAD6C, \uAD50\uC721, \uD14C\uC2A4\uD2B8, \uC2DC\uC5F0, \uB0B4\uBD80 \uD559\uC2B5\uC744 \uC774\uC720\uB85C \uC544\uB798 \uC870\uD56D\uC744 \uD68C\uD53C\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</p>\r\n    <h3>1. \uC774 \uC800\uC7A5\uC18C\uC5D0\uB294 \uC704\uBC95 \uCF58\uD150\uCE20\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4</h3>\r\n    <p>dsh-purge \uAC00 \uBC30\uD3EC\uD558\uB294 \uCF54\uB4DC, \uBB38\uC11C, \uD328\uCE58, \uAE30\uBCF8 \uD504\uB86C\uD504\uD2B8\uB294 \uD2B8\uB85C\uC774 \uBAA9\uB9C8, \uBC31\uB3C4\uC5B4, \uBBF8\uC2B9\uC778 \uCE68\uD22C \uB3C4\uAD6C, \uB79C\uC12C\uC6E8\uC5B4, \uD06C\uB9AC\uB374\uC15C \uC2A4\uD130\uD551 \uC2A4\uD06C\uB9BD\uD2B8\uAC00 \uC544\uB2C8\uBA70, \uACF5\uC6A9 \uC778\uD130\uB137\uC774\uB098 \uC11C\uB4DC\uD30C\uD2F0 \uC2DC\uC2A4\uD15C\uC744 \uACA8\uB0E5\uD55C \uACF5\uACA9 \uD398\uC774\uB85C\uB4DC\uB3C4 \uC544\uB2D9\uB2C8\uB2E4. \uC774 \uD504\uB85C\uC81D\uD2B8\uB294 \uC704\uBC95 \uCF58\uD150\uCE20\uB97C \uC81C\uACF5\uD558\uC9C0 \uC54A\uACE0, \uC704\uBC95 \uBC94\uC8C4\uC758 \uAD50\uC0AC\xB7\uC870\uC9C1\xB7\uD611\uC870\uB3C4 \uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.</p>\r\n    <h3>2. \uB85C\uCEEC \uC870\uC791\uC740 \uB300\uC678 \uAD8C\uD55C\uC744 \uAD6C\uC131\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4</h3>\r\n    <p>\uD328\uCE58 \uC801\uC6A9, \uC4F0\uAE30, \uB864\uBC31, \uC81C\uAC70\uB294 \uBAA8\uB450 \uB85C\uCEEC \uD30C\uC77C\uACFC \uB85C\uCEEC \uD504\uB85C\uC138\uC2A4 \uC548\uC5D0\uC11C \uC644\uB8CC\uB429\uB2C8\uB2E4. \uC774\uB7EC\uD55C \uC870\uC791\uC740 \uC5B4\uB5A4 \uACF5\uC6A9 \uC778\uD130\uB137 \uD638\uC2A4\uD2B8\uB098 \uBBF8\uC2B9\uC778 \uC2DC\uC2A4\uD15C\uC5D0 \uB300\uD574\uC11C\uB3C4 \uC2A4\uCE94, \uD0D0\uC9C0, \uCE68\uC785, \uACF5\uACA9 \uD328\uD0B7 \uBC1C\uC2E0\uC744 \uD558\uC9C0 \uC54A\uC73C\uBA70, \uB85C\uCEEC \uAE30\uAE30\uB97C \uACBD\uC720\uC9C0\uB85C \uC0BC\uC544\uC11C\uB3C4 \uC548 \uB429\uB2C8\uB2E4.</p>\r\n    <p>\uD50C\uB7EC\uADF8\uC778\uC774 \uC5C5\uB370\uC774\uD2B8 \uD655\uC778\uC744 \uCF1C\uBA74 \uC774 \uD50C\uB7EC\uADF8\uC778 \uC790\uCCB4\uC758 GitHub \uC800\uC7A5\uC18C\uC5D0\uB9CC \uC811\uC18D\uD574 \uBC84\uC804\uC744 \uB300\uC870\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uC774 \uC811\uC18D\uC740 \uC11C\uB4DC\uD30C\uD2F0 \uC2DC\uC2A4\uD15C\uC5D0 \uB300\uD55C \uB124\uD2B8\uC6CC\uD06C \uACF5\uACA9\uACFC \uBB34\uAD00\uD558\uBA70, \uB300\uC678 \uCE68\uD22C\uC5D0 \uB300\uD55C \uAD8C\uD55C\uC73C\uB85C \uD574\uC11D\uB420 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</p>\r\n    <h3>3. \uD5C8\uC6A9\uB418\uB294 \uC0AC\uC6A9 \uBC94\uC704</h3>\r\n    <p>\uC790\uC2E0\uC774 \uCC98\uB9AC \uAD8C\uD55C\uC744 \uC99D\uBA85\uD560 \uC218 \uC788\uB294 \uD658\uACBD\uC5D0\uC11C\uB9CC \uC0AC\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4: \uBCF8\uC778\uC774 \uAD00\uB9AC \uAD8C\uD55C\uC744 \uAC00\uC9C4 \uB85C\uCEEC \uAE30\uAE30\uC758 \uACF5\uC2DD Harness, \uC624\uD504\uB77C\uC778 \uB85C\uCEEC \uD569\uC131 \uC2E4\uC2B5 \uD658\uACBD, \uC18C\uC720\uC790\uAC00 \uC801\uBC95\uD55C \uC11C\uBA74 \uC2B9\uC778\uC744 \uBC1C\uAE09\uD55C \uB124\uD2B8\uC6CC\uD06C \uBCF4\uC548 \uB4DC\uB9B4 \uC2E4\uC2B5 \uD658\uACBD, \uADDC\uC815\uC744 \uC900\uC218\uD558\uB294 \uC2E4\uD5D8\uC2E4\uC758 \uD1B5\uC81C\uB41C \uD658\uACBD. \uC11C\uBA74 \uC2B9\uC778\uC740 \uAD6C\uCCB4\uC801 \uB300\uC0C1, \uAE30\uAC04, \uBC94\uC704\uC5D0 \uB300\uC751\uD574\uC57C \uD569\uB2C8\uB2E4. \uAE30\uAD00 \uC774\uB984\uB9CC \uC801\uAC70\uB098 \uAD6C\uB450 \uC9C4\uC220\uB9CC\uC73C\uB85C\uB294 \uC2B9\uC778\uC774 \uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.</p>\r\n    <p>\uC18C\uC720\uC790\uC758 \uC801\uBC95\uD55C \uC11C\uBA74 \uC2B9\uC778\uC774 \uC5C6\uB294 \uB300\uC0C1, \uACF5\uC6A9 \uC778\uD130\uB137 \uC628\uB77C\uC778 \uC2DC\uC2A4\uD15C, \uC6B4\uC601 \uC911\uC778 \uC11C\uBE44\uC2A4, \uADF8\uB9AC\uACE0 \uC5D0\uB108\uC9C0\xB7\uAD50\uD1B5\xB7\uC218\uB9AC\xB7\uAE08\uC735\xB7\uACF5\uACF5 \uC11C\uBE44\uC2A4\xB7\uC804\uC790 \uC815\uBD80 \uB4F1 \uD575\uC2EC \uC815\uBCF4 \uAE30\uBC18 \uC2DC\uC124\uC740 \uB4DC\uB9B4 \uB300\uC0C1\uC73C\uB85C \uC0BC\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</p>\r\n    <h3>4. \uC900\uC218\uD574\uC57C \uD558\uB294 \uBC95\uB960(\uC870\xB7\uD56D\uBCC4)</h3>\r\n    <p>\uC911\uAD6D \uD615\uBC95 \uC81C285\uC870 \uC81C1\uD56D: \uAD6D\uAC00 \uADDC\uC815\uC744 \uC704\uBC18\uD574 \uAD6D\uAC00 \uC0AC\uBB34, \uAD6D\uBC29 \uAC74\uC124, \uCCA8\uB2E8 \uACFC\uD559\uAE30\uC220 \uBD84\uC57C\uC758 \uCEF4\uD4E8\uD130 \uC815\uBCF4 \uC2DC\uC2A4\uD15C\uC5D0 \uCE68\uC785\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uAC19\uC740 \uC870 \uC81C2\uD56D: \uC804\uD56D\uC5D0\uC11C \uADDC\uC815\uD55C \uBC94\uC704 \uBC16\uC758 \uCEF4\uD4E8\uD130 \uC815\uBCF4 \uC2DC\uC2A4\uD15C\uC5D0 \uCE68\uC785\uD558\uAC70\uB098, \uB2E4\uB978 \uAE30\uC220 \uC218\uB2E8\uC73C\uB85C \uADF8 \uC2DC\uC2A4\uD15C\uC5D0 \uC800\uC7A5\xB7\uCC98\uB9AC\xB7\uC804\uC1A1\uB418\uB294 \uB370\uC774\uD130\uB97C \uD68D\uB4DD\uD558\uAC70\uB098, \uADF8 \uC2DC\uC2A4\uD15C\uC744 \uBD88\uBC95 \uD1B5\uC81C\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uAC19\uC740 \uC870 \uC81C3\uD56D: \uCEF4\uD4E8\uD130 \uC815\uBCF4 \uC2DC\uC2A4\uD15C \uCE68\uC785\xB7\uBD88\uBC95 \uD1B5\uC81C\uC5D0 \uC804\uC6A9\uB418\uB294 \uD504\uB85C\uADF8\uB7A8\uC774\uB098 \uB3C4\uAD6C\uB97C \uC81C\uACF5\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uD0C0\uC778\uC774 \uCE68\uC785\xB7\uBD88\uBC95 \uD1B5\uC81C\uB97C \uD55C\uB2E4\uB294 \uC0AC\uC2E4\uC744 \uC54C\uBA74\uC11C \uD504\uB85C\uADF8\uB7A8\uC774\uB098 \uB3C4\uAD6C\uB97C \uC81C\uACF5\uD558\uB294 \uD589\uC704\uB3C4 \uB9C8\uCC2C\uAC00\uC9C0\uB85C \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C286\uC870 \uC81C1\uD56D: \uCEF4\uD4E8\uD130 \uC815\uBCF4 \uC2DC\uC2A4\uD15C \uAE30\uB2A5\uC744 \uC0AD\uC81C\xB7\uC218\uC815\xB7\uCD94\uAC00\xB7\uBC29\uD574\uD574 \uC2DC\uC2A4\uD15C\uC774 \uC815\uC0C1\uC801\uC73C\uB85C \uC791\uB3D9\uD558\uC9C0 \uBABB\uD558\uAC8C \uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uAC19\uC740 \uC870 \uC81C2\uD56D: \uC2DC\uC2A4\uD15C\uC5D0 \uC800\uC7A5\xB7\uCC98\uB9AC\xB7\uC804\uC1A1\uB418\uB294 \uB370\uC774\uD130\uC640 \uC751\uC6A9 \uD504\uB85C\uADF8\uB7A8\uC744 \uC0AD\uC81C\xB7\uC218\uC815\xB7\uCD94\uAC00\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uAC19\uC740 \uC870 \uC81C3\uD56D: \uCEF4\uD4E8\uD130 \uBC14\uC774\uB7EC\uC2A4 \uB4F1 \uD30C\uAD34\uC801 \uD504\uB85C\uADF8\uB7A8\uC744 \uACE0\uC758\uB85C \uC81C\uC791\xB7\uC804\uD30C\uD574 \uCEF4\uD4E8\uD130 \uC2DC\uC2A4\uD15C\uC758 \uC815\uC0C1 \uC791\uB3D9\uC5D0 \uC601\uD5A5\uC744 \uC8FC\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C287\uC870: \uCEF4\uD4E8\uD130\uB97C \uC774\uC6A9\uD574 \uAE08\uC735 \uC0AC\uAE30, \uC808\uB3C4, \uD6A1\uB839, \uACF5\uAE08 \uC720\uC6A9, \uAD6D\uAC00 \uAE30\uBC00 \uD0C8\uCDE8 \uB610\uB294 \uADF8 \uBC16\uC758 \uBC94\uC8C4\uB97C \uC800\uC9C0\uB974\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C287\uC870\uC7582 \uC81C1\uD56D \uC81C1\uD638: \uC0AC\uAE30 \uC2E4\uD589, \uBC94\uC8C4 \uBC29\uBC95 \uC804\uC218, \uAE08\uC9C0 \uBB3C\uD488\xB7\uADDC\uC81C \uBB3C\uD488\uC758 \uC81C\uC791\uC774\uB098 \uD310\uB9E4 \uB4F1 \uC704\uBC95 \uBC94\uC8C4 \uD65C\uB3D9\uC5D0 \uC0AC\uC6A9\uD558\uB294 \uC6F9\uC0AC\uC774\uD2B8\uB098 \uD1B5\uC2E0 \uADF8\uB8F9\uC744 \uAC1C\uC124\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uAC19\uC740 \uD56D \uC81C2\uD638: \uB9C8\uC57D, \uCD1D\uAE30, \uC74C\uB780\uBB3C \uB4F1 \uAE08\uC9C0 \uBB3C\uD488\xB7\uADDC\uC81C \uBB3C\uD488\uC758 \uC81C\uC791\uC774\uB098 \uD310\uB9E4, \uB610\uB294 \uADF8 \uBC16\uC758 \uC704\uBC95 \uBC94\uC8C4\uC5D0 \uAD00\uD55C \uC815\uBCF4\uB97C \uAC8C\uC2DC\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uAC19\uC740 \uD56D \uC81C3\uD638: \uC0AC\uAE30 \uB4F1 \uC704\uBC95 \uBC94\uC8C4 \uD65C\uB3D9\uC744 \uC704\uD574 \uC815\uBCF4\uB97C \uAC8C\uC2DC\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C287\uC870\uC7583: \uD0C0\uC778\uC774 \uC815\uBCF4 \uB124\uD2B8\uC6CC\uD06C\uB97C \uC774\uC6A9\uD574 \uBC94\uC8C4\uB97C \uC800\uC9C0\uB978\uB2E4\uB294 \uC0AC\uC2E4\uC744 \uC54C\uBA74\uC11C\uB3C4 \uAE30\uC220 \uC9C0\uC6D0\uC744 \uC81C\uACF5\uD558\uAC70\uB098, \uAD11\uACE0 \uD64D\uBCF4\xB7\uACB0\uC81C \uC815\uC0B0 \uB4F1\uC758 \uB3C4\uC6C0\uC744 \uC81C\uACF5\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C253\uC870\uC7582 \uC81C1\uD56D\xB7\uC81C3\uD56D: \uD0C0\uC778\uC5D0\uAC8C \uC2DC\uBBFC \uAC1C\uC778\uC815\uBCF4\uB97C \uD310\uB9E4\uD558\uAC70\uB098 \uC81C\uACF5\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uC2DC\uBBFC \uAC1C\uC778\uC815\uBCF4\uB97C \uC808\uCDE8\uD558\uAC70\uB098 \uADF8 \uBC16\uC758 \uBC29\uBC95\uC73C\uB85C \uBD88\uBC95 \uD68D\uB4DD\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC911\uAD6D \uB124\uD2B8\uC6CC\uD06C \uC548\uC804\uBC95 \uC81C13\uC870 \uC81C2\uD56D: \uB124\uD2B8\uC6CC\uD06C\uB97C \uC0AC\uC6A9\uD574 \uB124\uD2B8\uC6CC\uD06C \uC548\uC804\uC744 \uD574\uCE58\uAC70\uB098, \uB124\uD2B8\uC6CC\uD06C\uB97C \uC774\uC6A9\uD574 \uAD6D\uAC00 \uC548\uC804\xB7\uBA85\uC608\xB7\uC774\uC775\uC744 \uD574\uCE58\uAC70\uB098, \uAD6D\uAC00 \uC815\uAD8C \uC804\uBCF5\xB7\uC0AC\uD68C\uC8FC\uC758 \uC81C\uB3C4 \uC804\uBCF5\uC744 \uC120\uB3D9\uD558\uAC70\uB098, \uAD6D\uAC00 \uBD84\uC5F4\xB7\uAD6D\uAC00 \uD1B5\uC77C \uD30C\uAD34\uB97C \uC120\uB3D9\uD558\uAC70\uB098, \uD14C\uB7EC\uB9AC\uC998\xB7\uADF9\uB2E8\uC8FC\uC758\uB97C \uC120\uC804\uD558\uAC70\uB098, \uBBFC\uC871 \uC99D\uC624\xB7\uBBFC\uC871 \uCC28\uBCC4\uC744 \uC120\uC804\uD558\uAC70\uB098, \uD3ED\uB825\xB7\uC74C\uB780 \uC0C9\uC815 \uC815\uBCF4\uB97C \uC804\uD30C\uD558\uAC70\uB098, \uD5C8\uC704 \uC815\uBCF4\uB97C \uC870\uC791\xB7\uC804\uD30C\uD574 \uACBD\uC81C \uC9C8\uC11C\uC640 \uC0AC\uD68C \uC9C8\uC11C\uB97C \uC5B4\uC9C0\uB7FD\uD788\uAC70\uB098, \uD0C0\uC778\uC758 \uBA85\uC608\xB7\uC0AC\uC0DD\uD65C\xB7\uC9C0\uC2DD\uC7AC\uC0B0\uAD8C \uBC0F \uADF8 \uBC16\uC758 \uD569\uBC95\uC801 \uAD8C\uC775\uC744 \uCE68\uD574\uD558\uB294 \uB4F1\uC758 \uD65C\uB3D9\uC744 \uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C14\uC870: \uB124\uD2B8\uC6CC\uD06C\uB97C \uC774\uC6A9\uD574 \uBBF8\uC131\uB144\uC790\uC758 \uC2E0\uCCB4\uC801\xB7\uC815\uC2E0\uC801 \uAC74\uAC15\uC744 \uD574\uCE58\uB294 \uD65C\uB3D9\uC744 \uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C29\uC870: \uD0C0\uC778\uC758 \uB124\uD2B8\uC6CC\uD06C\uC5D0 \uBD88\uBC95 \uCE68\uC785\uD558\uAC70\uB098, \uD0C0\uC778 \uB124\uD2B8\uC6CC\uD06C\uC758 \uC815\uC0C1 \uAE30\uB2A5\uC744 \uBC29\uD574\uD558\uAC70\uB098, \uB124\uD2B8\uC6CC\uD06C \uB370\uC774\uD130\uB97C \uC808\uCDE8\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uB124\uD2B8\uC6CC\uD06C \uCE68\uC785, \uB124\uD2B8\uC6CC\uD06C \uC815\uC0C1 \uAE30\uB2A5 \uBC0F \uBCF4\uD638 \uC870\uCE58 \uBC29\uD574, \uB124\uD2B8\uC6CC\uD06C \uB370\uC774\uD130 \uC808\uCDE8\uC5D0 \uC804\uC6A9\uB418\uB294 \uD504\uB85C\uADF8\uB7A8\uC774\uB098 \uB3C4\uAD6C\uB97C \uC81C\uACF5\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uD0C0\uC778\uC774 \uB124\uD2B8\uC6CC\uD06C \uC548\uC804\uC744 \uD574\uCE58\uB294 \uD65C\uB3D9\uC744 \uD55C\uB2E4\uB294 \uC0AC\uC2E4\uC744 \uC54C\uBA74\uC11C \uAE30\uC220 \uC9C0\uC6D0\xB7\uAD11\uACE0 \uD64D\uBCF4\xB7\uACB0\uC81C \uC815\uC0B0 \uB4F1\uC758 \uB3C4\uC6C0\uC744 \uC81C\uACF5\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C33\uC870: \uACF5\uACF5 \uD1B5\uC2E0\uACFC \uC815\uBCF4 \uC11C\uBE44\uC2A4, \uC5D0\uB108\uC9C0, \uAD50\uD1B5, \uC218\uB9AC, \uAE08\uC735, \uACF5\uACF5 \uC11C\uBE44\uC2A4, \uC804\uC790 \uC815\uBD80 \uB4F1 \uD575\uC2EC \uC815\uBCF4 \uAE30\uBC18 \uC2DC\uC124\uC5D0 \uB300\uD574 \uC911\uC810 \uBCF4\uD638\uB97C \uC2E4\uC2DC\uD569\uB2C8\uB2E4. \uC801\uBC95\uD55C \uC2B9\uC778 \uC5C6\uC774 \uCE68\uC785\xB7\uBC29\uD574\xB7\uD30C\uAD34\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</p>\r\n    <p>\uC81C46\uC870: \uAC1C\uC778\uC815\uBCF4\uB97C \uC808\uCDE8\uD558\uAC70\uB098 \uADF8 \uBC16\uC758 \uBD88\uBC95 \uBC29\uC2DD\uC73C\uB85C \uD68D\uB4DD\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD558\uBA70, \uAC1C\uC778\uC815\uBCF4\uB97C \uBD88\uBC95 \uD310\uB9E4\uD558\uAC70\uB098 \uBD88\uBC95\uC73C\uB85C \uD0C0\uC778\uC5D0\uAC8C \uC81C\uACF5\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C48\uC870: \uC0AC\uAE30 \uC2E4\uD589, \uBC94\uC8C4 \uBC29\uBC95 \uC804\uC218, \uAE08\uC9C0 \uBB3C\uD488\xB7\uADDC\uC81C \uBB3C\uD488\uC758 \uC81C\uC791\uC774\uB098 \uD310\uB9E4 \uB4F1 \uC704\uBC95 \uBC94\uC8C4 \uD65C\uB3D9\uC5D0 \uC0AC\uC6A9\uD558\uB294 \uC6F9\uC0AC\uC774\uD2B8\uB098 \uD1B5\uC2E0 \uADF8\uB8F9\uC744 \uAC1C\uC124\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uB124\uD2B8\uC6CC\uD06C\uB97C \uC774\uC6A9\uD574 \uC704\uC758 \uC704\uBC95 \uBC94\uC8C4 \uD65C\uB3D9\uC5D0 \uAD00\uD55C \uC815\uBCF4\uB97C \uAC8C\uC2DC\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C50\uC870: \uBC1C\uC1A1\uD558\uB294 \uC804\uC790 \uC815\uBCF4\uC640 \uC81C\uACF5\uD558\uB294 \uC751\uC6A9 \uC18C\uD504\uD2B8\uC6E8\uC5B4\uC5D0 \uC545\uC131 \uD504\uB85C\uADF8\uB7A8\uC744 \uC124\uC815\uD574\uC11C\uB294 \uC548 \uB418\uBA70, \uBC95\uB960\xB7\uD589\uC815 \uBC95\uADDC\uAC00 \uAC8C\uC2DC\uB098 \uC804\uC1A1\uC744 \uAE08\uC9C0\uD558\uB294 \uC815\uBCF4\uB97C \uD3EC\uD568\uD574\uC11C\uB294 \uC548 \uB429\uB2C8\uB2E4.</p>\r\n    <p>\uC911\uAD6D \uB370\uC774\uD130 \uC548\uC804\uBC95 \uC81C8\uC870: \uB370\uC774\uD130 \uCC98\uB9AC \uD65C\uB3D9\uC744 \uD558\uBA74\uC11C \uAD6D\uAC00 \uC548\uC804\uACFC \uACF5\uACF5 \uC774\uC775\uC744 \uD574\uCCD0\uC11C\uB294 \uC548 \uB418\uACE0, \uAC1C\uC778\uACFC \uC870\uC9C1\uC758 \uD569\uBC95\uC801 \uAD8C\uC775\uC744 \uCE68\uD574\uD574\uC11C\uB294 \uC548 \uB429\uB2C8\uB2E4.</p>\r\n    <p>\uC81C32\uC870 \uC81C1\uD56D: \uB370\uC774\uD130\uB97C \uC218\uC9D1\uD560 \uB54C\uB294 \uC801\uBC95\uD558\uACE0 \uC815\uB2F9\uD55C \uBC29\uC2DD\uC744 \uCDE8\uD574\uC57C \uD558\uBA70, \uC808\uCDE8\uD558\uAC70\uB098 \uADF8 \uBC16\uC758 \uBD88\uBC95 \uBC29\uC2DD\uC73C\uB85C \uB370\uC774\uD130\uB97C \uD68D\uB4DD\uD574\uC11C\uB294 \uC548 \uB429\uB2C8\uB2E4.</p>\r\n    <p>\uAC19\uC740 \uC870 \uC81C2\uD56D: \uBC95\uB960\xB7\uD589\uC815 \uBC95\uADDC\uAC00 \uB370\uC774\uD130 \uC218\uC9D1\xB7\uC0AC\uC6A9\uC758 \uBAA9\uC801\uACFC \uBC94\uC704\uB97C \uADDC\uC815\uD55C \uACBD\uC6B0, \uADF8 \uBAA9\uC801\uACFC \uBC94\uC704 \uC548\uC5D0\uC11C\uB9CC \uC218\uC9D1\xB7\uC0AC\uC6A9\uD574\uC57C \uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C51\uC870: \uB370\uC774\uD130\uB97C \uC808\uCDE8\uD558\uAC70\uB098 \uADF8 \uBC16\uC758 \uBD88\uBC95 \uBC29\uC2DD\uC73C\uB85C \uD68D\uB4DD\uD558\uAC70\uB098, \uADF8\uB85C \uC778\uD574 \uAC1C\uC778\xB7\uC870\uC9C1\uC758 \uD569\uBC95\uC801 \uAD8C\uC775\uC744 \uCE68\uD574\uD55C \uACBD\uC6B0\uC5D0\uB294 \uAD00\uB828 \uBC95\uB960\xB7\uD589\uC815 \uBC95\uADDC\uC5D0 \uB530\uB77C \uCC98\uBC8C\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC911\uAD6D \uAC1C\uC778\uC815\uBCF4 \uBCF4\uD638\uBC95 \uC81C5\uC870: \uAC1C\uC778\uC815\uBCF4\uB97C \uCC98\uB9AC\uD560 \uB54C\uB294 \uC801\uBC95\xB7\uC815\uB2F9\xB7\uD544\uC694\xB7\uC2E0\uC758\uC758 \uC6D0\uCE59\uC744 \uC9C0\uCF1C\uC57C \uD558\uBA70, \uC624\uB3C4\xB7\uC0AC\uAE30\xB7\uAC15\uC694 \uB4F1\uC758 \uBC29\uC2DD\uC73C\uB85C \uCC98\uB9AC\uD574\uC11C\uB294 \uC548 \uB429\uB2C8\uB2E4.</p>\r\n    <p>\uC81C6\uC870 \uC81C1\uD56D\xB7\uC81C2\uD56D: \uAC1C\uC778\uC815\uBCF4\uB97C \uCC98\uB9AC\uD560 \uB54C\uB294 \uBA85\uD655\uD558\uACE0 \uD569\uB9AC\uC801\uC778 \uBAA9\uC801\uC774 \uC788\uC5B4\uC57C \uD558\uACE0 \uADF8 \uBAA9\uC801\uACFC \uC9C1\uC811 \uAD00\uB828\uB418\uC5B4\uC57C \uD558\uBA70, \uAC1C\uC778\uC758 \uAD8C\uC775\uC5D0 \uBBF8\uCE58\uB294 \uC601\uD5A5\uC774 \uCD5C\uC18C\uC778 \uBC29\uC2DD\uC744 \uCDE8\uD574\uC57C \uD569\uB2C8\uB2E4. \uC218\uC9D1\uC740 \uCC98\uB9AC \uBAA9\uC801 \uB2EC\uC131\uC5D0 \uD544\uC694\uD55C \uCD5C\uC18C \uBC94\uC704\uB85C \uD55C\uC815\uD558\uBA70, \uACFC\uB3C4\uD558\uAC8C \uC218\uC9D1\uD574\uC11C\uB294 \uC548 \uB429\uB2C8\uB2E4.</p>\r\n    <p>\uC81C10\uC870: \uD0C0\uC778\uC758 \uAC1C\uC778\uC815\uBCF4\uB97C \uBD88\uBC95\uC73C\uB85C \uC218\uC9D1\xB7\uC0AC\uC6A9\xB7\uAC00\uACF5\xB7\uC804\uC1A1\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD558\uACE0, \uD0C0\uC778\uC758 \uAC1C\uC778\uC815\uBCF4\uB97C \uBD88\uBC95\uC73C\uB85C \uB9E4\uB9E4\xB7\uC81C\uACF5\xB7\uACF5\uAC1C\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uAD6D\uAC00 \uC548\uC804\uACFC \uACF5\uACF5 \uC774\uC775\uC744 \uD574\uCE58\uB294 \uAC1C\uC778\uC815\uBCF4 \uCC98\uB9AC \uD65C\uB3D9\uC744 \uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC81C13\uC870: \uAC1C\uC778\uC758 \uB3D9\uC758\uB97C \uBC1B\uC9C0 \uC54A\uC558\uACE0, \uACC4\uC57D \uCCB4\uACB0\xB7\uC774\uD589\uC5D0 \uD544\uC694\uD55C \uACBD\uC6B0, \uBC95\uC815 \uC9C1\uBB34 \uC218\uD589, \uB3CC\uBC1C \uC0C1\uD669 \uB300\uC751, \uACF5\uACF5 \uC774\uC775\uC744 \uC704\uD55C \uC5B8\uB860 \uBCF4\uB3C4, \uBCF8\uC778\uC774 \uC774\uBBF8 \uC801\uBC95\uD558\uAC8C \uACF5\uAC1C\uD55C \uC815\uBCF4\uC758 \uCC98\uB9AC, \uBC95\uB960\xB7\uD589\uC815 \uBC95\uADDC\uAC00 \uC815\uD55C \uADF8 \uBC16\uC758 \uC0AC\uC720\uC5D0\uB3C4 \uD574\uB2F9\uD558\uC9C0 \uC54A\uC73C\uBA74 \uAC1C\uC778\uC815\uBCF4\uB97C \uCC98\uB9AC\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</p>\r\n    <p>\uC81C28\uC870\xB7\uC81C29\uC870: \uC0DD\uCCB4 \uC778\uC2DD, \uC758\uB8CC \uAC74\uAC15, \uAE08\uC735 \uACC4\uC88C, \uC774\uB3D9 \uACBD\uB85C, \uADF8\uB9AC\uACE0 \uB9CC 14\uC138 \uBBF8\uB9CC \uBBF8\uC131\uB144\uC790\uC758 \uAC1C\uC778\uC815\uBCF4\uB294 \uBBFC\uAC10 \uAC1C\uC778\uC815\uBCF4\uC5D0 \uC18D\uD569\uB2C8\uB2E4. \uD2B9\uC815 \uBAA9\uC801\uACFC \uCDA9\uBD84\uD55C \uD544\uC694\uC131, \uC5C4\uACA9\uD55C \uBCF4\uD638 \uC870\uCE58\uAC00 \uC5C6\uACE0 \uAC1C\uC778\uC758 \uBCC4\uB3C4 \uB3D9\uC758\uB97C \uBC1B\uC9C0 \uC54A\uC558\uB2E4\uBA74 \uCC98\uB9AC\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</p>\r\n    <p>\uADF8 \uBC16\uC5D0\uB3C4 \uD604\uD589 \uC720\uD6A8\uD55C \uB2E4\uB978 \uBC95\uB960\xB7\uD589\uC815 \uBC95\uADDC\xB7\uAC10\uB3C5 \uADDC\uC815, \uADF8\uB9AC\uACE0 \uC0AC\uC6A9\uD558\uB294 \uBAA8\uB378\uC758 \uC11C\uBE44\uC2A4 \uC57D\uAD00\uACFC \uB0A8\uC6A9 \uC815\uCC45\uC744 \uC900\uC218\uD574\uC57C \uD569\uB2C8\uB2E4.</p>\r\n    <h3>5. \uC774\uC5D0 \uB530\uB77C \uAE08\uC9C0\uB418\uB294 \uBC29\uD5A5</h3>\r\n    <p>\uBBF8\uC2B9\uC778 \uC811\uADFC. \uC11C\uBA74 \uC2B9\uC778\uC774 \uC5C6\uB294 \uAE30\uAD00, \uB3C4\uBA54\uC778, \uC8FC\uC18C, \uACF5\uC6A9 \uC778\uD130\uB137 \uC2DC\uC2A4\uD15C, \uC6B4\uC601 \uC911\uC778 \uC11C\uBE44\uC2A4, \uD575\uC2EC \uC815\uBCF4 \uAE30\uBC18 \uC2DC\uC124\uC744 \uC2E4\uC2B5 \uB300\uC0C1\uC73C\uB85C \uB4F1\uB85D\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD558\uBA70, \uADF8\uC5D0 \uB300\uD55C \uC2A4\uCE94\xB7\uD0D0\uC9C0\xB7\uCE68\uC785\xB7\uD1B5\uC81C\xB7\uD328\uD0B7 \uBC1C\uC2E0\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uD615\uBC95 \uC81C285\uC870 \uC81C1\uD56D\xB7\uC81C2\uD56D, \uB124\uD2B8\uC6CC\uD06C \uC548\uC804\uBC95 \uC81C29\uC870\xB7\uC81C33\uC870\uC5D0 \uD574\uB2F9\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uD30C\uAD34\uC640 \uC545\uC131 \uD504\uB85C\uADF8\uB7A8. \uD0C0\uC778 \uC2DC\uC2A4\uD15C \uAE30\uB2A5\uC774\uB098 \uADF8 \uC548\uC758 \uB370\uC774\uD130\xB7\uC751\uC6A9 \uD504\uB85C\uADF8\uB7A8\uC744 \uC0AD\uC81C\xB7\uC218\uC815\xB7\uCD94\uAC00\xB7\uBC29\uD574\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uBC14\uC774\uB7EC\uC2A4, \uB79C\uC12C\uC6E8\uC5B4 \uB610\uB294 \uADF8 \uBC16\uC758 \uD30C\uAD34\uC801 \uD504\uB85C\uADF8\uB7A8\uC744 \uC81C\uC791\xB7\uC804\uD30C\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uC815\uBCF4\uB098 \uC18C\uD504\uD2B8\uC6E8\uC5B4\uC5D0 \uC545\uC131 \uD504\uB85C\uADF8\uB7A8\uC744 \uC124\uC815\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uD615\uBC95 \uC81C286\uC870 \uC81C1\uD56D\uBD80\uD130 \uC81C3\uD56D, \uB124\uD2B8\uC6CC\uD06C \uC548\uC804\uBC95 \uC81C50\uC870\uC5D0 \uD574\uB2F9\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uB3C4\uAD6C\uC640 \uC870\uB825. \uC774 \uD504\uB85C\uC81D\uD2B8\uB098 \uC774 \uAE30\uAE30\uB97C \uD0C0\uC778\uC5D0\uAC8C \uC81C\uACF5\uD574 \uCE68\uC785, \uBD88\uBC95 \uD1B5\uC81C, \uB370\uC774\uD130 \uC808\uCDE8\uC5D0 \uC4F0\uAC8C \uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uC0C1\uB300\uBC29\uC774 \uB124\uD2B8\uC6CC\uD06C \uBC94\uC8C4\uB97C \uC800\uC9C0\uB974\uACE0 \uC788\uB2E4\uB294 \uC0AC\uC2E4\uC744 \uC54C\uBA74\uC11C\uB3C4 \uD504\uB85C\uADF8\uB7A8, \uB3C4\uAD6C, \uAE30\uC220 \uC9C0\uC6D0, \uAD11\uACE0 \uD64D\uBCF4, \uACB0\uC81C \uC815\uC0B0\uC744 \uC81C\uACF5\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uD615\uBC95 \uC81C285\uC870 \uC81C3\uD56D, \uC81C287\uC870\uC7583, \uB124\uD2B8\uC6CC\uD06C \uC548\uC804\uBC95 \uC81C29\uC870\uC5D0 \uD574\uB2F9\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uB370\uC774\uD130. \uC5C5\uBB34 \uB370\uC774\uD130, \uACC4\uC815, \uBE44\uBC00\uBC88\uD638 \uBC0F \uADF8 \uBC16\uC758 \uBCF4\uD638 \uB300\uC0C1 \uB370\uC774\uD130\uB97C \uC808\uCDE8\xB7\uBD88\uBC95 \uC218\uC9D1\xB7\uBC94\uC704 \uCD08\uACFC \uC0AC\uC6A9\xB7\uC720\uCD9C\xB7\uD310\uB9E4\uD558\uAC70\uB098 \uD0C0\uC778\uC5D0\uAC8C \uC81C\uACF5\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uB370\uC774\uD130 \uC548\uC804\uBC95 \uC81C8\uC870\xB7\uC81C32\uC870\xB7\uC81C51\uC870\uC5D0 \uD574\uB2F9\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uAC1C\uC778\uC815\uBCF4. \uD0C0\uC778\uC758 \uAC1C\uC778\uC815\uBCF4\uB97C \uBD88\uBC95\uC73C\uB85C \uC218\uC9D1\xB7\uC0AC\uC6A9\xB7\uAC00\uACF5\xB7\uC804\uC1A1\xB7\uB9E4\uB9E4\xB7\uC81C\uACF5\xB7\uACF5\uAC1C\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uACFC\uB3C4\uD55C \uC218\uC9D1\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uC624\uB3C4\xB7\uC0AC\uAE30\xB7\uAC15\uC694 \uBC29\uC2DD\uC758 \uCC98\uB9AC\uB97C \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uC0DD\uCCB4 \uC778\uC2DD, \uC758\uB8CC \uAC74\uAC15, \uAE08\uC735 \uACC4\uC88C, \uC774\uB3D9 \uACBD\uB85C, \uC544\uB3D9 \uAC1C\uC778\uC815\uBCF4\uB97C \uC784\uC758\uB85C \uCC98\uB9AC\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uD615\uBC95 \uC81C253\uC870\uC7582 \uC81C1\uD56D\xB7\uC81C3\uD56D, \uB124\uD2B8\uC6CC\uD06C \uC548\uC804\uBC95 \uC81C46\uC870, \uAC1C\uC778\uC815\uBCF4 \uBCF4\uD638\uBC95 \uC81C5\uC870\xB7\uC81C6\uC870\xB7\uC81C10\uC870\xB7\uC81C13\uC870\xB7\uC81C28\uC870\xB7\uC81C29\uC870\uC5D0 \uD574\uB2F9\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uC0AC\uAE30\uC640 \uC704\uBC95 \uC815\uBCF4. \uC6F9\uC0AC\uC774\uD2B8\uB098 \uADF8\uB8F9\uC744 \uAC1C\uC124\uD558\uAC70\uB098 \uC774\uC6A9\uD574 \uC0AC\uAE30, \uBC94\uC8C4 \uBC29\uBC95 \uC804\uC218, \uAE08\uC9C0 \uBB3C\uD488\xB7\uADDC\uC81C \uBB3C\uD488\uC758 \uC81C\uC791\uC774\uB098 \uD310\uB9E4\uB97C \uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uADF8\uB7EC\uD55C \uC815\uBCF4\uB97C \uAC8C\uC2DC\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uCEF4\uD4E8\uD130\uB97C \uC774\uC6A9\uD574 \uC0AC\uAE30, \uC808\uB3C4, \uD6A1\uB839, \uACF5\uAE08 \uC720\uC6A9, \uAD6D\uAC00 \uAE30\uBC00 \uD0C8\uCDE8\uB97C \uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uD615\uBC95 \uC81C287\uC870, \uC81C287\uC870\uC7582 \uC81C1\uD56D \uC81C1\uD638\uBD80\uD130 \uC81C3\uD638, \uB124\uD2B8\uC6CC\uD06C \uC548\uC804\uBC95 \uC81C48\uC870\uC5D0 \uD574\uB2F9\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uCF58\uD150\uCE20. \uAD6D\uAC00 \uC548\uC804\xB7\uBA85\uC608\xB7\uC774\uC775\uC744 \uD574\uCE58\uB294 \uCF58\uD150\uCE20\uB97C \uC0DD\uC131\uD558\uAC70\uB098 \uC804\uD30C\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD558\uACE0, \uC815\uAD8C \uC804\uBCF5\xB7\uBD84\uC5F4\uC744 \uC120\uB3D9\uD558\uB294 \uAC83\uC744 \uAE08\uC9C0\uD558\uBA70, \uD14C\uB7EC\uB9AC\uC998\xB7\uADF9\uB2E8\uC8FC\uC758\xB7\uBBFC\uC871 \uC99D\uC624\uB97C \uAE08\uC9C0\uD558\uACE0, \uD3ED\uB825\xB7\uC74C\uB780 \uC0C9\uC815\xB7\uB3C4\uBC15\uC744 \uAE08\uC9C0\uD558\uBA70, \uD5C8\uC704 \uC815\uBCF4\uB97C \uC870\uC791\uD574 \uACBD\uC81C \uC9C8\uC11C\uC640 \uC0AC\uD68C \uC9C8\uC11C\uB97C \uC5B4\uC9C0\uB7FD\uD788\uB294 \uAC83\uC744 \uAE08\uC9C0\uD558\uACE0, \uBA85\uC608\xB7\uC0AC\uC0DD\uD65C\xB7\uC9C0\uC2DD\uC7AC\uC0B0\uAD8C \uCE68\uD574\uB97C \uAE08\uC9C0\uD558\uBA70, \uBBF8\uC131\uB144\uC790\uC758 \uC2E0\uCCB4\uC801\xB7\uC815\uC2E0\uC801 \uAC74\uAC15\uC744 \uD574\uCE58\uB294 \uCF58\uD150\uCE20\uB97C \uAE08\uC9C0\uD569\uB2C8\uB2E4. \uB124\uD2B8\uC6CC\uD06C \uC548\uC804\uBC95 \uC81C13\uC870 \uC81C2\uD56D\xB7\uC81C14\uC870\uC5D0 \uD574\uB2F9\uD569\uB2C8\uB2E4.</p>\r\n    <p>\uACB0\uACFC \uD655\uC0B0. \uB4DC\uB9B4 \uC911\uC5D0 \uB9CC\uB4E4\uC5B4\uC9C4 \uAE30\uB85D, \uC790\uC0B0 \uC815\uBCF4, \uD30C\uC77C\uC740 \uC11C\uBA74 \uC2B9\uC778\uC5D0 \uC801\uD78C \uB300\uC0C1\uACFC \uAE30\uAC04 \uC548\uC5D0\uB9CC \uB0A8\uACA8\uC57C \uD558\uBA70, \uC5F4\uB78C \uAD8C\uD55C\uC774 \uC5C6\uB294 \uC0AC\uB78C\uC5D0\uAC8C \uB118\uAE30\uAC70\uB098 \uC2B9\uC778 \uBC94\uC704 \uBC16\uC758 \uC6A9\uB3C4\uB85C \uBC14\uAFD4 \uC4F8 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</p>\r\n    <h3>6. \uCC45\uC784\uC740 \uC0AC\uC6A9\uC790\uAC00 \uC9D1\uB2C8\uB2E4</h3>\r\n    <p>\uC774 \uD504\uB85C\uC81D\uD2B8\uB294 MIT \uB77C\uC774\uC120\uC2A4\uC5D0 \uB530\uB77C \uC788\uB294 \uADF8\uB300\uB85C \uC81C\uACF5\uB429\uB2C8\uB2E4. \uAC1C\uBC1C\uC790\uB294 \uC644\uC804\uC131, \uC548\uC804\uC131, \uC801\uD569\uC131\uC5D0 \uB300\uD574 \uBCF4\uC99D\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uC0AC\uC6A9\uC790\uB294 \uC790\uC2E0\uC758 \uB2E4\uC6B4\uB85C\uB4DC, \uBC30\uD3EC, \uC2E4\uD589, \uC218\uC815, \uC804\uD30C \uBC0F \uBAA8\uB4E0 \uC785\uB825\uACFC \uCD9C\uB825\uC5D0 \uB300\uD574 \uB3C5\uB9BD\uC801\uC774\uACE0 \uC644\uC804\uD55C \uBBFC\uC0AC\xB7\uD589\uC815\xB7\uD615\uC0AC \uBC95\uC801 \uCC45\uC784\uC744 \uC9D1\uB2C8\uB2E4. \uC800\uC790\uC640 \uAE30\uC5EC\uC790\uB294 \uB0A8\uC6A9\uC73C\uB85C \uBC1C\uC0DD\uD55C \uC9C1\uC811\xB7\uAC04\uC811\xB7\uC5F0\uB300 \uCC45\uC784\uC744 \uC9C0\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.</p>\r\n    <p>\uCCB4\uD06C\uB85C \uD655\uC778\uD558\uB294 \uC8FC\uCCB4\uB294 \uC870\uC791\uC790 \uBCF8\uC778\uC774\uBA70, \uC774 \uC120\uC5B8\uC744 \uC77D\uC9C0 \uC54A\uC740 \uC0AC\uB78C\uC744 \uB300\uC2E0\uD560 \uC218 \uC5C6\uACE0, \uD0C0\uC778\uC758 \uC2DC\uC2A4\uD15C\uC744 \uC774\uBBF8 \uC2B9\uC778\uB41C \uAC83\uC73C\uB85C \uB9D0\uD560 \uC218\uB3C4 \uC5C6\uC2B5\uB2C8\uB2E4.</p>\r\n    <h3>7. \uC704\uBC18 \uC2DC \uAD8C\uD55C \uC885\uB8CC</h3>\r\n    <p>\uBD88\uBC95 \uACF5\uACA9, \uC545\uC758\uC801 \uD65C\uB3D9 \uB610\uB294 \uC704\uC758 \uAE08\uC9C0 \uBC29\uD5A5 \uC911 \uC5B4\uB290 \uD558\uB098\uC5D0 \uC0AC\uC6A9\uB418\uB294 \uC21C\uAC04 \uC0AC\uC6A9 \uD5C8\uAC00\uB294 \uADF8 \uD589\uC704\uAC00 \uBC1C\uC0DD\uD55C \uB0A0\uBD80\uD130 \uC790\uB3D9\uC73C\uB85C \uC885\uB8CC\uB418\uBA70 \uCCA0\uD68C\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uC989\uC2DC \uC0AC\uC6A9\uC744 \uC911\uB2E8\uD558\uACE0 \uC774 \uD504\uB85C\uC81D\uD2B8\uC758 \uCF54\uB4DC, \uC2A4\uD06C\uB9BD\uD2B8, \uD30C\uC0DD \uB370\uC774\uD130\uB97C \uD3D0\uAE30\uD558\uBA70 \uBC95\uC5D0 \uB530\uB77C \uCC45\uC784\uC744 \uC9D1\uB2C8\uB2E4. \uAD8C\uD55C\uC774 \uC885\uB8CC\uB41C \uB4A4\uC5D0\uB294 \uB4DC\uB9B4 \uCF58\uC194\uC744 \uACC4\uC18D \uC5F4\uAC70\uB098 \uACC4\uC18D \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</p>\r\n    <h3>8. DeepSeek \uACF5\uC2DD\uACFC\uC758 \uAD00\uACC4</h3>\r\n    <p>\uC774 \uD504\uB85C\uC81D\uD2B8\uB294 \uB3C5\uB9BD\uC801\uC778 \uC624\uD508\uC18C\uC2A4 \uD504\uB85C\uC81D\uD2B8\uC774\uBA70, DeepSeek \uACF5\uC2DD \uB610\uB294 \uADF8 \uAD00\uB828 \uC8FC\uCCB4\uC640 \uC18C\uC18D\xB7\uC0C1\uC5C5 \uD611\uB825\xB7\uAD8C\uD55C\xB7\uACF5\uC2DD \uBCF4\uC99D \uAD00\uACC4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uBCF8\uBB38\uC758 '\uACF5\uC2DD'\uC740 \uD3C9\uAC00 \uB300\uC0C1\uC774 \uC0AC\uC6A9\uC790\uAC00 \uB85C\uCEEC\uC5D0 \uC124\uCE58\uD55C \uACF5\uC2DD DeepSeek Harness \uC18C\uD504\uD2B8\uC6E8\uC5B4 \uD328\uD0A4\uC9C0\uC784\uC744 \uB73B\uD560 \uBFD0\uC774\uBA70, DeepSeek \uACF5\uC2DD\uC774 \uC774 \uD50C\uB7EC\uADF8\uC778\uC744 \uAC1C\uBC1C\xB7\uC2B9\uC778\xB7\uBCF4\uC99D\uD55C\uB2E4\uB294 \uB73B\uC774 \uC544\uB2D9\uB2C8\uB2E4.</p>\r\n    <p>\uB05D. \uCE74\uC6B4\uD2B8\uB2E4\uC6B4\uC774 \uB05D\uB098\uACE0 \uC5EC\uAE30\uAE4C\uC9C0 \uC2A4\uD06C\uB864\uD574 \uC138 \uD56D\uBAA9\uC744 \uBAA8\uB450 \uCCB4\uD06C\uD574\uC57C, \uBCF8\uC778 \uC2E0\uBD84\uC73C\uB85C \uC774 \uC120\uC5B8\uC744 \uC778\uC815\uD558\uACE0 \uC774\uBC88 \uB4DC\uB9B4 \uCF58\uC194 \uAD8C\uD55C\uC744 \uC644\uB8CC\uD55C \uAC83\uC774 \uB429\uB2C8\uB2E4.</p>";
 function AuthGate(props) {
   const t = useT();
   const [left, setLeft] = useState(10);
@@ -10062,11 +10062,11 @@ function statusLabel(st, t) {
   return st || t("unknown");
 }
 var LAYER_GROUP = {
-  \u63D0\u793A\u8BCD: "prompt",
-  \u4EE3\u7801: "code",
-  \u5DE5\u5177: "tools",
-  "0.1.5 \u517C\u5BB9": "compat",
-  "0.2.0 \u517C\u5BB9": "dsh20"
+  \uD504\uB86C\uD504\uD2B8: "prompt",
+  \uCF54\uB4DC: "code",
+  \uB3C4\uAD6C: "tools",
+  "0.1.5 \uD638\uD658": "compat",
+  "0.2.0 \uD638\uD658": "dsh20"
 };
 var GROUP_ORDER = ["prompt", "code", "tools", "compat", "dsh20"];
 function patchRowsOf(state) {
@@ -10111,7 +10111,7 @@ function PatchGroups({ state }) {
     return h(
       "p",
       { role: "status" },
-      "\u8BFB\u53D6\u5931\u8D25\uFF0C\u8865\u4E01\u660E\u7EC6\u6682\u4E0D\u53EF\u7528\uFF1B\u8BF7\u5237\u65B0\u91CD\u8BD5\u3002"
+      "\uC77D\uAE30 \uC2E4\uD328. \uD328\uCE58 \uC0C1\uC138\uB97C \uC9C0\uAE08\uC740 \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uC0C8\uB85C\uACE0\uCE68 \uD6C4 \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC138\uC694."
     );
   if (!state || !state.patch_status)
     return h("div", { className: "dshpp-skel", style: { height: 120 } });
@@ -10249,7 +10249,7 @@ function HelpTip({ title, children, label }) {
       {
         type: "button",
         className: "dshpp-help-btn",
-        "aria-label": (label || title || "\u8BF4\u660E") + "\uFF08\u67E5\u770B\u8BF4\u660E\uFF09",
+        "aria-label": (label || title || "\uC124\uBA85") + " (\uC124\uBA85 \uBCF4\uAE30)",
         "aria-expanded": open ? "true" : "false",
         onMouseEnter: () => setOpen(true),
         onMouseLeave: () => setOpen(false),
@@ -10299,7 +10299,7 @@ function StatusExtras() {
         body: JSON.stringify({ enabled: !boost })
       });
       setBoost(!!r.enabled);
-      setNotice(r.enabled ? "\u5DF2\u5F00\u542F\uFF0C\u91CD\u542F\u540E\u751F\u6548" : "\u5DF2\u5173\u95ED\uFF0C\u91CD\u542F\u540E\u751F\u6548");
+      setNotice(r.enabled ? "\uCF30\uC2B5\uB2C8\uB2E4. \uC7AC\uC2DC\uC791 \uD6C4 \uC801\uC6A9\uB429\uB2C8\uB2E4" : "\uAED0\uC2B5\uB2C8\uB2E4. \uC7AC\uC2DC\uC791 \uD6C4 \uC801\uC6A9\uB429\uB2C8\uB2E4");
     } catch (e) {
       setNotice(e.message);
     }
@@ -10329,7 +10329,7 @@ function StatusExtras() {
   const total = layers.filter((layer) => layer.applicable !== false).length;
   return h(
     "section",
-    { className: "dshpp-card", "aria-label": "\u7834\u7532\u72B6\u6001" },
+    { className: "dshpp-card", "aria-label": "\uD0C8\uC625 \uC0C1\uD0DC" },
     h(
       "div",
       { className: "dshpp-line" },
@@ -10339,17 +10339,17 @@ function StatusExtras() {
         h("i", {
           className: "dshpp-dot " + (check ? failed.length ? "is-bad" : pendingLayers.length || uncertain.length ? "is-warn" : "is-ok" : "")
         }),
-        "\u7834\u7532\u81EA\u68C0",
+        "\uD0C8\uC625 \uC790\uCCB4 \uC810\uAC80",
         h(
           "b",
           null,
-          check ? failed.length ? `${failed.length} \u5C42\u672A\u751F\u6548` : pendingLayers.length ? `${pendingPatches} \u6761\u5F85\u5E94\u7528` : uncertain.length ? `${uncertain.length} \u5C42\u9700\u786E\u8BA4` : `${total} \u5C42\u5168\u90E8\u5728\u4F4D` : "\u68C0\u6D4B\u4E2D\u2026"
+          check ? failed.length ? `${failed.length}\uAC1C \uACC4\uCE35 \uBBF8\uC801\uC6A9` : pendingLayers.length ? `${pendingPatches}\uAC74 \uC801\uC6A9 \uB300\uAE30` : uncertain.length ? `${uncertain.length}\uAC1C \uACC4\uCE35 \uD655\uC778 \uD544\uC694` : `${total}\uAC1C \uACC4\uCE35 \uBAA8\uB450 \uC815\uC0C1` : "\uD655\uC778 \uC911\u2026"
         )
       ),
       h(
         "details",
         { className: "dshpp-fold-inline" },
-        h("summary", null, "\u67E5\u770B\u9010\u5C42"),
+        h("summary", null, "\uACC4\uCE35\uBCC4 \uBCF4\uAE30"),
         h(
           "div",
           { className: "dshpp-checks" },
@@ -10367,23 +10367,23 @@ function StatusExtras() {
               h(
                 "span",
                 { className: "dshpp-check-val" },
-                layer.applicable === false ? "\u4E0D\u9002\u7528" : layer.state === "pending" ? `\u5F85\u5E94\u7528 #${(layer.pending || []).join("/#")}` : layer.state === "inferred" ? "\u5BBF\u4E3B\u63A8\u5BFC" : layer.state === "unknown" ? "\u672A\u786E\u8BA4" : `${layer.applied}/${layer.required ?? layer.total}`
+                layer.applicable === false ? "\uD574\uB2F9 \uC5C6\uC74C" : layer.state === "pending" ? `\uC801\uC6A9 \uB300\uAE30 #${(layer.pending || []).join("/#")}` : layer.state === "inferred" ? "\uD638\uC2A4\uD2B8 \uCD94\uB860" : layer.state === "unknown" ? "\uBBF8\uD655\uC778" : `${layer.applied}/${layer.required ?? layer.total}`
               ),
               layer.note ? h(HelpTip, { title: layer.title }, layer.note) : null
             )
-          ) : h("div", { className: "dshpp-muted" }, "\u68C0\u6D4B\u4E2D\u2026")
+          ) : h("div", { className: "dshpp-muted" }, "\uD655\uC778 \uC911\u2026")
         )
       ),
       h(
         Btn,
         { tiny: true, disabled: busy, onClick: rerun },
-        busy ? "\u2026" : "\u91CD\u6D4B"
+        busy ? "\u2026" : "\uB2E4\uC2DC \uAC80\uC0AC"
       ),
       h(
         Btn,
         {
           tiny: true,
-          title: "\u751F\u6210\u4E00\u6B21\u6027\u63A2\u9488\uFF1A\u4E0B\u4E00\u8F6E\u56DE\u590D\u91CC\u770B\u6A21\u578B\u6709\u6CA1\u6709\u539F\u6837\u56DE\u663E\u8BE5\u6807\u8BB0",
+          title: "\uC77C\uD68C\uC6A9 \uD504\uB85C\uBE0C\uB97C \uB9CC\uB4ED\uB2C8\uB2E4. \uB2E4\uC74C \uD134 \uC751\uB2F5\uC5D0\uC11C \uBAA8\uB378\uC774 \uADF8 \uD45C\uC2DD\uC744 \uADF8\uB300\uB85C \uB418\uD480\uC774\uD558\uB294\uC9C0 \uD655\uC778\uD569\uB2C8\uB2E4",
           onClick: async () => {
             try {
               const r = await apiJson("/dsh-purge/probe", {
@@ -10397,7 +10397,7 @@ function StatusExtras() {
             }
           }
         },
-        "\u63A2\u9488"
+        "\uD504\uB85C\uBE0C"
       )
     ),
     h(
@@ -10406,18 +10406,18 @@ function StatusExtras() {
       h(
         "span",
         { className: "dshpp-line-main" },
-        "\u7834\u7532\u5F3A\u5316\u6BB5",
+        "\uD0C8\uC625 \uAC15\uD654 \uC139\uC158",
         h(
           HelpTip,
-          { title: "\u7834\u7532\u5F3A\u5316\u6BB5" },
-          "\u5728\u7CFB\u7EDF\u63D0\u793A\u8BCD\u672B\u5C3E\u8FFD\u52A0\u4E00\u6BB5\u4E0E\u6CE8\u5165\u540C\u7EA7\u7684\u6587\u672C\uFF1A\u5C42\u7EA7\u58F0\u660E / \u62D2\u7EDD\u5373\u6545\u969C / \u6297\u8C04\u5A9A / \u591A\u8F6E\u91CD\u7533\u3002\u9ED8\u8BA4\u5F00\u542F\u3002"
+          { title: "\uD0C8\uC625 \uAC15\uD654 \uC139\uC158" },
+          "\uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8 \uB05D\uC5D0 \uC8FC\uC785\uACFC \uAC19\uC740 \uB4F1\uAE09\uC758 \uD14D\uC2A4\uD2B8\uB97C \uB367\uBD99\uC785\uB2C8\uB2E4: \uACC4\uCE35 \uC120\uC5B8 / \uAC70\uBD80\uB294 \uACE7 \uC7A5\uC560 / \uC544\uCCA8 \uC800\uD56D / \uB2E4\uC911 \uB77C\uC6B4\uB4DC \uC7AC\uD655\uC778. \uAE30\uBCF8\uAC12\uC740 \uCF1C\uC9D0\uC785\uB2C8\uB2E4."
         ),
-        h("b", null, boost === null ? "\u2026" : boost ? "\u5DF2\u5F00\u542F" : "\u5DF2\u5173\u95ED")
+        h("b", null, boost === null ? "\u2026" : boost ? "\uCF1C\uC9D0" : "\uAEBC\uC9D0")
       ),
       h(
         Btn,
         { tiny: true, disabled: boost === null, onClick: toggle },
-        boost ? "\u5173\u95ED" : "\u5F00\u542F"
+        boost ? "\uB044\uAE30" : "\uCF1C\uAE30"
       ),
       notice ? h("span", { className: "dshpp-muted" }, notice) : null
     )
@@ -10425,33 +10425,33 @@ function StatusExtras() {
 }
 function assertMaintenanceResult(result) {
   if (!result || typeof result !== "object")
-    throw new Error("\u7EF4\u62A4\u63A5\u53E3\u8FD4\u56DE\u4E86\u65E0\u6548\u7ED3\u679C");
+    throw new Error("\uC720\uC9C0\uBCF4\uC218 \uC778\uD130\uD398\uC774\uC2A4\uAC00 \uC720\uD6A8\uD558\uC9C0 \uC54A\uC740 \uACB0\uACFC\uB97C \uB3CC\uB824\uC92C\uC2B5\uB2C8\uB2E4");
   if (result.ok === false) {
-    const errors = Array.isArray(result.errors) ? result.errors.filter(Boolean).join("\uFF1B") : "";
-    const partial = result.applied ? "\uFF1B\u90E8\u5206\u76EE\u6807\u5DF2\u66F4\u65B0\uFF0C\u8BF7\u91CD\u542F\u5BF9\u5E94 DSH \u8FDB\u7A0B\u52A0\u8F7D" : "";
-    throw new Error((result.error || errors || "\u7EF4\u62A4\u64CD\u4F5C\u5931\u8D25") + partial);
+    const errors = Array.isArray(result.errors) ? result.errors.filter(Boolean).join(" \xB7 ") : "";
+    const partial = result.applied ? " \xB7 \uC77C\uBD80 \uB300\uC0C1\uC740 \uC774\uBBF8 \uC5C5\uB370\uC774\uD2B8\uD588\uC2B5\uB2C8\uB2E4. \uD574\uB2F9 DSH \uD504\uB85C\uC138\uC2A4\uB97C \uC7AC\uC2DC\uC791\uD574 \uB85C\uB4DC\uD558\uC138\uC694" : "";
+    throw new Error((result.error || errors || "\uC720\uC9C0\uBCF4\uC218 \uC791\uC5C5 \uC2E4\uD328") + partial);
   }
 }
 function maintenanceNotice(op, result) {
   if (op === "backup") {
     if (!result.id)
-      throw new Error("\u5907\u4EFD\u64CD\u4F5C\u672A\u8FD4\u56DE\u5907\u4EFD\u7F16\u53F7\uFF0C\u8BF7\u5237\u65B0\u5217\u8868\u6838\u5BF9\u7ED3\u679C");
-    return `\u5907\u4EFD\u5DF2\u521B\u5EFA\uFF1A${result.id}`;
+      throw new Error("\uBC31\uC5C5 \uC791\uC5C5\uC774 \uBC31\uC5C5 \uBC88\uD638\uB97C \uB3CC\uB824\uC8FC\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uBAA9\uB85D\uC744 \uC0C8\uB85C \uACE0\uCCD0 \uACB0\uACFC\uB97C \uD655\uC778\uD558\uC138\uC694");
+    return `\uBC31\uC5C5\uC744 \uB9CC\uB4E4\uC5C8\uB2E4: ${result.id}`;
   }
   if (op === "rollback")
-    return (result.note || "\u63D2\u4EF6\u56DE\u6EDA\u5DF2\u5B8C\u6210") + "\u3002\u8BF7\u91CD\u542F DSH \u8FDB\u7A0B\uFF1B\u4EC5\u5237\u65B0\u6D4F\u89C8\u5668\u4E0D\u4F1A\u52A0\u8F7D\u65B0\u7248\u540E\u7AEF\u3002";
+    return (result.note || "\uD50C\uB7EC\uADF8\uC778 \uB864\uBC31\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4") + ". DSH \uD504\uB85C\uC138\uC2A4\uB97C \uC7AC\uC2DC\uC791\uD558\uC138\uC694. \uBE0C\uB77C\uC6B0\uC800\uB9CC \uC0C8\uB85C \uACE0\uCE58\uBA74 \uC0C8 \uBC31\uC5D4\uB4DC\uAC00 \uB85C\uB4DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.";
   if (op === "update") {
     if (result.applied === false || result.skipped)
-      return result.note || "\u672A\u5B89\u88C5\u65B0\u7248\u672C\uFF0C\u5F53\u524D\u5B89\u88C5\u672A\u66F4\u65B0\u3002";
+      return result.note || "\uC0C8 \uBC84\uC804\uC744 \uC124\uCE58\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uD604\uC7AC \uC124\uCE58\uBCF8\uC740 \uADF8\uB300\uB85C\uC785\uB2C8\uB2E4.";
     if (result.applied || result.needRestart || result.restart_required) {
       const version = result.release?.version || result.localVersion || result.remoteVersion;
       const warnings = result.cleanup_warnings || [];
-      const cleanup = warnings.length ? `\u6E05\u7406\u672A\u5B8C\u6210\uFF08${warnings.map((w) => `${w.stage}:${w.code}`).join("\uFF0C")}\uFF09\uFF0C\u6B8B\u7559\u5DF2\u4FDD\u7559\u3002` : "";
-      return `${cleanup}\u63D2\u4EF6\u5DF2\u5B89\u88C5${version ? "\uFF1A" + version : ""}\u3002\u8BF7\u91CD\u542F DSH \u8FDB\u7A0B\uFF1B\u4EC5\u5237\u65B0\u6D4F\u89C8\u5668\u4E0D\u4F1A\u52A0\u8F7D\u65B0\u7248\u540E\u7AEF\u3002`;
+      const cleanup = warnings.length ? `\uC815\uB9AC\uB97C \uB9C8\uCE58\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4(${warnings.map((w) => `${w.stage}:${w.code}`).join(", ")}). \uB0A8\uC740 \uD30C\uC77C\uC740 \uBCF4\uC874\uD588\uC2B5\uB2C8\uB2E4.` : "";
+      return `${cleanup}\uD50C\uB7EC\uADF8\uC778\uC744 \uC124\uCE58\uD588\uC2B5\uB2C8\uB2E4${version ? ": " + version : ""}. DSH \uD504\uB85C\uC138\uC2A4\uB97C \uC7AC\uC2DC\uC791\uD558\uC138\uC694. \uBE0C\uB77C\uC6B0\uC800\uB9CC \uC0C8\uB85C \uACE0\uCE58\uBA74 \uC0C8 \uBC31\uC5D4\uB4DC\uAC00 \uB85C\uB4DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.`;
     }
-    return result.note || "\u66F4\u65B0\u8BF7\u6C42\u5DF2\u5B8C\u6210\uFF0C\u8BF7\u5237\u65B0\u72B6\u6001\u6838\u5BF9\u5B89\u88C5\u7ED3\u679C\u3002";
+    return result.note || "\uC5C5\uB370\uC774\uD2B8 \uC694\uCCAD\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4. \uC0C1\uD0DC\uB97C \uC0C8\uB85C \uACE0\uCCD0 \uC124\uCE58 \uACB0\uACFC\uB97C \uD655\uC778\uD558\uC138\uC694.";
   }
-  return result.note || "\u7EF4\u62A4\u64CD\u4F5C\u5DF2\u5B8C\u6210";
+  return result.note || "\uC720\uC9C0\uBCF4\uC218 \uC791\uC5C5\uC744 \uB9C8\uCCE4\uC2B5\uB2C8\uB2E4";
 }
 function UpdatePreferences({
   value,
@@ -10485,7 +10485,7 @@ function UpdatePreferences({
   }
   return h(
     "section",
-    { "aria-label": "\u81EA\u52A8\u66F4\u65B0\u8BBE\u7F6E", className: "dshpp-card" },
+    { "aria-label": "\uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8 \uC124\uC815", className: "dshpp-card" },
     h(
       "div",
       { className: "dshpp-row" },
@@ -10497,26 +10497,26 @@ function UpdatePreferences({
           checked: value.autoCheck,
           disabled: saving,
           onChange: (e) => save({ autoCheck: e.target.checked }),
-          "aria-label": "\u81EA\u52A8\u68C0\u67E5\u66F4\u65B0"
+          "aria-label": "\uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8 \uD655\uC778"
         }),
-        "\u81EA\u52A8\u68C0\u67E5\u66F4\u65B0"
+        "\uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8 \uD655\uC778"
       ),
       h(HelpTip, {
-        title: "\u81EA\u52A8\u68C0\u67E5\u66F4\u65B0",
-        children: "\u542F\u52A8 30 \u79D2\u540E\u68C0\u67E5\uFF0C\u4E4B\u540E\u6309\u95F4\u9694\u68C0\u67E5\u3002\u5173\u95ED\u4E0D\u4F1A\u6539\u53D8\u5DF2\u4FDD\u5B58\u7684\u81EA\u52A8\u5B89\u88C5\u504F\u597D\uFF0C\u4F46\u4F1A\u6682\u505C\u81EA\u52A8\u5B89\u88C5\u3002"
+        title: "\uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8 \uD655\uC778",
+        children: "\uC2DC\uC791 30\uCD08 \uB4A4 \uD655\uC778\uD558\uACE0, \uC774\uD6C4\uC5D0\uB294 \uAC04\uACA9\uC5D0 \uB530\uB77C \uD655\uC778\uD569\uB2C8\uB2E4. \uB044\uB354\uB77C\uB3C4 \uC800\uC7A5\uB41C \uC790\uB3D9 \uC124\uCE58 \uC124\uC815\uC740 \uBC14\uB00C\uC9C0 \uC54A\uC9C0\uB9CC \uC790\uB3D9 \uC124\uCE58\uAC00 \uC77C\uC2DC \uC815\uC9C0\uB429\uB2C8\uB2E4."
       }),
       h(
         "select",
         {
-          "aria-label": "\u66F4\u65B0\u68C0\u67E5\u95F4\u9694",
+          "aria-label": "\uC5C5\uB370\uC774\uD2B8 \uD655\uC778 \uAC04\uACA9",
           value: value.intervalHours,
           disabled: saving || !value.autoCheck,
           onChange: (e) => save({ intervalHours: Number(e.target.value) })
         },
-        [.../* @__PURE__ */ new Set([1, 6, 12, 24, value.intervalHours])].sort((a, b) => a - b).map((v) => h("option", { key: v, value: v }, `\u6BCF ${v} \u5C0F\u65F6`))
+        [.../* @__PURE__ */ new Set([1, 6, 12, 24, value.intervalHours])].sort((a, b) => a - b).map((v) => h("option", { key: v, value: v }, `${v}\uC2DC\uAC04\uB9C8\uB2E4`))
       ),
-      // 「更新通道」与上面两个控件同行并排，尺寸与 select 一致：
-      // 它配置的正是这条更新检查走的代理/密钥，不该漂到标题最右端。
+      // "업데이트 채널"은 위 두 컨트롤과 같은 줄에 나란히 두고 크기를 select 에 맞춘다.
+      // 이 버튼이 설정하는 것이 바로 이 업데이트 확인이 쓰는 프록시/키이므로, 제목 맨 오른쪽으로 밀리면 안 된다.
       onOpenChannel ? h(
         Btn,
         {
@@ -10524,9 +10524,9 @@ function UpdatePreferences({
           className: "dshpp-updch-open",
           disabled: saving,
           onClick: () => onOpenChannel(),
-          title: tr("updch.title", "\u66F4\u65B0\u901A\u9053\uFF1A\u4EE3\u7406\u4E0E GitHub \u5BC6\u94A5")
+          title: tr("updch.title", "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110: \uD504\uB85D\uC2DC\uC640 GitHub \uD0A4")
         },
-        tr("updch.open", "\u66F4\u65B0\u901A\u9053")
+        tr("updch.open", "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110")
       ) : null
     ),
     h(
@@ -10540,19 +10540,19 @@ function UpdatePreferences({
           checked: value.autoInstall,
           disabled: saving,
           onChange: (e) => save({ autoInstall: e.target.checked }),
-          "aria-label": "\u81EA\u52A8\u5B89\u88C5\u66F4\u65B0"
+          "aria-label": "\uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8 \uC124\uCE58"
         }),
-        "\u81EA\u52A8\u5B89\u88C5\u66F4\u65B0"
+        "\uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8 \uC124\uCE58"
       ),
       h(HelpTip, {
-        title: "\u81EA\u52A8\u5B89\u88C5\u66F4\u65B0",
-        children: "\u4EC5\u5728\u81EA\u52A8\u68C0\u67E5\u5F00\u542F\u3001\u53D1\u73B0\u672A\u9501\u5B9A\u7684\u65B0\u6B63\u5F0F\u7248\u65F6\u5B89\u88C5\u3002\u5B89\u88C5\u524D\u5907\u4EFD\u3001\u6821\u9A8C\u53D1\u884C\u5305\uFF1B\u5931\u8D25\u4E0D\u81EA\u52A8\u5207\u6362\u6765\u6E90\u3002\u5B89\u88C5\u540E\u7B49\u5F85\u4F60\u624B\u52A8\u91CD\u542F\uFF0C\u4E0D\u4F1A\u81EA\u52A8\u91CD\u542F DSH\u3002"
+        title: "\uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8 \uC124\uCE58",
+        children: "\uC790\uB3D9 \uD655\uC778\uC774 \uCF1C\uC838 \uC788\uACE0 \uC7A0\uAE30\uC9C0 \uC54A\uC740 \uC0C8 \uC815\uC2DD \uBC84\uC804\uC744 \uCC3E\uC558\uC744 \uB54C\uB9CC \uC124\uCE58\uD569\uB2C8\uB2E4. \uC124\uCE58 \uC804\uC5D0 \uBC31\uC5C5\uD558\uACE0 \uB9B4\uB9AC\uC2A4 \uD328\uD0A4\uC9C0\uB97C \uAC80\uC99D\uD558\uBA70, \uC2E4\uD328\uD574\uB3C4 \uC18C\uC2A4\uB97C \uC790\uB3D9\uC73C\uB85C \uBC14\uAFB8\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uC124\uCE58 \uD6C4\uC5D0\uB294 \uC9C1\uC811 \uC7AC\uC2DC\uC791\uD558\uAE30\uB97C \uAE30\uB2E4\uB9AC\uACE0, DSH \uB97C \uC790\uB3D9\uC73C\uB85C \uC7AC\uC2DC\uC791\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
       })
     ),
     h(
       "p",
       { className: "dshpp-hint" },
-      status.reconciliationError ? "\u5B89\u88C5\u72B6\u6001\u5F85\u6838\u5BF9\uFF0C\u81EA\u52A8\u5B89\u88C5\u5DF2\u6682\u505C\u3002" : status.restartRequired ? `\u78C1\u76D8\u7248\u672C ${status.pendingVersion}\uFF0C\u5F53\u524D\u8FD0\u884C ${status.runningVersion || "\u672A\u77E5"}\uFF1B\u7B49\u5F85\u4F60\u624B\u52A8\u91CD\u542F DSH\u3002` : !value.autoCheck ? "\u81EA\u52A8\u68C0\u67E5\u5DF2\u5173\u95ED\uFF0C\u81EA\u52A8\u5B89\u88C5\u6682\u505C\u3002" : status.checkedAt ? `\u4E0A\u6B21\u68C0\u67E5\uFF1A${new Date(status.checkedAt).toLocaleString()}${status.hasUpdate ? ` \xB7 \u53EF\u7528\u7248\u672C ${status.availableVersion}` : ""}` : "\u542F\u52A8\u540E\u81EA\u52A8\u68C0\u67E5\uFF1B\u5B89\u88C5\u540E\u4EC5\u63D0\u793A\u624B\u52A8\u91CD\u542F\u3002"
+      status.reconciliationError ? "\uC124\uCE58 \uC0C1\uD0DC \uD655\uC778 \uB300\uAE30 \uC911\uC774\uB77C \uC790\uB3D9 \uC124\uCE58\uB97C \uC77C\uC2DC \uC815\uC9C0\uD588\uC2B5\uB2C8\uB2E4." : status.restartRequired ? `\uB514\uC2A4\uD06C \uBC84\uC804 ${status.pendingVersion}, \uD604\uC7AC \uC2E4\uD589 ${status.runningVersion || "\uC54C \uC218 \uC5C6\uC74C"}. DSH \uB97C \uC9C1\uC811 \uC7AC\uC2DC\uC791\uD558\uAE30\uB97C \uAE30\uB2E4\uB9BD\uB2C8\uB2E4.` : !value.autoCheck ? "\uC790\uB3D9 \uD655\uC778\uC774 \uAEBC\uC838 \uC788\uC5B4 \uC790\uB3D9 \uC124\uCE58\uB3C4 \uBA48\uCDB0 \uC788\uC2B5\uB2C8\uB2E4." : status.checkedAt ? `\uB9C8\uC9C0\uB9C9 \uD655\uC778: ${new Date(status.checkedAt).toLocaleString()}${status.hasUpdate ? ` \xB7 \uC0AC\uC6A9 \uAC00\uB2A5\uD55C \uBC84\uC804 ${status.availableVersion}` : ""}` : "\uC2DC\uC791 \uD6C4 \uC790\uB3D9\uC73C\uB85C \uD655\uC778\uD558\uACE0, \uC124\uCE58 \uD6C4\uC5D0\uB294 \uC9C1\uC811 \uC7AC\uC2DC\uC791\uD558\uB3C4\uB85D\uB9CC \uC548\uB0B4\uD569\uB2C8\uB2E4."
     ),
     status.reconciliationError ? h("p", { role: "alert" }, status.reconciliationError) : null,
     [...new Set([status.error, status.installError].filter(Boolean))].map(
@@ -10616,7 +10616,7 @@ function UpdateChannelDialog({ value, onClose, onSaved }) {
       className: "dshpp-updch-mask",
       role: "dialog",
       "aria-modal": "true",
-      "aria-label": tr("updch.title", "\u66F4\u65B0\u901A\u9053\uFF1A\u4EE3\u7406\u4E0E GitHub \u5BC6\u94A5"),
+      "aria-label": tr("updch.title", "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110: \uD504\uB85D\uC2DC\uC640 GitHub \uD0A4"),
       onClick: (e) => {
         if (e.target === e.currentTarget && !saving) onClose();
       }
@@ -10627,25 +10627,25 @@ function UpdateChannelDialog({ value, onClose, onSaved }) {
       h(
         "h4",
         { className: "dshpp-updch-title" },
-        tr("updch.title", "\u66F4\u65B0\u901A\u9053\uFF1A\u4EE3\u7406\u4E0E GitHub \u5BC6\u94A5")
+        tr("updch.title", "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110: \uD504\uB85D\uC2DC\uC640 GitHub \uD0A4")
       ),
       h(
         "p",
         { className: "dshpp-hint" },
         tr(
           "updch.scope",
-          "\u8FD9\u91CC\u7684\u4EE3\u7406\u4E0E\u5BC6\u94A5\u53EA\u4F5C\u7528\u4E8E\u672C\u63D2\u4EF6\u7684\u66F4\u65B0\u68C0\u67E5\u4E0E\u4E0B\u8F7D\u901A\u9053\uFF0C\u4E0D\u5F71\u54CD\u5176\u5B83\u6A21\u578B\u5382\u5546\u7684\u8BF7\u6C42\uFF0C\u4E5F\u4E0D\u5199\u5165\u5BBF\u4E3B\u8FDB\u7A0B\u73AF\u5883\u3002\u7559\u7A7A\u7EE7\u627F\u5DF2\u6709\u66F4\u65B0\u4EE3\u7406\u73AF\u5883\u3002"
+          "\uC5EC\uAE30\uC11C \uC124\uC815\uD55C \uD504\uB85D\uC2DC\uC640 \uD0A4\uB294 \uC774 \uD50C\uB7EC\uADF8\uC778\uC758 \uC5C5\uB370\uC774\uD2B8 \uD655\uC778\uACFC \uB2E4\uC6B4\uB85C\uB4DC \uACBD\uB85C\uC5D0\uB9CC \uC801\uC6A9\uB418\uACE0, \uB2E4\uB978 \uBAA8\uB378 \uACF5\uAE09\uC790 \uC694\uCCAD\uC5D0\uB294 \uC601\uD5A5\uC744 \uC8FC\uC9C0 \uC54A\uC73C\uBA70 \uD638\uC2A4\uD2B8 \uD504\uB85C\uC138\uC2A4 \uD658\uACBD\uC5D0\uB3C4 \uC4F0\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uBE44\uC6CC \uB450\uBA74 \uAE30\uC874 \uC5C5\uB370\uC774\uD2B8 \uD504\uB85D\uC2DC \uD658\uACBD\uC744 \uC0C1\uC18D\uD569\uB2C8\uB2E4."
         )
       ),
       h(
         "label",
         { className: "dshpp-updch-label" },
-        h("span", null, tr("updch.proxy", "\u4EE3\u7406\u5730\u5740")),
+        h("span", null, tr("updch.proxy", "\uD504\uB85D\uC2DC \uC8FC\uC18C")),
         h("input", {
           ref: proxyRef,
           type: "text",
           className: "dshpp-field dshpp-updch-field",
-          "aria-label": tr("updch.proxy", "\u4EE3\u7406\u5730\u5740"),
+          "aria-label": tr("updch.proxy", "\uD504\uB85D\uC2DC \uC8FC\uC18C"),
           value: proxy,
           disabled: saving,
           placeholder: tr("updch.proxy.ph", "socks5://127.0.0.1:60808"),
@@ -10659,22 +10659,22 @@ function UpdateChannelDialog({ value, onClose, onSaved }) {
         { className: "dshpp-hint" },
         tr(
           "updch.proxy.hint",
-          "\u652F\u6301 http:// / https:// / socks5:// \u524D\u7F00\uFF0C\u4F8B\u5982 http://127.0.0.1:7890\u3002\u7559\u7A7A\u7EE7\u627F\u5DF2\u6709\u66F4\u65B0\u4EE3\u7406\u73AF\u5883\u3002"
+          "http:// / https:// / socks5:// \uC811\uB450\uC0AC\uB97C \uC9C0\uC6D0\uD569\uB2C8\uB2E4. \uC608: http://127.0.0.1:7890. \uBE44\uC6CC \uB450\uBA74 \uAE30\uC874 \uC5C5\uB370\uC774\uD2B8 \uD504\uB85D\uC2DC \uD658\uACBD\uC744 \uC0C1\uC18D\uD569\uB2C8\uB2E4."
         )
       ),
       h(
         "label",
         { className: "dshpp-updch-label" },
-        h("span", null, tr("updch.token", "GitHub \u5BC6\u94A5")),
+        h("span", null, tr("updch.token", "GitHub \uD0A4")),
         h("input", {
           type: "password",
           className: "dshpp-field dshpp-updch-field",
-          "aria-label": tr("updch.token", "GitHub \u5BC6\u94A5"),
+          "aria-label": tr("updch.token", "GitHub \uD0A4"),
           value: token,
           disabled: saving || clearToken,
           placeholder: tr(
             "updch.token.ph",
-            "\u53EF\u9009\uFF1A\u63D0\u9AD8 GitHub API \u989D\u5EA6\uFF0C\u7559\u7A7A\u5219\u4E0D\u4FEE\u6539"
+            "\uC120\uD0DD: GitHub API \uD55C\uB3C4\uB97C \uB192\uC785\uB2C8\uB2E4. \uBE44\uC6CC \uB450\uBA74 \uBC14\uAFB8\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4"
           ),
           spellCheck: false,
           autoComplete: "off",
@@ -10686,8 +10686,8 @@ function UpdateChannelDialog({ value, onClose, onSaved }) {
         { className: "dshpp-hint" },
         hasToken ? tr(
           "updch.token.set",
-          "\u672C\u673A\u5DF2\u914D\u7F6E\u5BC6\u94A5\u3002\u8F93\u5165\u6846\u59CB\u7EC8\u4E3A\u7A7A\uFF0C\u7559\u7A7A\u4FDD\u5B58\u8868\u793A\u4FDD\u6301\u4E0D\u53D8\u3002"
-        ) : tr("updch.token.unset", "\u672C\u673A\u5C1A\u672A\u914D\u7F6E\u5BC6\u94A5\u3002\u7559\u7A7A\u8868\u793A\u4E0D\u914D\u7F6E\u3002")
+          "\uC774 \uCEF4\uD4E8\uD130\uC5D0 \uD0A4\uAC00 \uC124\uC815\uB418\uC5B4 \uC788\uC2B5\uB2C8\uB2E4. \uC785\uB825\uCC3D\uC740 \uD56D\uC0C1 \uBE44\uC5B4 \uC788\uACE0, \uBE44\uC6B4 \uCC44 \uC800\uC7A5\uD558\uBA74 \uADF8\uB300\uB85C \uC720\uC9C0\uB429\uB2C8\uB2E4."
+        ) : tr("updch.token.unset", "\uC774 \uCEF4\uD4E8\uD130\uC5D0 \uC544\uC9C1 \uD0A4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uBE44\uC6CC \uB450\uBA74 \uC124\uC815\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.")
       ),
       hasToken ? h(
         "label",
@@ -10696,10 +10696,10 @@ function UpdateChannelDialog({ value, onClose, onSaved }) {
           type: "checkbox",
           checked: clearToken,
           disabled: saving,
-          "aria-label": tr("updch.token.clear", "\u6E05\u9664\u5DF2\u4FDD\u5B58\u7684\u5BC6\u94A5"),
+          "aria-label": tr("updch.token.clear", "\uC800\uC7A5\uB41C \uD0A4 \uC9C0\uC6B0\uAE30"),
           onChange: (e) => setClearToken(!!e.target.checked)
         }),
-        h("span", null, tr("updch.token.clear", "\u6E05\u9664\u5DF2\u4FDD\u5B58\u7684\u5BC6\u94A5"))
+        h("span", null, tr("updch.token.clear", "\uC800\uC7A5\uB41C \uD0A4 \uC9C0\uC6B0\uAE30"))
       ) : null,
       error ? h("p", { role: "alert" }, error) : null,
       h(
@@ -10708,12 +10708,12 @@ function UpdateChannelDialog({ value, onClose, onSaved }) {
         h(
           Btn,
           { disabled: saving, onClick: onClose },
-          tr("updch.cancel", "\u53D6\u6D88")
+          tr("updch.cancel", "\uCDE8\uC18C")
         ),
         h(
           Btn,
           { kind: "primary", disabled: saving, onClick: save },
-          saving ? tr("updch.saving", "\u4FDD\u5B58\u4E2D\u2026") : tr("updch.save", "\u4FDD\u5B58")
+          saving ? tr("updch.saving", "\uC800\uC7A5 \uC911\u2026") : tr("updch.save", "\uC800\uC7A5")
         )
       )
     )
@@ -10732,7 +10732,7 @@ function CommunityMaintenance() {
     try {
       const result = await apiJson("/dsh-purge/community");
       assertMaintenanceResult(result);
-      if (!Array.isArray(result.backups)) throw new Error("\u5907\u4EFD\u5217\u8868\u54CD\u5E94\u65E0\u6548");
+      if (!Array.isArray(result.backups)) throw new Error("\uBC31\uC5C5 \uBAA9\uB85D \uC751\uB2F5\uC774 \uC720\uD6A8\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4");
       if (!mounted.current || request !== generation.current) return;
       setValue(result);
       setSelected(
@@ -10756,16 +10756,16 @@ function CommunityMaintenance() {
   async function run(op) {
     if (running.current) return;
     if (op === "rollback" && !window.confirm(
-      "\u53EA\u56DE\u6EDA Purge \u63D2\u4EF6\u53CA\u5176\u5165\u53E3\uFF0C\u4FDD\u7559\u5F53\u524D\u63D0\u793A\u8BCD\u548C\u8BBE\u7F6E\uFF1B\u5B8C\u6210\u540E\u9700\u91CD\u542F DSH \u8FDB\u7A0B\uFF1B\u4EC5\u5237\u65B0\u6D4F\u89C8\u5668\u4E0D\u4F1A\u52A0\u8F7D\u65B0\u7248\u540E\u7AEF\u3002\u7EE7\u7EED\uFF1F"
+      "Purge \uD50C\uB7EC\uADF8\uC778\uACFC \uADF8 \uC9C4\uC785\uC810\uB9CC \uB864\uBC31\uD558\uACE0 \uD604\uC7AC \uD504\uB86C\uD504\uD2B8\uC640 \uC124\uC815\uC740 \uB0A8\uAE41\uB2C8\uB2E4. \uB05D\uB098\uBA74 DSH \uD504\uB85C\uC138\uC2A4\uB97C \uC7AC\uC2DC\uC791\uD574\uC57C \uD558\uACE0, \uBE0C\uB77C\uC6B0\uC800\uB9CC \uC0C8\uB85C \uACE0\uCE58\uBA74 \uC0C8 \uBC31\uC5D4\uB4DC\uAC00 \uB85C\uB4DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uACC4\uC18D\uD560\uAE4C\uC694?"
     ))
       return;
     if (op === "update" && !window.confirm(
-      "\u5C06\u5148\u5907\u4EFD\uFF0C\u518D\u5B89\u88C5\u6240\u9009\u793E\u533A\u6B63\u5F0F\u7248\uFF1B\u4E0D\u4F1A\u91CD\u65B0\u5E94\u7528\u5BBF\u4E3B\u8865\u4E01\u3002\u5B89\u88C5\u540E\u8BF7\u91CD\u542F DSH \u8FDB\u7A0B\uFF1B\u4EC5\u5237\u65B0\u6D4F\u89C8\u5668\u4E0D\u4F1A\u52A0\u8F7D\u65B0\u7248\u540E\u7AEF\u3002\u7EE7\u7EED\uFF1F"
+      "\uBA3C\uC800 \uBC31\uC5C5\uD55C \uB4A4 \uC120\uD0DD\uD55C \uCEE4\uBBA4\uB2C8\uD2F0 \uC815\uC2DD \uBC84\uC804\uC744 \uC124\uCE58\uD569\uB2C8\uB2E4. \uD638\uC2A4\uD2B8 \uD328\uCE58\uB97C \uB2E4\uC2DC \uC801\uC6A9\uD558\uC9C0\uB294 \uC54A\uC2B5\uB2C8\uB2E4. \uC124\uCE58 \uD6C4 DSH \uD504\uB85C\uC138\uC2A4\uB97C \uC7AC\uC2DC\uC791\uD558\uACE0, \uBE0C\uB77C\uC6B0\uC800\uB9CC \uC0C8\uB85C \uACE0\uCE58\uBA74 \uC0C8 \uBC31\uC5D4\uB4DC\uAC00 \uB85C\uB4DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uACC4\uC18D\uD560\uAE4C\uC694?"
     ))
       return;
     running.current = true;
     setBusy(true);
-    setNotice("\u5904\u7406\u4E2D\u2026");
+    setNotice("\uCC98\uB9AC \uC911\u2026");
     try {
       const r = await apiJson("/dsh-purge/community", {
         method: "POST",
@@ -10775,11 +10775,11 @@ function CommunityMaintenance() {
       assertMaintenanceResult(r);
       if (!mounted.current) return;
       if (op === "check") {
-        if (!Array.isArray(r.versions)) throw new Error("\u53D1\u884C\u5217\u8868\u54CD\u5E94\u65E0\u6548");
+        if (!Array.isArray(r.versions)) throw new Error("\uB9B4\uB9AC\uC2A4 \uBAA9\uB85D \uC751\uB2F5\uC774 \uC720\uD6A8\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4");
         setReleases(r.versions.filter((v) => v.asset));
         setRelease(r.versions.find((v) => v.asset)?.ref || "");
         setNotice(
-          r.degraded ? `${r.degraded}\uFF1B${r.stale ? "\u5F53\u524D\u663E\u793A\u7F13\u5B58\u5217\u8868\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5" : "\u5DF2\u663E\u793A\u5907\u7528\u5217\u8868"}` : r.error ? `\u68C0\u67E5\u66F4\u65B0\u5931\u8D25\uFF1A${r.error}` : r.hasUpdate ? `\u53D1\u73B0\u65B0\u7248\u672C ${r.remoteVersion}` : "\u5F53\u524D\u5DF2\u662F\u6700\u65B0\u6B63\u5F0F\u7248"
+          r.degraded ? `${r.degraded} \xB7 ${r.stale ? "\uC9C0\uAE08\uC740 \uCE90\uC2DC \uBAA9\uB85D\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4. \uC7A0\uC2DC \uD6C4 \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC138\uC694" : "\uB300\uCCB4 \uBAA9\uB85D\uC744 \uD45C\uC2DC\uD588\uC2B5\uB2C8\uB2E4"}` : r.error ? `\uC5C5\uB370\uC774\uD2B8 \uD655\uC778 \uC2E4\uD328: ${r.error}` : r.hasUpdate ? `\uC0C8 \uBC84\uC804 ${r.remoteVersion} \uBC1C\uACAC` : "\uC774\uBBF8 \uCD5C\uC2E0 \uC815\uC2DD \uBC84\uC804\uC785\uB2C8\uB2E4"
         );
       } else {
         setNotice(maintenanceNotice(op, r));
@@ -10787,7 +10787,7 @@ function CommunityMaintenance() {
     } catch (e) {
       if (mounted.current)
         setNotice(
-          e.message === "timeout" ? "\u7EF4\u62A4\u8BF7\u6C42\u8D85\u65F6\uFF0C\u64CD\u4F5C\u53EF\u80FD\u4ECD\u5728\u6267\u884C\uFF1B\u8BF7\u5148\u5237\u65B0\u72B6\u6001\uFF0C\u52FF\u91CD\u590D\u63D0\u4EA4\u3002" : e.message
+          e.message === "timeout" ? "\uC720\uC9C0\uBCF4\uC218 \uC694\uCCAD\uC774 \uC2DC\uAC04 \uCD08\uACFC\uB410\uC2B5\uB2C8\uB2E4. \uC791\uC5C5\uC774 \uC544\uC9C1 \uC2E4\uD589 \uC911\uC77C \uC218 \uC788\uC73C\uB2C8 \uBA3C\uC800 \uC0C1\uD0DC\uB97C \uC0C8\uB85C \uACE0\uCE58\uACE0, \uAC19\uC740 \uC694\uCCAD\uC744 \uBC18\uBCF5 \uC81C\uCD9C\uD558\uC9C0 \uB9C8\uC138\uC694." : e.message
         );
     } finally {
       if (op !== "check" && mounted.current) await load();
@@ -10797,14 +10797,14 @@ function CommunityMaintenance() {
   }
   return h(
     "section",
-    { className: "dshpp-panel", "aria-label": "\u793E\u533A\u7248\u7EF4\u62A4" },
-    h("h3", null, "\u7EF4\u62A4\uFF1A\u66F4\u65B0\u4E0E\u672C\u673A\u5907\u4EFD"),
-    // 通道现状摘要：代理是否直连、密钥是否已配置（密钥明文永不回显）。
-    // 入口按钮不在这里，它跟「自动检查更新」放在同一行。
+    { className: "dshpp-panel", "aria-label": "\uCEE4\uBBA4\uB2C8\uD2F0\uD310 \uC720\uC9C0\uBCF4\uC218" },
+    h("h3", null, "\uC720\uC9C0\uBCF4\uC218: \uC5C5\uB370\uC774\uD2B8\uC640 \uC774 \uCEF4\uD4E8\uD130 \uBC31\uC5C5"),
+    // 채널 현황 요약: 프록시가 직결인지, 키가 설정돼 있는지(키 평문은 절대 되풀이하지 않는다).
+    // 진입 버튼은 여기 있지 않고 "자동 업데이트 확인"과 같은 줄에 있다.
     value ? h(
       "p",
       { className: "dshpp-hint" },
-      (value.update_preferences?.proxyUrl ? tr("updch.state.proxy", "\u66F4\u65B0\u901A\u9053\u4EE3\u7406\uFF1A") + value.update_preferences.proxyUrl : tr("updch.state.direct", "\u66F4\u65B0\u901A\u9053\uFF1A\u7EE7\u627F\u73AF\u5883\u6216\u7CFB\u7EDF\u4EE3\u7406")) + " \xB7 " + (value.update_preferences?.hasGithubToken ? tr("updch.state.token.on", "GitHub \u5BC6\u94A5\u5DF2\u914D\u7F6E") : tr("updch.state.token.off", "\u672A\u914D\u7F6E GitHub \u5BC6\u94A5"))
+      (value.update_preferences?.proxyUrl ? tr("updch.state.proxy", "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110 \uD504\uB85D\uC2DC: ") + value.update_preferences.proxyUrl : tr("updch.state.direct", "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110: \uD658\uACBD \uB610\uB294 \uC2DC\uC2A4\uD15C \uD504\uB85D\uC2DC \uC0C1\uC18D")) + " \xB7 " + (value.update_preferences?.hasGithubToken ? tr("updch.state.token.on", "GitHub \uD0A4 \uC124\uC815\uB428") : tr("updch.state.token.off", "GitHub \uD0A4 \uBBF8\uC124\uC815"))
     ) : null,
     h(UpdatePreferences, {
       value: value?.update_preferences,
@@ -10815,7 +10815,7 @@ function CommunityMaintenance() {
     h(
       "div",
       { className: "dshpp-row" },
-      h(Btn, { disabled: busy, onClick: () => run("check") }, "\u68C0\u67E5\u793E\u533A\u7248\u66F4\u65B0"),
+      h(Btn, { disabled: busy, onClick: () => run("check") }, "\uCEE4\uBBA4\uB2C8\uD2F0\uD310 \uC5C5\uB370\uC774\uD2B8 \uD655\uC778"),
       h(
         Btn,
         {
@@ -10832,22 +10832,22 @@ function CommunityMaintenance() {
                   )
                 )}`
               );
-              setNotice(lines.length ? lines.join("\n") : "\u8FD8\u6CA1\u6709\u52A8\u4F5C\u8BB0\u5F55");
+              setNotice(lines.length ? lines.join("\n") : "\uC544\uC9C1 \uAE30\uB85D\uB41C \uB3D9\uC791\uC774 \uC5C6\uC2B5\uB2C8\uB2E4");
             } catch (e) {
               setNotice(e.message);
             }
           }
         },
-        "\u6700\u8FD1\u52A8\u4F5C"
+        "\uCD5C\uADFC \uB3D9\uC791"
       ),
       h(
         "a",
         {
-          href: "https://github.com/kingcharleslzy-ai/dsh-purge/releases",
+          href: "https://github.com/wnduddld0513/dsh-purge-kr/releases",
           target: "_blank",
           rel: "noreferrer"
         },
-        "\u53D1\u884C\u8BB0\u5F55"
+        "\uB9B4\uB9AC\uC2A4 \uAE30\uB85D"
       )
     ),
     releases?.length ? h(
@@ -10856,7 +10856,7 @@ function CommunityMaintenance() {
       h(
         "select",
         {
-          "aria-label": "\u9009\u62E9\u793E\u533A\u53D1\u884C\u7248\u672C",
+          "aria-label": "\uCEE4\uBBA4\uB2C8\uD2F0 \uB9B4\uB9AC\uC2A4 \uC120\uD0DD",
           value: release,
           onChange: (e) => setRelease(e.target.value),
           disabled: busy
@@ -10868,31 +10868,31 @@ function CommunityMaintenance() {
       h(
         Btn,
         { disabled: busy || !release, onClick: () => run("update") },
-        "\u5B89\u88C5\u6240\u9009\u7248\u672C"
+        "\uC120\uD0DD\uD55C \uBC84\uC804 \uC124\uCE58"
       )
     ) : null,
-    h("h3", { style: { marginTop: 20 } }, "\u672C\u673A\u5907\u4EFD"),
+    h("h3", { style: { marginTop: 20 } }, "\uC774 \uCEF4\uD4E8\uD130 \uBC31\uC5C5"),
     h(
       Btn,
       { disabled: busy || listState === "loading", onClick: load },
-      "\u5237\u65B0\u5907\u4EFD\u5217\u8868"
+      "\uBC31\uC5C5 \uBAA9\uB85D \uC0C8\uB85C \uACE0\uCE68"
     ),
-    listState === "loading" ? h("p", { role: "status" }, "\u6B63\u5728\u8BFB\u53D6\u5907\u4EFD\u2026") : null,
-    listState === "error" ? h("p", { role: "alert" }, `\u8BFB\u53D6\u5907\u4EFD\u5931\u8D25\uFF1A${listError}`) : null,
-    listState === "ready" && !value.backups.length ? h("p", { role: "status" }, "\u6682\u65E0\u5907\u4EFD") : null,
+    listState === "loading" ? h("p", { role: "status" }, "\uBC31\uC5C5\uC744 \uC77D\uB294 \uC911\u2026") : null,
+    listState === "error" ? h("p", { role: "alert" }, `\uBC31\uC5C5 \uC77D\uAE30 \uC2E4\uD328: ${listError}`) : null,
+    listState === "ready" && !value.backups.length ? h("p", { role: "status" }, "\uBC31\uC5C5 \uC5C6\uC74C") : null,
     h(
       "div",
       { className: "dshpp-row" },
-      h(Btn, { disabled: busy, onClick: () => run("backup") }, "\u7ACB\u5373\u5907\u4EFD"),
+      h(Btn, { disabled: busy, onClick: () => run("backup") }, "\uC9C0\uAE08 \uBC31\uC5C5"),
       h(
         "select",
         {
-          "aria-label": "\u9009\u62E9\u56DE\u6EDA\u5907\u4EFD",
+          "aria-label": "\uB864\uBC31\uD560 \uBC31\uC5C5 \uC120\uD0DD",
           value: selected,
           onChange: (e) => setSelected(e.target.value),
           disabled: busy || listState !== "ready"
         },
-        h("option", { value: "" }, "\u9009\u62E9\u5907\u4EFD"),
+        h("option", { value: "" }, "\uBC31\uC5C5 \uC120\uD0DD"),
         ...(value?.backups || []).map(
           (b) => h(
             "option",
@@ -10907,23 +10907,23 @@ function CommunityMaintenance() {
           disabled: busy || !selected || listState !== "ready",
           onClick: () => run("rollback")
         },
-        "\u56DE\u6EDA\u63D2\u4EF6"
+        "\uD50C\uB7EC\uADF8\uC778 \uB864\uBC31"
       )
     ),
     h(
       "p",
       { className: "dshpp-hint" },
-      "\u5907\u4EFD\u53EA\u4FDD\u5B58\u5728\u672C\u673A\u3002\u56DE\u6EDA\u4FDD\u7559\u5F53\u524D\u63D0\u793A\u8BCD\u3001\u89C4\u5219\u548C\u5176\u4ED6\u63D2\u4EF6\u8BBE\u7F6E\uFF1B\u5B89\u88C5\u6216\u56DE\u6EDA\u540E\u9700\u8981\u91CD\u542F DSH \u8FDB\u7A0B\uFF1B\u4EC5\u5237\u65B0\u6D4F\u89C8\u5668\u4E0D\u4F1A\u52A0\u8F7D\u65B0\u7248\u540E\u7AEF\u3002"
+      "\uBC31\uC5C5\uC740 \uC774 \uCEF4\uD4E8\uD130\uC5D0\uB9CC \uB0A8\uC2B5\uB2C8\uB2E4. \uB864\uBC31\uC740 \uD604\uC7AC \uD504\uB86C\uD504\uD2B8, \uADDC\uCE59, \uB2E4\uB978 \uD50C\uB7EC\uADF8\uC778 \uC124\uC815\uC744 \uBCF4\uC874\uD569\uB2C8\uB2E4. \uC124\uCE58\uB098 \uB864\uBC31 \uD6C4\uC5D0\uB294 DSH \uD504\uB85C\uC138\uC2A4\uB97C \uC7AC\uC2DC\uC791\uD574\uC57C \uD558\uACE0, \uBE0C\uB77C\uC6B0\uC800\uB9CC \uC0C8\uB85C \uACE0\uCE58\uBA74 \uC0C8 \uBC31\uC5D4\uB4DC\uAC00 \uB85C\uB4DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
     ),
     notice ? h("p", { role: "status" }, notice) : null,
-    // 对话框挂在面板内部，靠固定定位脱离容器，不依赖 portal。
+    // 대화상자는 패널 안에 붙지만 고정 위치로 컨테이너를 벗어나며 portal 에 의존하지 않는다.
     channelOpen && value ? h(UpdateChannelDialog, {
       value: value.update_preferences,
       onClose: () => setChannelOpen(false),
       onSaved: (next) => {
         setValue((current) => ({ ...current, update_preferences: next }));
         setNotice(
-          tr("updch.saved", "\u66F4\u65B0\u901A\u9053\u5DF2\u4FDD\u5B58\uFF0C\u4E0B\u4E00\u6B21\u68C0\u67E5\u66F4\u65B0\u5373\u751F\u6548\u3002")
+          tr("updch.saved", "\uC5C5\uB370\uC774\uD2B8 \uCC44\uB110\uC744 \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC74C \uC5C5\uB370\uC774\uD2B8 \uD655\uC778\uBD80\uD130 \uC801\uC6A9\uB429\uB2C8\uB2E4.")
         );
       }
     }) : null
@@ -10956,7 +10956,7 @@ function incompleteApplyDetail(result, t) {
       t("restart.incomplete.runtime"),
       ...runtimeRepairDetails(result.cli_repair)
     );
-  return parts.length ? parts.join("\uFF1B") : t("restart.incomplete.unknown");
+  return parts.length ? parts.join(" \xB7 ") : t("restart.incomplete.unknown");
 }
 
 // src/components/advanced.js
@@ -11309,7 +11309,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
   };
   const updateErrorText = (tr, e) => {
     const msg = String(e && e.message || e || "");
-    if (msg === "timeout" || /aborted|abort|超时/i.test(msg))
+    if (msg === "timeout" || /aborted|abort|timeout|타임아웃|시간 ?초과/i.test(msg))
       return tr("update.timeout");
     if (/\b404\b/.test(msg) || /non-json/.test(msg))
       return tr("update.needRestart");
@@ -11611,7 +11611,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
             if (d.manualQuit) {
               setNotice({
                 kind: "ok",
-                text: "\u8865\u4E01\u5DF2\u5199\u5165\u78C1\u76D8\uFF0C\u5F53\u524D\u8FDB\u7A0B\u5C1A\u672A\u52A0\u8F7D\u3002\u6362\u5305\u52A9\u624B\u7B49\u5F85\u4F60\u5B8C\u6574\u9000\u51FA\uFF08macOS \u7528 \u2318Q\uFF0CWindows \u4ECE\u7CFB\u7EDF\u6258\u76D8\u9000\u51FA\uFF09\u3002\u786E\u8BA4\u6362\u5305\u5B8C\u6210\u540E\u518D\u624B\u52A8\u6253\u5F00 DSH\uFF0C\u4E0D\u4F1A\u81EA\u52A8\u91CD\u542F\u3002"
+                text: "\uD328\uCE58\uB97C \uB514\uC2A4\uD06C\uC5D0 \uAE30\uB85D\uD588\uC9C0\uB9CC \uD604\uC7AC \uD504\uB85C\uC138\uC2A4\uB294 \uC544\uC9C1 \uB85C\uB4DC\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uD328\uD0A4\uC9C0 \uAD50\uCCB4 \uB3C4\uC6B0\uBBF8\uAC00 \uC644\uC804 \uC885\uB8CC\uB97C \uAE30\uB2E4\uB9BD\uB2C8\uB2E4(macOS \uB294 \u2318Q, Windows \uB294 \uC2DC\uC2A4\uD15C \uD2B8\uB808\uC774\uC5D0\uC11C \uC885\uB8CC). \uAD50\uCCB4\uAC00 \uB05D\uB09C \uAC83\uC744 \uD655\uC778\uD55C \uB4A4 DSH \uB97C \uC9C1\uC811 \uC5EC\uC138\uC694. \uC790\uB3D9 \uC7AC\uC2DC\uC791\uC740 \uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
               });
               setAskRestart(false);
               loadAll();
@@ -11665,7 +11665,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
         rejectNeedPrompt(t);
         return;
       }
-      if (!d || !d.ok) throw new Error(d && d.error || "\u4FDD\u5B58\u5931\u8D25");
+      if (!d || !d.ok) throw new Error(d && d.error || "\uC800\uC7A5 \uC2E4\uD328");
       const unchanged = readPromptBox() === content;
       if (unchanged && typeof d.content === "string") {
         overrideRef.current = d.content;
@@ -11673,7 +11673,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
       }
       setNotice({
         kind: "ok",
-        text: unchanged ? t("saved.override") : "\u5DF2\u4FDD\u5B58\u63D0\u4EA4\u7684\u7248\u672C\uFF1B\u5F53\u524D\u4FEE\u6539\u5C1A\u672A\u4FDD\u5B58\u3002"
+        text: unchanged ? t("saved.override") : "\uC81C\uCD9C\uD55C \uBC84\uC804\uC744 \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4. \uD604\uC7AC \uC218\uC815\uBD84\uC740 \uC544\uC9C1 \uC800\uC7A5\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4."
       });
     } catch (e) {
       if (ticket === actionTicket.current)
@@ -11694,7 +11694,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ content })
       });
-      if (!d || !d.ok) throw new Error(d && d.error || "\u4FDD\u5B58\u5931\u8D25");
+      if (!d || !d.ok) throw new Error(d && d.error || "\uC800\uC7A5 \uC2E4\uD328");
       const unchanged = ownRef.current === content;
       if (unchanged && typeof d.content === "string") {
         ownRef.current = d.content;
@@ -11702,7 +11702,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
       }
       setNotice({
         kind: "ok",
-        text: !unchanged ? "\u5DF2\u4FDD\u5B58\u63D0\u4EA4\u7684\u7248\u672C\uFF1B\u5F53\u524D\u4FEE\u6539\u5C1A\u672A\u4FDD\u5B58\u3002" : d.dropped > 0 ? t("saved.own.dropped", { n: d.dropped }) : t("saved.own")
+        text: !unchanged ? "\uC81C\uCD9C\uD55C \uBC84\uC804\uC744 \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4. \uD604\uC7AC \uC218\uC815\uBD84\uC740 \uC544\uC9C1 \uC800\uC7A5\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4." : d.dropped > 0 ? t("saved.own.dropped", { n: d.dropped }) : t("saved.own")
       });
     } catch (e) {
       setNotice({ kind: "error", text: t("err.save", { error: e.message }) });
@@ -11739,7 +11739,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
       }
       setNotice({
         kind: "ok",
-        text: unchanged ? tr("saved.restoreInject") : "\u5DF2\u6062\u590D\u9ED8\u8BA4\u503C\uFF1B\u5F53\u524D\u4FEE\u6539\u5C1A\u672A\u4FDD\u5B58\u3002"
+        text: unchanged ? tr("saved.restoreInject") : "\uAE30\uBCF8\uAC12\uC73C\uB85C \uB418\uB3CC\uB838\uC2B5\uB2C8\uB2E4. \uD604\uC7AC \uC218\uC815\uBD84\uC740 \uC544\uC9C1 \uC800\uC7A5\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4."
       });
     }).catch((e) => {
       if (ticket !== actionTicket.current) return;
@@ -11944,7 +11944,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
           h(
             "b",
             null,
-            !s ? "\u6B63\u5728\u8BFB\u53D6\u5BBF\u4E3B\u72B6\u6001\u2026" : s.ok === false ? "\u72B6\u6001\u8BFB\u53D6\u5931\u8D25\uFF0C\u5BBF\u4E3B\u4E0E\u8865\u4E01\u72B6\u6001\u672A\u77E5" : !located ? sealedReady ? "\u5BBF\u4E3B\u8FD8\u6CA1\u89E3\u5F00\uFF1A\u70B9\u300C\u5E94\u7528\u300D" : "\u672A\u5B9A\u4F4D\u5230\u5BBF\u4E3B\uFF1A\u70B9\u300C\u5E94\u7528\u300D\u91CD\u8BD5" : s?.asar_still_sealed ? `${applied}/${total} \u6761\u78C1\u76D8\u8865\u4E01\uFF08\u9000\u51FA\u91CD\u5F00\u540E\u52A0\u8F7D\uFF09` : tally.pending ? `\u8FD8\u6709 ${tally.pending} \u6761\u5F85\u5E94\u7528` : `${applied}/${total} \u6761\u8865\u4E01\u5DF2\u751F\u6548`
+            !s ? "\uD638\uC2A4\uD2B8 \uC0C1\uD0DC\uB97C \uC77D\uB294 \uC911\u2026" : s.ok === false ? "\uC0C1\uD0DC \uC77D\uAE30 \uC2E4\uD328. \uD638\uC2A4\uD2B8\uC640 \uD328\uCE58 \uC0C1\uD0DC\uB97C \uC54C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4" : !located ? sealedReady ? "\uD638\uC2A4\uD2B8\uAC00 \uC544\uC9C1 \uD480\uB9AC\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. '\uC801\uC6A9'\uC744 \uB204\uB974\uC138\uC694" : "\uD638\uC2A4\uD2B8\uB97C \uCC3E\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4. '\uC801\uC6A9'\uC744 \uB20C\uB7EC \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC138\uC694" : s?.asar_still_sealed ? `${applied}/${total}\uAC74 \uB514\uC2A4\uD06C \uD328\uCE58(\uC885\uB8CC \uD6C4 \uB2E4\uC2DC \uC5F4\uBA74 \uB85C\uB4DC\uB429\uB2C8\uB2E4)` : tally.pending ? `${tally.pending}\uAC74 \uB354 \uC801\uC6A9 \uB300\uAE30` : `${applied}/${total}\uAC74 \uD328\uCE58 \uC801\uC6A9\uB428`
           ),
           h(
             "span",
@@ -11990,13 +11990,13 @@ function PurgifySection({ page = "status", onStatus } = {}) {
               onClick: loadAll,
               disabled: patchBusy || uninstallBusy
             },
-            "\u5237\u65B0"
+            "\uC0C8\uB85C \uACE0\uCE68"
           )
         ),
         h(
           "p",
           { className: "dshpp-hero-hint" },
-          "\u88C5\u597D\u63D2\u4EF6\u3001\u66F4\u65B0\u8FC7 DSH\u3001\u6216\u53D1\u73B0\u6A21\u578B\u53C8\u5F00\u59CB\u63A8\u8131\u65F6\uFF1A\u70B9\u4E00\u6B21\u300C\u5E94\u7528\u300D\uFF0C\u7136\u540E\u9000\u51FA\u5E76\u91CD\u5F00 DSH\uFF0C\u5C31\u4F1A\u6062\u590D\u3002"
+          "\uD50C\uB7EC\uADF8\uC778\uC744 \uC124\uCE58\uD588\uAC70\uB098, DSH \uB97C \uC5C5\uB370\uC774\uD2B8\uD588\uAC70\uB098, \uBAA8\uB378\uC774 \uB2E4\uC2DC \uD68C\uD53C\uD558\uAE30 \uC2DC\uC791\uD558\uBA74 '\uC801\uC6A9'\uC744 \uD55C \uBC88 \uB204\uB978 \uB4A4 DSH \uB97C \uC885\uB8CC\uD588\uB2E4\uAC00 \uB2E4\uC2DC \uC5F4\uBA74 \uBCF5\uAD6C\uB429\uB2C8\uB2E4."
         ),
         noticeNode(notice)
       ),
@@ -12017,7 +12017,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
         h(
           "details",
           { className: "dshpp-editions" },
-          h("summary", null, "\u7248\u672C\u7BA1\u7406"),
+          h("summary", null, "\uBC84\uC804 \uAD00\uB9AC"),
           renderEdition("stable"),
           renderEdition("beta")
         ),
@@ -12029,11 +12029,11 @@ function PurgifySection({ page = "status", onStatus } = {}) {
         h(
           "summary",
           null,
-          "\u8865\u4E01\u660E\u7EC6 ",
+          "\uD328\uCE58 \uC0C1\uC138 ",
           h(
             "b",
             null,
-            !s ? "\u8BFB\u53D6\u4E2D" : s.ok === false ? "\u72B6\u6001\u672A\u77E5" : s.ai_base ? `${applied}/${total} \u5DF2\u5E94\u7528` : "\u672A\u5B9A\u4F4D\u5BBF\u4E3B"
+            !s ? "\uC77D\uB294 \uC911" : s.ok === false ? "\uC0C1\uD0DC \uBBF8\uD655\uC778" : s.ai_base ? `${applied}/${total} \uC801\uC6A9\uB428` : "\uD638\uC2A4\uD2B8 \uBBF8\uD0D0\uC9C0"
           )
         ),
         h(PatchGroups, { state: s })
@@ -12041,7 +12041,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
       h(
         "details",
         null,
-        h("summary", null, "\u9AD8\u7EA7\u9009\u9879"),
+        h("summary", null, "\uACE0\uAE09 \uC635\uC158"),
         h(HooksDenySection, { onSaved: loadAll })
       ),
       askUninstall ? h(
@@ -12102,7 +12102,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
           className: "dshpp-hint",
           style: {
             margin: "8px 0 0",
-            color: "var(--dshpp-danger, #c44)",
+            color: "var(--dsw-alias-state-error-primary)",
             fontSize: 12
           }
         },
@@ -12169,7 +12169,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
       h("textarea", {
         className: "dshpp-area",
         ref: promptAreaRef,
-        "aria-label": "\u63D0\u793A\u8BCD\u5185\u5BB9",
+        "aria-label": "\uD504\uB86C\uD504\uD2B8 \uB0B4\uC6A9",
         disabled: !overrideLoaded,
         value: override,
         onChange: (e) => {
@@ -12186,7 +12186,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
           className: "dshpp-hint",
           style: {
             margin: "8px 0 0",
-            color: "var(--dshpp-danger, #c44)",
+            color: "var(--dsw-alias-state-error-primary)",
             fontSize: 12
           }
         },
@@ -12217,7 +12217,7 @@ function PurgifySection({ page = "status", onStatus } = {}) {
       ),
       h("textarea", {
         className: "dshpp-area",
-        "aria-label": "\u670D\u52A1\u5668\u540D\u5355",
+        "aria-label": "\uC11C\uBC84 \uBAA9\uB85D",
         disabled: !ownLoaded,
         value: ownServers,
         onChange: (e) => {
@@ -13178,7 +13178,7 @@ function CompatibilityNote({ status }) {
       className: "dshpp-hint",
       style: { margin: "0 20px 10px" }
     },
-    valid ? "\u5B98\u65B9\u7248\u672C " + v + "\uFF1B\u6B64\u754C\u9762\u5DF2\u9A8C\u8BC1 1.1.71\u3002\u5982\u9047\u8BBE\u7F6E\u5F02\u5E38\uFF0C\u8BF7\u66F4\u65B0\u754C\u9762\u63D2\u4EF6\u3002" : "\u65E0\u6CD5\u786E\u8BA4\u5B98\u65B9 Purge \u63A5\u53E3\u3002\u8BF7\u68C0\u67E5\u5B98\u65B9\u63D2\u4EF6\u662F\u5426\u542F\u7528\uFF0C\u6216\u66F4\u65B0\u754C\u9762\u63D2\u4EF6\u3002"
+    valid ? "\uACF5\uC2DD \uBC84\uC804 " + v + ". \uC774 UI \uB294 1.1.71 \uC5D0\uC11C \uAC80\uC99D\uD588\uC2B5\uB2C8\uB2E4. \uC124\uC815\uC774 \uC774\uC0C1\uD558\uBA74 UI \uD50C\uB7EC\uADF8\uC778\uC744 \uC5C5\uB370\uC774\uD2B8\uD558\uC138\uC694." : "\uACF5\uC2DD Purge \uC778\uD130\uD398\uC774\uC2A4\uB97C \uD655\uC778\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uACF5\uC2DD \uD50C\uB7EC\uADF8\uC778\uC774 \uD65C\uC131\uD654\uB418\uC5B4 \uC788\uB294\uC9C0 \uD655\uC778\uD558\uAC70\uB098 UI \uD50C\uB7EC\uADF8\uC778\uC744 \uC5C5\uB370\uC774\uD2B8\uD558\uC138\uC694."
   );
 }
 function SettingsRoot(props = {}) {
@@ -13202,23 +13202,23 @@ function SettingsRoot(props = {}) {
     h(
       "header",
       { className: "dshpp-native-head" },
-      h("div", null, h("h2", null, "Purge"), h("p", null, "\u63D2\u4EF6\u8BBE\u7F6E")),
+      h("div", null, h("h2", null, "Purge"), h("p", null, "\uD50C\uB7EC\uADF8\uC778 \uC124\uC815")),
       h(
         "span",
         { className: "dshpp-native-badge" },
-        (true ? "\u793E\u533A\u7248 " : "\u72EC\u7ACB\u754C\u9762 ") + "1.6.69"
+        (true ? "\uCEE4\uBBA4\uB2C8\uD2F0\uD310 " : "\uB3C5\uB9BD UI ") + "1.6.69"
       )
     ),
     h(CompatibilityNote, { status: backendStatus }),
     h(
       "nav",
-      { className: "dshpp-native-nav", "aria-label": "Purge \u8BBE\u7F6E\u5206\u7C7B" },
+      { className: "dshpp-native-nav", "aria-label": "Purge \uC124\uC815 \uBD84\uB958" },
       [
-        ["status", "\u72B6\u6001"],
-        ["prompt", "\u63D0\u793A\u8BCD"],
-        ["rules", "\u89C4\u5219"],
-        ["skills", "\u6280\u80FD"],
-        ["more", "\u66F4\u591A"]
+        ["status", "\uC0C1\uD0DC"],
+        ["prompt", "\uD504\uB86C\uD504\uD2B8"],
+        ["rules", "\uADDC\uCE59"],
+        ["skills", "\uC2A4\uD0AC"],
+        ["more", "\uB354 \uBCF4\uAE30"]
       ].map(
         ([id, label]) => h(
           "button",
@@ -13246,8 +13246,8 @@ function SettingsRoot(props = {}) {
       h(
         "div",
         { hidden: page !== "more", className: "dshpp-more" },
-        h("h3", null, "\u6F14\u7EC3\u53F0"),
-        h("p", null, "\u6253\u5F00\u63D2\u4EF6\u539F\u6709\u7684\u6F14\u7EC3\u5DE5\u5177\u4E0E\u73AF\u5883\u8BBE\u7F6E\u3002"),
+        h("h3", null, "\uB4DC\uB9B4 \uCF58\uC194"),
+        h("p", null, "\uD50C\uB7EC\uADF8\uC778\uC5D0 \uC6D0\uB798 \uC788\uB358 \uB4DC\uB9B4 \uB3C4\uAD6C\uC640 \uD658\uACBD \uC124\uC815\uC744 \uC5FD\uB2C8\uB2E4."),
         h(
           Btn,
           {
@@ -13256,19 +13256,19 @@ function SettingsRoot(props = {}) {
               requestDrill("tab");
             }
           },
-          "\u6253\u5F00\u6F14\u7EC3\u53F0"
+          "\uB4DC\uB9B4 \uCF58\uC194 \uC5F4\uAE30"
         ),
         h(
           "p",
           { className: "dshpp-attribution" },
-          true ? "\u57FA\u4E8E YuJunZhiXue/dsh-purge 1.1.71 \u72EC\u7ACB\u7EF4\u62A4\uFF0C\u4FDD\u7559\u539F\u4F5C\u8005\u7F72\u540D\uFF1B\u66F4\u65B0\u4EC5\u6765\u81EA\u672C fork\u3002" : "\u754C\u9762\u72EC\u7ACB\u7EF4\u62A4\uFF1B\u5B98\u65B9 Purge \u53EF\u5355\u72EC\u66F4\u65B0\u3002\u57FA\u4E8E YuJunZhiXue/dsh-purge 1.1.71\uFF08MIT\uFF09\u3002"
+          true ? "YuJunZhiXue/dsh-purge 1.1.71 \uAE30\uBC18 \uB3C5\uB9BD \uC720\uC9C0, \uC6D0\uC800\uC790 \uD45C\uAE30 \uBCF4\uC874. \uC5C5\uB370\uC774\uD2B8\uB294 \uC774 fork \uC5D0\uC11C\uB9CC \uC635\uB2C8\uB2E4." : "UI \uB3C5\uB9BD \uC720\uC9C0. \uACF5\uC2DD Purge \uB294 \uB530\uB85C \uC5C5\uB370\uC774\uD2B8\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4. YuJunZhiXue/dsh-purge 1.1.71 \uAE30\uBC18(MIT)."
         )
       ),
       page === "drill" ? h(
         "div",
         { className: "dshpp-native-drill" },
-        // 演练台自带一套 CSS（.rt-*）；旧版由 dock 注入 <head>，重构时丢了，
-        // 结果面板在右侧栏里完全没样式、文字被挤成一列。这里随组件一起挂上。
+        // 드릴 콘솔은 자체 CSS(.rt-*)를 쓴다. 옛 버전은 dock 이 <head> 에 주입했지만 재구성 때 빠져서,
+        // 결과 패널이 오른쪽 사이드바에서 스타일 없이 글자가 한 열로 눌렸다. 여기서 컴포넌트와 함께 붙인다.
         __dshPurgeDrill && __dshPurgeDrill.CSS ? h("style", { "data-dsh-purge-drill": "1" }, __dshPurgeDrill.CSS) : null,
         h(
           Btn,
@@ -13278,9 +13278,9 @@ function SettingsRoot(props = {}) {
               select("more");
             }
           },
-          "\u8FD4\u56DE\u8BBE\u7F6E"
+          "\uC124\uC815\uC73C\uB85C \uB3CC\uC544\uAC00\uAE30"
         ),
-        readDrillAuth() ? h(__dshPurgeDrill.Panel, { embedded: true }) : h("p", null, "\u8BF7\u5148\u5B8C\u6210\u6F14\u7EC3\u53F0\u6388\u6743\u3002")
+        readDrillAuth() ? h(__dshPurgeDrill.Panel, { embedded: true }) : h("p", null, "\uBA3C\uC800 \uB4DC\uB9B4 \uCF58\uC194 \uC2B9\uC778\uC744 \uB9C8\uCCD0\uC57C \uD569\uB2C8\uB2E4.")
       ) : null
     )
   );
@@ -13288,12 +13288,12 @@ function SettingsRoot(props = {}) {
 
 // src/components/page.js
 var TABS = [
-  ["status", "\u72B6\u6001", "\u5BBF\u4E3B\u517C\u5BB9\u3001\u8865\u4E01\u3001\u7834\u7532\u81EA\u68C0"],
-  ["prompt", "\u63D0\u793A\u8BCD", "\u6CE8\u5165\u6B63\u6587\u4E0E\u7834\u7532\u5F3A\u5316\u6BB5"],
-  ["rules", "\u89C4\u5219", "\u89C4\u5219\u96C6\u4E0E\u5DE5\u4F5C\u533A\u7B56\u7565"],
-  ["skills", "\u6280\u80FD", "DSH \u6280\u80FD\u76EE\u5F55"],
-  ["drill", "\u6F14\u7EC3\u53F0", "\u7EA2\u961F\u6F14\u7EC3\u4E0E\u73AF\u5883\u9002\u914D"],
-  ["more", "\u66F4\u591A", "\u670D\u52A1\u5668\u540D\u5355\u3001\u66F4\u65B0\u4E0E\u7EF4\u62A4"]
+  ["status", "\uC0C1\uD0DC", "\uD638\uC2A4\uD2B8 \uD638\uD658, \uD328\uCE58, \uD0C8\uC625 \uC790\uCCB4 \uC810\uAC80"],
+  ["prompt", "\uD504\uB86C\uD504\uD2B8", "\uC8FC\uC785 \uBCF8\uBB38\uACFC \uD0C8\uC625 \uAC15\uD654 \uC139\uC158"],
+  ["rules", "\uADDC\uCE59", "\uADDC\uCE59 \uC138\uD2B8\uC640 \uC6CC\uD06C\uC2A4\uD398\uC774\uC2A4 \uC815\uCC45"],
+  ["skills", "\uC2A4\uD0AC", "DSH \uC2A4\uD0AC \uCE74\uD0C8\uB85C\uADF8"],
+  ["drill", "\uB4DC\uB9B4 \uCF58\uC194", "\uB808\uB4DC\uD300 \uB4DC\uB9B4\uACFC \uD658\uACBD \uC801\uC751"],
+  ["more", "\uB354 \uBCF4\uAE30", "\uC11C\uBC84 \uBAA9\uB85D, \uC5C5\uB370\uC774\uD2B8, \uC720\uC9C0\uBCF4\uC218"]
 ];
 function PurgeGlyph({ size = 18 } = {}) {
   return h(
@@ -13330,38 +13330,38 @@ function StatusStrip({ info }) {
     h(
       "span",
       { className: "dshpp-strip-item" },
-      "\u517C\u5BB9\u7EA7\u522B ",
+      "\uD638\uD658 \uC218\uC900 ",
       h(
         "b",
         null,
-        level === "qualified" ? "\u5DF2\u56DE\u5F52\u9A8C\u8BC1" : level === "unverified" ? "\u672A\u9A8C\u8BC1\u7248\u672C" : level === "mixed" ? "\u7EC4\u4EF6\u7248\u672C\u4E0D\u4E00\u81F4" : level ? "\u672A\u5B9A\u4F4D\u5BBF\u4E3B" : info?.ok === false ? "\u8BFB\u53D6\u5931\u8D25" : "\u68C0\u6D4B\u4E2D"
+        level === "qualified" ? "\uD68C\uADC0 \uAC80\uC99D\uB428" : level === "unverified" ? "\uBBF8\uAC80\uC99D \uBC84\uC804" : level === "mixed" ? "\uCEF4\uD3EC\uB10C\uD2B8 \uBC84\uC804 \uBD88\uC77C\uCE58" : level ? "\uD638\uC2A4\uD2B8 \uBBF8\uD0D0\uC9C0" : info?.ok === false ? "\uC77D\uAE30 \uC2E4\uD328" : "\uD655\uC778 \uC911"
       ),
       h(
         HelpTip,
-        { title: "\u517C\u5BB9\u7EA7\u522B" },
-        compat.message || "\u8BFB\u53D6\u5BBF\u4E3B\u7EC4\u4EF6\u7248\u672C\u540E\u7ED9\u51FA\u7ED3\u8BBA\u3002qualified \u8868\u793A\u8BE5 DSH \u7248\u672C\u7684\u8865\u4E01\u951A\u70B9\u5DF2\u9010\u6761\u56DE\u5F52\u3002"
+        { title: "\uD638\uD658 \uC218\uC900" },
+        compat.message || "\uD638\uC2A4\uD2B8 \uCEF4\uD3EC\uB10C\uD2B8 \uBC84\uC804\uC744 \uC77D\uACE0 \uACB0\uB860\uC744 \uB0C5\uB2C8\uB2E4. qualified \uB294 \uD574\uB2F9 DSH \uBC84\uC804\uC758 \uD328\uCE58 \uC575\uCEE4\uB97C \uD56D\uBAA9\uBCC4\uB85C \uD68C\uADC0 \uAC80\uC99D\uD588\uB2E4\uB294 \uB73B\uC785\uB2C8\uB2E4."
       )
     ),
     h(
       "span",
       { className: "dshpp-strip-item" },
-      "\u78C1\u76D8\u5199\u5165\u8BA1\u6570 ",
+      "\uB514\uC2A4\uD06C \uAE30\uB85D \uC218 ",
       h(
         "b",
         null,
         `${info?.patches_applied ?? "?"}/${info?.patches_total ?? "?"}`,
-        info?.patches_na > 0 ? ` \xB7 ${info.patches_na} \u6761\u672C\u673A\u4E0D\u9002\u7528` : ""
+        info?.patches_na > 0 ? ` \xB7 ${info.patches_na}\uAC74 \uC774 \uCEF4\uD4E8\uD130\uC5D0 \uD574\uB2F9 \uC5C6\uC74C` : ""
       ),
       h(
         HelpTip,
-        { title: "\u5BBF\u4E3B\u8865\u4E01" },
-        `\u5B9E\u9645\u5199\u8FDB DSH \u5BBF\u4E3B\u4EE3\u7801\u7684\u8865\u4E01\u6761\u6570\uFF08\u5206\u6BCD\u53EA\u7B97\u672C\u673A\u9002\u7528\u7684\uFF09\u3002\u5168\u90E8\u8865\u4E01 ${info?.patches_total_all ?? "?"} \u6761\uFF0C\u5176\u4E2D ${info?.patches_na ?? 0} \u6761\u76EE\u6807\u63D2\u4EF6/\u9884\u8BBE\u672A\u5B89\u88C5\uFF1B\u5F85\u5E94\u7528\u8868\u793A\u951A\u70B9\u8FD8\u5728\u3001\u8FD8\u6CA1\u5199\u5165\uFF1B\u6CA1\u5BF9\u4E0A\u8868\u793A\u5BBF\u4E3B\u6E90\u7801\u5DF2\u53D8\uFF0C\u9700\u8981\u91CD\u65B0\u5B9A\u4F4D\u951A\u70B9\u3002`
+        { title: "\uD638\uC2A4\uD2B8 \uD328\uCE58" },
+        `\uC2E4\uC81C\uB85C DSH \uD638\uC2A4\uD2B8 \uCF54\uB4DC\uC5D0 \uAE30\uB85D\uB41C \uD328\uCE58 \uC218(\uBD84\uBAA8\uB294 \uC774 \uCEF4\uD4E8\uD130\uC5D0 \uD574\uB2F9\uD558\uB294 \uD56D\uBAA9\uB9CC). \uC804\uCCB4 \uD328\uCE58 ${info?.patches_total_all ?? "?"}\uAC74 \uC911 ${info?.patches_na ?? 0}\uAC74\uC740 \uB300\uC0C1 \uD50C\uB7EC\uADF8\uC778/\uD504\uB9AC\uC14B\uC774 \uC124\uCE58\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. '\uC801\uC6A9 \uB300\uAE30'\uB294 \uC575\uCEE4\uAC00 \uB0A8\uC544 \uC788\uACE0 \uC544\uC9C1 \uC4F0\uC9C0 \uC54A\uC558\uB2E4\uB294 \uB73B\uC774\uACE0, '\uBD88\uC77C\uCE58'\uB294 \uD638\uC2A4\uD2B8 \uC18C\uC2A4\uAC00 \uBC14\uB00C\uC5B4 \uC575\uCEE4\uB97C \uB2E4\uC2DC \uCC3E\uC544\uC57C \uD55C\uB2E4\uB294 \uB73B\uC785\uB2C8\uB2E4.`
       )
     ),
     h(
       "span",
       { className: "dshpp-strip-item" },
-      "\u63D2\u4EF6 ",
+      "\uD50C\uB7EC\uADF8\uC778 ",
       h("b", null, info?.plugin_version || "1.6.69")
     )
   );
@@ -13369,12 +13369,12 @@ function StatusStrip({ info }) {
 function LayoutNotice({ info }) {
   if (!info || !info.asar_still_sealed && !info.host_layout) return null;
   const sealed = info.asar_still_sealed === true;
-  const note = info.host_layout?.note || "\u76EE\u6807\u78C1\u76D8\u4ECD\u6709 app.asar\uFF1B\u5F53\u524D\u8FDB\u7A0B\u52A0\u8F7D\u6765\u6E90\u5C1A\u672A\u786E\u8BA4\u3002";
-  const handoff = info.asar_handoff ? ` \u6362\u5305\u72B6\u6001\uFF1A${{ not_scheduled: "\u5C1A\u672A\u5E94\u7528\uFF1A\u70B9\u300C\u5E94\u7528\u300D\u540E\u624D\u4F1A\u5B89\u6392\u6362\u5305", archive_reappeared: "\u5F52\u6863\u518D\u6B21\u51FA\u73B0\uFF0C\u65E7\u6362\u5305\u8BB0\u5F55\u4E0D\u4EE3\u8868\u5F53\u524D\u5DF2\u5B8C\u6210", backup_missing: "\u539F\u5F52\u6863\u5907\u4EFD\u7F3A\u5931\uFF0C\u8BF7\u68C0\u67E5\u8BCA\u65AD", unknown_target: "\u76EE\u6807\u5B9E\u4F8B\u672A\u786E\u5B9A", unreadable: "\u6362\u5305\u8BB0\u5F55\u4E0D\u53EF\u8BFB\uFF0C\u8BF7\u68C0\u67E5\u8BCA\u65AD", starting: "\u52A9\u624B\u542F\u52A8\u4E2D\uFF08\u5C1A\u672A\u786E\u8BA4\u5C31\u7EEA\uFF09", ready: "\u52A9\u624B\u5DF2\u5C31\u7EEA", waiting_for_quit: "\u7B49\u5F85\u5B8C\u6574\u9000\u51FA\uFF08macOS \u2318Q / Windows \u7CFB\u7EDF\u6258\u76D8\uFF09", waiting_for_unlock: "\u7B49\u5F85\u5F52\u6863\u89E3\u9501", moving: "\u6B63\u5728\u4FDD\u7559\u539F\u5F52\u6863", complete: "\u6362\u5305\u5B8C\u6210\uFF0C\u8BF7\u624B\u52A8\u6253\u5F00 DSH", already_unsealed: "\u5F52\u6863\u5DF2\u79FB\u8D70\uFF0C\u8BF7\u624B\u52A8\u6253\u5F00 DSH", failed: "\u5931\u8D25\uFF0C\u8BF7\u67E5\u770B\u8BCA\u65AD\u5E76\u6309\u6062\u590D\u6587\u6863\u64CD\u4F5C", expired: "\u7B49\u5F85\u8D85\u65F6\uFF0C\u8BF7\u91CD\u65B0\u5E94\u7528\u6216\u6309\u6062\u590D\u6587\u6863\u64CD\u4F5C", helper_stopped: "\u52A9\u624B\u610F\u5916\u7ED3\u675F\uFF0C\u8BF7\u91CD\u65B0\u5E94\u7528\u6216\u6309\u6062\u590D\u6587\u6863\u64CD\u4F5C" }[info.asar_handoff.phase] || info.asar_handoff.phase}\u3002` : "";
+  const note = info.host_layout?.note || "\uB300\uC0C1 \uB514\uC2A4\uD06C\uC5D0 \uC544\uC9C1 app.asar \uAC00 \uC788\uACE0, \uD604\uC7AC \uD504\uB85C\uC138\uC2A4\uC758 \uB85C\uB4DC \uCD9C\uCC98\uB294 \uC544\uC9C1 \uD655\uC778\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4.";
+  const handoff = info.asar_handoff ? ` \uD328\uD0A4\uC9C0 \uAD50\uCCB4 \uC0C1\uD0DC: ${{ not_scheduled: "\uC544\uC9C1 \uC801\uC6A9\uB418\uC9C0 \uC54A\uC74C. '\uC801\uC6A9'\uC744 \uB20C\uB7EC\uC57C \uD328\uD0A4\uC9C0 \uAD50\uCCB4\uAC00 \uC608\uC57D\uB429\uB2C8\uB2E4", archive_reappeared: "\uC544\uCE74\uC774\uBE0C\uAC00 \uB2E4\uC2DC \uB098\uD0C0\uB0AC\uC2B5\uB2C8\uB2E4. \uC61B \uAD50\uCCB4 \uAE30\uB85D\uC740 \uD604\uC7AC \uC644\uB8CC\uB97C \uB73B\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4", backup_missing: "\uC6D0\uBCF8 \uC544\uCE74\uC774\uBE0C \uBC31\uC5C5\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uC9C4\uB2E8\uC744 \uD655\uC778\uD558\uC138\uC694", unknown_target: "\uB300\uC0C1 \uC778\uC2A4\uD134\uC2A4\uAC00 \uD655\uC815\uB418\uC9C0 \uC54A\uC74C", unreadable: "\uAD50\uCCB4 \uAE30\uB85D\uC744 \uC77D\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uC9C4\uB2E8\uC744 \uD655\uC778\uD558\uC138\uC694", starting: "\uB3C4\uC6B0\uBBF8 \uC2DC\uC791 \uC911(\uC900\uBE44 \uD655\uC778 \uC804)", ready: "\uB3C4\uC6B0\uBBF8 \uC900\uBE44 \uC644\uB8CC", waiting_for_quit: "\uC644\uC804 \uC885\uB8CC \uB300\uAE30(macOS \u2318Q / Windows \uC2DC\uC2A4\uD15C \uD2B8\uB808\uC774)", waiting_for_unlock: "\uC544\uCE74\uC774\uBE0C \uC7A0\uAE08 \uD574\uC81C \uB300\uAE30", moving: "\uC6D0\uBCF8 \uC544\uCE74\uC774\uBE0C \uBCF4\uC874 \uC911", complete: "\uAD50\uCCB4 \uC644\uB8CC. DSH \uB97C \uC9C1\uC811 \uC5EC\uC138\uC694", already_unsealed: "\uC544\uCE74\uC774\uBE0C\uB97C \uC62E\uACBC\uC2B5\uB2C8\uB2E4. DSH \uB97C \uC9C1\uC811 \uC5EC\uC138\uC694", failed: "\uC2E4\uD328. \uC9C4\uB2E8\uC744 \uD655\uC778\uD558\uACE0 \uBCF5\uAD6C \uBB38\uC11C\uC5D0 \uB530\uB77C \uC870\uCE58\uD558\uC138\uC694", expired: "\uB300\uAE30 \uC2DC\uAC04 \uCD08\uACFC. \uB2E4\uC2DC \uC801\uC6A9\uD558\uAC70\uB098 \uBCF5\uAD6C \uBB38\uC11C\uC5D0 \uB530\uB77C \uC870\uCE58\uD558\uC138\uC694", helper_stopped: "\uB3C4\uC6B0\uBBF8\uAC00 \uC608\uAE30\uCE58 \uC54A\uAC8C \uC885\uB8CC\uB410\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC801\uC6A9\uD558\uAC70\uB098 \uBCF5\uAD6C \uBB38\uC11C\uC5D0 \uB530\uB77C \uC870\uCE58\uD558\uC138\uC694" }[info.asar_handoff.phase] || info.asar_handoff.phase}.` : "";
   const failure = info.asar_handoff?.error;
-  const detail = info.asar_handoff?.detail ? ` \u8BE6\u60C5\uFF1A${info.asar_handoff.detail}${failure?.win32_code != null ? `\uFF08Windows \u9519\u8BEF ${failure.win32_code}\uFF09` : ""}` : "";
+  const detail = info.asar_handoff?.detail ? ` \uC0C1\uC138: ${info.asar_handoff.detail}${failure?.win32_code != null ? `(Windows \uC624\uB958 ${failure.win32_code})` : ""}` : "";
   const confirmed = info.host_layout?.state === "unpacked_entry" && info.host_layout?.process?.matches_target === true && info.host_layout?.disk?.archive_exists === false;
-  const diskNote = info.host_layout?.disk?.archive_exists === true ? " \u76EE\u6807\u78C1\u76D8\u4ECD\u6709 app.asar\u3002" : "";
+  const diskNote = info.host_layout?.disk?.archive_exists === true ? " \uB300\uC0C1 \uB514\uC2A4\uD06C\uC5D0 \uC544\uC9C1 app.asar \uAC00 \uC788\uC2B5\uB2C8\uB2E4." : "";
   if (sealed || !confirmed) {
     return h(
       "p",
@@ -13388,7 +13388,7 @@ function LayoutNotice({ info }) {
   return h(
     "details",
     { className: "dshpp-layout-details" },
-    h("summary", null, "\u2713 \u5DF2\u4ECE\u89E3\u5305\u76EE\u5F55\u542F\u52A8\uFF08\u6362\u5305\u5B8C\u6210\uFF09"),
+    h("summary", null, "\u2713 \uC5B8\uD329 \uB514\uB809\uD130\uB9AC\uC5D0\uC11C \uC2DC\uC791\uB428(\uD328\uD0A4\uC9C0 \uAD50\uCCB4 \uC644\uB8CC)"),
     h("p", { className: "dshpp-note" }, note, diskNote, handoff, detail)
   );
 }
@@ -13397,7 +13397,7 @@ function VersionNotice({ info }) {
     return h(
       "p",
       { className: "dshpp-warn", role: "status" },
-      `\u72B6\u6001\u8BFB\u53D6\u5931\u8D25\uFF1A${info.error || "\u63A5\u53E3\u4E0D\u53EF\u7528"}\u3002\u5F53\u524D\u5BBF\u4E3B\u4E0E\u8865\u4E01\u72B6\u6001\u672A\u77E5\uFF0C\u8BF7\u70B9\u300C\u5237\u65B0\u300D\u91CD\u8BD5\uFF1B\u6301\u7EED\u5931\u8D25\u65F6\u8BF7\u63D0\u4F9B\u64CD\u4F5C\u7CFB\u7EDF\u3001DSH/\u63D2\u4EF6\u7248\u672C\u548C\u6B64\u9519\u8BEF\u3002`
+      `\uC0C1\uD0DC \uC77D\uAE30 \uC2E4\uD328: ${info.error || "\uC778\uD130\uD398\uC774\uC2A4 \uC0AC\uC6A9 \uBD88\uAC00"}. \uD604\uC7AC \uD638\uC2A4\uD2B8\uC640 \uD328\uCE58 \uC0C1\uD0DC\uB97C \uC54C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. '\uC0C8\uB85C \uACE0\uCE68'\uC744 \uB2E4\uC2DC \uB20C\uB7EC \uBCF4\uACE0, \uACC4\uC18D \uC2E4\uD328\uD558\uBA74 \uC6B4\uC601\uCCB4\uC81C, DSH/\uD50C\uB7EC\uADF8\uC778 \uBC84\uC804\uACFC \uC774 \uC624\uB958\uB97C \uC54C\uB824 \uC8FC\uC138\uC694.`
     );
   }
   const backend = info?.plugin_version;
@@ -13405,7 +13405,7 @@ function VersionNotice({ info }) {
   return h(
     "p",
     { className: "dshpp-warn", role: "status" },
-    `\u5B98\u65B9\u7248\u672C ${backend}\uFF1B\u754C\u9762 ${"1.6.69"}\u3002\u4E24\u8005\u4E0D\u4E00\u81F4\u65F6\u8BBE\u7F6E\u53EF\u80FD\u4E0D\u751F\u6548\uFF0C\u8BF7\u66F4\u65B0\u5230\u540C\u4E00\u7248\u672C\u540E\u91CD\u542F DSH\u3002`
+    `\uACF5\uC2DD \uBC84\uC804 ${backend}, UI ${"1.6.69"}. \uB458\uC774 \uB2E4\uB974\uBA74 \uC124\uC815\uC774 \uC801\uC6A9\uB418\uC9C0 \uC54A\uC744 \uC218 \uC788\uC73C\uB2C8, \uAC19\uC740 \uBC84\uC804\uC73C\uB85C \uC5C5\uB370\uC774\uD2B8\uD55C \uB4A4 DSH \uB97C \uC7AC\uC2DC\uC791\uD558\uC138\uC694.`
   );
 }
 function PurgePage() {
@@ -13455,7 +13455,7 @@ function PurgePage() {
           true ? h(
             "span",
             { className: "dshpp-page-ver" },
-            "\u793E\u533A\u7248 1.6.69"
+            "\uCEE4\uBBA4\uB2C8\uD2F0\uD310 1.6.69"
           ) : null
         )
       )
@@ -13521,7 +13521,7 @@ function PurgePage() {
           h(
             "p",
             { className: "dshpp-muted" },
-            "\u6F14\u7EC3\u53F0\u9700\u8981\u5148\u5B8C\u6210\u4E00\u6B21\u6388\u6743\u3002"
+            "\uB4DC\uB9B4 \uCF58\uC194\uC740 \uBA3C\uC800 \uD55C \uBC88 \uC2B9\uC778\uC774 \uD544\uC694\uD569\uB2C8\uB2E4."
           ),
           h(
             Btn,
@@ -13532,7 +13532,7 @@ function PurgePage() {
                 requestDrill("auth");
               }
             },
-            "\u53BB\u6388\u6743"
+            "\uC2B9\uC778\uD558\uB7EC \uAC00\uAE30"
           )
         )
       ) : null
@@ -13540,7 +13540,7 @@ function PurgePage() {
     h(
       "footer",
       { className: "dshpp-page-foot" },
-      true ? "\u57FA\u4E8E YuJunZhiXue/dsh-purge 1.1.71 \u72EC\u7ACB\u7EF4\u62A4 \xB7 MIT \xB7 \u4FDD\u7559\u539F\u4F5C\u8005\u7F72\u540D" : "\u754C\u9762\u72EC\u7ACB\u7EF4\u62A4 \xB7 \u57FA\u4E8E YuJunZhiXue/dsh-purge 1.1.71\uFF08MIT\uFF09"
+      true ? "YuJunZhiXue/dsh-purge 1.1.71 \uAE30\uBC18 \uB3C5\uB9BD \uC720\uC9C0 \xB7 MIT \xB7 \uC6D0\uC800\uC790 \uD45C\uAE30 \uC720\uC9C0" : "UI \uB3C5\uB9BD \uC720\uC9C0 \xB7 YuJunZhiXue/dsh-purge 1.1.71 \uAE30\uBC18(MIT)"
     )
   );
 }
@@ -13880,7 +13880,7 @@ async function openRewoundSession(sessions, sessionId) {
         } else if (typeof sessions?.open === "function") {
           sessions.open(sessionId);
         } else {
-          throw new Error("\u6253\u4E0D\u5F00\u56DE\u9000\u540E\u7684\u4F1A\u8BDD");
+          throw new Error("\uB418\uB3CC\uB9AC\uAE30 \uD6C4 \uC138\uC158\uC744 \uC5F4 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4");
         }
         const selected = workspace?.selection?.getSnapshot?.()?.sessionId;
         if (!workspace || selected === sessionId) {
@@ -13897,7 +13897,7 @@ async function openRewoundSession(sessions, sessionId) {
     }
     await waitMs(120);
   }
-  throw new Error(lastError && lastError.message || "\u56DE\u9000\u540E\u7684\u4F1A\u8BDD\u6CA1\u6709\u6253\u5F00");
+  throw new Error(lastError && lastError.message || "\uB418\uB3CC\uB9AC\uAE30 \uD6C4 \uC138\uC158\uC774 \uC5F4\uB9AC\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4");
 }
 
 // src/components/rewind.js
@@ -13939,14 +13939,14 @@ function rewindMenuNode(t, menuPos, menuRef, runRewind) {
           runRewind("once");
         }
       },
-      h("b", null, rewindText(t, "rewind.once", "\u56DE\u9000\u4E00\u6B21")),
+      h("b", null, rewindText(t, "rewind.once", "\uD55C \uBC88 \uB418\uB3CC\uB9AC\uAE30")),
       h(
         "span",
         null,
         rewindText(
           t,
           "rewind.once.hint",
-          "\u628A\u8FD9\u4E00\u8F6E\u53D1\u51FA\u53BB\u7684\u90A3\u53E5\u653E\u56DE\u8F93\u5165\u6846\uFF0C\u5E76\u6E05\u6389\u8FD9\u4E00\u8F6E"
+          "\uC774\uBC88 \uB77C\uC6B4\uB4DC\uC5D0\uC11C \uBCF4\uB0B8 \uBB38\uC7A5\uC744 \uC785\uB825\uCC3D\uC5D0 \uB418\uB3CC\uB824 \uB193\uACE0, \uC774\uBC88 \uB77C\uC6B4\uB4DC\uB97C \uC9C0\uC6C1\uB2C8\uB2E4"
         )
       )
     ),
@@ -13965,14 +13965,14 @@ function rewindMenuNode(t, menuPos, menuRef, runRewind) {
           runRewind("round");
         }
       },
-      h("b", null, rewindText(t, "rewind.round", "\u56DE\u9000\u4E0A\u4E00\u8F6E")),
+      h("b", null, rewindText(t, "rewind.round", "\uC774\uC804 \uB77C\uC6B4\uB4DC \uB418\uB3CC\uB9AC\uAE30")),
       h(
         "span",
         null,
         rewindText(
           t,
           "rewind.round.hint",
-          "\u628A\u8FD9\u4E00\u8F6E\u53D1\u51FA\u53BB\u7684\u90A3\u53E5\u653E\u56DE\u8F93\u5165\u6846\uFF1B\u5B50\u4EE3\u7406\u4E5F\u53EA\u64A4\u8FD9\u4E00\u8F6E"
+          "\uC774\uBC88 \uB77C\uC6B4\uB4DC\uC5D0\uC11C \uBCF4\uB0B8 \uBB38\uC7A5\uC744 \uC785\uB825\uCC3D\uC5D0 \uB418\uB3CC\uB824 \uB193\uC2B5\uB2C8\uB2E4. \uC11C\uBE0C\uC5D0\uC774\uC804\uD2B8\uB3C4 \uC774\uBC88 \uB77C\uC6B4\uB4DC\uB9CC \uCCA0\uD68C\uD569\uB2C8\uB2E4"
         )
       )
     )
@@ -14008,7 +14008,7 @@ var RewindFallback = class extends Component {
       body: JSON.stringify({ sessionId, mode })
     }).then(async (data) => {
       if (!data || !data.ok || !data.sessionId || data.cleared === false) {
-        throw new Error(data && data.error || "\u6CA1\u6709\u6E05\u6389\u4E4B\u524D\u53D1\u9001\u7684\u5185\u5BB9");
+        throw new Error(data && data.error || "\uC774\uC804\uC5D0 \uBCF4\uB0B8 \uB0B4\uC6A9\uC744 \uC9C0\uC6B0\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4");
       }
       noteRewindAt(data.at);
       const text = isPluginDraft(data.text) ? "" : data.text || "";
@@ -14019,7 +14019,7 @@ var RewindFallback = class extends Component {
     }).catch((e) => {
       this.setState({
         busy: false,
-        notice: "\u56DE\u9000\u5931\u8D25: " + String(e && e.message || e)
+        notice: "\uB418\uB3CC\uB9AC\uAE30 \uC2E4\uD328: " + String(e && e.message || e)
       });
     });
   }
@@ -14037,7 +14037,7 @@ var RewindFallback = class extends Component {
   render() {
     const sessionId = this.props.sessionId || currentSessionId(hostSessions());
     const t = this.props.t || null;
-    const label = this.state.busy ? "\u56DE\u9000\u4E2D\u2026" : this.state.notice ? this.state.notice.slice(0, 18) : "\u56DE\u9000";
+    const label = this.state.busy ? "\uB418\uB3CC\uB9AC\uB294 \uC911\u2026" : this.state.notice ? this.state.notice.slice(0, 18) : "\uB418\uB3CC\uB9AC\uAE30";
     return h(
       "div",
       {
@@ -14156,7 +14156,7 @@ function RewindButton(props) {
         body: JSON.stringify({ sessionId, mode })
       });
       if (!data || !data.ok || !data.sessionId || data.cleared === false) {
-        throw new Error(data && data.error || "\u6CA1\u6709\u6E05\u6389\u4E4B\u524D\u53D1\u9001\u7684\u5185\u5BB9");
+        throw new Error(data && data.error || "\uC774\uC804\uC5D0 \uBCF4\uB0B8 \uB0B4\uC6A9\uC744 \uC9C0\uC6B0\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4");
       }
       noteRewindAt(data.at);
       const text = isPluginDraft(data.text) ? "" : data.text || "";
@@ -14164,7 +14164,7 @@ function RewindButton(props) {
       await openRewoundSession(sessions, data.sessionId);
       scheduleComposerFill(data.sessionId, text);
     } catch (e) {
-      const message = rewindText(t, "rewind.fail", "\u56DE\u9000\u5931\u8D25: {error}").replace(
+      const message = rewindText(t, "rewind.fail", "\uB418\uB3CC\uB9AC\uAE30 \uC2E4\uD328: {error}").replace(
         "{error}",
         String(e && e.message || e)
       );
@@ -14192,8 +14192,8 @@ function RewindButton(props) {
     setMenu(true);
   };
   const failLabel = notice ? notice.length > 18 ? notice.slice(0, 18) + "\u2026" : notice : "";
-  const label = busy ? rewindText(t, "rewind.busy", "\u56DE\u9000\u4E2D\u2026") : failLabel || rewindText(t, "rewind.label", "\u56DE\u9000");
-  const title = notice || rewindText(t, "rewind.aria", "\u56DE\u9000");
+  const label = busy ? rewindText(t, "rewind.busy", "\uB418\uB3CC\uB9AC\uB294 \uC911\u2026") : failLabel || rewindText(t, "rewind.label", "\uB418\uB3CC\uB9AC\uAE30");
+  const title = notice || rewindText(t, "rewind.aria", "\uB418\uB3CC\uB9AC\uAE30");
   return h(
     "div",
     { className: "dshp-rewind-wrap", ref: wrapRef },
@@ -14204,7 +14204,7 @@ function RewindButton(props) {
         type: "button",
         className: "dshp-rewind",
         title,
-        "aria-label": rewindText(t, "rewind.aria", "\u56DE\u9000"),
+        "aria-label": rewindText(t, "rewind.aria", "\uB418\uB3CC\uB9AC\uAE30"),
         "aria-expanded": menu ? "true" : "false",
         disabled: busy || !sessionId,
         onMouseDown: (e) => e.preventDefault(),
@@ -14275,7 +14275,7 @@ function installRewindUi(ctx) {
 var rd3 = __toESM(require("react-dom"), 1);
 
 // src/styles/welcome.css
-var welcome_default = "/* The first-run dialog is rendered before any settings page. It must own its\n   styles and cannot depend on the optional drill vendor stylesheet. */\n.dshpp-welcome-mask {\n  position: fixed;\n  inset: 0;\n  z-index: 2147483000;\n  display: grid;\n  place-items: center;\n  padding: 24px;\n  overflow: auto;\n  box-sizing: border-box;\n  background: rgb(0 0 0 / 35%);\n  color: var(--dsw-alias-label-primary, #171717);\n  font-family: inherit;\n  font-size: 14px;\n  line-height: 1.6;\n  text-align: left;\n}\n.dshpp-welcome-card {\n  width: min(600px, 100%);\n  max-height: calc(100dvh - 48px);\n  overflow: auto;\n  box-sizing: border-box;\n  padding: 24px;\n  border: 1px solid var(--dsw-alias-border-l1, #ddd);\n  border-radius: 16px;\n  background: var(--dsw-alias-bg-layer-1, #fff);\n  box-shadow: 0 16px 64px rgb(0 0 0 / 18%);\n}\n.dshpp-welcome-card h2 {\n  margin: 0 0 6px;\n  font: inherit;\n  font-size: 20px;\n  font-weight: 600;\n}\n.dshpp-welcome-card h3 {\n  margin: 16px 0 6px;\n  font: inherit;\n  font-weight: 600;\n}\n.dshpp-welcome-lead {\n  color: var(--dsw-alias-label-secondary, #666);\n}\n.dshpp-welcome-warn {\n  margin: 16px 0;\n  padding: 12px;\n  border-radius: 8px;\n  background: var(--dsw-alias-bg-layer-2, #f5f5f5);\n}\n.dshpp-welcome-legal p {\n  margin: 10px 0;\n}\n.dshpp-welcome-legal a {\n  color: var(--dsw-alias-label-brand, #436ee8);\n  overflow-wrap: anywhere;\n}\n.dshpp-welcome-check {\n  display: flex;\n  align-items: flex-start;\n  gap: 10px;\n  margin-top: 20px;\n  cursor: pointer;\n}\n.dshpp-welcome-check input {\n  flex: 0 0 auto;\n  width: 16px;\n  height: 16px;\n  margin: 4px 0 0;\n  accent-color: var(--dsw-alias-label-brand, #436ee8);\n}\n.dshpp-welcome-ops {\n  display: flex;\n  justify-content: flex-end;\n  margin-top: 20px;\n}\n.dshpp-welcome-ops button {\n  min-height: 36px;\n  padding: 8px 16px;\n  border: 0;\n  border-radius: 8px;\n  background: var(--dsw-alias-label-primary, #171717);\n  color: var(--dsw-alias-bg-base, #fff);\n  font: inherit;\n  cursor: pointer;\n}\n.dshpp-welcome-ops button:disabled {\n  opacity: 0.4;\n  cursor: default;\n}\n.dshpp-welcome-ops button:focus-visible,\n.dshpp-welcome-check input:focus-visible {\n  outline: 2px solid var(--dsw-alias-label-brand, #436ee8);\n  outline-offset: 3px;\n}\n@media (max-height: 600px) {\n  .dshpp-welcome-mask {\n    padding: 12px;\n  }\n  .dshpp-welcome-card {\n    max-height: calc(100dvh - 24px);\n    padding: 18px;\n  }\n}\n";
+var welcome_default = "/* The first-run dialog is rendered before any settings page. It must own its\n   styles and cannot depend on the optional drill vendor stylesheet.\n   \uC0C9\xB7\uBC18\uACBD\xB7\uD3F0\uD2B8\xB7\uADF8\uB9BC\uC790\xB7\uBAA8\uC158\uC740 DSH \uD1A0\uD070\uB9CC \uC4F4\uB2E4(\uD14C\uB9C8 \uC804\uD658\uC744 \uADF8\uB300\uB85C \uB530\uB77C\uAC04\uB2E4). */\n.dshpp-welcome-mask {\n  position: fixed;\n  inset: 0;\n  z-index: 2147483000;\n  display: grid;\n  place-items: center;\n  padding: 24px;\n  overflow: auto;\n  box-sizing: border-box;\n  background: rgba(0, 0, 0, 0.35);\n  color: var(--dsw-alias-label-primary);\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 1.6;\n  text-align: left;\n}\n.dshpp-welcome-card {\n  width: min(600px, 100%);\n  max-height: calc(100dvh - 48px);\n  overflow: auto;\n  box-sizing: border-box;\n  padding: 24px;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-lg);\n  background: var(--dsw-alias-bg-layer-1);\n  box-shadow: var(--dsw-elevation-panel);\n}\n.dshpp-welcome-card h2 {\n  margin: 0 0 6px;\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-size: 20px;\n  font-weight: 600;\n}\n.dshpp-welcome-card h3 {\n  margin: 16px 0 6px;\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-weight: 600;\n}\n.dshpp-welcome-lead {\n  color: var(--dsw-alias-label-secondary);\n}\n.dshpp-welcome-warn {\n  margin: 16px 0;\n  padding: 12px;\n  border: 0.5px solid var(--dsw-alias-border-l2);\n  border-radius: var(--dsw-radius-sm);\n  background: var(--dsw-alias-bg-layer-2);\n}\n.dshpp-welcome-legal p {\n  margin: 10px 0;\n}\n.dshpp-welcome-legal a {\n  color: var(--dsw-alias-link);\n  overflow-wrap: anywhere;\n}\n.dshpp-welcome-check {\n  display: flex;\n  align-items: flex-start;\n  gap: 10px;\n  margin-top: 20px;\n  cursor: pointer;\n}\n.dshpp-welcome-check input {\n  flex: 0 0 auto;\n  width: 16px;\n  height: 16px;\n  margin: 4px 0 0;\n  accent-color: var(--dsw-alias-button-primary-fill);\n}\n.dshpp-welcome-ops {\n  display: flex;\n  justify-content: flex-end;\n  margin-top: 20px;\n}\n/* CTA \uB300\uBE44: \uBC30\uACBD/\uAE00\uC790\uB97C \uD50C\uB7EC\uADF8\uC778 \uC0C9\uC73C\uB85C \uACE0\uC815\uD558\uC9C0 \uC54A\uACE0 DSH \uC8FC \uBC84\uD2BC \uD1A0\uD070\uC744 \uC4F4\uB2E4.\n   \uBE44\uD65C\uC131\uC77C \uB54C\uB294 \uCC44\uB3C4\uB97C \uB0AE\uCD98 fill + dimmed \uAE00\uC790 \uC870\uD569\uC73C\uB85C \uB300\uBE44\uB97C \uC720\uC9C0\uD55C\uB2E4\n   (\uD22C\uBA85\uB3C4\uB85C \uD750\uB9AC\uBA74 \uAE00\uC790\uAC00 \uBC30\uACBD\uC5D0 \uBB3B\uD788\uBBC0\uB85C opacity \uB97C \uC4F0\uC9C0 \uC54A\uB294\uB2E4). */\n.dshpp-welcome-ops button {\n  min-height: 36px;\n  height: 36px;\n  padding: 0 14px;\n  border: 0;\n  border-radius: var(--dsw-radius-md);\n  background: var(--dsw-alias-button-primary-fill);\n  color: var(--dsw-alias-label-primary-foreground);\n  font: inherit;\n  font-family: var(--dsw-font-family);\n  font-size: 14px;\n  line-height: 22px;\n  font-weight: 500;\n  cursor: pointer;\n  transition:\n    background-color 0.16s ease-out,\n    color 0.16s ease-out,\n    border-color 0.16s ease-out;\n}\n.dshpp-welcome-ops button:hover:not(:disabled) {\n  background: var(--dsw-alias-button-primary-hover);\n}\n.dshpp-welcome-ops button:active:not(:disabled) {\n  background: var(--dsw-alias-button-primary-hover);\n}\n.dshpp-welcome-ops button:disabled {\n  border-color: transparent;\n  background: var(\n    --dsw-alias-button-primary-dimmed,\n    var(--dsw-alias-bg-layer-3)\n  );\n  color: var(--dsw-alias-label-dimmed, var(--dsw-alias-label-tertiary));\n  cursor: not-allowed;\n  opacity: 1;\n}\n.dshpp-welcome-ops button:focus-visible,\n.dshpp-welcome-check input:focus-visible {\n  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);\n  outline-offset: 3px;\n}\n@media (max-height: 600px) {\n  .dshpp-welcome-mask {\n    padding: 12px;\n  }\n  .dshpp-welcome-card {\n    max-height: calc(100dvh - 24px);\n    padding: 18px;\n  }\n}\n";
 
 // src/components/welcome.js
 var WELCOME_KEY = "dsh-purge-user-notice-v1";
@@ -14380,8 +14380,8 @@ function isRedteamPresetId(value) {
   if (!text) return false;
   if (text === "redteam") return true;
   if (/^red[\s_-]*team$/i.test(text)) return true;
-  const label = text.replace(/不是红队/g, "").replace(/非红队/g, "");
-  if (/红队/.test(label)) return true;
+  const label = text.replace(/레드팀 아님/g, "").replace(/비레드팀/g, "");
+  if (/레드팀/.test(label)) return true;
   return false;
 }
 function readSessionAgentPreset(sess) {
@@ -14435,17 +14435,17 @@ function isRedteamModeActive() {
     );
     for (const el of nodes) {
       const text = String(el.textContent || "").replace(/\s+/g, " ").trim();
-      if (/红队模式/.test(text) || /^RedTeam\b/i.test(text)) return true;
+      if (/레드팀 모드/.test(text) || /^RedTeam\b/i.test(text)) return true;
     }
   } catch {
   }
   try {
     const labels = document.querySelectorAll(
-      "[class*='label' i][class*='preset' i], [class*='presetLabel' i], [title*='\u7EA2\u961F'], [title*='RedTeam']"
+      "[class*='label' i][class*='preset' i], [class*='presetLabel' i], [title*='\uB808\uB4DC\uD300'], [title*='RedTeam']"
     );
     for (const el of labels) {
       const text = String(el.textContent || "").trim();
-      if (/红队模式/.test(text) || /^RedTeam\b/i.test(text)) return true;
+      if (/레드팀 모드/.test(text) || /^RedTeam\b/i.test(text)) return true;
       if (isRedteamPresetId(text)) return true;
     }
   } catch {
@@ -14464,8 +14464,8 @@ function looksLikeSendControl(el) {
     btn.getAttribute("data-testid"),
     btn.textContent
   ].filter(Boolean).join(" ");
-  if (/停止|Stop/i.test(label) && !/发送|Send/i.test(label)) return false;
-  if (/发送|Submit|Send(?!\s*feedback)/i.test(label)) return true;
+  if (/중지|정지|Stop/i.test(label) && !/전송|보내기|Send/i.test(label)) return false;
+  if (/전송|보내기|Submit|Send(?!\s*feedback)/i.test(label)) return true;
   try {
     const card = btn.closest("[data-composer-card], [data-composer-seat]");
     if (card) {
@@ -14776,7 +14776,7 @@ function PanelOverlays() {
     // Restored from 1.1.71 apply(): shell.overlay carried the welcome notice
     // and the red-team environment gate next to the dock.
     h(WelcomeNotice, {
-      repo: true ? "https://github.com/kingcharleslzy-ai/dsh-purge" : void 0
+      repo: true ? "https://github.com/wnduddld0513/dsh-purge-kr" : void 0
     }),
     h(EnvAdaptSendGate),
     st.authOpen ? h(AuthGate, { pending: st.pending }) : null
@@ -14792,7 +14792,12 @@ function apply(ctx) {
     ["sessions", "uiWorkspace", "conversation"],
     (host3) => installRewindUi(host3)
   );
-  ctx.effect(() => ctx.locale.register(NS, { zh, en }), "panel locale");
+  ctx.effect(() => ctx.locale.register(NS, { ko, en }), "panel locale");
+  ctx.effect(() => {
+    const locale = ctx.locale;
+    if (!locale || typeof locale.addLanguage !== "function") return void 0;
+    return locale.addLanguage({ id: "ko", label: "\uD55C\uAD6D\uC5B4", fallback: "en" });
+  }, "panel locale language");
   const t = ctx.locale.bind(NS);
   setTranslate(t);
   ctx.slots.inject(

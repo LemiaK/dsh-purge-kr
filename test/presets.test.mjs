@@ -35,10 +35,10 @@ test("install is idempotent and never overwrites user edits without force", () =
     assert.equal(first.action, "installed");
     const file = path.join(first.dir, "agent.cordis.yml");
     assert(fs.existsSync(file));
-    // 落盘时就合并了 #24：模板里的 fetch: false 会被打开
+    // 기록 시점에 #24 가 이미 병합되었다: 템플릿의 fetch: false 가 열린 상태로 기록된다
     const installed = fs.readFileSync(file, "utf8");
     assert(installed.includes("fetch: true"), "preset ships with web fetch enabled");
-    // 精确断言：装完以后 #24 已无活可干（模板注释里提到 fetch: false 不算）
+    // 정확히 확인한다: 설치가 끝나면 #24 에 남은 일이 없다(템플릿 주석에 적힌 fetch: false 는 해당 없음)
     assert.equal(
       applyReplacementsToText(installed, ALL_PATCHES.find((p) => p.id === 24)).changed,
       false,
@@ -62,7 +62,7 @@ test("install is idempotent and never overwrites user edits without force", () =
 test("the bundled preset parses into a registry definition", () => {
   const def = readPresetDefinition("unrestricted", bundledPresetDir());
   assert.equal(def.id, "unrestricted");
-  assert.equal(def.name, "无限制模式");
+  assert.equal(def.name, "무제한 모드");
   assert.equal(def.order, 20);
   assert(Array.isArray(def.plugins), "plugins rows");
   assert(def.plugins.length >= 12, `expected a full composition, got ${def.plugins.length}`);
@@ -93,12 +93,12 @@ test("a plugin-managed preset is updated in place, a user-edited one is kept", (
   try {
     installPreset({ home });
     const file = path.join(userPresetDir(home), "agent.cordis.yml");
-    // 模拟旧版本模板：仍是插件写的（带 marker），内容不同
+    // 옛 버전 템플릿을 흉내낸다: 여전히 플러그인이 기록한 것이고(marker 포함) 내용만 다르다
     fs.writeFileSync(file, "# managed-by: dsh-purge\nold template\n");
     const updated = installPreset({ home });
     assert.equal(updated.action, "updated");
     assert(fs.readFileSync(file, "utf8").includes("fetch: true"));
-    // 用户把它改成自己的一份（去掉 marker）后不再覆盖
+    // 사용자가 자기 것으로 고친 뒤(marker 제거)에는 다시 덮어쓰지 않는다
     fs.writeFileSync(file, "# my own preset\n");
     assert.equal(installPreset({ home }).action, "kept");
   } finally {

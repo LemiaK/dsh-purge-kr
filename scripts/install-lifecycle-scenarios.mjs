@@ -89,7 +89,7 @@ export async function runInstallLifecycle({runtime,cli,legacy,previous,archive,t
     fs.writeFileSync(path.join(home,'prompt-inject.md'),sentinelFiles['prompt-inject.md']);
     let rollbackId=backupId;
     if(!baseline) {
-      if(backupId)await assert.rejects(manager.rollback(backupId),/没有插件可回滚/);
+      if(backupId)await assert.rejects(manager.rollback(backupId),/롤백할 플러그인이 없/);
       rollbackId=(await manager.backup('installed-baseline')).id;
     }
     await manager.rollback(rollbackId);
@@ -108,7 +108,7 @@ export async function runInstallLifecycle({runtime,cli,legacy,previous,archive,t
       ['install',()=>manager.install(archive)],['rollback',()=>manager.rollback(rollbackId)]
     ]) {
       console.log('STEP '+label('failure-recovery-'+name));
-      await assert.rejects(operation,/已恢复/);
+      await assert.rejects(operation,/복원/);
       protectedFiles.forEach((file,i)=>assert.deepEqual(fs.readFileSync(file),bytes[i]));
       await verifyInstalledPackage(profile,meta);preserved();
     }

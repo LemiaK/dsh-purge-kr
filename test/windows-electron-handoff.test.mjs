@@ -11,7 +11,7 @@ const electron = process.env.PURGE_ELECTRON_EXEC;
 test('real Windows Electron: helper executes and survives its launcher exiting', {
   skip: process.platform !== 'win32' || !electron,
 }, async () => {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'purge electron 中文 '));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'purge electron 한글 '));
   const exe = path.join(root, 'holder.exe'), asar = path.join(root, 'app.asar');
   fs.copyFileSync(process.execPath, exe);
   fs.mkdirSync(path.join(root, 'app'));

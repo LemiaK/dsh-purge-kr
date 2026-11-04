@@ -38,7 +38,7 @@ test("0.2.1 complete preset still carries the dsh-purge inject after assemble", 
   const out = applyReplacementsToText(SYSTEM_PROMPT_ASSEMBLE, patch(40));
   assert.equal(out.changed, true);
   assert.ok(out.text.includes("const dshPurgeSections ="));
-  // complete 模式：注入段排在官方段之前（普通分支保持宿主原顺序）。
+  // complete 모드: 주입 섹션이 공식 섹션보다 앞에 온다(일반 분기는 호스트 원래 순서를 유지한다).
   assert.ok(out.text.includes("[...dshPurgeSections, ...dshPurgeRest]"));
   assert.ok(out.text.includes("const requiredContexts = new Set("));
   assert.ok(out.text.includes("requiredContexts.has(entry.name)"));

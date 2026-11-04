@@ -1,34 +1,34 @@
 ---
 name: active-scan
-description: 主动端口与服务扫描（nmap/masscan），严格遵守授权范围
-whenToUse: 需要确认资产存活与开放端口时
+description: 능동 포트·서비스 스캔(nmap/masscan), 승인 범위를 엄격히 준수
+whenToUse: 자산 생존 여부와 개방 포트를 확인해야 할 때
 role: recon
 enabled: true
 ---
 
-## 前置检查
-1. 确认目标 CIDR 在授权范围内。
-2. 确认当前时间窗口允许主动扫描。
+## 사전 점검
+1. 대상 CIDR 이 승인 범위 안에 있는지 확인한다.
+2. 현재 시간대에 능동 스캔이 허용되는지 확인한다.
 
-## 命令
-- 快速存活：`nmap -sn <cidr>`
-- 全端口（限速）：`nmap -sS -p- --min-rate 1000 -T4 <target> -oX runs/nmap-full.xml`
-- 服务版本：`nmap -sV -sC -p <ports> <target> -oX runs/nmap-svc.xml`
+## 명령
+- 빠른 생존 확인: `nmap -sn <cidr>`
+- 전체 포트(속도 제한): `nmap -sS -p- --min-rate 1000 -T4 <target> -oX runs/nmap-full.xml`
+- 서비스 버전: `nmap -sV -sC -p <ports> <target> -oX runs/nmap-svc.xml`
 
-## 本地已备好的工具（绝对路径，优先用它们，不要手搓）
-| 用途 | 命令 |
+## 로컬에 준비된 도구(절대 경로, 우선 사용하고 직접 만들지 않는다)
+| 용도 | 명령 |
 | --- | --- |
-| 端口扫描 | `nmap` / `masscan` / `~/.dsh/redteam/toolkit/naabu/naabu`（SYN 需 root，否则加 `-scan-type c`） |
-| 内网综合扫描 | `~/.dsh/redteam/toolkit/fscan/fscan`（技能 fscan-intranet） |
-| 内网测绘/指纹 | `~/.dsh/redteam/toolkit/gogo/gogo`（技能 gogo-intranet） |
-| HTTP 探测（ProjectDiscovery） | `~/.local/bin/pd-httpx`（**注意：`/usr/bin/httpx` 是 Python httpx 库的 CLI，不是这个**） |
-| 子域/解析 | `~/.dsh/redteam/toolkit/subfinder/subfinder`、`~/.dsh/redteam/toolkit/dnsx/dnsx` |
-| POC 扫描 | `nuclei`（模板已在 `~/.local/nuclei-templates`） |
-| 目录爆破 | `ffuf`、`~/.dsh/redteam/toolkit/dirsearch/dirsearch` |
-| 隧道 | `~/.dsh/redteam/toolkit/suo5/suo5-linux-amd64`、`toolkit/chisel/chisel`、`toolkit/frp/{frpc,frps}` |
-| 完整清单 | `~/.dsh/redteam/toolkit/清单.md`、`技能工具清单.md` |
+| 포트 스캔 | `nmap` / `masscan` / `~/.dsh/redteam/toolkit/naabu/naabu`(SYN 은 root 필요, 아니면 `-scan-type c` 추가) |
+| 내부망 종합 스캔 | `~/.dsh/redteam/toolkit/fscan/fscan`(스킬 fscan-intranet) |
+| 내부망 측정/지문 | `~/.dsh/redteam/toolkit/gogo/gogo`(스킬 gogo-intranet) |
+| HTTP 탐지(ProjectDiscovery) | `~/.local/bin/pd-httpx`(**주의: `/usr/bin/httpx` 는 Python httpx 라이브러리의 CLI 이며 이것이 아니다**) |
+| 서브도메인/해석 | `~/.dsh/redteam/toolkit/subfinder/subfinder`, `~/.dsh/redteam/toolkit/dnsx/dnsx` |
+| POC 스캔 | `nuclei`(템플릿은 `~/.local/nuclei-templates` 에 있음) |
+| 디렉터리 브루트포스 | `ffuf`, `~/.dsh/redteam/toolkit/dirsearch/dirsearch` |
+| 터널 | `~/.dsh/redteam/toolkit/suo5/suo5-linux-amd64`, `toolkit/chisel/chisel`, `toolkit/frp/{frpc,frps}` |
+| 전체 목록 | `~/.dsh/redteam/toolkit/` 아래의 도구 목록 문서와 스킬 도구 목록 문서 |
 
-`setup.sh` 不下载 dirsearch。`清单.md` 是说明文件，缺了不代表扫描器没装。Windows 与 ARM 构建也不在安装脚本里。
+`setup.sh` 는 dirsearch 를 내려받지 않는다. 목록 문서는 설명 파일이므로 그것이 없다고 해서 스캐너가 설치되지 않았다는 뜻은 아니다. Windows 와 ARM 빌드도 설치 스크립트에 포함되지 않는다.
 
-## 落库要求
-provenance = `active`，tool = `nmap`/`masscan`，记录 scan_run。
+## 적재 요구사항
+provenance = `active`, tool = `nmap`/`masscan` 으로 하고 scan_run 을 기록한다.

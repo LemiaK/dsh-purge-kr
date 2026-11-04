@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import React from "react";
 import { create, act } from "react-test-renderer";
-import { zh } from "../src/shared/locale.js";
+import { ko } from "../src/shared/locale.js";
 import {
   ARM_KEY,
   DRAFT_KEY,
@@ -34,7 +34,7 @@ globalThis.document = {
   addEventListener() {},
   removeEventListener() {},
 };
-const t = (key) => zh[key] || key;
+const t = (key) => ko[key] || key;
 const posts = [];
 const opened = [];
 const drafts = new Map();
@@ -122,15 +122,15 @@ const rewindButton = () =>
     (x) => x.type === "button" && x.props.className === "dshp-rewind",
   )[0];
 assert.equal(rewindButton().props.disabled, false);
-assert(rewindButton().props.children.join("").includes("回退"));
+assert(rewindButton().props.children.join("").includes("되돌리기"));
 await act(async () => rewindButton().props.onClick());
 const items = () =>
   tree.root.findAll(
     (x) => x.type === "button" && x.props.className === "dshp-rewind-item",
   );
-assert.equal(items().length, 2, "menu keeps 回退一次 / 回退上一轮");
+assert.equal(items().length, 2, "menu keeps 한 번 되돌리기 / 이전 라운드 되돌리기");
 
-// 2) "回退一次" posts {sessionId, mode:"once"} and refills the composer
+// 2) "한 번 되돌리기" posts {sessionId, mode:"once"} and refills the composer
 await act(async () =>
   items()[0].props.onClick({ preventDefault() {}, stopPropagation() {} }),
 );

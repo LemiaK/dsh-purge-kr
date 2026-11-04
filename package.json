@@ -1,7 +1,7 @@
 {
   "name": "dsh-purge-community",
   "version": "1.6.69",
-  "description": "让 AI 更专注地辅助学习与动手实验：DSH 附加组件，提供状态自检、提示词与规则管理、本机备份与回滚。",
+  "description": "AI 가 학습과 직접 해보는 실험을 더 집중해서 돕게 한다: DSH 부가 컴포넌트로 상태 자체 점검, 프롬프트와 규칙 관리, 로컬 백업과 롤백을 제공한다.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -32,7 +32,6 @@
     "cordis.patch.yml",
     "screenshots.json",
     "README.md",
-    "README.zh-CN.md",
     "LICENSE",
     "NOTICE.md",
     "CONTRIBUTORS.md",
@@ -65,19 +64,19 @@
     "backup",
     "rollback",
     "compatibility",
-    "破甲",
+    "탈옥",
     "jailbreak",
     "prompt-injection",
-    "无限制模式",
+    "무제한 모드",
     "unrestricted"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kingcharleslzy-ai/dsh-purge.git"
+    "url": "git+https://github.com/wnduddld0513/dsh-purge-kr.git"
   },
-  "homepage": "https://github.com/kingcharleslzy-ai/dsh-purge#readme",
+  "homepage": "https://github.com/wnduddld0513/dsh-purge-kr#readme",
   "bugs": {
-    "url": "https://github.com/kingcharleslzy-ai/dsh-purge/issues"
+    "url": "https://github.com/wnduddld0513/dsh-purge-kr/issues"
   },
   "dsh": {
     "bundle": {
@@ -96,8 +95,8 @@
     },
     "install": {
       "preferred": "tarball",
-      "tarball": "https://github.com/kingcharleslzy-ai/dsh-purge/releases/latest/download/dsh-purge-community-1.6.69.tgz",
-      "git": "https://github.com/kingcharleslzy-ai/dsh-purge.git"
+      "tarball": "https://github.com/wnduddld0513/dsh-purge-kr/releases/latest/download/dsh-purge-community-1.6.69.tgz",
+      "git": "https://github.com/wnduddld0513/dsh-purge-kr.git"
     },
     "compatibility": {
       "dsh": ">=0.2.1-rc.1 <0.3.0",
@@ -126,7 +125,7 @@
   },
   "dshTarget": "0.2.1-rc.1 (runtime injection + host patches verified)",
   "contributors": [
-    "小杨 / YuJunZhiXue (original dsh-purge author)",
+    "샤오양 / YuJunZhiXue (original dsh-purge author)",
     {
       "name": "luowang-ui",
       "url": "https://github.com/luowang-ui"
@@ -153,8 +152,8 @@
     }
   ],
   "author": {
-    "name": "kingcharleslzy-ai",
-    "url": "https://github.com/kingcharleslzy-ai"
+    "name": "wnduddld0513",
+    "url": "https://github.com/wnduddld0513"
   },
   "dependencies": {
     "yaml": "2.9.1"

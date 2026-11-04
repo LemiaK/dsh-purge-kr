@@ -72,7 +72,7 @@ const responses = {
     patch: { applied: 74, total: 82 },
     layers: [
       {
-        title: "沙箱 confine 直通",
+        title: "샌드박스 confine 직통",
         kind: "host",
         ids: [15],
         ok: true,
@@ -81,7 +81,7 @@ const responses = {
         total: 1,
       },
       {
-        title: "文件系统围栏禁用",
+        title: "파일 시스템 울타리 비활성화",
         kind: "host",
         ids: [16],
         ok: false,
@@ -152,7 +152,7 @@ vm.runInNewContext(
 const ctx = {
   locale: {
     register: (_, v) => {
-      dict = v.zh;
+      dict = v.ko;
       return () => {};
     },
     bind:
@@ -238,42 +238,41 @@ win.confirm = () => true;
     root.findAllByType("h1").some((x) => x.children.join("") === "Purge"),
     "page title renders",
   );
-  assert(root.findAllByProps({ "aria-label": "社区版维护" }).length);
+  assert(root.findAllByProps({ "aria-label": "커뮤니티판 유지보수" }).length);
   assert(
     JSON.stringify(tree.toJSON()).includes("0.2.1-rc.1"),
     "the status strip reports the host version from the backend",
   );
-  assert(button("刷新"), "original status page renders in the community build");
+  assert(button("새로 고침"), "original status page renders in the community build");
   assert(
-    JSON.stringify(tree.toJSON()).includes("Hooks 拦截"),
+    JSON.stringify(tree.toJSON()).includes("Hooks 차단"),
     "original hooks deny section renders in the community build",
   );
   const selfcheckTree = JSON.stringify(tree.toJSON());
-  assert(selfcheckTree.includes("破甲自检"), "self-check block renders");
+  assert(selfcheckTree.includes("탈옥 자체 점검"), "self-check block renders");
   assert(
-    selfcheckTree.includes("破甲强化段"),
+    selfcheckTree.includes("탈옥 강화 섹션"),
     "boost toggle renders next to the self-check",
   );
   assert(
-    selfcheckTree.includes("沙箱 confine 直通") &&
-      selfcheckTree.includes("文件系统围栏禁用"),
+    selfcheckTree.includes("샌드박스 confine 직통") &&
+      selfcheckTree.includes("파일 시스템 울타리 비활성화"),
     "self-check renders every layer reported by /dsh-purge/selfcheck",
   );
   assert(
     selfcheckTree.includes("#16") ||
-      selfcheckTree.includes("1 层未生效") ||
-      selfcheckTree.includes("有 1 层未生效"),
+      selfcheckTree.includes("1개 계층 미적용"),
     "self-check surfaces the failing layer",
   );
   assert.equal(writes.length, 0, "opening never writes configuration");
-  for (const label of ["应用", "还原", "卸载"])
+  for (const label of ["적용", "되돌리기", "제거"])
     assert.equal(
       button(label).props.disabled,
       false,
       "community build keeps " + label + " usable",
     );
   await act(async () => {
-    button("立即备份").props.onClick();
+    button("지금 백업").props.onClick();
     await new Promise((r) => setTimeout(r, 15));
   });
   assert.deepEqual(
@@ -282,11 +281,11 @@ win.confirm = () => true;
   );
   await act(async () => {
     root
-      .findByProps({ "aria-label": "选择回滚备份" })
+      .findByProps({ "aria-label": "롤백할 백업 선택" })
       .props.onChange({ target: { value: "backup-fixture" } });
   });
   await act(async () => {
-    button("回滚插件").props.onClick();
+    button("플러그인 롤백").props.onClick();
     await new Promise((r) => setTimeout(r, 15));
   });
   assert.equal(writes[1].body.id, "backup-fixture");

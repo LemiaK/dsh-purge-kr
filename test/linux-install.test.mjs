@@ -10,7 +10,7 @@ import { bootstrapInstall, desktopCli, webCli, prepareLinuxHost } from "../scrip
 const exec = promisify(execFile);
 
 function fixture(t) {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "purge Linux 中文 "));
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "purge Linux 한국어 "));
   t.after(() => fs.rmSync(tmp, { recursive: true, force: true }));
   const home = path.join(tmp, "home"), profile = path.join(home, "profiles/web");
   fs.mkdirSync(profile, { recursive: true });
@@ -24,7 +24,7 @@ function fixture(t) {
 test("read-only official Linux DSH gets an owned, executable, idempotent copy with contained links", { skip: process.platform !== "linux" || process.getuid?.() === 0 }, async t => {
   let restore;
   t.after(() => restore?.());
-  const f = fixture(t), root = path.join(f.tmp, "official"), userHome = path.join(f.tmp, "user 中文");
+  const f = fixture(t), root = path.join(f.tmp, "official"), userHome = path.join(f.tmp, "user 한국어");
   const cli = path.join(root, "lib/bin.js"), base = path.join(root, "node_modules/@deepseek-ai");
   fs.mkdirSync(path.dirname(cli), { recursive: true }); fs.mkdirSync(base, { recursive: true });
   fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "@deepseek-ai/dsh", version: "0.2.1-rc.2", bin: { dsh: "lib/bin.js" } }));
@@ -38,7 +38,7 @@ test("read-only official Linux DSH gets an owned, executable, idempotent copy wi
   assert.equal(result.copied, true);
   assert(!fs.existsSync(result.launcher), "preparing a copy must not activate it");
   result.activate();
-  assert.deepEqual(JSON.parse((await exec(result.launcher, ["web", "含 空格", "--port", "3081"])).stdout), ["web", "含 空格", "--port", "3081"]);
+  assert.deepEqual(JSON.parse((await exec(result.launcher, ["web", "공백 포함", "--port", "3081"])).stdout), ["web", "공백 포함", "--port", "3081"]);
   assert.equal(fs.statSync(path.join(result.aiBase, "fixture.js")).mode & 0o777, 0o600);
   assert.equal(fs.realpathSync(path.join(result.aiBase, "internal")), path.join(result.aiBase, "fixture.js"));
   fs.writeFileSync(path.join(result.aiBase, "fixture.js"), "patched");
@@ -80,7 +80,7 @@ test("Linux Desktop CLI discovery keeps the explicitly selected install", t => {
 test("offline Linux bootstrap verifies SHA256, runs migration with web profile and keeps settings", { skip: process.platform !== "linux" }, async t => {
   const f = fixture(t), pack = path.join(f.tmp, "package"), version = "1.6.28";
   fs.mkdirSync(path.join(pack, "bin"), { recursive: true });
-  fs.writeFileSync(path.join(pack, "package.json"), JSON.stringify({ name: "dsh-purge-community", version, repository: { url: "git+https://github.com/kingcharleslzy-ai/dsh-purge.git" } }));
+  fs.writeFileSync(path.join(pack, "package.json"), JSON.stringify({ name: "dsh-purge-community", version, repository: { url: "git+https://github.com/wnduddld0513/dsh-purge-kr.git" } }));
   fs.writeFileSync(path.join(pack, "bin/community.js"), `require('node:fs').writeFileSync(process.env.DSH_HOME+'/called.json', JSON.stringify({args:process.argv.slice(2),profile:process.env.DSH_PROFILE,surface:process.env.DSH_SURFACE,cli:process.env.PURGE_DSH_CLI}));`);
   const archiveFile = path.join(f.tmp, `dsh-purge-community-${version}.tgz`);
   await exec("tar", ["-czf", archiveFile, "-C", f.tmp, "package"]);
@@ -160,7 +160,7 @@ test('Linux migration failure preserves first-install and existing host launcher
  const writable=()=>{fs.chmodSync(official,0o755);fs.chmodSync(base,0o755);};
  try {
   const pack=path.join(f.tmp,'package');fs.mkdirSync(path.join(pack,'bin'),{recursive:true});
-  fs.writeFileSync(path.join(pack,'package.json'),JSON.stringify({name:'dsh-purge-community',version:'1.6.32',repository:{url:'git+https://github.com/kingcharleslzy-ai/dsh-purge.git'}}));
+  fs.writeFileSync(path.join(pack,'package.json'),JSON.stringify({name:'dsh-purge-community',version:'1.6.32',repository:{url:'git+https://github.com/wnduddld0513/dsh-purge-kr.git'}}));
   const archiveFile=path.join(f.tmp,'dsh-purge-community-1.6.32.tgz');
   const makeArchive=async source=>{
    fs.writeFileSync(path.join(pack,'bin/community.js'),source);

@@ -1,33 +1,33 @@
-# #122：更新网络与密钥文件权限
+# #122: 업데이트 네트워크와 키 파일 권한
 
-本次只修改更新通道和凭据文件处理，不修改宿主补丁、提示词、权限选择或自动更新开关。不自动重启 DSH，也不改系统代理、TUN、Defender 或白名单。
+이번에는 업데이트 채널과 자격 증명 파일 처리만 수정하고, 호스트 패치, 프롬프트, 권한 선택, 자동 업데이트 스위치는 바꾸지 않는다. DSH 를 자동 재시작하지 않고 시스템 프록시, TUN, Defender, 화이트리스트도 바꾸지 않는다.
 
-## 行为
+## 동작
 
-- Windows 静态 WinINET 配置优先通过系统 `reg.exe` 只读获取；失败、编码或格式不明确时，使用系统 Windows PowerShell 5.1 以 UTF-8 读取。成功结果缓存 30 秒，失败不缓存；不执行 PAC/WPAD。两个 Windows 助手只在自己的子进程内使用 Windows PowerShell 5.1 系统模块，避免继承 PowerShell 7 模块路径导致 Get-Acl 等命令加载失败；父进程及系统环境不变。
-- 保留原有显式更新代理、环境变量和 `NO_PROXY` 优先级。代理探测失败明确标注 HTTP 尚未发送，不静默改走直连；发行列表降级也保留原原因，不再统称 GitHub API 不可用。
-- `ECONNRESET`、`ECONNREFUSED`、`EPIPE`、`ETIMEDOUT`、`EAI_AGAIN`、`ENETUNREACH`、`EHOSTUNREACH` 最多重试两次，退避 150/300 毫秒。重定向共用重试预算；探测、传输和退避都受原请求总超时约束。收到不完整正文后重试会丢弃该正文。
-- HTTP 错误、认证失败、证书错误、代理配置错误、来源限制、文件过大和 SHA256 不匹配不会被这层重试掩盖。既有 Atom/缓存/归档备用通道策略不变；token 仍仅发送到 GitHub API。
-- Windows 的 `update-channel.json` 在首次读取时收紧旧文件 DACL，但不修改内容；新文件先在受保护的暂存目录中以受保护 DACL 创建，再写入明文和原子替换。只允许当前进程用户、SYSTEM、Administrators，不继承普通 Users 权限。凭据经子进程 stdin 传递，不进命令参数、环境变量或报错输出。
-- macOS/Linux 保持文件 `0600` 和原子替换。行为偏好与凭据分开存储；只改检查间隔不重写 token。空 token 表示保留，显式清除才删除。异常 JSON 只报格式错误，不输出原文。
-- 文件被占用、只读、保护助手执行失败等情况明确失败并保留旧凭据。只清理本轮的精确暂存文件和目录，不递归清理链接目标。
+- Windows 정적 WinINET 설정은 시스템 `reg.exe` 로 읽기 전용 조회를 우선한다. 실패하거나 인코딩·형식이 불명확하면 시스템 Windows PowerShell 5.1 로 UTF-8 로 읽는다. 성공 결과는 30초 캐시하고 실패는 캐시하지 않으며 PAC/WPAD 는 실행하지 않는다. 두 Windows 도우미는 자기 자식 프로세스 안에서만 Windows PowerShell 5.1 시스템 모듈을 써서, PowerShell 7 모듈 경로를 상속해 Get-Acl 같은 명령 로드가 실패하는 것을 피한다. 부모 프로세스와 시스템 환경은 변하지 않는다.
+- 기존 명시적 업데이트 프록시, 환경 변수, `NO_PROXY` 우선순위를 유지한다. 프록시 탐지가 실패하면 HTTP 가 아직 전송되지 않았다고 명확히 표시하고 조용히 직접 연결로 바꾸지 않는다. 릴리스 목록 강등도 원래 이유를 유지하고 더 이상 GitHub API 불가로 통칭하지 않는다.
+- `ECONNRESET`, `ECONNREFUSED`, `EPIPE`, `ETIMEDOUT`, `EAI_AGAIN`, `ENETUNREACH`, `EHOSTUNREACH` 는 최대 두 번 재시도하고 백오프는 150/300 ms 다. 리다이렉트는 재시도 예산을 공유한다. 탐지, 전송, 백오프 모두 원래 요청의 총 타임아웃을 따른다. 불완전한 본문을 받은 뒤 재시도하면 그 본문을 버린다.
+- HTTP 오류, 인증 실패, 인증서 오류, 프록시 설정 오류, 출처 제한, 파일 초과, SHA256 불일치는 이 계층의 재시도로 덮이지 않는다. 기존 Atom/캐시/아카이브 대체 채널 정책은 그대로이며 token 은 여전히 GitHub API 로만 보낸다.
+- Windows 의 `update-channel.json` 은 최초 읽기 시 옛 파일 DACL 을 조이지만 내용은 바꾸지 않는다. 새 파일은 먼저 보호된 임시 디렉터리에 보호된 DACL 로 만들고, 그다음 평문을 쓰고 원자 교체한다. 현재 프로세스 사용자, SYSTEM, Administrators 만 허용하고 일반 Users 권한을 상속하지 않는다. 자격 증명은 자식 프로세스 stdin 으로 전달하고 명령 인자, 환경 변수, 오류 출력에 넣지 않는다.
+- macOS/Linux 는 파일 `0600` 과 원자 교체를 유지한다. 동작 선호와 자격 증명은 따로 저장하고, 검사 간격만 바꿀 때 token 을 다시 쓰지 않는다. 빈 token 은 보존을 뜻하며 명시적으로 지워야 삭제된다. 비정상 JSON 은 형식 오류만 보고하고 원문을 출력하지 않는다.
+- 파일이 점유되었거나, 읽기 전용이거나, 보호 도우미 실행이 실패한 경우 명확히 실패하고 옛 자격 증명을 보존한다. 이번 라운드의 정확한 임시 파일과 디렉터리만 정리하고 링크 대상을 재귀적으로 정리하지 않는다.
 
-## 测试入口
+## 테스트 진입점
 
 ```sh
 node --test test/update-http.test.mjs test/update-resilience.test.mjs test/update-secrets.test.mjs test/update-policy.test.mjs test/update-proxy-runtime.test.mjs
-# 另行下载的 Electron，不能指向正式 DSH
+# 별도로 내려받은 Electron. 정식 DSH 를 가리키면 안 된다
 PURGE_ELECTRON_EXEC=/path/to/isolated/Electron node scripts/check-update-runtime.mjs
-# 只读真实 WinINET 与公开 GitHub 发行信息，不输出代理或密钥值
+# 실제 WinINET 과 공개 GitHub 릴리스 정보만 읽고 프록시나 키 값을 출력하지 않는다
 node scripts/check-update-channel-runtime.mjs
 ```
 
-Windows 对应在当前测试进程设置 `PURGE_ELECTRON_EXEC` 后运行相同 Node 脚本。TLS 测试用临时自签 CA，仅通过子进程 `NODE_EXTRA_CA_CERTS` 信任；不关闭 TLS 校验、不改系统证书。没有 OpenSSL 时提供包含 `key.pem` / `cert.pem` 的 `PURGE_TEST_TLS_DIR`，否则该项明确跳过，不能声称已验收。
+Windows 대응은 현재 테스트 프로세스에 `PURGE_ELECTRON_EXEC` 를 설정한 뒤 같은 Node 스크립트를 실행한다. TLS 테스트는 임시 자체 서명 CA 를 쓰고 자식 프로세스 `NODE_EXTRA_CA_CERTS` 로만 신뢰한다. TLS 검증을 끄지 않고 시스템 인증서를 바꾸지 않는다. OpenSSL 이 없으면 `key.pem` / `cert.pem` 이 있는 `PURGE_TEST_TLS_DIR` 를 제공하고, 없으면 그 항목은 명확히 스킵하며 인수 완료라고 주장할 수 없다.
 
-## 实测范围与边界
+## 실측 범위와 경계
 
-- macOS、本机 Windows 11 4090：实际公开 GitHub 请求返回 HTTP 200；4090 三次真实 `reg.exe` 探测约 9–11 ms，实际 PowerShell 备用读取与之相符。这不是所有机器的性能保证。
-- 两平台隔离 Electron 44.7.0：真实 HTTPS → CONNECT / SOCKS、连接重置、半途断流、超时、凭据重定向隔离和下载 SHA256 校验；Windows 真实继承 ACL、旧文件迁移、只读文件失败、文件占用失败及释放后恢复。假 token 与所有修改均在临时目录内。
-- 4090 另用实际 PowerShell 7.6.5 模块路径重现：旧助手 Get-Acl 加载失败，修正子进程模块路径后成功；另覆盖实际 8.3 短路径和不兼容模块的自动回归。
-- 此次未在报告者 Windows 10 19041 / 特定 Clash TUN fakeIP 环境实机复测；仍请报告者更新后确认原来的失败是否消失。不要因此宣布其代理、DNS 或所有网络故障都已解决。
-- ACL 是本机访问控制，不是加密；不能保护凭据免受同一用户进程、SYSTEM 或管理员读取。共用 profile 的服务必须使用正确的运行账户；不要为了通过测试扩大 ACL。读取权限检查按文件身份和元数据缓存，不是持续文件监控。
+- macOS, 이 PC 의 Windows 11 4090: 실제 공개 GitHub 요청이 HTTP 200 을 반환했다. 4090 에서 실제 `reg.exe` 탐지 세 번은 약 9–11 ms 였고 실제 PowerShell 대체 읽기도 이와 일치했다. 이것은 모든 기계의 성능 보장이 아니다.
+- 두 플랫폼 격리 Electron 44.7.0: 실제 HTTPS → CONNECT / SOCKS, 연결 리셋, 중도 단절, 타임아웃, 자격 증명 리다이렉트 격리, 다운로드 SHA256 검증. Windows 는 실제 ACL 상속, 옛 파일 마이그레이션, 읽기 전용 파일 실패, 파일 점유 실패와 해제 후 복구. 가짜 token 과 모든 변경은 임시 디렉터리 안에서 이루어졌다.
+- 4090 은 실제 PowerShell 7.6.5 모듈 경로로도 재현했다: 옛 도우미는 Get-Acl 로드가 실패했고, 자식 프로세스 모듈 경로를 고친 뒤 성공했다. 실제 8.3 단축 경로와 호환되지 않는 모듈에 대한 자동 회귀도 함께 커버했다.
+- 이번에 보고자의 Windows 10 19041 / 특정 Clash TUN fakeIP 환경에서는 실기 재검증하지 않았다. 보고자가 업데이트한 뒤 원래 실패가 사라졌는지 확인해야 한다. 그렇다고 그의 프록시, DNS, 모든 네트워크 장애가 해결되었다고 선언하지 않는다.
+- ACL 은 이 PC 의 접근 제어이며 암호화가 아니다. 같은 사용자 프로세스, SYSTEM, 관리자가 읽는 것까지 막을 수는 없다. profile 을 공유하는 서비스는 올바른 실행 계정을 써야 하고, 테스트 통과를 위해 ACL 을 넓히지 않는다. 읽기 권한 검사는 파일 신원과 메타데이터 캐시를 따르며 지속적 파일 모니터링이 아니다.
