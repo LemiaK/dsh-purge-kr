@@ -173,7 +173,9 @@ const test = async () => {
   assert.equal(area("프롬프트 내용").props.value, "Existing test prompt");
   await act(async () => btn("프롬프트").props.onClick());
   await act(async () =>
-    area("프롬프트 내용").props.onChange({ target: { value: "UNSAVED prompt" } }),
+    area("프롬프트 내용").props.onChange({
+      target: { value: "UNSAVED prompt" },
+    }),
   );
   await act(async () => btn("더 보기").props.onClick());
   await act(async () =>
@@ -276,7 +278,9 @@ const test = async () => {
     assert(
       tree.root
         .findAll((x) => x.props.role === "status")
-        .some((x) => x.children.join("").includes("상태 읽기 실패: unavailable")),
+        .some((x) =>
+          x.children.join("").includes("상태 읽기 실패: unavailable"),
+        ),
     );
     await act(async () => tree.unmount());
     assert.equal(writes.length, 0);

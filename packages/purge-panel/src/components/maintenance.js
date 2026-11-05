@@ -48,7 +48,11 @@ export function StatusExtras() {
         body: JSON.stringify({ enabled: !boost }),
       });
       setBoost(!!r.enabled);
-      setNotice(r.enabled ? "켰습니다. 재시작 후 적용됩니다" : "껐습니다. 재시작 후 적용됩니다");
+      setNotice(
+        r.enabled
+          ? "켰습니다. 재시작 후 적용됩니다"
+          : "껐습니다. 재시작 후 적용됩니다",
+      );
     } catch (e) {
       setNotice(e.message);
     }
@@ -172,7 +176,8 @@ export function StatusExtras() {
         Btn,
         {
           tiny: true,
-          title: "일회용 프로브를 만듭니다. 다음 턴 응답에서 모델이 그 표식을 그대로 되풀이하는지 확인합니다",
+          title:
+            "일회용 프로브를 만듭니다. 다음 턴 응답에서 모델이 그 표식을 그대로 되풀이하는지 확인합니다",
           onClick: async () => {
             try {
               const r = await apiJson("/dsh-purge/probe", {
@@ -229,7 +234,9 @@ export function assertMaintenanceResult(result) {
 export function maintenanceNotice(op, result) {
   if (op === "backup") {
     if (!result.id)
-      throw new Error("백업 작업이 백업 번호를 돌려주지 않았습니다. 목록을 새로 고쳐 결과를 확인하세요");
+      throw new Error(
+        "백업 작업이 백업 번호를 돌려주지 않았습니다. 목록을 새로 고쳐 결과를 확인하세요",
+      );
     return `백업을 만들었다: ${result.id}`;
   }
   if (op === "rollback")
@@ -239,7 +246,10 @@ export function maintenanceNotice(op, result) {
     );
   if (op === "update") {
     if (result.applied === false || result.skipped)
-      return result.note || "새 버전을 설치하지 않았습니다. 현재 설치본은 그대로입니다.";
+      return (
+        result.note ||
+        "새 버전을 설치하지 않았습니다. 현재 설치본은 그대로입니다."
+      );
     if (result.applied || result.needRestart || result.restart_required) {
       const version =
         result.release?.version || result.localVersion || result.remoteVersion;
@@ -249,7 +259,10 @@ export function maintenanceNotice(op, result) {
         : "";
       return `${cleanup}플러그인을 설치했습니다${version ? ": " + version : ""}. DSH 프로세스를 재시작하세요. 브라우저만 새로 고치면 새 백엔드가 로드되지 않습니다.`;
     }
-    return result.note || "업데이트 요청을 마쳤습니다. 상태를 새로 고쳐 설치 결과를 확인하세요.";
+    return (
+      result.note ||
+      "업데이트 요청을 마쳤습니다. 상태를 새로 고쳐 설치 결과를 확인하세요."
+    );
   }
   return result.note || "유지보수 작업을 마쳤습니다";
 }
@@ -472,11 +485,7 @@ export function UpdateChannelDialog({ value, onClose, onSaved }) {
       h(
         "label",
         { className: "dshpp-updch-label" },
-        h(
-          "span",
-          null,
-          tr("updch.mirror", "GitHub 미러 (선택)"),
-        ),
+        h("span", null, tr("updch.mirror", "GitHub 미러 (선택)")),
         h("input", {
           type: "text",
           value: mirror,
@@ -545,7 +554,10 @@ export function UpdateChannelDialog({ value, onClose, onSaved }) {
               "updch.token.set",
               "이 컴퓨터에 키가 설정되어 있습니다. 입력창은 항상 비어 있고, 비운 채 저장하면 그대로 유지됩니다.",
             )
-          : tr("updch.token.unset", "이 컴퓨터에 아직 키가 없습니다. 비워 두면 설정하지 않습니다."),
+          : tr(
+              "updch.token.unset",
+              "이 컴퓨터에 아직 키가 없습니다. 비워 두면 설정하지 않습니다.",
+            ),
       ),
       hasToken
         ? h(
@@ -601,7 +613,8 @@ export function CommunityMaintenance() {
     try {
       const result = await apiJson("/dsh-purge/community");
       assertMaintenanceResult(result);
-      if (!Array.isArray(result.backups)) throw new Error("백업 목록 응답이 유효하지 않습니다");
+      if (!Array.isArray(result.backups))
+        throw new Error("백업 목록 응답이 유효하지 않습니다");
       if (!mounted.current || request !== generation.current) return;
       setValue(result);
       setSelected((current) =>
@@ -650,7 +663,8 @@ export function CommunityMaintenance() {
       assertMaintenanceResult(r);
       if (!mounted.current) return;
       if (op === "check") {
-        if (!Array.isArray(r.versions)) throw new Error("릴리스 목록 응답이 유효하지 않습니다");
+        if (!Array.isArray(r.versions))
+          throw new Error("릴리스 목록 응답이 유효하지 않습니다");
         setReleases(r.versions.filter((v) => v.asset));
         setRelease(r.versions.find((v) => v.asset)?.ref || "");
         setNotice(
@@ -693,7 +707,10 @@ export function CommunityMaintenance() {
           (value.update_preferences?.proxyUrl
             ? tr("updch.state.proxy", "업데이트 채널 프록시: ") +
               value.update_preferences.proxyUrl
-            : tr("updch.state.direct", "업데이트 채널: 환경 또는 시스템 프록시 상속")) +
+            : tr(
+                "updch.state.direct",
+                "업데이트 채널: 환경 또는 시스템 프록시 상속",
+              )) +
             " · " +
             (value.update_preferences?.hasGithubToken
               ? tr("updch.state.token.on", "GitHub 키 설정됨")
@@ -710,7 +727,11 @@ export function CommunityMaintenance() {
     h(
       "div",
       { className: "dshpp-row" },
-      h(Btn, { disabled: busy, onClick: () => run("check") }, "커뮤니티판 업데이트 확인"),
+      h(
+        Btn,
+        { disabled: busy, onClick: () => run("check") },
+        "커뮤니티판 업데이트 확인",
+      ),
       h(
         Btn,
         {
@@ -728,7 +749,9 @@ export function CommunityMaintenance() {
                     ),
                   )}`,
               );
-              setNotice(lines.length ? lines.join("\n") : "아직 기록된 동작이 없습니다");
+              setNotice(
+                lines.length ? lines.join("\n") : "아직 기록된 동작이 없습니다",
+              );
             } catch (e) {
               setNotice(e.message);
             }
@@ -828,7 +851,10 @@ export function CommunityMaintenance() {
           onSaved: (next) => {
             setValue((current) => ({ ...current, update_preferences: next }));
             setNotice(
-              tr("updch.saved", "업데이트 채널을 저장했습니다. 다음 업데이트 확인부터 적용됩니다."),
+              tr(
+                "updch.saved",
+                "업데이트 채널을 저장했습니다. 다음 업데이트 확인부터 적용됩니다.",
+              ),
             );
           },
         })

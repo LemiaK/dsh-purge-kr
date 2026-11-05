@@ -105,7 +105,10 @@ test("actual terminal check failures and failed item IDs are retained together",
     h.tr,
   );
   assert.match(message, /#12,13/);
-  assert.match(message, /터미널 창 억제 검사가 통과하지 못했습니다 \(missing\)/);
+  assert.match(
+    message,
+    /터미널 창 억제 검사가 통과하지 못했습니다 \(missing\)/,
+  );
   assert.match(
     h.incompleteApplyDetail({ failed: 1, failed_items: "bad" }, h.tr),
     /#\?/,
@@ -166,7 +169,10 @@ for (const [name, result, expected] of [
         ),
       );
       assert.match(notice[0].children.join(""), expected);
-      assert.doesNotMatch(notice[0].children.join(""), /CMD 창 없이|프롬프트를 기록/);
+      assert.doesNotMatch(
+        notice[0].children.join(""),
+        /CMD 창 없이|프롬프트를 기록/,
+      );
       assert.deepEqual(
         h.calls
           .filter((c) => c.method === "POST")

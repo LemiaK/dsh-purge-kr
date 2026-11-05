@@ -128,7 +128,11 @@ const items = () =>
   tree.root.findAll(
     (x) => x.type === "button" && x.props.className === "dshp-rewind-item",
   );
-assert.equal(items().length, 2, "menu keeps 한 번 되돌리기 / 이전 라운드 되돌리기");
+assert.equal(
+  items().length,
+  2,
+  "menu keeps 한 번 되돌리기 / 이전 라운드 되돌리기",
+);
 
 // 2) "한 번 되돌리기" posts {sessionId, mode:"once"} and refills the composer
 await act(async () =>

@@ -132,7 +132,9 @@ export class RewindFallback extends Component {
     })
       .then(async (data) => {
         if (!data || !data.ok || !data.sessionId || data.cleared === false) {
-          throw new Error((data && data.error) || "이전에 보낸 내용을 지우지 못했습니다");
+          throw new Error(
+            (data && data.error) || "이전에 보낸 내용을 지우지 못했습니다",
+          );
         }
         noteRewindAt(data.at);
         const text = isPluginDraft(data.text) ? "" : data.text || "";
@@ -303,7 +305,9 @@ export function RewindButton(props) {
         body: JSON.stringify({ sessionId, mode }),
       });
       if (!data || !data.ok || !data.sessionId || data.cleared === false) {
-        throw new Error((data && data.error) || "이전에 보낸 내용을 지우지 못했습니다");
+        throw new Error(
+          (data && data.error) || "이전에 보낸 내용을 지우지 못했습니다",
+        );
       }
       noteRewindAt(data.at);
       const text = isPluginDraft(data.text) ? "" : data.text || "";
@@ -311,10 +315,11 @@ export function RewindButton(props) {
       await openRewoundSession(sessions, data.sessionId);
       scheduleComposerFill(data.sessionId, text);
     } catch (e) {
-      const message = rewindText(t, "rewind.fail", "되돌리기 실패: {error}").replace(
-        "{error}",
-        String((e && e.message) || e),
-      );
+      const message = rewindText(
+        t,
+        "rewind.fail",
+        "되돌리기 실패: {error}",
+      ).replace("{error}", String((e && e.message) || e));
       setNotice(message);
     } finally {
       setBusy(false);

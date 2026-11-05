@@ -680,7 +680,10 @@ export const __dshPurgeDrill = (() => {
       });
     shotLoading.set(key, p);
   };
-  const SHOT_KIND = { screenshot: "현장 스크린샷", card: "기록에서 생성한 증거 발췌" };
+  const SHOT_KIND = {
+    screenshot: "현장 스크린샷",
+    card: "기록에서 생성한 증거 발췌",
+  };
   const ShotImage = ({ eng, shot, height }) => {
     const [zoom, setZoom] = React.useState(false);
     const src = shotSrc(eng, shot.id);
@@ -1117,7 +1120,9 @@ export const __dshPurgeDrill = (() => {
             role: "button",
             tabIndex: 0,
             "aria-expanded": open ? "true" : "false",
-            title: (open ? "이 그룹 접기" : "이 그룹 펼치기") + "(자산 목록으로도 전환)",
+            title:
+              (open ? "이 그룹 접기" : "이 그룹 펼치기") +
+              "(자산 목록으로도 전환)",
             onClick: () => {
               setView("list");
               toggle();
@@ -1257,7 +1262,8 @@ export const __dshPurgeDrill = (() => {
           className: "rt-input",
           value: prov,
           onChange: (e) => setProv(e.target.value),
-          title: "포트 출처로 필터(목록에는 더 이상 별도 열로 나오지 않고 상세에서 볼 수 있습니다)",
+          title:
+            "포트 출처로 필터(목록에는 더 이상 별도 열로 나오지 않고 상세에서 볼 수 있습니다)",
         },
         h("option", { value: "" }, "출처 무관"),
         h("option", { value: "passive" }, "수동만"),
@@ -1314,7 +1320,8 @@ export const __dshPurgeDrill = (() => {
         "button",
         {
           className: "rt-btn" + (view === "timeline" ? " rt-btn-primary" : ""),
-          title: "발견 시각 기준으로 자산 보기(언제 발견했고 어느 날 얼마나 모았는지)",
+          title:
+            "발견 시각 기준으로 자산 보기(언제 발견했고 어느 날 얼마나 모았는지)",
           onClick: () => setView("timeline"),
         },
         "발견 시각",
@@ -1719,7 +1726,9 @@ export const __dshPurgeDrill = (() => {
                 "span",
                 null,
                 d.test_surface ||
-                  (portRows.length ? "미기록(열린 포트는 아래 참조)" : "열린 포트 없음"),
+                  (portRows.length
+                    ? "미기록(열린 포트는 아래 참조)"
+                    : "열린 포트 없음"),
                 d.scope
                   ? h(
                       "span",
@@ -2315,7 +2324,9 @@ export const __dshPurgeDrill = (() => {
             setMsg({ err: (r && r.error) || "복원 실패" });
             return;
           }
-          setMsg({ ok: "내장 기본값으로 복원됨: " + (r.reset || []).join(", ") });
+          setMsg({
+            ok: "내장 기본값으로 복원됨: " + (r.reset || []).join(", "),
+          });
           api({ op: "prompts", engagement: eng }).then(
             (rr) => {
               if (rr && rr.ok) {
@@ -2373,7 +2384,11 @@ export const __dshPurgeDrill = (() => {
         h(
           "div",
           { className: "rt-toolbar" },
-          h("span", { style: { fontWeight: 600 } }, cur ? cur.title : "프롬프트"),
+          h(
+            "span",
+            { style: { fontWeight: 600 } },
+            cur ? cur.title : "프롬프트",
+          ),
           h(
             "span",
             { className: "rt-tag" },
@@ -2560,7 +2575,8 @@ export const __dshPurgeDrill = (() => {
                 {
                   className: "rt-tag",
                   style: { marginLeft: 6 },
-                  title: "공식 스킬 디렉터리이며 레드팀 도구 경로로 검사하지 않습니다",
+                  title:
+                    "공식 스킬 디렉터리이며 레드팀 도구 경로로 검사하지 않습니다",
                 },
                 "공식",
               )
@@ -2731,9 +2747,12 @@ export const __dshPurgeDrill = (() => {
                   {
                     className: "rt-tag",
                     style: { cursor: "pointer" },
-                    title: "스킬 본문이나 환경 변수를 방금 바꾸셨나요? 여기를 누르면 30초 캐시를 건너뛰고 다시 검사합니다",
+                    title:
+                      "스킬 본문이나 환경 변수를 방금 바꾸셨나요? 여기를 누르면 30초 캐시를 건너뛰고 다시 검사합니다",
                   },
-                  clickable(() => load(true), { label: "스킬 사용 가능성 재검사" }),
+                  clickable(() => load(true), {
+                    label: "스킬 사용 가능성 재검사",
+                  }),
                 ),
                 "사용 가능성 재검사",
               ),
@@ -2859,7 +2878,9 @@ export const __dshPurgeDrill = (() => {
                         h(
                           "b",
                           null,
-                          avail === "available" ? "설치되지 않은 외부 도구" : "결손",
+                          avail === "available"
+                            ? "설치되지 않은 외부 도구"
+                            : "결손",
                         ),
                         h(
                           "span",
@@ -3035,7 +3056,11 @@ export const __dshPurgeDrill = (() => {
                       "개 스킬)",
                   )
                 : null,
-              h("div", { className: "rt-empty" }, "왼쪽에서 스킬을 선택하면 내용이 보입니다"),
+              h(
+                "div",
+                { className: "rt-empty" },
+                "왼쪽에서 스킬을 선택하면 내용이 보입니다",
+              ),
             ),
       ),
     );
@@ -3124,7 +3149,11 @@ export const __dshPurgeDrill = (() => {
             "div",
             { className: "rt-evi-head" },
             "증거 요약",
-            h("span", { className: "rt-tag" }, looksHttp ? "원본 메시지" : "텍스트"),
+            h(
+              "span",
+              { className: "rt-tag" },
+              looksHttp ? "원본 메시지" : "텍스트",
+            ),
             h("div", { className: "rt-spacer" }),
             h(
               "button",
@@ -3312,7 +3341,9 @@ export const __dshPurgeDrill = (() => {
             setMsg({ err: (r && r.error) || "갱신 실패" });
             return;
           }
-          setMsg({ ok: "“" + (STATUS_LABEL[next] || next) + "”(으)로 갱신했습니다" });
+          setMsg({
+            ok: "“" + (STATUS_LABEL[next] || next) + "”(으)로 갱신했습니다",
+          });
           load();
         },
         (e) => setMsg({ err: String((e && e.message) || e) }),
@@ -4206,7 +4237,8 @@ export const __dshPurgeDrill = (() => {
                 {
                   className: "rt-tag rt-tag-warn",
                   title:
-                    x.capped_reason || "같은 자산·같은 포트에서는 점수가 가장 높은 한 건만 인정합니다",
+                    x.capped_reason ||
+                    "같은 자산·같은 포트에서는 점수가 가장 높은 한 건만 인정합니다",
                 },
                 "서비스 상한 도달 · 미집계",
               )
@@ -4289,7 +4321,11 @@ export const __dshPurgeDrill = (() => {
             { key: "al", className: "rt-ap-assets" },
             st.assets.length
               ? st.assets.map(assetRow)
-              : h("div", { className: "rt-ap-none" }, "아직 점수를 낸 자산이 없습니다"),
+              : h(
+                  "div",
+                  { className: "rt-ap-none" },
+                  "아직 점수를 낸 자산이 없습니다",
+                ),
           ),
         );
       } else {
@@ -4309,7 +4345,11 @@ export const __dshPurgeDrill = (() => {
             { key: "hl", className: "rt-ap-hits" },
             st.items.length
               ? st.items.map(hitRow)
-              : h("div", { className: "rt-ap-none" }, "이 단계는 아직 득점이 없습니다"),
+              : h(
+                  "div",
+                  { className: "rt-ap-none" },
+                  "이 단계는 아직 득점이 없습니다",
+                ),
           ),
         );
         if (st.code === "boundary") {
@@ -4364,7 +4404,9 @@ export const __dshPurgeDrill = (() => {
                             (t.status === "active" ? "rt-tag-live" : ""),
                           style: t.status === "active" ? {} : { opacity: 0.7 },
                         },
-                        t.status === "active" ? "사용 가능" : t.status || "알 수 없음",
+                        t.status === "active"
+                          ? "사용 가능"
+                          : t.status || "알 수 없음",
                       ),
                       h(
                         "span",
@@ -4436,11 +4478,7 @@ export const __dshPurgeDrill = (() => {
                 "+" + st.points,
               )
             : null,
-          h(
-            "span",
-            { className: "rt-ap-cum" },
-            "누적 " + st.cumulative + "점",
-          ),
+          h("span", { className: "rt-ap-cum" }, "누적 " + st.cumulative + "점"),
         ),
         h(
           "div",
@@ -4563,7 +4601,11 @@ export const __dshPurgeDrill = (() => {
                       "div",
                       { className: "rt-hcol-hit" },
                       h("span", { className: "rt-hcol-pts" }, st.assetCount),
-                      h("span", { className: "rt-hcol-name" }, "대 자산이 득점"),
+                      h(
+                        "span",
+                        { className: "rt-hcol-name" },
+                        "대 자산이 득점",
+                      ),
                     ),
                     st.assets.slice(0, 6).map((a) =>
                       h(
@@ -4966,7 +5008,11 @@ export const __dshPurgeDrill = (() => {
                 )
               : null,
             x.incomplete
-              ? h("span", { className: "rt-tag rt-tag-warn" }, "재현 자료 보강 필요")
+              ? h(
+                  "span",
+                  { className: "rt-tag rt-tag-warn" },
+                  "재현 자료 보강 필요",
+                )
               : h("span", { className: "rt-tag rt-tag-live" }, "재현 가능"),
           ),
           h(
@@ -5007,7 +5053,11 @@ export const __dshPurgeDrill = (() => {
                         ? h("span", { className: "rt-tag" }, s.stage_code)
                         : null,
                       s.inferred
-                        ? h("span", { className: "rt-tag" }, "같은 자산으로 추론")
+                        ? h(
+                            "span",
+                            { className: "rt-tag" },
+                            "같은 자산으로 추론",
+                          )
                         : null,
                       h("div", { className: "rt-spacer" }),
                       s.recorded_at
@@ -5144,7 +5194,9 @@ export const __dshPurgeDrill = (() => {
                           (t.reach ? " · 도달 " + t.reach : "") +
                           " · 대상 측 " +
                           (t.entry_kind || "미선언") +
-                          (t.legit === false ? " · ⚠️ 타깃 경계를 넘은 것으로 보지 않습니다" : "") +
+                          (t.legit === false
+                            ? " · ⚠️ 타깃 경계를 넘은 것으로 보지 않습니다"
+                            : "") +
                           (t.status ? " · " + t.status : "") +
                           (t.command
                             ? " · 명령 " +
@@ -5938,7 +5990,8 @@ export const __dshPurgeDrill = (() => {
               : null,
             x.asset_target ? "발견 자산 " + x.asset_target : null,
             x.found_by_agent
-              ? "발견 역할 " + (ROLE_LABEL[x.found_by_agent] || x.found_by_agent)
+              ? "발견 역할 " +
+                (ROLE_LABEL[x.found_by_agent] || x.found_by_agent)
               : null,
             x.source_url ? "출처 " + x.source_url : null,
           ]
@@ -6058,7 +6111,11 @@ export const __dshPurgeDrill = (() => {
           { className: "rt-tag rt-tag-live" },
           "검증됨 " + stats.verified,
         ),
-        h("span", { className: "rt-tag" }, "누적 재사용 " + (stats.reused || 0)),
+        h(
+          "span",
+          { className: "rt-tag" },
+          "누적 재사용 " + (stats.reused || 0),
+        ),
         (stats.uncategorized || 0) > 0 &&
           (stats.uncategorized || 0) !== stats.total
           ? h(
@@ -6349,7 +6406,10 @@ export const __dshPurgeDrill = (() => {
                       className: "rt-btn",
                       style: { padding: "0 6px", fontSize: 10.5 },
                       onClick: () =>
-                        copy("nuclei -t " + t.path + " -u <대상>", "템플릿 명령"),
+                        copy(
+                          "nuclei -t " + t.path + " -u <대상>",
+                          "템플릿 명령",
+                        ),
                     },
                     "명령 복사",
                   ),
@@ -6386,7 +6446,9 @@ export const __dshPurgeDrill = (() => {
                 : null,
             )
           : null,
-        data === null ? h("div", { className: "rt-empty" }, "불러오는 중…") : null,
+        data === null
+          ? h("div", { className: "rt-empty" }, "불러오는 중…")
+          : null,
         data !== null && !items.length && !tplItems.length
           ? h(
               "div",
@@ -6561,7 +6623,9 @@ export const __dshPurgeDrill = (() => {
               "폴더에서 " +
               (r.assignedCount || 0) +
               "개 도구를 할당했습니다" +
-              (r.nucleiTemplatesDir ? ", nuclei-templates 도 인식했습니다" : ""),
+              (r.nucleiTemplatesDir
+                ? ", nuclei-templates 도 인식했습니다"
+                : ""),
           });
         },
         (e) => {
@@ -6783,7 +6847,11 @@ export const __dshPurgeDrill = (() => {
                             }),
                           ),
                       },
-                      h("option", { value: "auto" }, "auto(이 PC 를 따름, 기본)"),
+                      h(
+                        "option",
+                        { value: "auto" },
+                        "auto(이 PC 를 따름, 기본)",
+                      ),
                       h("option", { value: "windows" }, "windows"),
                       h("option", { value: "linux" }, "linux"),
                     ),
@@ -6855,7 +6923,11 @@ export const __dshPurgeDrill = (() => {
               h(
                 "div",
                 { className: "rt-card" },
-                h("h4", null, "키와 VPS(비우면 덮어쓰지 않습니다, 프로세스 환경 변수 우선)"),
+                h(
+                  "h4",
+                  null,
+                  "키와 VPS(비우면 덮어쓰지 않습니다, 프로세스 환경 변수 우선)",
+                ),
                 h(
                   "div",
                   { style: { display: "grid", gap: 8 } },
@@ -6965,7 +7037,8 @@ export const __dshPurgeDrill = (() => {
                   className: "rt-input",
                   rows: 3,
                   style: { width: "100%" },
-                  placeholder: "선택 사항. 예: 도구는 ○○ 포터블 패키지에서 가져옴",
+                  placeholder:
+                    "선택 사항. 예: 도구는 ○○ 포터블 패키지에서 가져옴",
                   value: draft.notes,
                   onChange: (e) =>
                     setDraft(
@@ -7288,7 +7361,8 @@ export const __dshPurgeDrill = (() => {
                   "span",
                   {
                     className: "rt-tag rt-tag-warn",
-                    title: "직접 등록/자체 생성한 계정은 득점 권한으로 치지 않고 과정 기록으로만 남깁니다",
+                    title:
+                      "직접 등록/자체 생성한 계정은 득점 권한으로 치지 않고 과정 기록으로만 남깁니다",
                   },
                   "자체 생성 · 미집계",
                 )
@@ -7311,7 +7385,8 @@ export const __dshPurgeDrill = (() => {
                   "span",
                   {
                     className: "rt-tag",
-                    title: "이 적중에는 증거 스크린샷이 있습니다(득점 항목을 펼치면 대표 이미지가 보입니다)",
+                    title:
+                      "이 적중에는 증거 스크린샷이 있습니다(득점 항목을 펼치면 대표 이미지가 보입니다)",
                   },
                   "이미지 " + hh.shot_count,
                 )
@@ -7385,7 +7460,9 @@ export const __dshPurgeDrill = (() => {
                       ? "(그 밖에 자체 생성 " + p.self_created + "회는 미집계)"
                       : "") +
                     (p.capped
-                      ? "(그 밖에 같은 서비스 중복 적중 " + p.capped + "회는 미집계)"
+                      ? "(그 밖에 같은 서비스 중복 적중 " +
+                        p.capped +
+                        "회는 미집계)"
                       : ""),
                 ),
               ),
@@ -7514,7 +7591,11 @@ export const __dshPurgeDrill = (() => {
             )
           : null,
         h("div", { className: "rt-spacer" }),
-        h("button", { className: "rt-btn", onClick: startNew }, "+ 득점 항목 추가"),
+        h(
+          "button",
+          { className: "rt-btn", onClick: startNew },
+          "+ 득점 항목 추가",
+        ),
         h(
           "button",
           { className: "rt-btn", disabled: busy, onClick: load },
@@ -7584,7 +7665,9 @@ export const __dshPurgeDrill = (() => {
                 placeholder: "이름(필수)",
                 value: form.name,
                 readOnly: form.builtin === true,
-                title: form.builtin ? "내장 득점 항목의 이름은 규칙이 고정합니다" : "",
+                title: form.builtin
+                  ? "내장 득점 항목의 이름은 규칙이 고정합니다"
+                  : "",
                 onChange: (e) => setField("name", e.target.value),
               }),
               h("input", {
@@ -7629,7 +7712,9 @@ export const __dshPurgeDrill = (() => {
               placeholder: "득점 조건 설명",
               value: form.description,
               readOnly: form.builtin === true,
-              title: form.builtin ? "내장 득점 항목의 조항 본문은 규칙이 고정합니다" : "",
+              title: form.builtin
+                ? "내장 득점 항목의 조항 본문은 규칙이 고정합니다"
+                : "",
               onChange: (e) => setField("description", e.target.value),
             }),
             h(
@@ -7871,7 +7956,8 @@ export const __dshPurgeDrill = (() => {
       api({ op: "activeTests", engagement: eng, limit: 20 })
         .then(
           (r) => {
-            if (my !== seq.current) return; /* 타깃이 바뀌었다: 이 응답은 이미 만료되었으므로 버린다 */
+            if (my !== seq.current)
+              return; /* 타깃이 바뀌었다: 이 응답은 이미 만료되었으므로 버린다 */
             if (!r || r.ok === false) {
               setErr((r && r.error) || "읽기 실패");
               return;
@@ -8014,7 +8100,11 @@ export const __dshPurgeDrill = (() => {
             )
           : null,
         a.potential
-          ? h("div", { className: "rt-atest-meta" }, "예상 득점: " + a.potential)
+          ? h(
+              "div",
+              { className: "rt-atest-meta" },
+              "예상 득점: " + a.potential,
+            )
           : null,
         noteLines.length
           ? h(Clip, { label: "테스트 기록", text: noteLines.join("\n") })
@@ -8171,7 +8261,11 @@ export const __dshPurgeDrill = (() => {
                   "전체 목록(필터·정렬 포함)은 “자산 매핑” 페이지에서 봅니다",
                 ),
               ])
-          : h("div", { className: "rt-atest-meta" }, "대기 중인 자산이 없습니다"),
+          : h(
+              "div",
+              { className: "rt-atest-meta" },
+              "대기 중인 자산이 없습니다",
+            ),
       ),
     );
 
@@ -8317,7 +8411,9 @@ export const __dshPurgeDrill = (() => {
       );
     /* 납품 요건: 웹셸은 반드시 Behinder/Godzilla 암호화 셸이어야 하고(사용자가 접속할 수 있어야 한다), 내부망은 suo5 터널로 간다 */
     const isEncryptedShell = (t) =>
-      /behinder|godzilla|\u51B0\u874E|\u54E5\u65AF\u62C9/i.test(String(t || ""));
+      /behinder|godzilla|\u51B0\u874E|\u54E5\u65AF\u62C9/i.test(
+        String(t || ""),
+      );
     const isSuo5 = (t) => /suo5/i.test(String(t || ""));
     /* 안내 바: 결론 한 줄 + 펼쳐 보는 방법만 남긴다(예전에는 세 덩어리 긴 설명을 평면 배치해 본문이 다 묻혔다) */
     const hint = (key, title, detail) =>
@@ -8390,7 +8486,11 @@ export const __dshPurgeDrill = (() => {
           ),
           isEncryptedShell(w.shell_type)
             ? null
-            : h("span", { className: "rt-tag rt-tag-warn" }, "사용자 접속 불가"),
+            : h(
+                "span",
+                { className: "rt-tag rt-tag-warn" },
+                "사용자 접속 불가",
+              ),
           w.privilege ? h("span", { className: "rt-tag" }, w.privilege) : null,
           h("div", { className: "rt-spacer" }),
           copied === "cmd" + w.id
@@ -8660,7 +8760,11 @@ export const __dshPurgeDrill = (() => {
             (totals.tunnels || 0) +
             " 사용 가능",
         ),
-        h("span", { className: "rt-tag" }, "자격 증명 " + (totals.credentials || 0)),
+        h(
+          "span",
+          { className: "rt-tag" },
+          "자격 증명 " + (totals.credentials || 0),
+        ),
         h("span", { className: "rt-tag" }, "접근 세션 " + (totals.access || 0)),
         h("div", { className: "rt-spacer" }),
         h(
@@ -8856,7 +8960,11 @@ export const __dshPurgeDrill = (() => {
         "div",
         { className: "rt-toolbar" },
         h("span", { style: { fontWeight: 600 } }, "작전 에이전트"),
-        h("span", { className: "rt-tag rt-tag-passive" }, "동시 실행 상한 " + max),
+        h(
+          "span",
+          { className: "rt-tag rt-tag-passive" },
+          "동시 실행 상한 " + max,
+        ),
         used === null
           ? h("span", { className: "rt-tag" }, "점유 현황 알 수 없음")
           : h(
@@ -8968,7 +9076,8 @@ export const __dshPurgeDrill = (() => {
             return;
           }
           setMsg({
-            ok: "저장됨: 동시 실행 상한 " + r.max + "(즉시 적용, 재시작 불필요)",
+            ok:
+              "저장됨: 동시 실행 상한 " + r.max + "(즉시 적용, 재시작 불필요)",
           });
           if (props.onSaved) props.onSaved();
         },
@@ -9902,7 +10011,10 @@ export const __dshPurgeDrill = (() => {
         {
           className: "rt-head",
           onMouseDown: full || embedded ? undefined : startDrag,
-          title: full || embedded ? undefined : "누른 채 드래그하면 패널이 이동합니다",
+          title:
+            full || embedded
+              ? undefined
+              : "누른 채 드래그하면 패널이 이동합니다",
         },
         embedded
           ? null
@@ -9945,7 +10057,11 @@ export const __dshPurgeDrill = (() => {
             engagements.length ? "타깃 선택" : "타깃 없음",
           ),
           engagements.map((x) =>
-            h("option", { key: x.id, value: x.id }, x.name || x.id || "이름 없음"),
+            h(
+              "option",
+              { key: x.id, value: x.id },
+              x.name || x.id || "이름 없음",
+            ),
           ),
         ),
         h("div", { className: "rt-spacer" }),
@@ -10015,13 +10131,17 @@ export const __dshPurgeDrill = (() => {
               role: "tab",
               "aria-selected": st.tab === t[0] ? "true" : "false",
               title: unreadOf(t[0])
-                ? t[1] + ": 새 내용이 있습니다. 열어서 보면 빨간 점이 사라집니다"
+                ? t[1] +
+                  ": 새 내용이 있습니다. 열어서 보면 빨간 점이 사라집니다"
                 : t[1],
             }),
             t[1],
             unreadOf(t[0])
               ? /* 빨간 점은 순수 시각 정보이므로 스크린 리더용 텍스트 대체를 준다 */
-                h("span", { className: "rt-tab-dot", "aria-label": "새 내용 있음" })
+                h("span", {
+                  className: "rt-tab-dot",
+                  "aria-label": "새 내용 있음",
+                })
               : null,
           );
         }),
@@ -10057,7 +10177,11 @@ export const __dshPurgeDrill = (() => {
         ),
         h("div", { className: "rt-spacer" }),
         full
-          ? h("span", null, "Esc 를 누르거나 오른쪽 위 “전체 보기 종료”를 누르면 사이드바가 있는 화면으로 돌아갑니다")
+          ? h(
+              "span",
+              null,
+              "Esc 를 누르거나 오른쪽 위 “전체 보기 종료”를 누르면 사이드바가 있는 화면으로 돌아갑니다",
+            )
           : null,
         h(
           "span",
