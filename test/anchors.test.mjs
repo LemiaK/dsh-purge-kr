@@ -31,17 +31,17 @@ test("overrides round-trip, apply per index, and clear", () => {
     assert.equal(lined.overridden, true);
     assert.equal(lined.replacements[0].pattern, "new anchor\nsecond line");
     assert.equal(lined.replacements[1].pattern, "other", "other entries untouched");
-    // 原对象没被改
+    // 원본 객체는 바뀌지 않았다
     assert.equal(patch().replacements[0].pattern, "old anchor\nsecond line");
 
-    // 覆盖后新锚点能命中，旧的不再命中
+    // 덮어쓴 뒤에는 새 앵커가 매칭되고 옛 앵커는 더는 매칭되지 않는다
     const text = "header\nnew anchor\nsecond line\nfooter";
     assert.equal(applyReplacementsToText(text, lined).text.includes("NEW"), true);
     assert.equal(applyReplacementsToText(text, patch()).changed, false);
 
     clearOverride(home, 42, 0);
     assert.deepEqual(readOverrides(home), {});
-    // 越界索引不生效
+    // 범위를 벗어난 인덱스는 적용되지 않는다
     assert.equal(applyOverrides(patch(), { 42: { 9: { pattern: "x" } } }).overridden, undefined);
   } finally {
     fs.rmSync(home, { recursive: true, force: true });

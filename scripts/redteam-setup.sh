@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-# 红队模式一键铺环境 —— 首次使用跑这一条就够
+# 레드팀 모드 환경 원샷 셋업 — 처음 쓸 때 이 한 줄이면 충분하다
 #
-#   bash $DSH_HOME/redteam/setup.sh            # 交互式引导（推荐）
-#   bash $DSH_HOME/redteam/setup.sh --yes      # 全自动，缺啥装啥（VPS/key 用已有值）
-#   bash $DSH_HOME/redteam/setup.sh --check    # 只体检不安装（CI / 排障用）
+#   bash $DSH_HOME/redteam/setup.sh            # 대화형 안내(권장)
+#   bash $DSH_HOME/redteam/setup.sh --yes      # 완전 자동, 없는 것은 설치(VPS/key 는 기존 값 사용)
+#   bash $DSH_HOME/redteam/setup.sh --check    # 설치 없이 점검만(CI / 문제 해결용)
 #
-# 做四件事：
-#   ① 装工具：把红队技能用到的二进制补齐到 $DSH_HOME/redteam/toolkit/
-#   ② 装技能：确认技能目录存在且可见（技能随包分发，这里只做体检与提示）
-#   ③ 收配置：引导用户提供 FOFA_KEY（测绘）与 VPS 登录方式（反弹 Shell 落地）
-#   ④ 验通道：实测载荷服务、模板库、二进制可执行性，最后写完成标记
+# 네 가지를 한다:
+#   ① 도구 설치: 레드팀 스킬이 쓰는 바이너리를 $DSH_HOME/redteam/toolkit/ 에 채운다
+#   ② 스킬 설치: 스킬 디렉터리가 존재하고 보이는지 확인(스킬은 패키지에 동봉되고, 여기서는 점검과 안내만)
+#   ③ 설정 수집: FOFA_KEY(측량)와 VPS 로그인 방식(리버스 셸 착지)을 안내해 받는다
+#   ④ 통로 검증: 페이로드 서비스, 템플릿 라이브러리, 바이너리 실행 가능성을 실측하고 마지막에 완료 표식을 쓴다
 #
-# 设计原则：
-#   · **幂等**：随时可重跑，已装的不重装（带 --force 才强制重下）
-#   · **零依赖**：只用 curl / python3 / tar / unzip，Node 也不需要
-#   · **不猜 URL**：一律走 GitHub releases/latest API 拿真实资产
-#   · **不静默失败**：每一步都打印结论，最后给一份体检表
+# 설계 원칙:
+#   · **멱등**: 언제든 다시 돌릴 수 있고, 이미 설치된 것은 다시 설치하지 않는다(--force 일 때만 강제 재다운로드)
+#   · **의존성 0**: curl / python3 / tar / unzip 만 쓴다. Node 도 필요 없다
+#   · **URL 추측 금지**: 전부 GitHub releases/latest API 로 실제 자산을 받는다
+#   · **조용한 실패 금지**: 단계마다 결론을 출력하고 마지막에 점검표를 준다
 # ─────────────────────────────────────────────────────────────────────────────
 set -uo pipefail
 
@@ -41,17 +41,17 @@ done
 
 mkdir -p "$TK" "$LOG_DIR"
 
-# ── 输出工具 ────────────────────────────────────────────────────────────────
+# ── 출력 도구 ────────────────────────────────────────────────────────────────
 C_OK=$'\033[32m'; C_WARN=$'\033[33m'; C_ERR=$'\033[31m'; C_DIM=$'\033[2m'; C_OFF=$'\033[0m'
 say()  { printf '%s\n' "$*" | tee -a "$LOG"; }
 
-# 运行环境提醒：本脚本会往本机落 VPS 私钥、WebShell 马与扫描器，只应在演练专用环境里跑
+# 실행 환경 경고: 이 스크립트는 이 PC 에 VPS 개인 키, WebShell 웹셸, 스캐너를 남기므로 드릴 전용 환경에서만 돌린다
 if [ -z "${REDTEAM_NO_VM_WARN:-}" ]; then
   say ""
-  say "⚠️  请在【专供演练的 Kali 虚拟机】里运行红队模式，不要跑在日常办公电脑/宿主机上："
-  say "    · 本机会落 VPS 私钥、冰蝎/哥斯拉马与各类扫描器，安全软件/EDR 拦查会误伤日常环境；"
-  say "    · 扫描与爆破流量会从你常用出口 IP 出去，影响正常上网与 IP 信誉；"
-  say "    · 演练结束直接丢弃虚拟机最干净。（设置 REDTEAM_NO_VM_WARN=1 可跳过本提示）"
+  say "⚠️  레드팀 모드는 반드시 [드릴 전용 Kali 가상 머신]에서 실행한다. 일상 업무용 PC/호스트 머신에서는 돌리지 않는다:"
+  say "    · 이 PC 에 VPS 개인 키, Behinder/Godzilla 웹셸과 각종 스캐너가 남아 보안 소프트웨어/EDR 탐지에 걸려 일상 환경을 망칠 수 있다;"
+  say "    · 스캔과 브루트포스 트래픽이 평소 쓰는 출구 IP 로 나가 정상 인터넷 사용과 IP 평판에 영향을 준다;"
+  say "    · 드릴이 끝나면 가상 머신을 통째로 버리는 것이 가장 깨끗하다. (REDTEAM_NO_VM_WARN=1 을 설정하면 이 안내를 건너뛴다)"
   say ""
 fi
 ok()   { say "  ${C_OK}✓${C_OFF} $*"; }
@@ -60,7 +60,7 @@ bad()  { say "  ${C_ERR}✗${C_OFF} $*"; }
 dim()  { say "  ${C_DIM}$*${C_OFF}"; }
 head_() { say ""; say "── $* ──────────────────────────────────────────"; }
 
-ask() { # ask <提示> <默认值>  → 回显用户输入（无 tty 或 --yes 时用默认值）
+ask() { # ask <프롬프트> <기본값>  → 사용자 입력을 되돌려준다(tty 가 없거나 --yes 면 기본값)
   local prompt="$1" def="${2:-}"
   if [ "$ASSUME_YES" = 1 ] || [ ! -t 0 ]; then printf '%s' "$def"; return; fi
   local ans
@@ -71,7 +71,7 @@ ask() { # ask <提示> <默认值>  → 回显用户输入（无 tty 或 --yes �
   printf '%s' "${ans:-$def}"
 }
 
-ask_secret() { # 不回显读取
+ask_secret() { # 에코 없이 읽기
   local prompt="$1"
   if [ "$ASSUME_YES" = 1 ] || [ ! -t 0 ]; then printf ''; return; fi
   local ans
@@ -81,10 +81,10 @@ ask_secret() { # 不回显读取
   printf '%s' "$ans"
 }
 
-# ── 工具函数 ────────────────────────────────────────────────────────────────
+# ── 도구 함수 ────────────────────────────────────────────────────────────────
 have() { command -v "$1" >/dev/null 2>&1; }
 
-gh_api() { # gh_api <repo> → 输出 releases/latest JSON（有 gh token 就用，配额高）
+gh_api() { # gh_api <repo> → releases/latest JSON 출력(gh token 이 있으면 쓰고, 할당량이 높다)
   local repo="$1" tok=""
   have gh && tok="$(gh auth token 2>/dev/null || true)"
   if [ -n "$tok" ]; then
@@ -94,9 +94,9 @@ gh_api() { # gh_api <repo> → 输出 releases/latest JSON（有 gh token 就用
   fi
 }
 
-dl_asset() { # dl_asset <repo> <asset-regex> <输出路径> [可执行]
+dl_asset() { # dl_asset <repo> <asset-regex> <출력 경로> [실행권한]
   local repo="$1" pat="$2" out="$3" chmod_x="${4:-1}"
-  if [ -s "$out" ] && [ "$FORCE" != 1 ]; then ok "已存在 $(basename "$out")"; return 0; fi
+  if [ -s "$out" ] && [ "$FORCE" != 1 ]; then ok "이미 있음 $(basename "$out")"; return 0; fi
   local json url name
   json="$(gh_api "$repo")"
   read -r name url <<<"$(printf '%s' "$json" | python3 -c "
@@ -107,9 +107,10 @@ except Exception: sys.exit(1)
 for a in j.get('assets') or []:
     if pat.search(a['name']): print(a['name'], a['browser_download_url']); break
 " "$pat")"
-  if [ -z "${url:-}" ]; then bad "$repo 无匹配资产（$pat）"; return 1; fi
-  # API 声明的字节数：下载后必须一字不差，否则就是截断（静默损坏比下载失败更危险——
-  # 文件存在、可执行位也在，运行时却什么都不做。gowitness 踩过：少 7MB，跑起来零输出零产物）
+  if [ -z "${url:-}" ]; then bad "$repo 에 일치하는 자산 없음($pat)"; return 1; fi
+  # API 가 선언한 바이트 수: 다운로드 후 한 바이트도 달라서는 안 된다. 다르면 잘린 것이다
+  # (조용한 손상이 다운로드 실패보다 위험하다. 파일은 있고 실행권한도 있는데 실행하면 아무것도 하지 않는다.
+  #  gowitness 에서 겪었다: 7MB 부족, 실행하면 출력도 산출물도 0)
   local want
   want="$(printf '%s' "$json" | python3 -c "
 import json,sys,re
@@ -119,23 +120,23 @@ except Exception: sys.exit(0)
 for a in j.get('assets') or []:
     if pat.search(a['name']): print(a.get('size') or 0); break
 " "$pat")"
-  dim "下载 $name（期望 ${want:-?} 字节）"
+  dim "다운로드 $name(기대 ${want:-?} 바이트)"
   if curl -sL --retry 3 --retry-delay 2 --fail -m 600 "$url" -o "$out"; then
     local got; got="$(stat -c%s "$out" 2>/dev/null || echo 0)"
     if [ -n "$want" ] && [ "$want" != "0" ] && [ "$got" != "$want" ]; then
-      bad "$name 下载不完整：期望 $want 字节、实际 $got（截断），已删除，请重跑"
+      bad "$name 다운로드가 불완전: 기대 $want 바이트, 실제 $got(잘림). 삭제했으니 다시 실행한다"
       rm -f "$out"; return 1
     fi
     [ "$chmod_x" = 1 ] && chmod +x "$out" 2>/dev/null
-    ok "$name → $out（$got 字节，与官方一致）"
+    ok "$name → $out($got 바이트, 공식과 일치)"
   else
-    bad "$name 下载失败（curl 退出码 $?）"; return 1
+    bad "$name 다운로드 실패(curl 종료 코드 $?)"; return 1
   fi
 }
 
-untar_all() { # untar_all <tarfile> <目录> <期望的二进制名...> → 全解压后摊平到 <目录>/
+untar_all() { # untar_all <tarfile> <디렉터리> <기대 바이너리 이름...> → 전부 풀어 <디렉터리>/ 로 평탄화
   local tf="$1" dir="$2"; shift 2
-  ( cd "$dir" && tar xzf "$tf" 2>/dev/null ) || { bad "$(basename "$tf") 解压失败"; return 1; }
+  ( cd "$dir" && tar xzf "$tf" 2>/dev/null ) || { bad "$(basename "$tf") 압축 해제 실패"; return 1; }
   local name found sz
   for name in "$@"; do
     found="$(find "$dir" -maxdepth 3 -type f -name "$name" ! -name "*.tar.gz" 2>/dev/null | head -1)"
@@ -143,20 +144,20 @@ untar_all() { # untar_all <tarfile> <目录> <期望的二进制名...> → 全�
       [ "$(dirname "$found")" != "$dir" ] && mv -f "$found" "$dir/$name"
       chmod +x "$dir/$name"
       sz="$(stat -c%s "$dir/$name" 2>/dev/null || echo 0)"
-      # 冒烟测试：真跑一次版本/帮助，跑不起来（截断/.so 缺失）当场报出来
+      # 스모크 테스트: 실제로 버전/도움말을 한 번 실행해 본다. 돌아가지 않으면(잘림/.so 누락) 즉시 보고한다
       if "$dir/$name" --version >/dev/null 2>&1 || "$dir/$name" -version >/dev/null 2>&1 \
          || "$dir/$name" -h >/dev/null 2>&1 || "$dir/$name" --help >/dev/null 2>&1; then
-        ok "$name 就位（$sz 字节，冒烟测试通过）"
+        ok "$name 배치됨($sz 바이트, 스모크 테스트 통과)"
       else
-        warn "$name 就位（$sz 字节）但冒烟测试无响应 —— 手动跑一次确认：$dir/$name --help"
+        warn "$name 배치됨($sz 바이트)이지만 스모크 테스트 무응답 —— 직접 한 번 실행해 확인: $dir/$name --help"
       fi
     else
-      bad "$name 未在包内找到"
+      bad "$name 을(를) 패키지 안에서 찾지 못함"
     fi
   done
 }
 
-verify_bin() { # verify_bin <路径> → 能跑起来返回 0（截断的二进制在这里就被挡住）
+verify_bin() { # verify_bin <경로> → 실행되면 0(잘린 바이너리는 여기서 걸러진다)
   local p="$1"
   [ -x "$p" ] || return 1
   timeout 15 "$p" --version >/dev/null 2>&1 && return 0
@@ -167,37 +168,37 @@ verify_bin() { # verify_bin <路径> → 能跑起来返回 0（截断的二进�
   return 1
 }
 
-# 安装前体检：文件在但跑不起来（截断/缺依赖）→ 删掉，让下面的安装分支重新下载。
-# 为什么必须这样：先前只判"文件是否可执行"，一个被截断的二进制（文件在、权限也对、
-# 运行却零输出）会一直留在盘上；而脚本还提示"重跑加 --force"，实际 --force 又不重下，
-# 提示与行为不一致 → 用户按提示做也修不好。改成"坏文件自动清掉再装"，重跑一次即自愈。
-doctor() { # doctor <路径> <名字>
+# 설치 전 점검: 파일은 있는데 실행되지 않으면(잘림/의존성 누락) 삭제해서 아래 설치 분기가 다시 받게 한다.
+# 왜 그래야 하는가: 예전에는 "파일이 실행 가능한가"만 봤다. 잘린 바이너리(파일도 있고 권한도 맞는데
+# 실행하면 출력이 0)는 디스크에 계속 남았고, 스크립트는 "--force 로 다시 실행하라"고 안내했지만 실제 --force 는
+# 다시 받지 않았다. 안내와 동작이 어긋나 사용자가 시켜도 고칠 수 없었다. "나쁜 파일은 자동으로 지우고 다시 설치"로 바꾸니 한 번 다시 돌리면 스스로 회복된다.
+doctor() { # doctor <경로> <이름>
   if [ -e "$1" ] && ! verify_bin "$1"; then
-    warn "$2 已损坏或截断（跑不起来），删除后重新下载"
+    warn "$2 이(가) 손상되었거나 잘렸다(실행 불가). 삭제 후 다시 다운로드한다"
     rm -f "$1"
   fi
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-head_ "红队模式环境体检 $(date '+%F %T')"
+head_ "레드팀 모드 환경 점검 $(date '+%F %T')"
 say "DSH_HOME = $DSH_HOME"
-say "工具箱   = $TK"
+say "도구함   = $TK"
 
-# ═══ ① 工具安装 ════════════════════════════════════════════════════════════
-head_ "① 安装工具（缺失的才下）"
+# ═══ ① 도구 설치 ════════════════════════════════════════════════════════════
+head_ "① 도구 설치(빠진 것만 받는다)"
 
-# --- 已在 PATH 的系统工具（Kali 自带，只体检） ---
+# --- PATH 에 이미 있는 시스템 도구(Kali 기본 포함, 점검만) ---
 PATHD="nmap masscan nuclei sqlmap ffuf feroxbuster gobuster hydra john hashcat wpscan nikto whatweb amass theHarvester msfconsole searchsploit proxychains4 socat nc tmux"
 MISSING_PATH=""
 for t in $PATHD; do have "$t" || MISSING_PATH="$MISSING_PATH $t"; done
 if [ -n "$MISSING_PATH" ]; then
-  warn "PATH 缺少：$MISSING_PATH"
-  dim "这些多为 Kali 自带包，用 apt 补：sudo apt install -y$MISSING_PATH"
+  warn "PATH 에 없음: $MISSING_PATH"
+  dim "대부분 Kali 기본 패키지다. apt 로 채운다: sudo apt install -y$MISSING_PATH"
 else
-  ok "PATH 系统工具齐全（nmap/masscan/nuclei/sqlmap/ffuf/feroxbuster/gobuster/hydra/hashcat/john/wpscan/nikto/whatweb/msfconsole…）"
+  ok "PATH 시스템 도구 충분(nmap/masscan/nuclei/sqlmap/ffuf/feroxbuster/gobuster/hydra/hashcat/john/wpscan/nikto/whatweb/msfconsole…)"
 fi
 
-# --- 工具箱二进制（随包/下载） ---
+# --- 도구함 바이너리(동봉/다운로드) ---
 declare -A BIN=(
   [fscan]="$TK/fscan/fscan"
   [gogo]="$TK/gogo/gogo"
@@ -216,12 +217,12 @@ declare -A BIN=(
 )
 
 if [ "$CHECK_ONLY" != 1 ]; then
-  # fscan / gogo（内网渗透主力，国内工具，走 GitHub release）
+  # fscan / gogo(내부망 침투 주력, 중국산 도구, GitHub release 경유)
   doctor "${BIN[fscan]}" fscan
   [ -x "${BIN[fscan]}" ] || { mkdir -p "$TK/fscan"; dl_asset "shadow1ng/fscan" "fscan_linux_amd64|linux_amd64.*\.(zip|tar\.gz)$" "$TK/fscan/fscan.zip" 0; }
-  [ -x "${BIN[gogo]}" ] || dim "gogo 需从 https://github.com/chainreactors/gogo/releases 手动取（无标准命名资产）"
+  [ -x "${BIN[gogo]}" ] || dim "gogo 는 https://github.com/chainreactors/gogo/releases 에서 직접 받는다(표준 명명 자산 없음)"
 
-  # suo5（WebShell 隧道核心）
+  # suo5(WebShell 터널 핵심)
   doctor "${BIN[suo5]}" suo5
   [ -x "${BIN[suo5]}" ] || { mkdir -p "$TK/suo5"; dl_asset "zema1/suo5" "suo5-linux-amd64" "${BIN[suo5]}"; }
 
@@ -232,7 +233,7 @@ if [ "$CHECK_ONLY" != 1 ]; then
     dl_asset "jpillora/chisel" "chisel_.*linux_amd64\.gz$" "$TK/chisel/chisel.gz" 0 && gunzip -f "$TK/chisel/chisel.gz" && mv -f "$TK/chisel/chisel" "${BIN[chisel]}" && chmod +x "${BIN[chisel]}"
   fi
 
-  # frp（frpc + frps，同一个 release 包内）
+  # frp(frpc + frps, 같은 release 패키지 안에 있다)
   doctor "${BIN[frpc]}" frpc; doctor "${BIN[frps]}" frps
   if [ ! -x "${BIN[frpc]}" ] || [ ! -x "${BIN[frps]}" ]; then
     mkdir -p "$TK/frp"
@@ -240,7 +241,7 @@ if [ "$CHECK_ONLY" != 1 ]; then
       && untar_all "$TK/frp/frp.tar.gz" "$TK/frp" frpc frps
   fi
 
-  # ProjectDiscovery 三件套
+  # ProjectDiscovery 세트
   doctor "${BIN[subfinder]}" subfinder
   [ -x "${BIN[subfinder]}" ] || { mkdir -p "$TK/subfinder"; dl_asset "projectdiscovery/subfinder" "linux_amd64\.zip$" "$TK/subfinder/s.zip" 0 && python3 -c "import zipfile;zipfile.ZipFile('$TK/subfinder/s.zip').extractall('$TK/subfinder')" && chmod +x "${BIN[subfinder]}"; }
   doctor "${BIN[dnsx]}" dnsx
@@ -256,11 +257,11 @@ if [ "$CHECK_ONLY" != 1 ]; then
     ok "pd-httpx wrapper -> ${BIN[httpx]}"
   fi
 
-  # ksubdomain（无状态子域爆破）
+  # ksubdomain(무상태 서브도메인 브루트포스)
   doctor "${BIN[ksubdomain]}" ksubdomain
   [ -x "${BIN[ksubdomain]}" ] || { mkdir -p "$TK/ksubdomain"; dl_asset "knownsec/ksubdomain" "linux.*\.zip$" "$TK/ksubdomain/k.zip" 0 && python3 -c "import zipfile;zipfile.ZipFile('$TK/ksubdomain/k.zip').extractall('$TK/ksubdomain')" && chmod +x "${BIN[ksubdomain]}"; }
 
-  # ligolo-ng（TUN 隧道备选）
+  # ligolo-ng(TUN 터널 대안)
   doctor "${BIN[ligolo-proxy]}" ligolo-proxy; doctor "${BIN[ligolo-agent]}" ligolo-agent
   if [ ! -x "${BIN[ligolo-proxy]}" ] || [ ! -x "${BIN[ligolo-agent]}" ]; then
     mkdir -p "$TK/ligolo"
@@ -270,64 +271,64 @@ if [ "$CHECK_ONLY" != 1 ]; then
       && untar_all "$TK/ligolo/agent.tar.gz" "$TK/ligolo" agent
   fi
 
-  # gowitness（批量截图留证）
+  # gowitness(대량 스크린샷 증거 확보)
   doctor "${BIN[gowitness]}" gowitness
   [ -x "${BIN[gowitness]}" ] || { mkdir -p "$TK/gowitness"; dl_asset "sensepost/gowitness" "gowitness-[0-9.]+-linux-amd64$" "${BIN[gowitness]}"; }
 
-  # OneForAll（子域收集，源码 + venv）
+  # OneForAll(서브도메인 수집, 소스 + venv)
   OF_DIR="$TK/oneforall/OneForAll-0.4.5"
   if [ ! -f "$OF_DIR/oneforall.py" ]; then
     mkdir -p "$TK/oneforall"
-    dim "下载 OneForAll 源码 v0.4.5"
+    dim "OneForAll 소스 v0.4.5 다운로드"
     curl -sL --retry 3 -m 300 "https://github.com/shmilylty/OneForAll/archive/refs/tags/v0.4.5.tar.gz" -o "$TK/oneforall/of.tar.gz" \
       && python3 -c "import tarfile;tarfile.open('$TK/oneforall/of.tar.gz').extractall('$TK/oneforall')" 2>/dev/null \
-      && ok "OneForAll 源码就位" || bad "OneForAll 源码下载失败"
+      && ok "OneForAll 소스 준비됨" || bad "OneForAll 소스 다운로드 실패"
   else
-    ok "OneForAll 源码已存在"
+    ok "OneForAll 소스 이미 있음"
   fi
-  # venv 依赖（首次约 1-2 分钟）
+  # venv 의존성(첫 회 약 1-2분)
   if [ -f "$OF_DIR/oneforall.py" ] && [ ! -x "$OF_DIR/.venv/bin/python" ]; then
-    dim "为 OneForAll 建 venv 并装依赖（约 1-2 分钟）"
+    dim "OneForAll 용 venv 를 만들고 의존성 설치(약 1-2분)"
     ( cd "$OF_DIR" && python3 -m venv .venv >/dev/null 2>&1 \
       && .venv/bin/python -m pip install -q --no-cache-dir --upgrade pip setuptools wheel >/dev/null 2>&1 \
       && .venv/bin/python -m pip install -q --no-cache-dir requests exrex fire beautifulsoup4 dnspython loguru tqdm PySocks tenacity termcolor treelib colorama future "SQLAlchemy<2" >/dev/null 2>&1 ) \
-      && ok "OneForAll 依赖就绪" || warn "OneForAll 依赖安装失败（子域收集改用 subfinder + ksubdomain 替代）"
+      && ok "OneForAll 의존성 준비됨" || warn "OneForAll 의존성 설치 실패(서브도메인 수집은 subfinder + ksubdomain 으로 대체)"
   elif [ -x "$OF_DIR/.venv/bin/python" ]; then
-    ok "OneForAll venv 已存在"
+    ok "OneForAll venv 이미 있음"
   fi
 else
-  dim "--check 模式：跳过安装"
+  dim "--check 모드: 설치를 건너뛴다"
 fi
 
-# ═══ ② nuclei 模板 ═════════════════════════════════════════════════════════
-head_ "② nuclei 模板库"
+# ═══ ② nuclei 템플릿 ═══════════════════════════════════════════════════════
+head_ "② nuclei 템플릿 라이브러리"
 NT="$HOME/.local/nuclei-templates"
 if [ -d "$NT" ]; then
   NTC="$(find "$NT" -name '*.yaml' 2>/dev/null | wc -l | tr -d ' ')"
-  ok "模板库就位：$NT（$NTC 个模板）"
-  [ "$NTC" -lt 1000 ] && warn "模板数偏少，跑一次：nuclei -update-templates"
+  ok "템플릿 라이브러리 준비됨: $NT(템플릿 $NTC 개)"
+  [ "$NTC" -lt 1000 ] && warn "템플릿 수가 적다. 한 번 실행한다: nuclei -update-templates"
 elif have nuclei; then
   if [ "$CHECK_ONLY" != 1 ]; then
-    dim "首次更新模板库（约 100MB，1-3 分钟）"
-    nuclei -update-templates >/dev/null 2>&1 && ok "模板库安装完成（$NT）" || bad "模板更新失败，稍后手动跑：nuclei -update-templates"
+    dim "템플릿 라이브러리 첫 업데이트(약 100MB, 1-3분)"
+    nuclei -update-templates >/dev/null 2>&1 && ok "템플릿 라이브러리 설치 완료($NT)" || bad "템플릿 업데이트 실패. 나중에 직접 실행한다: nuclei -update-templates"
   else
-    warn "模板库不存在（跑 nuclei -update-templates）"
+    warn "템플릿 라이브러리 없음(nuclei -update-templates 실행)"
   fi
 else
-  warn "未安装 nuclei，跳过"
+  warn "nuclei 미설치, 건너뛴다"
 fi
 
-# ═══ ③ 配置：FOFA_KEY 与 VPS ══════════════════════════════════════════════
-head_ "③ 配置（FOFA 测绘 key + VPS 登录方式）"
+# ═══ ③ 설정: FOFA_KEY 와 VPS ══════════════════════════════════════════════
+head_ "③ 설정(FOFA 측량 key + VPS 로그인 방식)"
 
-# 已有值（环境变量优先，其次 .env 文件）
-cur_env() { # cur_env <NAME> → 输出当前生效值（变量未设时不报错）
+# 기존 값(환경 변수 우선, 다음 .env 파일)
+cur_env() { # cur_env <NAME> → 현재 유효한 값 출력(변수 미설정이어도 오류 없음)
   local n="$1" v=""
-  v="${!n-}"                                   # 必须带 - ：set -u 下未定义变量会直接中断
+  v="${!n-}"                                   # - 를 반드시 붙인다: set -u 에서 미정의 변수는 즉시 중단시킨다
   [ -n "$v" ] && { printf '%s' "$v"; return; }
   [ -f "$ENV_FILE" ] && grep -E "^${n}=" "$ENV_FILE" 2>/dev/null | tail -1 | cut -d= -f2- | tr -d '"'
 }
-env_set() { # env_set <NAME> <VALUE> → 写/更新 $DSH_HOME/.env，权限 600
+env_set() { # env_set <NAME> <VALUE> → $DSH_HOME/.env 에 쓰기/갱신, 권한 600
   local n="$1" v="$2"
   mkdir -p "$(dirname "$ENV_FILE")"; touch "$ENV_FILE"; chmod 600 "$ENV_FILE"
   if grep -qE "^${n}=" "$ENV_FILE" 2>/dev/null; then
@@ -352,120 +353,120 @@ PY
 # --- FOFA_KEY ---
 FOFA_NOW="$(cur_env FOFA_KEY)"
 if [ -n "$FOFA_NOW" ]; then
-  ok "FOFA_KEY 已配置（${FOFA_NOW:0:4}…${FOFA_NOW: -4}，长度 ${#FOFA_NOW}）"
-  dim "来源：$([ -n "${FOFA_KEY:-}" ] && echo '环境变量' || echo "$ENV_FILE")"
+  ok "FOFA_KEY 설정됨(${FOFA_NOW:0:4}…${FOFA_NOW: -4}, 길이 ${#FOFA_NOW})"
+  dim "출처: $([ -n "${FOFA_KEY:-}" ] && echo '환경 변수' || echo "$ENV_FILE")"
   if [ "$CHECK_ONLY" != 1 ] && [ "$ASSUME_YES" != 1 ]; then
-    NEW="$(ask_secret '更新 FOFA_KEY（直接回车保留现有）')"
-    [ -n "$NEW" ] && env_set FOFA_KEY "$NEW" && ok "FOFA_KEY 已更新"
+    NEW="$(ask_secret 'FOFA_KEY 갱신(그냥 엔터면 기존 값 유지)')"
+    [ -n "$NEW" ] && env_set FOFA_KEY "$NEW" && ok "FOFA_KEY 갱신됨"
   fi
 else
-  warn "FOFA_KEY 未配置 —— 资产测绘（fofa-recon 技能）将降级"
-  dim "获取：https://fofa.info 登录 → 个人中心 → API Key（个人版 10,000 次/月，1 秒 1 次）"
-  dim "降级替代：crt.sh 证书透明 + subfinder/ksubdomain + 被动 DNS（技能 passive-recon / recon-pipeline）"
+  warn "FOFA_KEY 미설정 —— 자산 측량(fofa-recon 스킬)이 저하된다"
+  dim "발급: https://fofa.info 로그인 → 개인 센터 → API Key(개인판 월 10,000회, 1초 1회)"
+  dim "저하 대안: crt.sh 인증서 투명성 + subfinder/ksubdomain + 패시브 DNS(스킬 passive-recon / recon-pipeline)"
   if [ "$CHECK_ONLY" != 1 ]; then
-    NEW="$(ask_secret '粘贴 FOFA_KEY（留空则跳过，稍后可用 setup.sh 再配）')"
+    NEW="$(ask_secret 'FOFA_KEY 붙여넣기(비우면 건너뛰고 나중에 setup.sh 로 다시 설정)')"
     if [ -n "$NEW" ]; then
-      env_set FOFA_KEY "$NEW"; ok "FOFA_KEY 已写入 $ENV_FILE（重启 dsh web 后生效）"
-      # 立刻验一次有效性
+      env_set FOFA_KEY "$NEW"; ok "FOFA_KEY 를 $ENV_FILE 에 기록(dsh web 재시작 후 유효)"
+      # 즉시 유효성 검증 한 번
       RESP="$(curl -s -m 20 "https://fofa.info/api/v1/info/my?key=$NEW" 2>/dev/null)"
       if printf '%s' "$RESP" | grep -q '"error":false'; then
-        ok "FOFA_KEY 校验通过"
+        ok "FOFA_KEY 검증 통과"
       else
-        warn "FOFA_KEY 校验未通过：$(printf '%s' "$RESP" | head -c 120)"
+        warn "FOFA_KEY 검증 실패: $(printf '%s' "$RESP" | head -c 120)"
       fi
     else
-      warn "已跳过 FOFA_KEY（测绘能力降级，可随时重跑本脚本补）"
+      warn "FOFA_KEY 를 건너뜀(측량 능력 저하. 언제든 이 스크립트를 다시 돌려 채울 수 있다)"
     fi
   fi
 fi
 
-# --- VPS（反弹 Shell 落地与中转） ---
+# --- VPS(리버스 셸 착지와 중계) ---
 VPS_KEY_NOW="$(cur_env REDTEAM_VPS_KEY)";   VPS_KEY_NOW="${VPS_KEY_NOW:-$TK/vps/id_rsa}"
 VPS_HOST_NOW="$(cur_env REDTEAM_VPS_HOST)"
 VPS_USER_NOW="$(cur_env REDTEAM_VPS_USER)"; VPS_USER_NOW="${VPS_USER_NOW:-ubuntu}"
 say ""
 if [ -f "$VPS_KEY_NOW" ]; then
-  # 主机地址没配时（只有私钥、没有 user@host），技能里的 $REDTEAM_VPS_HOST 会解析成空
-  # —— 必须在这里补问，否则"看起来配好了"但命令跑不通。
+  # 호스트 주소가 없을 때(개인 키만 있고 user@host 가 없는 경우) 스킬 안의 $REDTEAM_VPS_HOST 는 빈 값으로 해석된다
+  # —— 여기서 반드시 되물어야 한다. 그렇지 않으면 "설정된 것처럼 보이지만" 명령이 실행되지 않는다.
   if [ -z "$VPS_HOST_NOW" ]; then
-    warn "有私钥但没有 VPS 地址（REDTEAM_VPS_HOST 未设）—— 技能里的 \$REDTEAM_VPS_HOST 会是空的"
+    warn "개인 키는 있는데 VPS 주소가 없다(REDTEAM_VPS_HOST 미설정) —— 스킬 안의 \$REDTEAM_VPS_HOST 가 빈 값이 된다"
     if [ "$CHECK_ONLY" != 1 ]; then
-      ANS="$(ask 'VPS 主机地址（只填 IP 或域名，用户名默认 '"$VPS_USER_NOW"')' '')"
+      ANS="$(ask 'VPS 호스트 주소(IP 또는 도메인만. 사용자 이름 기본값 '"$VPS_USER_NOW"')' '')"
       if [ -n "$ANS" ]; then
         env_set REDTEAM_VPS_HOST "$ANS"; env_set REDTEAM_VPS_USER "$VPS_USER_NOW"
-        VPS_HOST_NOW="$ANS"; ok "VPS 地址已写入 $ENV_FILE：$VPS_USER_NOW@$VPS_HOST_NOW"
+        VPS_HOST_NOW="$ANS"; ok "VPS 주소를 $ENV_FILE 에 기록: $VPS_USER_NOW@$VPS_HOST_NOW"
       else
-        warn "已跳过 —— 反弹 Shell / 载荷投递类技能会显示不可用"
+        warn "건너뜀 —— 리버스 셸 / 페이로드 전달 계열 스킬은 사용 불가로 표시된다"
       fi
     fi
   fi
 fi
 if [ -f "$VPS_KEY_NOW" ] && [ -n "$VPS_HOST_NOW" ]; then
-  ok "VPS 登录方式已就绪：$VPS_USER_NOW@$VPS_HOST_NOW（私钥 $VPS_KEY_NOW）"
+  ok "VPS 로그인 방식 준비됨: $VPS_USER_NOW@$VPS_HOST_NOW(개인 키 $VPS_KEY_NOW)"
   if ssh -i "$VPS_KEY_NOW" -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=8 "$VPS_USER_NOW@$VPS_HOST_NOW" 'echo ok' >/dev/null 2>&1; then
-    ok "VPS SSH 连通性正常"
+    ok "VPS SSH 연결 정상"
   else
-    warn "VPS SSH 连不上 —— 反弹 Shell 与载荷投递会失败"
-    dim "排查：私钥权限（chmod 600）、安全组 22 端口、用户名是否正确"
+    warn "VPS SSH 연결 실패 —— 리버스 셸과 페이로드 전달이 실패한다"
+    dim "점검: 개인 키 권한(chmod 600), 보안 그룹 22번 포트, 사용자 이름이 맞는지"
   fi
 elif [ ! -f "$VPS_KEY_NOW" ]; then
-  warn "未找到 VPS 私钥（$VPS_KEY_NOW）—— 反弹 Shell 落地能力不可用"
-  dim "需要一台公网 VPS（用于接收反弹 Shell、中转载荷、做隧道出口）"
+  warn "VPS 개인 키를 찾지 못함($VPS_KEY_NOW) —— 리버스 셸 착지 능력 사용 불가"
+  dim "공인 VPS 가 필요하다(리버스 셸 수신, 페이로드 중계, 터널 출구 역할)"
   if [ "$CHECK_ONLY" != 1 ]; then
-    NEW_HOST="$(ask 'VPS 登录地址（user@ip）' 'ubuntu@')"
-    NEW_KEY="$(ask 'VPS 私钥路径' "$TK/vps/id_rsa")"
+    NEW_HOST="$(ask 'VPS 로그인 주소(user@ip)' 'ubuntu@')"
+    NEW_KEY="$(ask 'VPS 개인 키 경로' "$TK/vps/id_rsa")"
     if [ -n "$NEW_HOST" ] && [ -f "$NEW_KEY" ]; then
       env_set REDTEAM_VPS_HOST "$NEW_HOST"; env_set REDTEAM_VPS_KEY "$NEW_KEY"
-      ok "VPS 登录方式已记录（$NEW_HOST）"
-      dim "把私钥放到 $NEW_KEY 并 chmod 600；或告知我们由你手动配置"
+      ok "VPS 로그인 방식 기록됨($NEW_HOST)"
+      dim "개인 키를 $NEW_KEY 에 두고 chmod 600; 또는 직접 설정한다고 알려 주면 된다"
     else
-      warn "已跳过 VPS 配置（无 VPS 时只能做不需要落地的成果：账号、数据、未授权）"
+      warn "VPS 설정을 건너뜀(VPS 가 없으면 착지가 필요 없는 성과만 가능: 계정, 데이터, 미인가)"
     fi
   fi
 else
-  warn "有私钥但 VPS 地址仍为空（REDTEAM_VPS_HOST 未设）—— 反弹 Shell / 载荷投递类技能会判为不可用"
-  dim "补配：在 $ENV_FILE 里写 REDTEAM_VPS_HOST=<IP 或域名> 与 REDTEAM_VPS_USER=<登录用户>"
+  warn "개인 키는 있는데 VPS 주소가 여전히 비어 있다(REDTEAM_VPS_HOST 미설정) —— 리버스 셸 / 페이로드 전달 계열 스킬이 사용 불가로 판정된다"
+  dim "추가 설정: $ENV_FILE 에 REDTEAM_VPS_HOST=<IP 또는 도메인> 과 REDTEAM_VPS_USER=<로그인 사용자> 를 쓴다"
 fi
 
-# 环境变量生效提示
+# 환경 변수 적용 안내
 if [ ! -f "$ENV_FILE" ] || ! grep -q 'FOFA_KEY' "$ENV_FILE" 2>/dev/null; then
-  dim "提示：$ENV_FILE 由 dsh web 启动时加载；改完需重启 dsh web 才在本进程生效"
+  dim "안내: $ENV_FILE 는 dsh web 시작 시 로드된다. 수정 후 dsh web 을 재시작해야 이 프로세스에 적용된다"
 fi
 
-# ═══ ④ 体检表 ══════════════════════════════════════════════════════════════
-head_ "④ 体检（二进制可执行性）"
+# ═══ ④ 점검표 ══════════════════════════════════════════════════════════════
+head_ "④ 점검(바이너리 실행 가능성)"
 FAILED=""; WEAK=""
 for name in "${!BIN[@]}"; do
   p="${BIN[$name]}"
-  if [ ! -x "$p" ]; then bad "$name 缺失（$p）"; FAILED="$FAILED $name"; continue; fi
-  # 光有可执行位不算通过：真跑一次 --version/-version/-h，防止"截断的二进制"混过去
+  if [ ! -x "$p" ]; then bad "$name 누락($p)"; FAILED="$FAILED $name"; continue; fi
+  # 실행 비트만으로 통과가 아니다: 실제로 --version/-version/-h 를 한 번 실행해 "잘린 바이너리"가 통과하지 못하게 한다
   if timeout 15 "$p" --version >/dev/null 2>&1 || timeout 15 "$p" -version >/dev/null 2>&1 \
      || timeout 15 "$p" -h >/dev/null 2>&1 || timeout 15 "$p" --help >/dev/null 2>&1 \
      || timeout 15 "$p" version >/dev/null 2>&1; then
-    ok "$name（$(stat -c%s "$p") 字节，冒烟通过）"
+    ok "$name($(stat -c%s "$p") 바이트, 스모크 통과)"
   else
-    warn "$name 存在但无响应（可能截断/缺依赖）—— 重跑本脚本加 --force 重下"
+    warn "$name 은(는) 있지만 무응답(잘렸거나 의존성 누락 가능) —— 이 스크립트를 --force 로 다시 실행해 재다운로드"
     WEAK="$WEAK $name"
   fi
 done
-[ -f "$TK/oneforall/OneForAll-0.4.5/oneforall.py" ] && ok "oneforall（源码）" || warn "oneforall（未装，可用 subfinder+ksubdomain 替代）"
-[ -d "$TK/Behinder" ] && ok "Behinder 冰蝎（WebShell 交付）" || warn "Behinder 未就位"
-[ -d "$TK/Godzilla" ] && ok "Godzilla 哥斯拉（WebShell 交付）" || warn "Godzilla 未就位"
-[ -d "$TK/AntSword" ] && ok "AntSword 蚁剑" || dim "AntSword 未就位（可选）"
+[ -f "$TK/oneforall/OneForAll-0.4.5/oneforall.py" ] && ok "oneforall(소스)" || warn "oneforall(미설치, subfinder+ksubdomain 으로 대체 가능)"
+[ -d "$TK/Behinder" ] && ok "Behinder(WebShell 전달)" || warn "Behinder 준비 안 됨"
+[ -d "$TK/Godzilla" ] && ok "Godzilla(WebShell 전달)" || warn "Godzilla 준비 안 됨"
+[ -d "$TK/AntSword" ] && ok "AntSword" || dim "AntSword 준비 안 됨(선택 사항)"
 
-# ═══ ⑤ 完成标记 ════════════════════════════════════════════════════════════
-head_ "总结"
+# ═══ ⑤ 완료 마커 ════════════════════════════════════════════════════════════
+head_ "요약"
 if [ -n "$FAILED" ]; then
-  warn "以下工具缺失，相关技能会降级：$FAILED"
+  warn "다음 도구가 없어 관련 스킬이 저하된다: $FAILED"
 elif [ -n "$WEAK" ]; then
-  warn "以下工具存在但冒烟未通过（重跑本脚本加 --force 重下）：$WEAK"
+  warn "다음 도구는 있지만 스모크를 통과하지 못했다(이 스크립트를 --force 로 다시 실행해 재다운로드): $WEAK"
 else
-  ok "工具箱完整（全部二进制冒烟通过）"
+  ok "도구함 완비(모든 바이너리 스모크 통과)"
 fi
 
 if [ "$CHECK_ONLY" != 1 ]; then
   {
-    echo "# 红队模式环境完成标记 —— 由 setup.sh 写入"
+    echo "# 레드팀 모드 환경 완료 마커 —— setup.sh 가 기록"
     echo "completed_at=$(date -Iseconds)"
     echo "dsh_home=$DSH_HOME"
     echo "toolkit=$TK"
@@ -473,15 +474,15 @@ if [ "$CHECK_ONLY" != 1 ]; then
     echo "fofa_key=$([ -n "$(cur_env FOFA_KEY)" ] && echo configured || echo missing)"
     echo "vps=$([ -f "$VPS_KEY_NOW" ] && echo configured || echo missing)"
   } > "$MARKER"
-  ok "已写完成标记：$MARKER"
-  dim "智能体在 preflight 里会读它来确认环境已就绪"
+  ok "완료 마커 기록됨: $MARKER"
+  dim "에이전트가 preflight 에서 이 파일을 읽어 환경이 준비되었는지 확인한다"
 fi
 
 say ""
-say "下一步："
-say "  1) 若刚改了 $ENV_FILE（FOFA_KEY / VPS），重启 dsh web 让本进程读到新值"
-say "  2) 进红队模式，指挥智能体第一个动作会跑 redteam_preflight 复核"
-say "  3) 直接给靶标单位名开工"
+say "다음 단계:"
+say "  1) 방금 $ENV_FILE(FOFA_KEY / VPS)를 바꿨다면 dsh web 을 재시작해 이 프로세스가 새 값을 읽게 한다"
+say "  2) 레드팀 모드로 들어가면 지휘 에이전트의 첫 동작이 redteam_preflight 로 재확인한다"
+say "  3) 표적 기관 이름만 주면 바로 착수한다"
 say ""
-say "日志：$LOG"
+say "로그: $LOG"
 exit 0

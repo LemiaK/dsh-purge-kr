@@ -52,7 +52,7 @@ function setup() {
     JSON.stringify({
       name: PACKAGE,
       version: "1.2.0",
-      repository: { url: "https://github.com/kingcharleslzy-ai/dsh-purge.git" },
+      repository: { url: "https://github.com/wnduddld0513/dsh-purge-kr.git" },
     }),
   );
   const candidate = path.join(home, "candidate.tgz");
@@ -127,7 +127,7 @@ test("no host layout still blocks writes with a clear message", () => {
     const none = compatibility(empty);
     assert.equal(none.level, "no-host");
     assert.equal(none.patch_writes_allowed, false);
-    assert.throws(() => requirePatchCompatibility(empty), /未定位到宿主/);
+    assert.throws(() => requirePatchCompatibility(empty), /호스트 디렉터리를 찾지 못해/);
   } finally {
     fs.rmSync(empty, { recursive: true, force: true });
   }
@@ -177,7 +177,7 @@ test("tampered backups rejected before installer or settings changes", async () 
       path.join(b.folder, "plugins", PACKAGE, "client.js"),
       "tampered",
     );
-    await assert.rejects(f.manager.rollback(b.id), /校验/);
+    await assert.rejects(f.manager.rollback(b.id), /검증/);
     assert.equal(f.installs.length, 0);
     assert.equal(
       fs.readFileSync(path.join(f.profile, "cordis.patch.yml"), "utf8"),
@@ -241,7 +241,7 @@ test("failed installer preserves a recovery snapshot and restores prior manifest
     f.manager.installer = async () => {
       throw Error("simulated failure");
     };
-    await assert.rejects(f.manager.install(f.candidate), /安装失败/);
+    await assert.rejects(f.manager.install(f.candidate), /설치 실패/);
     assert.equal(f.manager.list().length, 1);
     assert.deepEqual(
       fs.readFileSync(path.join(f.profile, "package.json")),
@@ -257,7 +257,7 @@ test("maintenance serializes writes across processes", async () => {
   try {
     fs.mkdirSync(f.manager.base, { recursive: true });
     fs.writeFileSync(path.join(f.manager.base, "maintenance.lock"), "fixture");
-    await assert.rejects(f.manager.backup(), /已有维护操作/);
+    await assert.rejects(f.manager.backup(), /이미 유지보수 작업이 진행 중/);
     assert.equal(f.manager.list().length, 0);
   } finally {
     f.close();
@@ -274,14 +274,14 @@ test("download rejects redirects to untrusted and insecure hosts before a second
   };
   await assert.rejects(
     download("https://github.com/test", 1024, request),
-    /来源无效/,
+    /출처가 올바르지 않습니다/,
   );
   assert.equal(calls, 1);
 });
 test("download limits streamed size even without content-length", async () => {
   await assert.rejects(
     download("https://github.com/test", 3, async () => new Response("too big")),
-    /过大/,
+    /너무 큽니다/,
   );
 });
 
@@ -327,8 +327,8 @@ test("release checksum failure stops before installation", async () => {
       installRelease(f.manager, {
         ref: "v1.2.0",
         version: "1.2.0",
-        asset: "https://github.com/kingcharleslzy-ai/dsh-purge/releases/download/v1.2.0/dsh-purge-community-1.2.0.tgz",
-        sums: "https://github.com/kingcharleslzy-ai/dsh-purge/releases/download/v1.2.0/SHA256SUMS.txt",
+        asset: "https://github.com/wnduddld0513/dsh-purge-kr/releases/download/v1.2.0/dsh-purge-community-1.2.0.tgz",
+        sums: "https://github.com/wnduddld0513/dsh-purge-kr/releases/download/v1.2.0/SHA256SUMS.txt",
       }, globalThis.fetch),
       /SHA256/,
     );
@@ -474,7 +474,7 @@ test('a failed fresh install quarantines partial package and retains user settin
       fs.writeFileSync(path.join(f.root, 'incomplete.js'), 'partial download');
       throw Error('fixture install failed');
     };
-    await assert.rejects(f.manager.install(f.candidate), /fixture install failed.*安装前依赖、安装与清单已恢复/);
+    await assert.rejects(f.manager.install(f.candidate), /fixture install failed.*설치 전 의존성, 설치, 매니페스트를 복원했습니다/);
     assert.equal(fs.existsSync(f.root), false);
     const recovery = path.join(f.manager.base, 'install-recovery');
     const failed = fs.readdirSync(recovery);
@@ -501,7 +501,7 @@ test('panel rollback restores the full prior graph on installer or entry import 
         if(stage === 'install') throw Error('installer failed');
       };
       f.manager.verifier = async () => { throw Error('ERR_MODULE_NOT_FOUND'); };
-      await assert.rejects(f.manager.rollback(snapshot.id),/回滚前依赖、安装与清单已恢复/);
+      await assert.rejects(f.manager.rollback(snapshot.id),/롤백 전 의존성, 설치, 매니페스트를 복원했습니다/);
       assert.deepEqual(fs.readFileSync(path.join(f.profile,'package.json')),manifest);
       assert.equal(fs.readFileSync(path.join(f.profile,'pnpm-lock.yaml'),'utf8'),'old lock');
       assert.equal(fs.readFileSync(path.join(f.root,'client.js'),'utf8'),'original client');
@@ -554,7 +554,7 @@ test('failed install restores the complete dependency graph and lockfile, not ju
         if(stage==='install')throw Error('download failure');
       };
       f.manager.verifier=async()=>{throw Error('dependency import failure');};
-      await assert.rejects(f.manager.install(f.candidate),/安装前依赖、安装与清单已恢复/);
+      await assert.rejects(f.manager.install(f.candidate),/설치 전 의존성, 설치, 매니페스트를 복원했습니다/);
       assert.deepEqual(fs.readFileSync(path.join(f.profile,'package.json')),manifest);
       assert.equal(fs.readFileSync(path.join(f.profile,'pnpm-lock.yaml'),'utf8'),'old lock');
       assert.equal(fs.readFileSync(path.join(f.root,'client.js'),'utf8'),'original client');
@@ -570,7 +570,7 @@ test('install recovery refuses to erase concurrent unrelated dependency changes'
       pkg.dependencies.concurrent='1.0.0';fs.writeFileSync(file,JSON.stringify(pkg));
       throw Error('failure after concurrent change');
     };
-    await assert.rejects(f.manager.install(f.candidate),/检测到并发配置变化，未覆盖/);
+    await assert.rejects(f.manager.install(f.candidate),/동시 설정 변경을 감지해 덮어쓰지 않았습니다/);
     assert.equal(JSON.parse(fs.readFileSync(path.join(f.profile,'package.json'))).dependencies.concurrent,'1.0.0');
     assert.equal(fs.readdirSync(path.join(f.manager.base,'install-recovery')).length,1);
   } finally {f.close();}
@@ -586,7 +586,7 @@ test('install ownership loss preserves concurrent changes and recovery checkpoin
       const pkg=JSON.parse(fs.readFileSync(manifest,'utf8'));pkg.concurrentWriter=true;
       fs.writeFileSync(manifest,JSON.stringify(pkg));
     };
-    await assert.rejects(f.manager.install(f.candidate), /维护锁归属无法确认/);
+    await assert.rejects(f.manager.install(f.candidate), /유지보수 잠금 소유자를 확인할 수 없어/);
     assert.equal(fs.readFileSync(path.join(f.profile,'cordis.patch.yml'),'utf8'),'NEW OWNER SETTINGS');
     assert.equal(JSON.parse(fs.readFileSync(path.join(f.profile,'package.json'),'utf8')).concurrentWriter,true);
     assert.equal(fs.readFileSync(path.join(f.manager.base,'maintenance.lock'),'utf8'),'replacement-owner');
@@ -602,7 +602,7 @@ test('rollback ownership loss never restores over a new writer', async () => {
       fs.writeFileSync(path.join(f.manager.base,'maintenance.lock'),'replacement-owner');
       fs.writeFileSync(path.join(f.profile,'cordis.patch.yml'),'NEW OWNER SETTINGS');
     };
-    await assert.rejects(f.manager.rollback(backup.id),/维护锁归属无法确认/);
+    await assert.rejects(f.manager.rollback(backup.id),/유지보수 잠금 소유자를 확인할 수 없어/);
     assert.equal(fs.readFileSync(path.join(f.profile,'cordis.patch.yml'),'utf8'),'NEW OWNER SETTINGS');
     assert.equal(fs.readFileSync(path.join(f.manager.base,'maintenance.lock'),'utf8'),'replacement-owner');
     assert(f.manager.list().some(item=>item.id===backup.id));

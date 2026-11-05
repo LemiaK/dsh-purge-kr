@@ -49,8 +49,8 @@ export function Pill({ value, label }) {
 }
 
 /**
- * 名词解释：DSH 自己的设置页也是"标题 + 小问号 + 悬浮说明"，
- * 这里用同构的轻量实现（不依赖 react-dom portal，右侧栏/整页都能用）。
+ * 이름 설명: DSH 자체 설정 페이지도 "제목 + 작은 물음표 + 호버 설명" 형태이고,
+ * 여기서는 같은 구조의 경량 구현을 쓴다(react-dom portal 에 의존하지 않으므로 오른쪽 사이드바/전체 페이지 어디서든 쓸 수 있다).
  */
 export function HelpTip({ title, children, label }) {
   const [open, setOpen] = useState(false);
@@ -62,7 +62,7 @@ export function HelpTip({ title, children, label }) {
       {
         type: "button",
         className: "dshpp-help-btn",
-        "aria-label": (label || title || "说明") + "（查看说明）",
+        "aria-label": (label || title || "설명") + " (설명 보기)",
         "aria-expanded": open ? "true" : "false",
         onMouseEnter: () => setOpen(true),
         onMouseLeave: () => setOpen(false),

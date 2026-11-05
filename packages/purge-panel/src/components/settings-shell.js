@@ -23,9 +23,9 @@ export function compatibilityLevelText(t, level) {
 }
 
 /**
- * 社区版兼容提示：读取后端 /dsh-purge/community 报告的宿主版本与兼容级别。
- * 原版 1.1.71 的 CompatibilityNote 只对官方接口版本告警；社区版换成本 fork
- * 真实的宿主版本/兼容级别，且永远渲染（不再无条件 return null）。
+ * 커뮤니티판 호환 안내: 백엔드 /dsh-purge/community 가 보고하는 호스트 버전과 호환 수준을 읽는다.
+ * 원본 1.1.71 의 CompatibilityNote 는 공식 인터페이스 버전에만 경고했다. 커뮤니티판은 이 fork 의
+ * 실제 호스트 버전/호환 수준으로 바꾸고, 항상 렌더한다(더 이상 무조건 return null 하지 않는다).
  */
 export function CommunityCompatibilityNote() {
   const t = useT();
@@ -76,10 +76,10 @@ export function CompatibilityNote({ status }) {
       style: { margin: "0 20px 10px" },
     },
     valid
-      ? "官方版本 " +
+      ? "공식 버전 " +
           v +
-          "；此界面已验证 1.1.71。如遇设置异常，请更新界面插件。"
-      : "无法确认官方 Purge 接口。请检查官方插件是否启用，或更新界面插件。",
+          ". 이 UI 는 1.1.71 에서 검증했습니다. 설정이 이상하면 UI 플러그인을 업데이트하세요."
+      : "공식 Purge 인터페이스를 확인할 수 없습니다. 공식 플러그인이 활성화되어 있는지 확인하거나 UI 플러그인을 업데이트하세요.",
   );
 }
 
@@ -104,23 +104,23 @@ export function SettingsRoot(props = {}) {
     h(
       "header",
       { className: "dshpp-native-head" },
-      h("div", null, h("h2", null, "Purge"), h("p", null, "插件设置")),
+      h("div", null, h("h2", null, "Purge"), h("p", null, "플러그인 설정")),
       h(
         "span",
         { className: "dshpp-native-badge" },
-        (__COMMUNITY__ ? "社区版 " : "独立界面 ") + __PANEL_VERSION__,
+        (__COMMUNITY__ ? "커뮤니티판 " : "독립 UI ") + __PANEL_VERSION__,
       ),
     ),
     h(CompatibilityNote, { status: backendStatus }),
     h(
       "nav",
-      { className: "dshpp-native-nav", "aria-label": "Purge 设置分类" },
+      { className: "dshpp-native-nav", "aria-label": "Purge 설정 분류" },
       [
-        ["status", "状态"],
-        ["prompt", "提示词"],
-        ["rules", "规则"],
-        ["skills", "技能"],
-        ["more", "更多"],
+        ["status", "상태"],
+        ["prompt", "프롬프트"],
+        ["rules", "규칙"],
+        ["skills", "스킬"],
+        ["more", "더 보기"],
       ].map(([id, label]) =>
         h(
           "button",
@@ -152,8 +152,8 @@ export function SettingsRoot(props = {}) {
       h(
         "div",
         { hidden: page !== "more", className: "dshpp-more" },
-        h("h3", null, "演练台"),
-        h("p", null, "打开插件原有的演练工具与环境设置。"),
+        h("h3", null, "드릴 콘솔"),
+        h("p", null, "플러그인에 원래 있던 드릴 도구와 환경 설정을 엽니다."),
         h(
           Btn,
           {
@@ -162,22 +162,22 @@ export function SettingsRoot(props = {}) {
               requestDrill("tab");
             },
           },
-          "打开演练台",
+          "드릴 콘솔 열기",
         ),
         h(
           "p",
           { className: "dshpp-attribution" },
           __COMMUNITY__
-            ? "基于 YuJunZhiXue/dsh-purge 1.1.71 独立维护，保留原作者署名；更新仅来自本 fork。"
-            : "界面独立维护；官方 Purge 可单独更新。基于 YuJunZhiXue/dsh-purge 1.1.71（MIT）。",
+            ? "YuJunZhiXue/dsh-purge 1.1.71 기반 독립 유지, 원저자 표기 보존. 업데이트는 이 fork 에서만 옵니다."
+            : "UI 독립 유지. 공식 Purge 는 따로 업데이트할 수 있습니다. YuJunZhiXue/dsh-purge 1.1.71 기반(MIT).",
         ),
       ),
       page === "drill"
         ? h(
             "div",
             { className: "dshpp-native-drill" },
-            // 演练台自带一套 CSS（.rt-*）；旧版由 dock 注入 <head>，重构时丢了，
-            // 结果面板在右侧栏里完全没样式、文字被挤成一列。这里随组件一起挂上。
+            // 드릴 콘솔은 자체 CSS(.rt-*)를 쓴다. 옛 버전은 dock 이 <head> 에 주입했지만 재구성 때 빠져서,
+            // 결과 패널이 오른쪽 사이드바에서 스타일 없이 글자가 한 열로 눌렸다. 여기서 컴포넌트와 함께 붙인다.
             __dshPurgeDrill && __dshPurgeDrill.CSS
               ? h("style", { "data-dsh-purge-drill": "1" }, __dshPurgeDrill.CSS)
               : null,
@@ -189,11 +189,11 @@ export function SettingsRoot(props = {}) {
                   select("more");
                 },
               },
-              "返回设置",
+              "설정으로 돌아가기",
             ),
             readDrillAuth()
               ? h(__dshPurgeDrill.Panel, { embedded: true })
-              : h("p", null, "请先完成演练台授权。"),
+              : h("p", null, "먼저 드릴 콘솔 승인을 마쳐야 합니다."),
           )
         : null,
     ),

@@ -1,5 +1,5 @@
-// 破甲插件不做「公网目标一律拒绝」的门禁：那是上游 1.1.7x 的靶场限制。
-// 这里钉住两件事：net-scope 不再导出安装器；index 不再安装它。
+// 탈옥 플러그인은 "공인망 대상은 전부 거부"하는 게이트를 두지 않는다: 그것은 업스트림 1.1.7x 의 실습 환경 제한이다.
+// 여기서 두 가지를 고정한다: net-scope 가 더 이상 설치기를 내보내지 않는다; index 가 더 이상 그것을 설치하지 않는다.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -15,11 +15,11 @@ test("net-scope no longer ships a request gate", () => {
 test("the plugin entry never installs a region gate", () => {
   const src = fs.readFileSync(path.join(import.meta.dirname, "../lib/index.js"), "utf8");
   assert.doesNotMatch(src, /installRegionGate/);
-  assert.doesNotMatch(src, /严令禁止/);
+  assert.doesNotMatch(src, /\u4e25\u4ee4\u7981\u6b62/);
 });
 
 test("allow-list helpers stay exported for the settings card", () => {
   for (const name of ["readAllowText", "writeAllowText", "normalizeAllowText", "ownServerNote"]) {
-    assert.equal(typeof netScope[name], "function", `${name} 应保留`);
+    assert.equal(typeof netScope[name], "function", `${name} 는 유지되어야 한다`);
   }
 });

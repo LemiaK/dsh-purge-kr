@@ -62,7 +62,7 @@ test("install is idempotent and never overwrites user edits without force", () =
 test("the bundled preset parses into a registry definition", () => {
   const def = readPresetDefinition("unrestricted", bundledPresetDir());
   assert.equal(def.id, "unrestricted");
-  assert.equal(def.name, "无限制模式");
+  assert.equal(def.name, "무제한 모드");
   assert.equal(def.order, 20);
   assert(Array.isArray(def.plugins), "plugins rows");
   assert(def.plugins.length >= 12, `expected a full composition, got ${def.plugins.length}`);

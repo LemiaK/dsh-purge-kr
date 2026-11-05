@@ -1,39 +1,39 @@
-# #52：独立安装器下载失败
+# #52: 독립 설치기 다운로드 실패
 
-## 证据与根因边界
+## 증거와 근본 원인 경계
 
-报告者能用 curl 下载 raw 安装脚本，但在 `Downloading Purge Community 1.6.38...` 后仅看到 `fetch failed`。1.6.38 Release、归档和 SHA256 清单均存在；维护端实际下载、核对 SHA256、Electron dry-run 成功。因此没有证据认定发行附件丢失，也不能仅凭这行报错断定报告者是代理、证书或超时。
+보고자는 curl 로 raw 설치 스크립트를 내려받을 수 있었지만 `Downloading Purge Community 1.6.38...` 뒤에 `fetch failed` 만 보았다. 1.6.38 Release, 아카이브, SHA256 매니페스트는 모두 존재했고, 유지보수 측은 실제로 다운로드해 SHA256 을 대조하고 Electron dry-run 을 통과시켰다. 따라서 릴리스 첨부가 사라졌다고 볼 증거는 없고, 이 한 줄 오류만으로 보고자가 프록시·인증서·타임아웃 때문이라고 단정할 수도 없다.
 
-已确认的代码缺陷是：独立 bootstrap 使用一次性 Node fetch，未提供备用传输；顶层仅显示 error.message，丢弃 cause/聚合连接错误。curl 与 Node/Electron fetch 的代理和证书处理可以不同。插件内 update-http 的修复没有覆盖独立入口。
+확인된 코드 결함은 이것이다: 독립 bootstrap 이 일회성 Node fetch 만 쓰고 대체 전송 수단이 없었고, 최상위에서 error.message 만 표시해 cause/집계 연결 오류를 버렸다. curl 과 Node/Electron fetch 는 프록시와 인증서 처리 방식이 다를 수 있다. 플러그인 안 update-http 수정은 독립 진입점을 커버하지 않았다.
 
-## 1.6.39 的修复
+## 1.6.39 의 수정
 
-- 保持 bootstrap 自包含，仅使用 Node 内建模块，不依赖尚未安装的包。
-- 每个下载最多两次 fetch，然后一次系统 curl；只对已识别的瞬时网络错误或 HTTP 408/429/500/502/503/504 重试。每次从原始官方地址重新开始，不重用过期的签名重定向。
-- metadata/checksum 总预算各 60 秒；archive 默认 180 秒，沿用 `PURGE_DOWNLOAD_TIMEOUT_MS` 的 30000–900000 范围。fetch 每一跳最多 20 秒，所有重试共享总预算。
-- 系统 curl 使用固定路径、不经 shell、不读 curlrc、不自动跳转。每一跳检查 HTTPS、443、无 URL 凭证及官方域名白名单；响应头和正文均有大小上限。curl stdout 按 HTTP 头和二进制正文分离，支持 interim 响应；部分失败内容不复用。
-- 所有通道保持 TLS 校验。显式 `CURL_CA_BUNDLE` 作为 `--cacert` 传给 curl，兼容 Windows Schannel；不会安装证书或更改系统信任库。fetch 明确报告证书错误时直接停止，不以备用通道绕过该错误。
-- 来源、证书、大小、永久 HTTP 错误及 SHA256 不符都保持失败。下载完成仍需检查 SHA256、归档路径、包名/版本/仓库身份，才进入原迁移器。
-- 日志输出 stage/host/transport/attempt/code，递归展开 cause 和 AggregateError 的错误码。原始 error/stderr、代理 URL、签名 URL、令牌不输出。
+- bootstrap 을 자체 포함으로 유지하고, Node 내장 모듈만 쓰며, 아직 설치되지 않은 패키지에 의존하지 않는다.
+- 다운로드마다 fetch 를 최대 두 번, 그다음 시스템 curl 을 한 번 시도한다. 이미 식별된 일시적 네트워크 오류나 HTTP 408/429/500/502/503/504 에만 재시도한다. 매번 원래 공식 주소에서 다시 시작하고, 만료된 서명 리다이렉트를 재사용하지 않는다.
+- metadata/checksum 총 예산은 각각 60초, archive 는 기본 180초이며 `PURGE_DOWNLOAD_TIMEOUT_MS` 의 30000–900000 범위를 따른다. fetch 는 홉마다 최대 20초이고, 모든 재시도가 총 예산을 공유한다.
+- 시스템 curl 은 고정 경로를 쓰고, shell 을 거치지 않고, curlrc 를 읽지 않고, 자동 리다이렉트를 하지 않는다. 홉마다 HTTPS, 443, URL 자격 증명 없음, 공식 도메인 화이트리스트를 확인하고, 응답 헤더와 본문 모두 크기 상한이 있다. curl stdout 은 HTTP 헤더와 바이너리 본문을 분리하고 interim 응답을 지원한다. 일부만 받은 실패 내용은 재사용하지 않는다.
+- 모든 채널은 TLS 검증을 유지한다. 명시적 `CURL_CA_BUNDLE` 은 `--cacert` 로 curl 에 전달해 Windows Schannel 과 호환한다. 인증서를 설치하거나 시스템 신뢰 저장소를 바꾸지 않는다. fetch 가 인증서 오류를 명확히 보고하면 즉시 중단하고, 대체 채널로 그 오류를 우회하지 않는다.
+- 출처, 인증서, 크기, 영구 HTTP 오류, SHA256 불일치는 모두 실패로 유지한다. 다운로드가 끝나도 SHA256, 아카이브 경로, 패키지명/버전/저장소 신원을 확인한 뒤에야 기존 마이그레이터로 들어간다.
+- 로그는 stage/host/transport/attempt/code 를 출력하고 cause 와 AggregateError 의 오류 코드를 재귀적으로 펼친다. 원래 error/stderr, 프록시 URL, 서명 URL, 토큰은 출력하지 않는다.
 
-## 网络与设置边界
+## 네트워크와 설정 경계
 
-本修复不修改系统代理、Clash、DSH 设置、profile、用户提示词、预设或原有功能；不自动 apply/restart。curl 只继承进程环境和系统默认信任库，不保证读取 Windows/macOS GUI 代理、PAC 或插件专用 `PURGE_HTTPS_PROXY`，也不添加镜像。若当前环境两条通道都不可达，明确报错，不自动改网络。
+이 수정은 시스템 프록시, Clash, DSH 설정, profile, 사용자 프롬프트, 프리셋, 기존 기능을 바꾸지 않고, 자동 apply/restart 도 하지 않는다. curl 은 프로세스 환경과 시스템 기본 신뢰 저장소만 상속하며, Windows/macOS GUI 프록시, PAC, 플러그인 전용 `PURGE_HTTPS_PROXY` 를 읽는다고 보장하지 않고, 미러도 추가하지 않는다. 현재 환경에서 두 채널 모두 도달할 수 없으면 명확히 오류를 내고 네트워크를 자동으로 바꾸지 않는다.
 
-系统 curl 缺失会报告 CURL_UNAVAILABLE。下载或校验失败尚未进入迁移，无须安装回滚、清锁文件或删配置。`--dry-run`/`-DryRun` 仍只校验下载，不安装。
+시스템 curl 이 없으면 CURL_UNAVAILABLE 을 보고한다. 다운로드나 검증 실패는 아직 마이그레이션 전이므로 설치 롤백, 잠금 파일 정리, 설정 삭제가 필요 없다. `--dry-run`/`-DryRun` 은 여전히 다운로드만 검증하고 설치하지 않는다.
 
-## 复测与需要报告者补充的内容
+## 재검증과 보고자가 보충할 내용
 
-1. 重新下载 master 的 install.sh/install.ps1，避免沿用旧入口；运行 dry-run。
-2. 若成功，去掉 dry-run 再按自己的意愿安装；需要加载新版时手动重开 DSH。
-3. 若失败，提供 OS/DSH 版本、失败的 `[download]` / `Release download failed` 行，说明是否能在浏览器下载同一发行附件，以及终端是否继承代理（只回答是/否，不贴地址或凭证）。
-4. 关注 `stage=metadata`（API）、`archive`（GitHub/CDN）、`checksum`（校验清单）；403/404不应泛化成超时。新版日志用于确认报告者具体网络根因，不声称已经在他的机器复现。
+1. master 의 install.sh/install.ps1 을 다시 내려받아 옛 진입점을 쓰지 않도록 하고, dry-run 을 실행한다.
+2. 성공하면 dry-run 을 빼고 원하는 대로 설치한다. 새 버전을 로드해야 하면 사용자가 직접 DSH 를 다시 연다.
+3. 실패하면 OS/DSH 버전, 실패한 `[download]` / `Release download failed` 줄을 제공하고, 브라우저에서 같은 릴리스 첨부를 내려받을 수 있는지, 터미널이 프록시를 상속하는지(예/아니오만 답하고 주소나 자격 증명은 붙이지 않는다)를 설명한다.
+4. `stage=metadata`(API), `archive`(GitHub/CDN), `checksum`(검증 매니페스트)에 주목한다. 403/404 는 타임아웃으로 일반화하면 안 된다. 새 로그는 보고자의 구체적 네트워크 근본 원인을 확인하기 위한 것이며, 그의 기계에서 이미 재현했다고 주장하지 않는다.
 
-## 测试
+## 테스트
 
-- `test/bootstrap-download.test.mjs`：重试次数、备用通道、来源/端口/凭证拒绝、错误分层和脱敏、截断与限额、预算、SHA256 失败不安装和设置不变。
-- `test/bootstrap-curl.test.mjs`：本地真实 TLS + CONNECT 代理，真实系统 curl 的二进制下载、interim 响应、逐跳来源拦截、curlrc 不加载、超大响应、超时、无效证书拒绝。测试代理仅注入测试子进程，不写系统代理或证书库。
-- `scripts/check-bootstrap-download-runtime.mjs [版本]`：在选定 Node/Electron 中下载真实官方 Release 并核对摘要；分别跑默认路径和只对 fetch 注入网络错误、由真实 curl 完成归档与清单下载。使用一次性 profile，禁止进入安装。
-- 其余安装、权限、备份、回滚与宿主功能回归保留。下载实测不能替代完整 DSH 图形界面或模型能力测试。
+- `test/bootstrap-download.test.mjs`: 재시도 횟수, 대체 채널, 출처/포트/자격 증명 거부, 오류 계층화와 마스킹, 잘림과 한도, 예산, SHA256 실패 시 설치 없음과 설정 불변.
+- `test/bootstrap-curl.test.mjs`: 로컬 실제 TLS + CONNECT 프록시, 실제 시스템 curl 의 바이너리 다운로드, interim 응답, 홉별 출처 차단, curlrc 미로드, 초대형 응답, 타임아웃, 무효 인증서 거부. 테스트 프록시는 테스트 자식 프로세스에만 주입하고 시스템 프록시나 인증서 저장소에 쓰지 않는다.
+- `scripts/check-bootstrap-download-runtime.mjs [버전]`: 선택한 Node/Electron 에서 실제 공식 Release 를 내려받아 다이제스트를 대조한다. 기본 경로와, fetch 에만 네트워크 오류를 주입해 실제 curl 이 아카이브와 매니페스트 다운로드를 완료하는 경로를 각각 실행한다. 일회성 profile 을 쓰고 설치로 들어가는 것은 금지한다.
+- 나머지 설치, 권한, 백업, 롤백, 호스트 기능 회귀는 유지한다. 다운로드 실측이 전체 DSH GUI 나 모델 능력 테스트를 대신할 수 없다.
 
-本地验收（2026-10-21）：macOS 全量 269 项，257 通过、12 项环境/平台跳过；Windows 11 实机全量 269 项，246 通过、23 项环境/平台跳过。新增真实 curl/TLS 用例在两端均执行通过，没有跳过。两端使用 Electron 44.7.0 实际下载 1.6.38 官方归档与清单，默认路径和注入 fetch 失败后的 curl 路径均通过 SHA256；隔离 profile 设置保持原字节。既有 Electron 诊断通过，macOS 在一次性 Electron 副本完成手动退出换包/回滚回归，未重启用户 DSH。完整三平台官方 npm 宿主安装/回滚由 PR CI 另行执行，不与以上下载验收混为一项。
+로컬 인수(2026-10-21): macOS 전체 269항목 중 257 통과, 12항목 환경/플랫폼 스킵; Windows 11 실기 전체 269항목 중 246 통과, 23항목 환경/플랫폼 스킵. 새로 추가한 실제 curl/TLS 케이스는 양쪽 모두 실행 통과했고 스킵이 없었다. 양쪽 모두 Electron 44.7.0 으로 1.6.38 공식 아카이브와 매니페스트를 실제 다운로드해, 기본 경로와 fetch 실패 주입 후 curl 경로 모두 SHA256 을 통과했다. 격리 profile 설정은 원본 바이트를 유지했다. 기존 Electron 진단도 통과했고, macOS 는 일회성 Electron 사본에서 수동 종료 패키지 교체/롤백 회귀를 완료했으며 사용자 DSH 는 재시작하지 않았다. 세 플랫폼 공식 npm 호스트 설치/롤백 전체는 PR CI 가 따로 수행하며, 위 다운로드 인수와 한 항목으로 섞지 않는다.
