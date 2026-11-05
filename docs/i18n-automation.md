@@ -15,6 +15,8 @@
 | `LLM_MODEL` | Environment variable | 아니오 | `gpt-4o-mini` | 번역 모델 이름 |
 | `LLM_REASONING_EFFORT` | Environment variable | 아니오 | (없음) | 추론 강도: `none` / `minimal` / `low` / `medium` / `high` / `xhigh` / `max`. 없거나 목록 밖 값이면 필드를 보내지 않는다 |
 | `LLM_TIMEOUT_MS` | Environment variable | 아니오 | `120000` | 호출 타임아웃(밀리초) |
+| `LLM_SESSION_ID` | Environment variable | 아니오 | 실행 id | `x-opencode-session` 헤더 값. **자격 증명이 아니라 라우팅·프롬프트 캐시용 세션 식별자**다(제공자 문서: “stable session ID for each conversation”). 없으면 워크플로 실행 id 를 쓴다 |
+| `LLM_EXTRA_HEADERS` | Environment variable | 아니오 | — | 추가 헤더 JSON(예: `{"x-foo":"bar"}`). 값은 로그에 남기지 않는다 |
 
 `LLM_REASONING_EFFORT` 동작:
 - 값이 허용 목록에 있으면 요청 본문에 `reasoning_effort` 필드로 실린다. 목록: `none` `minimal` `low` `medium` `high` `xhigh` `max`.

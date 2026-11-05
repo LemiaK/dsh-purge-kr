@@ -23,8 +23,8 @@ jobs:
       LLM_REASONING_EFFORT: ${{ vars.LLM_REASONING_EFFORT }}
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
       LLM_DEBUG: "1"
-      LLM_SESSION_ID: ${{ secrets.LLM_SESSION_ID }}
-      LLM_EXTRA_HEADERS: ${{ secrets.LLM_EXTRA_HEADERS }}
+      LLM_SESSION_ID: ${{ vars.LLM_SESSION_ID || github.run_id }}
+      LLM_EXTRA_HEADERS: ${{ vars.LLM_EXTRA_HEADERS }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
