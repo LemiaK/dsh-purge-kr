@@ -2,7 +2,7 @@ name: Upstream sync
 
 on:
   schedule:
-    - cron: "17 3 * * *"   # 하루 1회(UTC). GitHub cron 은 혼잡 시 수십 분 지연될 수 있다.
+    - cron: "0 3,15 * * *"   # 하루 2회(UTC 03:00 / 15:00). GitHub cron 은 혼잡 시 수십 분 지연될 수 있다.
   workflow_dispatch:
   repository_dispatch:
     types: [upstream-release]
