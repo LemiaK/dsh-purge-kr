@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import { scanCode, applySpans, skeleton, hasCjk, codeFingerprint } from "../scripts/i18n/spans.mjs";
 import { loadTm, saveTm, tmKey } from "../scripts/i18n/tm.mjs";
 import { llmConfig, buildRequest, normalizeEffort, REASONING_EFFORTS } from "../scripts/i18n/translate.mjs";
+import { applyEdits } from "../scripts/i18n-repair.mjs";
 
 const FAKE_KEY = "test11221323213123";
 const FAKE_URL = "https://example.invalid/v1";
@@ -120,4 +121,26 @@ test("the structural fingerprint ignores translation but catches code edits", ()
   assert.equal(codeFingerprint(a), codeFingerprint(b));
   const c = 'const x = 2; // 번역된 주석\nfunction f() { return "값"; }\n';
   assert.notEqual(codeFingerprint(a), codeFingerprint(c));
+});
+
+test("the repair pass applies only exact, unprotected edits", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "repair-"));
+  fs.mkdirSync(path.join(dir, "lib"), { recursive: true });
+  fs.mkdirSync(path.join(dir, ".github"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "lib", "a.js"), "const a = 1;\nconst b = 2;\n", "utf8");
+  fs.writeFileSync(path.join(dir, ".github", "w.yml"), "on: push\n", "utf8");
+  const { applied, rejected } = applyEdits(
+    [
+      { file: "lib/a.js", search: "const a = 1;", replace: "const a = 10;" },        // 정확히 1회 → 적용
+      { file: "lib/a.js", search: "const ", replace: "let " },                        // 2회 → 거부
+      { file: ".github/w.yml", search: "on: push", replace: "on: pull_request" },     // 보호 경로 → 거부
+      { file: "lib/missing.js", search: "x", replace: "y" },                          // 파일 없음 → 거부
+    ],
+    dir,
+  );
+  assert.deepEqual(applied, ["lib/a.js"]);
+  assert.equal(rejected.length, 3);
+  assert.match(fs.readFileSync(path.join(dir, "lib", "a.js"), "utf8"), /const a = 10;/);
+  assert.equal(fs.readFileSync(path.join(dir, ".github", "w.yml"), "utf8"), "on: push\n");
+  fs.rmSync(dir, { recursive: true, force: true });
 });

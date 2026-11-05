@@ -85,11 +85,12 @@ jobs:
         run: |
           branch="$(git rev-parse --abbrev-ref HEAD)"
           body_file=".sync/summary.md"
+          if [ "${{ steps.sync.outcome }}" = "success" ]; then draft=""; else draft="--draft"; fi
           if gh pr view "$branch" --json number >/dev/null 2>&1; then
             gh pr edit "$branch" --body-file "$body_file"
           else
             gh pr create --head "$branch" --title "upstream sync: $(node -p "require('./package.json').version")" \
-              --body-file "$body_file" --label upstream-sync
+              --body-file "$body_file" --label upstream-sync $draft
           fi
 
       - name: Merge and release when the gates are green
@@ -110,8 +111,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          body="$(mktemp)"
+          if [ -f .sync/summary.md ]; then cat .sync/summary.md >> "$body"; fi
+          for extra in .sync/repair.md .sync/failure.md .sync/review.md; do
+            if [ -f "$extra" ]; then
+              { printf '\n---\n\n'; cat "$extra"; } >> "$body"
+            fi
+          done
           gh issue create --title "upstream sync 실패: $(date -u +%F)" \
-            --body-file .sync/summary.md --label upstream-sync || true
+            --body-file "$body" --label upstream-sync || true
 
       - name: Never upload the log with credentials
         if: always()

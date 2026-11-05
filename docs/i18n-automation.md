@@ -102,3 +102,13 @@ node scripts/localize.mjs --manifest .sync/changed.txt --check
   - 수동 실행 시에는 `auto_merge` 입력으로 그 실행만 끌 수 있다.
 - 머지 직후 `auto-release.yml` 을 **명시 호출**한다(봇의 master push 는 워크플로를 재트리거하지 않기 때문).
   → 버전 태그 생성 → `release.yml` 을 태그에서 dispatch → 3개 OS 검증 → tgz·SHA256·릴리스.
+
+## 8. 자동 복구(repair)
+
+게이트가 실패하면 워크플로가 **실패 로그를 모델에 보내고 최소 편집(search/replace)만 받아 적용**한 뒤 게이트를 다시 돌린다.
+
+- 대상: 번역·코드·테스트·문서 (실패 원인을 고치는 데 필요한 최소 편집)
+- 금지: `.github/**`, `package-lock.json`, `client.js`, `packages/purge-panel/client.js`, `i18n/tm.ko.jsonl`
+- 편집 규칙: `search` 문자열이 파일에 **정확히 1회** 존재해야 적용(모호하면 거부)
+- 성공 시 `fix(ci): apply AI repair (attempt N)` 커밋 + 번들 재생성 커밋 후 계속 진행(PR → 머지 → 릴리스)
+- 시도 횟수(기본 2회)를 넘기면 `.sync/failure.md` 를 만들고 exit 3 → 워크플로가 **이슈로 남긴다**(로그·검토 결과 포함)
