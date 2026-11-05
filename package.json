@@ -32,7 +32,6 @@
     "cordis.patch.yml",
     "screenshots.json",
     "README.md",
-    "README.zh-CN.md",
     "LICENSE",
     "NOTICE.md",
     "CONTRIBUTORS.md",
@@ -74,11 +73,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kingcharleslzy-ai/dsh-purge.git"
+    "url": "git+https://github.com/wnduddld0513/dsh-purge-kr.git"
   },
-  "homepage": "https://github.com/kingcharleslzy-ai/dsh-purge#readme",
+  "homepage": "https://github.com/wnduddld0513/dsh-purge-kr#readme",
   "bugs": {
-    "url": "https://github.com/kingcharleslzy-ai/dsh-purge/issues"
+    "url": "https://github.com/wnduddld0513/dsh-purge-kr/issues"
   },
   "dsh": {
     "bundle": {
@@ -97,8 +96,8 @@
     },
     "install": {
       "preferred": "tarball",
-      "tarball": "https://github.com/kingcharleslzy-ai/dsh-purge/releases/latest/download/dsh-purge-community-1.6.78.tgz",
-      "git": "https://github.com/kingcharleslzy-ai/dsh-purge.git"
+      "tarball": "https://github.com/wnduddld0513/dsh-purge-kr/releases/latest/download/dsh-purge-community-1.6.78.tgz",
+      "git": "https://github.com/wnduddld0513/dsh-purge-kr.git"
     },
     "compatibility": {
       "dsh": ">=0.2.1-rc.1 <0.3.0",
@@ -154,8 +153,8 @@
     }
   ],
   "author": {
-    "name": "kingcharleslzy-ai",
-    "url": "https://github.com/kingcharleslzy-ai"
+    "name": "wnduddld0513",
+    "url": "https://github.com/wnduddld0513"
   },
   "dependencies": {
     "yaml": "2.9.1"
