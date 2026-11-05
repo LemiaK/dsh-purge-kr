@@ -22,6 +22,7 @@ jobs:
       LLM_MODEL: ${{ vars.LLM_MODEL }}
       LLM_REASONING_EFFORT: ${{ vars.LLM_REASONING_EFFORT }}
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_DEBUG: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

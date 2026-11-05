@@ -22,6 +22,7 @@ export function llmConfig(env = process.env) {
     model: env.LLM_MODEL || DEFAULT_MODEL,
     reasoningEffort: normalizeEffort(env.LLM_REASONING_EFFORT),
     timeoutMs: Number(env.LLM_TIMEOUT_MS || 120000),
+    debug: env.LLM_DEBUG === "1" || env.LLM_DEBUG === "true",
   };
 }
 
@@ -110,6 +111,13 @@ export async function postChat(cfg, bodyFor, { attemptsPerShape = 2 } = {}) {
           return await res.json();
         }
         lastError = "http " + res.status;
+        if (cfg.debug && res.status >= 400 && res.status < 500) {
+          // 진단 모드에서만 응답 본문을 남긴다(키는 헤더에만 있으므로 본문에 없고, 한 번 더 마스킹한다).
+          try {
+            const text = await res.text();
+            lastError += ": " + sanitize(text.slice(0, 300).replace(/\s+/g, " "), cfg.key);
+          } catch { /* 본문을 못 읽어도 상태 코드는 남는다 */ }
+        }
         // 4xx 중 429 는 잠시 뒤 같은 shape 재시도, 나머지 4xx 는 더 단순한 shape 로.
         if (res.status === 429 || res.status >= 500) {
           await delay(800 * attempt);
