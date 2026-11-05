@@ -77,3 +77,18 @@ node scripts/localize.mjs --manifest .sync/changed.txt --check
 잘못 번역된 앵커는 `scripts/i18n-restore-anchors.mjs` 가 업스트림 원문으로 되돌린다.
 
 게이트가 실패하면 워크플로는 PR 을 열되 **자동 머지하지 않고** `.sync/review.md` 를 본문에 붙인다.
+
+## 7. 자동 릴리스
+
+| 단계 | 트리거 | 동작 |
+| --- | --- | --- |
+| 업스트림 감지 | `schedule` 하루 2회(UTC 03:00 / 15:00) · 수동 · `repository_dispatch` | `upstream/master` 의 버전이 다르면 동기화 시작 |
+| 동기화 | 위 | 병합 → 번역 → 영역별 커밋 → 검토 → 게이트 → PR |
+| 머지 후 릴리스 | **master push** (`auto-release.yml`) | package.json 버전으로 `v<version>` 태그 생성(없을 때만) → `release.yml` 을 그 태그에서 dispatch |
+| 자산 배포 | `release.yml` | 3개 OS 설치기 테스트 → tgz + `SHA256SUMS.txt` → GitHub Release |
+
+동작 규칙:
+- 이미 같은 버전 릴리스가 있으면 아무 것도 하지 않는다(멱등).
+- 태그만 있고 릴리스가 없으면(중간 실패), 태그는 재사용하고 릴리스만 다시 만든다.
+- 태그 push 는 `GITHUB_TOKEN` 으로 하므로 다른 워크플로를 재트리거하지 않는다. 그래서 릴리스는 `workflow_dispatch` 로 **명시 호출**한다(이 이벤트는 예외적으로 허용됨).
+- 봇이 만든 커밋으로는 auto-release 가 돌지 않는다(수동 dispatch 는 허용).

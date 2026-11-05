@@ -1,0 +1,71 @@
+name: Auto release
+
+# 동기화 PR 이 master 에 머지되면(= 버전이 올라간 커밋이 들어오면) 그 버전의 태그를 만들고
+# 기존 release 워크플로를 그 태그에서 실행한다. 태그 push 는 GITHUB_TOKEN 으로 하면 다른 워크플로를
+# 재트리거하지 않으므로, workflow_dispatch 로 명시 호출한다(이 이벤트는 예외적으로 허용된다).
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: auto-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    # 봇이 만든 커밋으로는 돌지 않는다(수동 dispatch 는 허용).
+    if: github.actor != 'github-actions[bot]' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Read the version and check for an existing release
+        id: state
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if gh release view "v$version" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::v$version 이미 릴리스됨 — 건너뜁니다."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+          # 태그는 있으나 릴리스가 없으면 재사용한다(중간 실패 복구).
+          if git rev-parse -q --verify "refs/tags/v$version" >/dev/null; then
+            echo "tag_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create the version tag when missing
+        if: steps.state.outputs.skip == 'false' && steps.state.outputs.tag_exists == 'false'
+        run: |
+          set -euo pipefail
+          git config user.name "auto-release"
+          git config user.email "auto-release@users.noreply.github.com"
+          git tag "v${{ steps.state.outputs.version }}"
+          git push origin "refs/tags/v${{ steps.state.outputs.version }}"
+
+      - name: Dispatch the release workflow on that tag
+        if: steps.state.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          sleep 3
+          gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "v${{ steps.state.outputs.version }}"
+          echo "::notice::release.yml 을 v${{ steps.state.outputs.version }} 태그에서 실행했습니다."
