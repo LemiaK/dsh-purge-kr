@@ -24,7 +24,8 @@ export const ko = {
   "dock.close": "접기",
   "dock.unauthorized": "미승인",
   "welcome.title": "사용자 고지",
-  "welcome.lead": "이 플러그인을 처음 설치하면 다음 안내를 읽어 주세요. 확인하시면 이 창은 다시 표시되지 않습니다.",
+  "welcome.lead":
+    "이 플러그인을 처음 설치하면 다음 안내를 읽어 주세요. 확인하시면 이 창은 다시 표시되지 않습니다.",
   "welcome.warn":
     "이 플러그인은 무료 오픈소스입니다. 제작자 몰래 판매하거나 유료로 되팔거나 이 프로젝트로 이익을 얻는 행위는 법적 책임을 집니다.",
   "welcome.body":
@@ -37,7 +38,8 @@ export const ko = {
   "welcome.ban3":
     "사용자는 거주지 법령과 플랫폼 규범을 스스로 지켜야 합니다. 위법의 결과는 행위자가 지며 제작자와 무관합니다.",
   "welcome.bans": "금지 사항",
-  "welcome.check": "위 사용자 고지를 읽고 이해했으며 합법적으로 쓰는 데 동의합니다.",
+  "welcome.check":
+    "위 사용자 고지를 읽고 이해했으며 합법적으로 쓰는 데 동의합니다.",
   "welcome.ok": "확인하며 계속합니다",
   "auth.title": "드릴 콘솔 승인 확인",
   "auth.lead":
@@ -45,11 +47,15 @@ export const ko = {
   "auth.warn":
     "보안 경고: 드릴 콘솔은 관리 권한이 있는 로컬 호스트, 오프라인 표적, 서면 승인을 받은 드릴 환경에만 쓰세요. 승인 없는 침투·공격·탈취·파괴는 일절 금지합니다.",
   "auth.hint.wait": "선언을 읽어 주세요. {n}초 후에 선택할 수 있습니다.",
-  "auth.hint.scroll": "카운트다운이 끝났습니다. 선언을 끝까지 스크롤한 뒤 체크하세요.",
+  "auth.hint.scroll":
+    "카운트다운이 끝났습니다. 선언을 끝까지 스크롤한 뒤 체크하세요.",
   "auth.hint.check": "카운트다운이 끝났습니다. 세 항목을 모두 체크하세요.",
-  "auth.check.read": "'보안 및 위법 금지 선언'을 다 읽었고 모든 조항을 인정합니다.",
-  "auth.check.scope": "로컬 승인 환경, 오프라인 표적, 규정을 지킨 드릴에만 쓰겠다고 확인합니다.",
-  "auth.check.ban": "어떤 위법 용도로도 쓰지 않겠다고 확인합니다. 이 승인을 마치지 않으면 드릴 콘솔을 쓸 수 없습니다.",
+  "auth.check.read":
+    "'보안 및 위법 금지 선언'을 다 읽었고 모든 조항을 인정합니다.",
+  "auth.check.scope":
+    "로컬 승인 환경, 오프라인 표적, 규정을 지킨 드릴에만 쓰겠다고 확인합니다.",
+  "auth.check.ban":
+    "어떤 위법 용도로도 쓰지 않겠다고 확인합니다. 이 승인을 마치지 않으면 드릴 콘솔을 쓸 수 없습니다.",
   "auth.no": "들어가지 않음",
   "auth.ok": "승인 확인",
   "auth.ok.tab": "승인하고 드릴 콘솔 열기",
@@ -85,9 +91,11 @@ export const ko = {
     "한 줄에 IP 하나 또는 전체 호스트명 하나입니다. 계정@호스트 형태도 되고, 계정은 이 표기를 알아보는 용도일 뿐입니다. 호스트명은 그때 해석된 주소까지 함께 통과시킵니다. 키, 비밀번호, 대역은 쓰지 마세요.",
   "own.save": "목록 저장",
   "saved.own": "내 서버를 저장했습니다",
-  "saved.own.dropped": "저장했습니다. {n}개 줄이 단일 IP 나 호스트명이 아니어서 버렸습니다",
+  "saved.own.dropped":
+    "저장했습니다. {n}개 줄이 단일 IP 나 호스트명이 아니어서 버렸습니다",
   "metric.purged": "기록됨",
-  "metric.purged.skip": "기록됨. {n}개 항목을 건너뛰었습니다. 이 설치본에 그 파일이 없습니다",
+  "metric.purged.skip":
+    "기록됨. {n}개 항목을 건너뛰었습니다. 이 설치본에 그 파일이 없습니다",
   "metric.pendingShort": "대기 {n}",
   "metric.unmatchedShort": "불일치 {n}",
   "metric.partialShort": "부분 적중 {n}",
@@ -117,7 +125,8 @@ export const ko = {
     "현재 호스트의 @deepseek-ai 를 찾지 못해 정리가 적용되지 않습니다. 완전히 종료한 뒤 이 호스트를 다시 열고 이 페이지에서 '적용'을 누르세요. 데스크톱 설치 경로는 어느 드라이브든 되고, 디렉터리 이름에 DeepseekHarness / DeepSeek Harness 가 있으면 됩니다.",
   "warn.noRoot.desktop":
     "공식 클라이언트 코드는 app.asar 안에 있습니다. '적용'을 누르면 풀고 자동으로 재시작하므로 스크립트를 따로 돌릴 필요가 없습니다. 계속 찾지 못한다고 뜨면 클라이언트를 완전히 종료했다가 다시 연 뒤 '적용'을 누르세요. 서드파티 DSH Desktop 은 바로 '적용'을 누르세요.",
-  "unpack.restarting": "패치를 기록했습니다. '재시작'을 누르면 클라이언트가 스스로 다시 열립니다.",
+  "unpack.restarting":
+    "패치를 기록했습니다. '재시작'을 누르면 클라이언트가 스스로 다시 열립니다.",
   "restart.fullQuit": "재시작 중입니다. 클라이언트가 스스로 다시 열립니다.",
   "warn.noInject":
     "공식은 항상 기본 프롬프트를 씁니다. 레드팀에서 규칙 세트를 켜면 규칙 세트만 쓰고, 켜지 않으면 CTF 를 뺀 기본 프롬프트를 쓴 뒤 레드팀 작업을 잇습니다. 양쪽이 모두 비면 추가해야 한다고 알립니다.",
@@ -160,16 +169,19 @@ export const ko = {
   "update.pinned": "{version} 에 고정되어 있고 채널 최신은 {remote} 입니다",
   "update.done": "{version} 으로 업데이트했습니다",
   "update.restarting": "되돌린 뒤 새 패치를 기록했습니다. 재시작 중…",
-  "update.fullQuit": "패치를 기록했습니다. '재시작'을 누르면 클라이언트가 스스로 다시 열립니다.",
+  "update.fullQuit":
+    "패치를 기록했습니다. '재시작'을 누르면 클라이언트가 스스로 다시 열립니다.",
   "restart.official.title": "재시작 필요",
-  "restart.official.body": "패치를 기록했습니다. 재시작을 누르면 클라이언트가 스스로 다시 열립니다.",
+  "restart.official.body":
+    "패치를 기록했습니다. 재시작을 누르면 클라이언트가 스스로 다시 열립니다.",
   "update.switched": "{version} 으로 전환했습니다",
   "update.autoDone": "{version} 으로 자동 업데이트했습니다",
   "update.reloading": "설정 페이지를 새로 고치는 중…",
   "update.dirty": "새 버전이 있습니다. 로컬 변경분은 자동으로 덮지 않았습니다",
   "update.fail": "업데이트하지 못했습니다: {error}",
   "update.timeout": "확인 시간이 초과됐습니다. 업데이트 확인을 다시 누르세요",
-  "update.needRestart": "확인 인터페이스가 로드되지 않았습니다. dsh 를 먼저 재시작한 뒤 업데이트 확인을 누르세요",
+  "update.needRestart":
+    "확인 인터페이스가 로드되지 않았습니다. dsh 를 먼저 재시작한 뒤 업데이트 확인을 누르세요",
   "update.noBeta": "아직 베타 버전이 없습니다",
   "update.switch": "이 버전으로 전환",
   "update.pick": "버전 선택",
@@ -195,7 +207,8 @@ export const ko = {
   "rules.title": "규칙 세트",
   "rules.none": "없음",
   "rules.reset": "되돌리기",
-  "rules.reset.confirm": "전역 지시 파일을 되돌릴까요? 규칙 라이브러리는 남습니다.",
+  "rules.reset.confirm":
+    "전역 지시 파일을 되돌릴까요? 규칙 라이브러리는 남습니다.",
   "rules.empty": "규칙이 없습니다",
   "rules.pick": "규칙 선택",
   "policy.title": "워크스페이스 정책",
@@ -212,7 +225,8 @@ export const ko = {
   "cwd.scope.cwd": "현재 디렉터리",
   "cwd.scope.ancestor": "상위",
   "cwd.scope.root": "프로젝트 루트",
-  "cwd.no.workspace": "DSH 가 아직 작업 디렉터리를 고르지 않았습니다. DSH 에서 먼저 작업을 시작한 뒤 돌아오세요.",
+  "cwd.no.workspace":
+    "DSH 가 아직 작업 디렉터리를 고르지 않았습니다. DSH 에서 먼저 작업을 시작한 뒤 돌아오세요.",
   "pill.current": "현재",
   "btn.use": "사용",
   "btn.inUse": "현재",
@@ -249,19 +263,24 @@ export const ko = {
   "confirm.delete.skill":
     "공식 $DSH_HOME/skills 에서 {id} 삭제할까요? 호스트가 카탈로그에서 자동으로 뺍니다.",
   "err.skills": "읽지 못했습니다: {error}",
-  "err.skills.needRestart": "Skill 인터페이스가 로드되지 않았습니다. 현재 호스트를 먼저 재시작하세요",
+  "err.skills.needRestart":
+    "Skill 인터페이스가 로드되지 않았습니다. 현재 호스트를 먼저 재시작하세요",
   "btn.restart": "재시작",
   "btn.restart.busy": "재시작 중…",
   restarting: "재시작 중…",
   "restarting.desktop": "데스크톱 앱을 재시작하는 중…",
   "restart.timeout": "시간 초과입니다. 새로 고치세요",
   "restart.fail": "실패했습니다: {error}",
-  "restart.notStarted": "재시작이 시작되지 않았습니다. 클라이언트는 그대로 있으며 자동으로 다시 시도하지 않습니다.",
-  "restart.already": "이번 재시작은 이미 시작되었습니다. 다시 재시작하지 않습니다.",
+  "restart.notStarted":
+    "재시작이 시작되지 않았습니다. 클라이언트는 그대로 있으며 자동으로 다시 시도하지 않습니다.",
+  "restart.already":
+    "이번 재시작은 이미 시작되었습니다. 다시 재시작하지 않습니다.",
   "restart.confirm": "정리가 끝났습니다. 재시작하면 적용됩니다.",
-  "restart.confirm.desktop": "정리가 끝났습니다. 데스크톱 앱을 재시작하면 적용됩니다.",
+  "restart.confirm.desktop":
+    "정리가 끝났습니다. 데스크톱 앱을 재시작하면 적용됩니다.",
   "restart.ask.title": "지금 재시작할까요",
-  "restart.ask.body": "이미 기록했습니다. 재시작해야 현재 클라이언트에 적용됩니다.",
+  "restart.ask.body":
+    "이미 기록했습니다. 재시작해야 현재 클라이언트에 적용됩니다.",
   "restart.now": "지금 재시작",
   "restart.notNow": "나중에",
   "restart.asarSwap":
@@ -273,11 +292,14 @@ export const ko = {
   "restart.incomplete": "적용이 끝나지 않았습니다. {detail}",
   "restart.incomplete.patches":
     "{failed} 개 항목 처리에 실패했습니다 (#{ids}). 패치 상세를 확인하세요",
-  "restart.incomplete.flash": "터미널 창 억제 검사가 통과하지 못했습니다 ({entry})",
+  "restart.incomplete.flash":
+    "터미널 창 억제 검사가 통과하지 못했습니다 ({entry})",
   "restart.incomplete.host":
     "대상 호스트 기록 완료를 확인하지 못했습니다. 클라이언트, 호스트 버전, 대상 경로를 대조하세요",
-  "restart.incomplete.restore": "구성 복원이 끝나지 않았습니다. 진단 기록을 확인하세요",
-  "restart.incomplete.runtime": "CLI 런타임 검사나 복구에 실패했습니다. 진단 기록을 확인하세요",
+  "restart.incomplete.restore":
+    "구성 복원이 끝나지 않았습니다. 진단 기록을 확인하세요",
+  "restart.incomplete.runtime":
+    "CLI 런타임 검사나 복구에 실패했습니다. 진단 기록을 확인하세요",
   "restart.incomplete.unknown":
     "현재 백엔드가 구체적 원인을 반환하지 않았습니다. 호스트 버전, 패치 상세, 진단 결과를 확인하세요",
   "restart.later": "나중에",
@@ -341,7 +363,8 @@ export const ko = {
   "patch.54": "산출물 안내에서 불필요한 금지 제거",
   "patch.55": "매 단계 첫 시스템 프롬프트 교체",
   "patch.56": "되돌리기는 철회된 라운드만 숨김",
-  "patch.57": "developer role 은 openai/azure 전용, 서드파티 프록시는 system 으로 폴백",
+  "patch.57":
+    "developer role 은 openai/azure 전용, 서드파티 프록시는 system 으로 폴백",
   "patch.58": "되돌리기 빈 마커는 모델 요청에 넣지 않음",
   "patch.59": "공식 Auto Review 가 더 이상 도구를 막지 않음",
   "patch.60": "공식 run_code 에서 승인 안내 제거",
@@ -378,9 +401,11 @@ export const ko = {
   "rewind.empty": "되돌릴 이전 발화가 없습니다",
   "rewind.fail": "되돌리지 못했습니다: {error}",
   "rewind.once": "한 번 되돌리기",
-  "rewind.once.hint": "이 라운드에서 보낸 발화를 입력창으로 되돌리고 이 라운드를 지웁니다",
+  "rewind.once.hint":
+    "이 라운드에서 보낸 발화를 입력창으로 되돌리고 이 라운드를 지웁니다",
   "rewind.round": "이전 라운드 되돌리기",
-  "rewind.round.hint": "이 라운드에서 보낸 발화를 입력창으로 되돌립니다. 서브에이전트도 이 라운드만 철회합니다",
+  "rewind.round.hint":
+    "이 라운드에서 보낸 발화를 입력창으로 되돌립니다. 서브에이전트도 이 라운드만 철회합니다",
   "hooksDeny.title": "Hooks 차단",
   "hooksDeny.bypass": "hooks 의 deny / ask 통과 (패치 30 / 31 / 64 / 65)",
   "hooksDeny.hint":
@@ -414,9 +439,12 @@ export const ko = {
   "updch.proxy.hint":
     "http:// / https:// / socks5:// 접두사를 지원합니다. 예: http://127.0.0.1:7890. 비워 두면 기존 업데이트 프록시 환경을 상속합니다.",
   "updch.token": "GitHub 키",
-  "updch.token.ph": "선택 사항: GitHub API 할당량을 올립니다. 비워 두면 변경하지 않습니다",
-  "updch.token.set": "이 기기에는 키가 설정되어 있습니다. 입력창은 항상 비어 있으며, 비운 채 저장하면 그대로 둔다는 뜻입니다.",
-  "updch.token.unset": "이 기기에는 아직 키가 없습니다. 비워 두면 설정하지 않습니다.",
+  "updch.token.ph":
+    "선택 사항: GitHub API 할당량을 올립니다. 비워 두면 변경하지 않습니다",
+  "updch.token.set":
+    "이 기기에는 키가 설정되어 있습니다. 입력창은 항상 비어 있으며, 비운 채 저장하면 그대로 둔다는 뜻입니다.",
+  "updch.token.unset":
+    "이 기기에는 아직 키가 없습니다. 비워 두면 설정하지 않습니다.",
   "updch.token.clear": "저장된 키 지우기",
   "updch.save": "저장",
   "updch.saving": "저장 중…",

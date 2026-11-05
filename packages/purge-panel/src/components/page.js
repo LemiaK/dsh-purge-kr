@@ -89,7 +89,9 @@ export function StatusStrip({ info }) {
         "b",
         null,
         `${info?.patches_applied ?? "?"}/${info?.patches_total ?? "?"}`,
-        info?.patches_na > 0 ? ` · ${info.patches_na}건 이 컴퓨터에 해당 없음` : "",
+        info?.patches_na > 0
+          ? ` · ${info.patches_na}건 이 컴퓨터에 해당 없음`
+          : "",
       ),
       h(
         HelpTip,

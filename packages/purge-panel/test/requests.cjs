@@ -225,7 +225,11 @@ const body = pageSeat.body;
     "newer draft",
     "Slow save response must preserve newer edits",
   );
-  assert(JSON.stringify(tree.toJSON()).includes("현재 수정분은 아직 저장하지 않았습니다"));
+  assert(
+    JSON.stringify(tree.toJSON()).includes(
+      "현재 수정분은 아직 저장하지 않았습니다",
+    ),
+  );
   fetchHook = (path, init) =>
     init.method === "POST"
       ? reply({ ok: true, content: "bad response" }, 500)

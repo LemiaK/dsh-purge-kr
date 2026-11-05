@@ -157,7 +157,9 @@ async function requestJson(p, init) {
     if (isAbortError(e)) throw new Error("timeout");
     const msg = String((e && e.message) || e || "");
     if (!e?.status && /failed to fetch|networkerror|load failed/i.test(msg)) {
-      throw new Error("인터페이스에 연결할 수 없습니다. dsh 가 실행 중인지 확인한 뒤 Ctrl+F5 를 누르세요");
+      throw new Error(
+        "인터페이스에 연결할 수 없습니다. dsh 가 실행 중인지 확인한 뒤 Ctrl+F5 를 누르세요",
+      );
     }
     throw e;
   } finally {

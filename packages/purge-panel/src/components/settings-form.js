@@ -100,7 +100,10 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
 
   const updateErrorText = (tr, e) => {
     const msg = String((e && e.message) || e || "");
-    if (msg === "timeout" || /aborted|abort|timeout|타임아웃|시간 ?초과/i.test(msg))
+    if (
+      msg === "timeout" ||
+      /aborted|abort|timeout|타임아웃|시간 ?초과/i.test(msg)
+    )
       return tr("update.timeout");
     if (/\b404\b/.test(msg) || /non-json/.test(msg))
       return tr("update.needRestart");

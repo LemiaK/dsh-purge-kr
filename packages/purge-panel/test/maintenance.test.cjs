@@ -164,7 +164,9 @@ test("successful update reports its version and DSH process restart, not a backu
   await click(tree, "커뮤니티판 업데이트 확인");
   await click(tree, "선택한 버전 설치");
   assert(text(tree).includes("플러그인을 설치했습니다: 1.6.4"));
-  assert(text(tree).includes("브라우저만 새로 고치면 새 백엔드가 로드되지 않습니다"));
+  assert(
+    text(tree).includes("브라우저만 새로 고치면 새 백엔드가 로드되지 않습니다"),
+  );
   assert(!text(tree).includes("백업을 만들었다: "));
   await unmount(tree);
 });
@@ -265,7 +267,8 @@ test("update switches save separate preferences without invoking install or rest
     true,
   );
   assert.equal(
-    tree.root.findByProps({ "aria-label": "업데이트 확인 간격" }).props.disabled,
+    tree.root.findByProps({ "aria-label": "업데이트 확인 간격" }).props
+      .disabled,
     true,
   );
   assert(
@@ -332,7 +335,10 @@ test("cached releases and failed fallbacks are visible instead of claiming lates
         ? reply({ ok: true, backups: [] })
         : reply(
             failed
-              ? { ok: false, error: "API 할당량 소진; Atom 대체 실패: 프록시 시간 초과" }
+              ? {
+                  ok: false,
+                  error: "API 할당량 소진; Atom 대체 실패: 프록시 시간 초과",
+                }
               : {
                   ok: true,
                   versions: [],

@@ -51,11 +51,27 @@
   display: none;
 }
 /* 안쪽 목록/에디터 스크롤 영역도 같은 규칙을 따른다. */
-.dshpp-page :is(.dshpp-rulelist, .dshpp-cwd-list, .dshpp-editor, .dshpp-auth-legal, .dshpp-fold-inner, .dshpp-page-tabs) {
+.dshpp-page
+  :is(
+    .dshpp-rulelist,
+    .dshpp-cwd-list,
+    .dshpp-editor,
+    .dshpp-auth-legal,
+    .dshpp-fold-inner,
+    .dshpp-page-tabs
+  ) {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.dshpp-page :is(.dshpp-rulelist, .dshpp-cwd-list, .dshpp-editor, .dshpp-auth-legal, .dshpp-fold-inner, .dshpp-page-tabs)::-webkit-scrollbar {
+.dshpp-page
+  :is(
+    .dshpp-rulelist,
+    .dshpp-cwd-list,
+    .dshpp-editor,
+    .dshpp-auth-legal,
+    .dshpp-fold-inner,
+    .dshpp-page-tabs
+  )::-webkit-scrollbar {
   width: 0;
   height: 0;
   display: none;

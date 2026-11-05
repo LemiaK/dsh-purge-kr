@@ -243,7 +243,10 @@ win.confirm = () => true;
     JSON.stringify(tree.toJSON()).includes("0.2.1-rc.1"),
     "the status strip reports the host version from the backend",
   );
-  assert(button("새로 고침"), "original status page renders in the community build");
+  assert(
+    button("새로 고침"),
+    "original status page renders in the community build",
+  );
   assert(
     JSON.stringify(tree.toJSON()).includes("Hooks 차단"),
     "original hooks deny section renders in the community build",
@@ -260,8 +263,7 @@ win.confirm = () => true;
     "self-check renders every layer reported by /dsh-purge/selfcheck",
   );
   assert(
-    selfcheckTree.includes("#16") ||
-      selfcheckTree.includes("1개 계층 미적용"),
+    selfcheckTree.includes("#16") || selfcheckTree.includes("1개 계층 미적용"),
     "self-check surfaces the failing layer",
   );
   assert.equal(writes.length, 0, "opening never writes configuration");

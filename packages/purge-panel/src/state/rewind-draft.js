@@ -421,5 +421,7 @@ export async function openRewoundSession(sessions, sessionId) {
     }
     await waitMs(120);
   }
-  throw new Error((lastError && lastError.message) || "되돌리기 후 세션이 열리지 않았습니다");
+  throw new Error(
+    (lastError && lastError.message) || "되돌리기 후 세션이 열리지 않았습니다",
+  );
 }

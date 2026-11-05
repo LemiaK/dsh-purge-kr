@@ -122,7 +122,8 @@ export function looksLikeSendControl(el) {
   ]
     .filter(Boolean)
     .join(" ");
-  if (/중지|정지|Stop/i.test(label) && !/전송|보내기|Send/i.test(label)) return false;
+  if (/중지|정지|Stop/i.test(label) && !/전송|보내기|Send/i.test(label))
+    return false;
   if (/전송|보내기|Submit|Send(?!\s*feedback)/i.test(label)) return true;
   /* composer 주 버튼: data-composer-card 안의 primary */
   try {
