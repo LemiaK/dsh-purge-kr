@@ -1,4 +1,4 @@
-// 证据账本必须能挂在真实红队库上，路径导入必须挡住越界源文件。
+// 증거 장부는 실제 레드팀 저장소 위에 얹혀야 하고, 경로 가져오기는 범위를 벗어난 원본 파일을 막아야 한다.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -13,8 +13,8 @@ const withStore = (fn) => {
   try {
     return fn(store, root);
   } finally {
-    // Windows 上 SQLite 句柄没关时删目录会 EBUSY；先关库再清临时目录。
-    try { store.close?.(); } catch { /* 已关闭 */ }
+    // Windows 에서 SQLite 핸들이 닫히지 않은 채 디렉터리를 지우면 EBUSY 가 난다; 먼저 DB 를 닫고 임시 디렉터리를 지운다.
+    try { store.close?.(); } catch { /* 이미 닫힘 */ }
     fs.rmSync(root, { recursive: true, force: true });
   }
 };
@@ -36,7 +36,7 @@ test("ledger reads and writes through the real store handle", () => {
 
 test("engagement ids cannot escape the engagements directory", () => {
   withStore((store) => {
-    assert.throws(() => store.dirOf("../../etc"), /outside allowed roots|允许的根|path/i);
+    assert.throws(() => store.dirOf("../../etc"), /outside allowed roots|path/i);
   });
 });
 

@@ -1,6 +1,6 @@
-// 破甲契约：这 25 条是"闸门"。任何人（包括后续优化）改动它们，
-// 指纹就会变，CI 直接红——要动必须先说明理由并更新这里的指纹。
-// 质量优化只能碰非闸门补丁（例如已移除的 #18/#19）。
+// 탈옥 계약: 이 25개가 "게이트"다. 누구든(이후 최적화 포함) 이를 바꾸면
+// 지문이 달라져 CI 가 바로 빨개진다 — 손대려면 먼저 이유를 밝히고 여기 지문을 갱신한다.
+// 품질 최적화는 게이트가 아닌 패치만 건드린다(예: 제거된 #18/#19).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
@@ -65,8 +65,8 @@ test("all 25 bypass gates exist with unchanged semantics", () => {
 });
 
 test("quality-reducing patches stay opt-in and off by default", () => {
-  // #18/#19 关闭的是上下文保护（重复调用提醒、工具结果修剪），不是门禁。
-  // 它们以 disabledByDefault 形态存在：能显式打开，但默认绝不写入宿主。
+  // #18/#19 가 끄는 것은 컨텍스트 보호(반복 호출 알림, 도구 결과 다듬기)이며 게이트가 아니다.
+  // 이들은 disabledByDefault 형태로 존재한다: 명시적으로 켤 수 있지만 기본값으로는 호스트에 절대 쓰지 않는다.
   for (const id of [18, 19]) {
     const patch = ALL_PATCHES.find((p) => p.id === id);
     assert.ok(patch, `#${id} should exist as an opt-in patch`);
