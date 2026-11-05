@@ -25,7 +25,8 @@ test('bundled file-write skill stays readable and demonstrates write access usin
   assert.ok(skill);
   assert.match(skill.content, /^name: unauth-exploit$/m);
   assert.match(skill.content, /^enabled: true$/m);
-  assert.match(skill.content, /静态标记/);
+  // 스킬 본문(한국어판)의 정적 표식 문구를 그대로 요구한다.
+  assert.match(skill.content, /정적 표식/);
   assert.doesNotMatch(skill.content, /<\?(?:php\b|=)/i);
 });
 

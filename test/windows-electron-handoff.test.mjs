@@ -8,15 +8,15 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as wait } from 'node:timers/promises';
 import { WINDOWS_ASAR_HANDOFF_PS1, readWindowsAsarHandoff } from '../lib/windows-asar-handoff.js';
 
-// 夹具用 import.meta.url 定位：Windows 上 cwd 可能被外层脚本改掉，
-// 用 cwd 拼接时（path.resolve 相对写法）会指向不存在的路径。
+// 픽스처는 import.meta.url 로 찾는다: Windows 에서는 cwd 가 바깥 스크립트에 의해 바뀔 수 있어,
+// cwd 로 이어 붙이면(path.resolve 상대 표기) 없는 경로를 가리키게 된다.
 const FIXTURE_ERRORS = fileURLToPath(new URL('./fixtures/windows-handoff-errors.ps1', import.meta.url));
 
 const electron = process.env.PURGE_ELECTRON_EXEC;
 test('real Windows Electron: helper executes and survives its launcher exiting', {
   skip: process.platform !== 'win32' || !electron,
 }, async () => {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'purge electron 中文 '));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'purge electron 한글 '));
   const exe = path.join(root, 'holder.exe'), asar = path.join(root, 'app.asar');
   fs.copyFileSync(process.execPath, exe);
   fs.mkdirSync(path.join(root, 'app'));
@@ -79,7 +79,7 @@ test('Windows native sharing violation retries, permanent collision fails withou
     assert.equal(locked.observed.error.win32_code,32);
     assert.equal(locked.final.phase,'complete');
     assert.equal(locked.exitCode,0);
-    assert.equal(locked.backupExists,true,'备份文件必须存在，否则换包没真正发生');
+    assert.equal(locked.backupExists,true,'백업 파일이 있어야 한다. 없으면 패키지 교체가 실제로 일어나지 않은 것이다');
     assert.equal(locked.backupText,'original fixture');
     assert.equal(locked.originalExists,false);
     const collision=result.results.find(r=>r.scenario==='collision');

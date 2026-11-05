@@ -1,4 +1,4 @@
-// 账本工具必须真的挂到工具面上：1.6.78 只拷了模块没接线，属于死代码。
+// 증거 장부 도구는 실제로 도구면에 붙어 있어야 한다: 1.6.78 은 모듈만 복사하고 배선하지 않아 죽은 코드였다.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -24,14 +24,14 @@ const TOOLS = [
 test("evidence ledger tools are registered, not just imported", () => {
   assert.match(source, /from '\.\/evidence-ledger\.mjs'/);
   for (const name of TOOLS) {
-    assert.ok(source.includes(`name: '${name}'`), `${name} 必须注册到工具面`);
+    assert.ok(source.includes(`name: '${name}'`), `${name} 는 도구면에 등록되어야 한다`);
   }
-  assert.match(source, /function ledgerOf\(/, "必须有取账本的帮助函数");
-  assert.match(source, /function unknownsOf\(/, "必须有取未知登记的帮助函数");
+  assert.match(source, /function ledgerOf\(/, "장부를 가져오는 도우미 함수가 있어야 한다");
+  assert.match(source, /function unknownsOf\(/, "미지 등록을 가져오는 도우미 함수가 있어야 한다");
 });
 
 test("knowledge-base tools stay available in this fork", () => {
   for (const name of ["redteam_poc_search", "redteam_poc_add"]) {
-    assert.ok(source.includes(`name: '${name}'`), `${name} 不应被上游的开源裁剪带走`);
+    assert.ok(source.includes(`name: '${name}'`), `${name} 는 업스트림의 오픈소스 정리에 휩쓸려 빠지면 안 된다`);
   }
 });
