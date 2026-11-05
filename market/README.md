@@ -1,13 +1,15 @@
-# DSH 사용자 정의 마켓 인덱스
+# DSH 自定义市场索引
 
-공식 소스 주소: **https://wnduddld0513.github.io/dsh-purge-kr/index.json**
+正式源地址：**https://kingcharleslzy-ai.github.io/dsh-purge/index.json**
 
-DSH “플러그인 → 실험적 플러그인 → 더 보기 → 사용자 정의 플러그인 마켓”을 켠 뒤 “발견 → 인덱스 소스 추가”에서 이 주소를 붙여 넣는다. 이 기능이 없는 옛 호스트는 GitHub Release 로 설치할 수 있다.
+DSH「插件 → 实验性插件 → 更多 → 自定义插件市场」开启后，在「发现 → 添加索引源」粘贴该地址。没有这个功能的旧宿主仍可通过 GitHub Release 安装。
 
-인덱스는 공식 format 1 을 따르며, 이 저장소가 1.6.5 부터 발행한 정식 버전만 수록한다. 소스 설치는 전체 Git 커밋에 고정하고 가변 브랜치를 가리키지 않는다. 릴리스 워크플로가 성공하면 GitHub Pages 를 생성해 배포하며, 인덱스를 손으로 고치지 않는다.
+索引遵循官方 format 1，收录 Purge（从 1.6.5 起）、Qwen Studio 和 Breeze Voice 的正式版本；源码安装固定到完整 Git 提交，不指向可变分支。发布工作流成功后生成并部署 GitHub Pages，不需要手改索引。
 
-호환 범위는 보수적으로 `>=0.2.1-rc.1 <0.2.2-0` 로 표기한다. 이는 해당 마켓 항목의 검증 범위를 뜻하며, 다른 호스트가 검증되었다고 주장하지 않는다. 마켓 노출은 DeepSeek 의 공식 보증이 아니며, 호스트 패치를 자동 적용하지도 않는다.
+每个条目分别声明其已验证的宿主版本范围，不声称其他宿主已验证。市场展示不代表 DeepSeek 官方背书，也不会自动应用宿主补丁。
 
-커뮤니티 디렉터리 등재와 자체 소스는 별개다: 자체 소스는 사용자가 추가하고, 커뮤니티 디렉터리는 항목을 제출해 유지보수자 검수를 기다린다.
+社区目录收录与自建源是两件事：自建源由用户添加；社区目录需提交条目并等待维护者审核。
 
-공식 규범: https://deepseek-harness.github.io/deepseek-harness/en/guide/plugin-market
+官方规范：https://deepseek-harness.github.io/deepseek-harness/en/guide/plugin-market
+
+发布新版 Breeze Voice 后，将发行包的预编译 Git 快照提交、发布时间和宿主兼容范围登记在 `market/breeze-voice.json`，验证后部署索引。

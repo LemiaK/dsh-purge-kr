@@ -1,265 +1,249 @@
-/* Purge 패널 기본 스타일.
-   색·반경·폰트·그림자·모션은 전부 DSH 0.2.1-rc.5 디자인 토큰(--dsw-*)에서 온다.
-   테마를 바꾸거나 새 테마를 설치해도 자동으로 따라가도록, 플러그인 고유 변수(--dshpp-*)는
-   이름만 유지하고 값은 토큰을 가리키게 한다. 구조/클래스 이름은 그대로 둔다.
-   타이포그래피·간격은 DSH 설정 화면 실측 규격을 따른다:
-   본문 14/22, 보조 13/20, 캡션 12/18, 제목 600, 간격 스케일 4/8/12/16/20/24. */
-
 .dshpp-root {
-  --dshpp-display: var(--dsw-font-family);
-  --dshpp-sans: var(--dsw-font-family);
-  --dshpp-mono: var(--dsw-font-markdown-code-font-family);
-  --dshpp-bg: transparent;
-  --dshpp-paper: var(--dsw-alias-bg-layer-1);
-  --dshpp-ink: var(--dsw-alias-label-primary);
-  --dshpp-mute: var(--dsw-alias-label-secondary);
-  --dshpp-line: var(--dsw-alias-border-l2);
-  --dshpp-fill: var(--dsw-alias-interactive-bg-hover);
-  --dshpp-accent: var(--dsw-alias-button-primary-fill);
-  --dshpp-accent-soft: var(--dsw-alias-bg-layer-3);
-  --dshpp-ok: var(--dsw-alias-state-success-primary);
-  --dshpp-warn: var(--dsw-alias-state-warn-primary);
-  --dshpp-bad: var(--dsw-alias-state-error-primary);
+  --dshpp-display:
+    "Songti SC", "Noto Serif SC", "Iowan Old Style", Palatino,
+    "Palatino Linotype", Georgia, serif;
+  --dshpp-sans:
+    "Yu Gothic UI", "Hiragino Sans GB", "Source Han Sans SC", system-ui,
+    sans-serif;
+  --dshpp-mono: "Cascadia Mono", "Sarasa Mono SC", ui-monospace, monospace;
+  --dshpp-ease: cubic-bezier(0.16, 1, 0.3, 1);
   max-width: 920px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
   padding: 16px;
-  border-radius: var(--dsw-radius-lg);
+  border-radius: 12px;
   background: var(--dshpp-bg);
   color: var(--dshpp-ink);
-  font-family: var(--dsw-font-family);
-  font-size: 14px;
-  line-height: 22px;
-  letter-spacing: 0;
+  font-family: var(--dshpp-sans);
 }
-/* 툴바: 하단 .5px 구분선 + 12px 패딩(DSH 설정 헤더 규격) */
+.dshpp-root {
+  --dshpp-bg: transparent;
+  --dshpp-paper: color-mix(
+    in srgb,
+    var(--dsw-alias-bg-layer-1, #f6f4ef) 74%,
+    transparent
+  );
+  --dshpp-ink: var(--dsw-alias-label-primary, #1a1916);
+  --dshpp-mute: color-mix(
+    in srgb,
+    var(--dsw-alias-label-primary, #1a1916) 74%,
+    var(--dsw-alias-label-secondary, #5c564c)
+  );
+  --dshpp-line: color-mix(
+    in srgb,
+    var(--dsw-alias-border-l1, #c8c2b6) 78%,
+    transparent
+  );
+  --dshpp-fill: color-mix(
+    in srgb,
+    var(--dsw-alias-brand-primary, #6d8f78) 14%,
+    transparent
+  );
+  --dshpp-accent: var(--dsw-alias-brand-primary, #3f6b52);
+  --dshpp-accent-soft: color-mix(
+    in srgb,
+    var(--dsw-alias-brand-primary, #6d8f78) 18%,
+    transparent
+  );
+  --dshpp-ok: #1f7a45;
+  --dshpp-warn: #8a5a12;
+  --dshpp-bad: #9a3434;
+}
+.dshpp-root[data-theme="white"] {
+  color-scheme: light;
+}
+.dshpp-root[data-theme="dusk"] {
+  color-scheme: dark;
+  --dshpp-ok: #8fd0a8;
+  --dshpp-warn: #e4c48a;
+  --dshpp-bad: #f0b4b4;
+}
 .dshpp-toolbar {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  padding: 12px 0;
-  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
 }
-/* 세그먼트 스위치: DSH 탭과 같은 재질(module-platform 바탕 + 활성 layer-1) */
 .dshpp-switch {
   display: inline-flex;
-  gap: 2px;
-  padding: 2px;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-sm);
+  border: 1px solid var(--dshpp-line);
+  border-radius: 999px;
   overflow: hidden;
-  background: var(--dsw-alias-bg-module-platform);
+  background: var(--dshpp-paper);
 }
 .dshpp-switch button {
   appearance: none;
   border: 0;
-  border-radius: var(--dsw-radius-xs);
   background: transparent;
-  color: var(--dsw-alias-label-secondary);
-  font-family: var(--dsw-font-family);
-  font-size: 12px;
-  line-height: 18px;
-  letter-spacing: -0.01em;
-  height: 28px;
-  padding: 0 12px;
+  color: var(--dshpp-mute);
+  font: 12px/1 var(--dshpp-sans);
+  padding: 6px 14px;
   cursor: pointer;
-  transition:
-    background-color 0.18s ease,
-    color 0.18s ease;
 }
 .dshpp-switch button.is-on {
-  background: var(--dsw-alias-bg-layer-1);
-  color: var(--dsw-alias-label-primary);
+  background: var(--dshpp-accent-soft);
+  color: var(--dshpp-ink);
 }
 .dshpp-switch button:focus-visible {
-  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);
-  outline-offset: 1px;
+  outline: 2px solid var(--dshpp-accent);
+  outline-offset: -2px;
 }
-/* 섹션 카드: 그림자 없이 layer-1 바탕 + .5px 구분선만 남긴다 */
 .dshpp-panel {
-  border: 0.5px solid var(--dsw-alias-border-l2);
+  border: 1px solid var(--dshpp-line);
   background: var(--dshpp-paper);
-  border-radius: var(--dsw-radius-lg);
-  padding: 16px;
-  box-shadow: none;
+  border-radius: 10px;
+  padding: 18px 18px 16px;
 }
 .dshpp-kicker {
   font-family: var(--dshpp-mono);
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--dsw-alias-label-tertiary);
+  color: var(--dshpp-mute);
   margin: 0 0 4px;
 }
 .dshpp-title {
-  font-family: var(--dsw-font-family);
+  font-family: var(--dshpp-display);
   font-size: 20px;
-  line-height: 28px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
   margin: 0;
-  color: var(--dsw-alias-label-primary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  color: var(--dshpp-ink);
 }
 .dshpp-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
 }
-/* 섹션 제목: 위 16px · 아래 8px */
 .dshpp-sub {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin: 16px 0 8px;
+  margin: 20px 0 10px;
 }
 .dshpp-sub h4 {
   margin: 0;
-  font-family: var(--dsw-font-family);
-  font-size: 14px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: var(--dsw-alias-label-primary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  font-family: var(--dshpp-display);
+  font-size: 15px;
+  font-weight: 500;
 }
 .dshpp-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
-/* 카드 안의 카드: 바탕은 비우고 구분선만 남긴다 */
 .dshpp-metric {
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  background: transparent;
+  border: 1px solid var(--dshpp-line);
+  background: var(--dshpp-bg);
   padding: 12px;
-  min-height: 64px;
+  min-height: 68px;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  border-radius: var(--dsw-radius-md);
+  border-radius: 8px;
 }
 .dshpp-metric b {
-  font-family: var(--dsw-font-family);
+  font-family: var(--dshpp-display);
   font-size: 18px;
-  font-weight: 600;
-  line-height: 24px;
-  letter-spacing: -0.01em;
-  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
+  line-height: 1.2;
 }
 .dshpp-metric span {
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-secondary);
+  font-size: 11px;
+  color: var(--dshpp-mute);
 }
 .dshpp-bar {
   height: 3px;
-  border-radius: var(--dsw-radius-xs);
-  background: var(--dsw-alias-border-l2);
+  border-radius: 99px;
+  background: var(--dshpp-line);
   overflow: hidden;
-  margin: 8px 0 12px;
+  margin: 8px 0 14px;
 }
 .dshpp-bar > i {
   display: block;
   height: 100%;
-  background: var(--dsw-alias-button-primary-fill);
+  background: var(--dshpp-accent);
   width: 0;
-  transition: width 0.16s ease-out;
+  transition: width 0.4s var(--dshpp-ease);
 }
 .dshpp-group {
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  margin: 0 0 12px;
-  background: transparent;
-  border-radius: var(--dsw-radius-md);
+  border: 1px solid var(--dshpp-line);
+  margin: 0 0 8px;
+  background: var(--dshpp-bg);
+  border-radius: 8px;
   overflow: hidden;
 }
 .dshpp-group-h {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 10px;
+  padding: 9px 12px;
   border: 0;
   background: transparent;
   color: inherit;
   cursor: pointer;
   font: inherit;
   text-align: left;
-  transition: background-color 0.16s ease-out;
 }
 .dshpp-group-h:hover {
-  background: var(--dsw-alias-interactive-bg-hover);
+  background: var(--dshpp-fill);
 }
 .dshpp-group-h:focus-visible {
-  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);
+  outline: 2px solid var(--dshpp-accent);
   outline-offset: -2px;
 }
 .dshpp-group-h strong {
-  font-family: var(--dsw-font-family);
+  font-family: var(--dshpp-display);
   font-size: 14px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
 }
 .dshpp-group-h em {
   font-style: normal;
   font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-tertiary);
+  color: var(--dshpp-mute);
   flex: 1;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
 }
 .dshpp-count {
   font-family: var(--dshpp-mono);
   font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-secondary);
+  color: var(--dshpp-mute);
 }
 .dshpp-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 12.5px;
 }
 .dshpp-table th {
   text-align: left;
   font-weight: 500;
-  font-size: 12px;
-  line-height: 18px;
-  letter-spacing: 0;
-  color: var(--dsw-alias-label-secondary);
-  padding: 8px 12px;
-  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--dshpp-mute);
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--dshpp-line);
 }
 .dshpp-table td {
   padding: 8px 12px;
-  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  border-bottom: 1px solid var(--dshpp-line);
   vertical-align: middle;
-  color: var(--dsw-alias-label-primary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
 }
 .dshpp-table tr:last-child td {
   border-bottom: 0;
 }
 .dshpp-table tr.is-on td {
-  background: var(--dsw-alias-bg-layer-3);
+  background: var(--dshpp-accent-soft);
 }
 .dshpp-id {
   font-family: var(--dshpp-mono);
-  color: var(--dsw-alias-label-tertiary);
+  opacity: 0.75;
   width: 42px;
 }
 .dshpp-actions {
@@ -273,20 +257,19 @@
   flex-wrap: wrap;
 }
 .dshpp-row + .dshpp-row {
-  margin-top: 8px;
+  margin-top: 10px;
 }
 .dshpp-pill {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   font-family: var(--dshpp-mono);
-  font-size: 12px;
+  font-size: 11px;
   padding: 2px 8px;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-sm);
-  line-height: 18px;
-  background: transparent;
-  color: var(--dsw-alias-label-secondary);
+  border: 1px solid var(--dshpp-line);
+  border-radius: 99px;
+  line-height: 1.6;
+  background: var(--dshpp-bg);
 }
 .dshpp-pill::before {
   content: "";
@@ -296,126 +279,79 @@
   background: currentColor;
 }
 .dshpp-pill.is-ok {
-  color: var(--dsw-alias-state-success-primary);
-  border-color: color-mix(
-    in srgb,
-    var(--dsw-alias-state-success-primary) 40%,
-    var(--dsw-alias-border-l2)
-  );
+  color: var(--dshpp-ok);
+  border-color: color-mix(in srgb, var(--dshpp-ok) 30%, var(--dshpp-line));
 }
 .dshpp-pill.is-wait {
-  color: var(--dsw-alias-state-warn-primary);
-  border-color: color-mix(
-    in srgb,
-    var(--dsw-alias-state-warn-primary) 40%,
-    var(--dsw-alias-border-l2)
-  );
+  color: var(--dshpp-warn);
+  border-color: color-mix(in srgb, var(--dshpp-warn) 30%, var(--dshpp-line));
 }
 .dshpp-pill.is-miss {
-  color: var(--dsw-alias-label-tertiary);
+  color: var(--dshpp-mute);
 }
 .dshpp-pill.is-bad {
-  color: var(--dsw-alias-state-error-primary);
+  color: var(--dshpp-bad);
 }
-/* 버튼: DSH 실측 규격(높이 36/28, radius md/sm, 텍스트-아이콘 gap 4, .16s ease-out, disabled .4) */
 .dshpp-btn {
   appearance: none;
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  height: 36px;
-  padding: 0 14px;
-  border: 0;
-  border-radius: var(--dsw-radius-md);
-  background: transparent;
-  color: var(--dsw-alias-label-primary);
-  font: inherit;
-  font-family: var(--dsw-font-family);
-  font-size: 14px;
-  line-height: 22px;
+  font-family: var(--dshpp-sans);
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
   cursor: pointer;
   transition:
-    background-color 0.16s ease-out,
-    color 0.16s ease-out,
-    border-color 0.16s ease-out,
-    opacity 0.16s ease-out;
+    background 0.15s var(--dshpp-ease),
+    opacity 0.15s var(--dshpp-ease);
 }
 .dshpp-btn:disabled {
+  opacity: 0.45;
   cursor: not-allowed;
-  opacity: 0.4;
 }
 .dshpp-btn:focus-visible {
-  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);
+  outline: 2px solid var(--dshpp-accent);
   outline-offset: 2px;
 }
 .dshpp-btn-primary {
-  background: var(--dsw-alias-button-primary-fill);
-  color: var(--dsw-alias-label-primary-foreground);
+  background: var(--dshpp-accent-soft);
+  color: var(--dshpp-ink);
+  border-color: color-mix(in srgb, var(--dshpp-accent) 35%, var(--dshpp-line));
 }
 .dshpp-btn-primary:hover:not(:disabled) {
-  background: var(--dsw-alias-button-primary-hover);
+  background: color-mix(in srgb, var(--dshpp-accent) 22%, var(--dshpp-bg));
 }
 .dshpp-btn-ghost {
   background: transparent;
-  color: var(--dsw-alias-label-primary);
-  border: 0.5px solid var(--dsw-alias-border-l3);
-}
-.dshpp-btn-ghost:hover:not(:disabled) {
-  background: var(--dsw-alias-interactive-bg-hover);
-}
-.dshpp-btn-ghost:active:not(:disabled) {
-  background: var(--dsw-alias-interactive-bg-active);
+  color: var(--dshpp-ink);
+  border-color: var(--dshpp-line);
 }
 .dshpp-btn-danger {
   background: transparent;
-  color: var(--dsw-alias-state-error-primary);
-  border: 0.5px solid
-    color-mix(
-      in srgb,
-      var(--dsw-alias-state-error-primary) 40%,
-      var(--dsw-alias-border-l3)
-    );
-}
-.dshpp-btn-danger:hover:not(:disabled) {
-  background: var(--dsw-alias-interactive-bg-hover-danger);
+  color: var(--dshpp-bad);
+  border-color: color-mix(in srgb, var(--dshpp-bad) 40%, var(--dshpp-line));
 }
 .dshpp-btn-solid-danger {
-  background: var(--dsw-alias-state-error-primary);
-  color: var(--dsw-alias-label-primary-foreground);
-}
-.dshpp-btn-solid-danger:hover:not(:disabled) {
-  background: color-mix(
-    in srgb,
-    var(--dsw-alias-state-error-primary) 88%,
-    var(--dsw-alias-bg-base)
-  );
+  background: color-mix(in srgb, var(--dshpp-bad) 16%, var(--dshpp-bg));
+  color: var(--dshpp-bad);
+  border-color: color-mix(in srgb, var(--dshpp-bad) 30%, var(--dshpp-line));
 }
 .dshpp-btn-tiny {
-  height: 28px;
+  min-height: 28px;
   padding: 0 10px;
-  border-radius: var(--dsw-radius-sm);
   font-size: 12px;
-  line-height: 18px;
 }
 .dshpp-field,
 .dshpp-area {
   width: 100%;
   box-sizing: border-box;
-  font-family: var(--dshpp-mono);
-  font-size: 13px;
-  line-height: 20px;
-  padding: 8px 12px;
-  background: var(--dsw-alias-bg-layer-2);
-  color: var(--dsw-alias-label-primary);
-  border: 0.5px solid var(--dsw-alias-border-l3);
-  border-radius: var(--dsw-radius-sm);
-  transition:
-    border-color 0.16s ease-out,
-    background-color 0.16s ease-out;
+  font: 13px/1.55 var(--dshpp-mono);
+  padding: 8px 10px;
+  background: var(--dshpp-bg);
+  color: var(--dshpp-ink);
+  border: 1px solid var(--dshpp-line);
+  border-radius: 8px;
 }
 .dshpp-field {
   width: auto;
@@ -424,17 +360,16 @@
 .dshpp-cr-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
   margin: 8px 0 0;
   font-size: 13px;
-  line-height: 20px;
 }
 .dshpp-cr-row label {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  color: var(--dsw-alias-label-primary);
+  gap: 6px;
+  color: var(--dshpp-ink);
 }
 .dshpp-cr-num {
   width: 64px;
@@ -453,12 +388,11 @@
   min-width: 0;
   max-width: none;
   height: 32px;
-  padding: 0 12px;
-  font-size: 13px;
-  line-height: 20px;
+  padding: 0 10px;
+  font-size: 12px;
 }
 .dshpp-rel {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
 }
 .dshpp-now {
   display: flex;
@@ -469,75 +403,60 @@
 }
 .dshpp-now-label {
   font-family: var(--dshpp-mono);
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--dsw-alias-label-tertiary);
+  color: var(--dshpp-mute);
 }
 .dshpp-now-ver {
-  font-family: var(--dsw-font-family);
+  font-family: var(--dshpp-display);
   font-size: 20px;
-  line-height: 28px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 .dshpp-now-mark {
   display: inline-flex;
   align-items: center;
-  margin-left: 4px;
-  padding: 2px 8px;
-  border-radius: var(--dsw-radius-sm);
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 99px;
   font-family: var(--dshpp-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-style: normal;
   font-weight: 500;
-  line-height: 18px;
-  color: var(--dsw-alias-state-success-primary);
-  border: 0.5px solid
-    color-mix(
-      in srgb,
-      var(--dsw-alias-state-success-primary) 40%,
-      var(--dsw-alias-border-l2)
-    );
-  background: color-mix(
-    in srgb,
-    var(--dsw-alias-state-success-primary) 12%,
-    transparent
-  );
+  line-height: 1.5;
+  color: var(--dshpp-ok);
+  border: 1px solid color-mix(in srgb, var(--dshpp-ok) 38%, var(--dshpp-line));
+  background: color-mix(in srgb, var(--dshpp-ok) 14%, var(--dshpp-bg));
 }
 .dshpp-editions {
   display: flex;
   flex-direction: column;
-  margin: 8px 0 0;
-  border-top: 0.5px solid var(--dsw-alias-border-l2);
+  margin: 10px 0 0;
+  border-top: 1px solid var(--dshpp-line);
 }
-/* 설정 행: flex + gap 8 + 16px 세로 패딩 + .5px 하단 구분선 */
 .dshpp-edition {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 12px;
-  padding: 16px 0;
-  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--dshpp-line);
 }
 .dshpp-edition-name {
   display: inline-flex;
   align-items: center;
   gap: 0;
-  font-family: var(--dsw-font-family);
-  font-size: 14px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: 0;
+  font-family: var(--dshpp-display);
+  font-size: 15px;
+  font-weight: 500;
   white-space: nowrap;
 }
 .dshpp-edition.is-on .dshpp-edition-name {
-  color: var(--dsw-alias-label-primary);
+  color: var(--dshpp-ink);
 }
 .dshpp-edition:not(.is-on) .dshpp-edition-name {
-  color: var(--dsw-alias-label-secondary);
+  color: var(--dshpp-mute);
 }
 .dshpp-edition .dshpp-btn {
   min-width: 118px;
@@ -545,7 +464,7 @@
 .dshpp-rel .dshpp-notice {
   display: block;
   margin-top: 8px;
-  min-height: 18px;
+  min-height: 16px;
 }
 @media (max-width: 560px) {
   .dshpp-edition {
@@ -568,29 +487,26 @@
 }
 .dshpp-field:focus,
 .dshpp-area:focus {
-  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);
-  outline-offset: 1px;
-  border-color: var(--dsw-alias-border-l4);
+  outline: none;
+  border-color: var(--dshpp-accent);
+  box-shadow: 0 0 0 3px var(--dshpp-accent-soft);
 }
 .dshpp-field:disabled,
 .dshpp-area:disabled {
-  opacity: 0.4;
+  opacity: 0.5;
 }
 .dshpp-ask {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  margin-top: 12px;
-  padding: 12px;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-md);
-  background: transparent;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--dshpp-line);
+  border-radius: 8px;
+  background: var(--dshpp-bg);
   font-size: 13px;
-  line-height: 20px;
-  color: var(--dsw-alias-label-secondary);
 }
-/* 모달 스크림: DSH 마스크 토큰(bg-mask-1)과 마스크 블러를 그대로 쓴다 */
 .dshpp-modal-bg {
   position: fixed;
   inset: 0;
@@ -599,43 +515,32 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: var(--dsw-alias-bg-mask-1);
-  backdrop-filter: var(--dsw-mask-blur);
+  background: color-mix(in srgb, var(--dshpp-ink) 28%, transparent);
 }
 .dshpp-modal {
   width: min(420px, 100%);
-  box-sizing: border-box;
-  background: var(--dsw-alias-bg-layer-1);
-  color: var(--dsw-alias-label-primary);
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-lg);
-  padding: 24px;
-  box-shadow: var(--dsw-elevation-panel);
+  background: var(--dshpp-paper);
+  color: var(--dshpp-ink);
+  border: 1px solid var(--dshpp-line);
+  border-radius: 12px;
+  padding: 20px 20px 16px;
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--dshpp-ink) 18%, transparent);
 }
 .dshpp-modal h4 {
   margin: 0 0 8px;
-  font-family: var(--dsw-font-family);
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--dsw-alias-label-primary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  font-family: var(--dshpp-display);
+  font-size: 18px;
+  font-weight: 500;
 }
 .dshpp-modal p {
-  margin: 0;
-  font-size: 14px;
-  line-height: 22px;
-  color: var(--dsw-alias-label-primary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  line-height: 1.55;
 }
 .dshpp-modal-ops {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-top: 16px;
 }
 .dshpp-restart-mask {
   position: fixed;
@@ -645,84 +550,100 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: var(--dsw-alias-bg-mask-3);
-  backdrop-filter: var(--dsw-mask-blur);
-  font-family: var(--dsw-font-family);
+  background: rgba(0, 0, 0, 0.62);
+  font-family:
+    "Yu Gothic UI", "Hiragino Sans GB", "Source Han Sans SC",
+    "Microsoft YaHei UI", system-ui, sans-serif;
 }
 .dshpp-restart-card {
   width: min(420px, 100%);
   box-sizing: border-box;
-  padding: 24px;
-  border-radius: var(--dsw-radius-lg);
-  background: var(--dsw-alias-bg-layer-1);
-  color: var(--dsw-alias-label-primary);
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  box-shadow: var(--dsw-elevation-prominent);
+  padding: 22px 22px 18px;
+  border-radius: 14px;
+  background: var(--dsw-alias-bg-layer-1, #fffcf7);
+  color: var(--dsw-alias-label-primary, #16140f);
+  border: 1px solid var(--dsw-alias-border-l1, #c9c3b6);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
 }
 .dshpp-restart-card h4 {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-family: inherit;
   font-size: 20px;
-  font-weight: 600;
-  line-height: 28px;
-  letter-spacing: -0.01em;
+  font-weight: 650;
+  line-height: 1.35;
   color: inherit;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
 }
 .dshpp-restart-card p {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  color: var(--dsw-alias-label-secondary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  margin: 0 0 18px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.65;
+  color: inherit;
 }
 .dshpp-restart-card .dshpp-modal-ops {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 10px;
 }
 .dshpp-restart-card .dshpp-btn {
-  height: 36px;
-  padding: 0 14px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--dsw-alias-label-primary);
-  background: transparent;
-  border: 0.5px solid var(--dsw-alias-border-l3);
-  border-radius: var(--dsw-radius-md);
+  min-height: 38px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--dsw-alias-label-primary, #16140f);
+  background: var(--dsw-alias-bg-layer-2, #fff);
+  border: 1px solid var(--dsw-alias-border-l1, #c9c3b6);
 }
 .dshpp-restart-card .dshpp-btn-primary,
 .dshpp-restart-card .dshpp-btn-primary:hover:not(:disabled) {
-  color: var(--dsw-alias-label-primary-foreground);
-  background: var(--dsw-alias-button-primary-fill);
-  border-color: transparent;
+  color: #fff;
+  background: #2f6b4f;
+  border-color: #2f6b4f;
+}
+body[data-ds-dark-theme] .dshpp-restart-card,
+.dshpp-restart-mask[data-theme="dusk"] .dshpp-restart-card {
+  background: #1c1e24;
+  color: #f4f1ea;
+  border-color: #5a5e68;
+}
+body[data-ds-dark-theme] .dshpp-restart-card .dshpp-btn,
+.dshpp-restart-mask[data-theme="dusk"] .dshpp-restart-card .dshpp-btn {
+  color: #f4f1ea;
+  background: #2a2d34;
+  border-color: #5a5e68;
+}
+body[data-ds-dark-theme] .dshpp-restart-card .dshpp-btn-primary,
+body[data-ds-dark-theme]
+  .dshpp-restart-card
+  .dshpp-btn-primary:hover:not(:disabled),
+.dshpp-restart-mask[data-theme="dusk"] .dshpp-restart-card .dshpp-btn-primary,
+.dshpp-restart-mask[data-theme="dusk"]
+  .dshpp-restart-card
+  .dshpp-btn-primary:hover:not(:disabled) {
+  color: #fff;
+  background: #3d8f68;
+  border-color: #3d8f68;
 }
 .dshpp-notice {
-  font-size: 12px;
-  line-height: 18px;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  font-size: 12.5px;
+  line-height: 1.4;
 }
 .dshpp-notice.is-ok {
-  color: var(--dsw-alias-state-success-primary);
+  color: var(--dshpp-ok);
 }
 .dshpp-notice.is-bad {
-  color: var(--dsw-alias-state-error-primary);
+  color: var(--dshpp-bad);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 .dshpp-skel {
   height: 12px;
-  border-radius: var(--dsw-radius-xs);
+  border-radius: 6px;
   background: linear-gradient(
     90deg,
-    var(--dsw-alias-interactive-bg-hover),
-    var(--dsw-alias-bg-layer-3),
-    var(--dsw-alias-interactive-bg-hover)
+    var(--dshpp-fill),
+    var(--dshpp-line),
+    var(--dshpp-fill)
   );
   background-size: 200% 100%;
   animation: dshpp-pulse 1.2s ease-in-out infinite;
@@ -730,29 +651,23 @@
 .dshpp-active {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
-  padding: 12px;
+  padding: 10px 12px;
   margin-bottom: 12px;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  background: transparent;
-  border-radius: var(--dsw-radius-md);
-  font-size: 13px;
-  line-height: 20px;
+  border: 1px solid var(--dshpp-line);
+  background: var(--dshpp-bg);
+  border-radius: 8px;
 }
 .dshpp-active b {
-  font-family: var(--dsw-font-family);
-  font-weight: 600;
-  color: var(--dsw-alias-label-primary);
+  font-family: var(--dshpp-display);
+  font-weight: 500;
 }
 .dshpp-empty {
-  padding: 24px 12px;
+  padding: 28px 12px;
   font-size: 13px;
-  line-height: 20px;
-  color: var(--dsw-alias-label-secondary);
+  color: var(--dshpp-mute);
   text-align: center;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
 }
 .dshpp-split {
   display: flex;
@@ -762,9 +677,9 @@
 .dshpp-rulelist {
   display: flex;
   flex-direction: column;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-md);
-  background: transparent;
+  border: 1px solid var(--dshpp-line);
+  border-radius: 8px;
+  background: var(--dshpp-bg);
   overflow: hidden;
 }
 .dshpp-rulebody {
@@ -776,21 +691,20 @@
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding: 12px;
+  padding: 10px 12px;
   border: 0;
-  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  border-bottom: 1px solid var(--dshpp-line);
   background: transparent;
   color: inherit;
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.16s ease-out;
 }
 .dshpp-ruleitem:hover {
-  background: var(--dsw-alias-interactive-bg-hover);
+  background: var(--dshpp-fill);
 }
 .dshpp-ruleitem.is-edit {
-  background: var(--dsw-alias-bg-layer-3);
+  background: var(--dshpp-accent-soft);
 }
 .dshpp-rule-main {
   flex: 1;
@@ -800,39 +714,35 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--dsw-font-family);
+  font-family: var(--dshpp-display);
   font-size: 14px;
-  line-height: 22px;
-  color: var(--dsw-alias-label-primary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  line-height: 1.35;
 }
 .dshpp-rule-meta {
   display: block;
-  margin-top: 4px;
+  margin-top: 3px;
   font-family: var(--dshpp-mono);
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  color: var(--dshpp-mute);
 }
 .dshpp-rule-ops {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 .dshpp-create {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 12px;
-  border-top: 0.5px solid var(--dsw-alias-border-l2);
-  background: transparent;
+  gap: 6px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--dshpp-line);
+  background: var(--dshpp-paper);
 }
 .dshpp-create-row {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
 }
 .dshpp-create .dshpp-field {
@@ -843,11 +753,11 @@
 .dshpp-editor {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   min-width: 0;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-md);
-  background: transparent;
+  border: 1px solid var(--dshpp-line);
+  border-radius: 8px;
+  background: var(--dshpp-bg);
   padding: 12px;
   min-height: 320px;
 }
@@ -860,86 +770,77 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--dsw-alias-label-secondary);
+  color: var(--dshpp-mute);
   font-size: 13px;
-  line-height: 20px;
   min-height: 160px;
 }
 .dshpp-block {
-  padding: 16px 0;
-  border-top: 0.5px solid var(--dsw-alias-border-l2);
+  padding: 14px 0;
+  border-top: 1px solid var(--dshpp-line);
 }
 .dshpp-block-head {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin: 0 0 8px;
 }
 .dshpp-block-head h4 {
   margin: 0;
-  font-family: var(--dsw-font-family);
+  font-family: var(--dshpp-display);
   font-size: 14px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: 0;
+  font-weight: 500;
   flex: 1;
-  color: var(--dsw-alias-label-primary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  color: var(--dshpp-ink);
 }
 .dshpp-block-hint {
   margin: 8px 0 0;
   font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-secondary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  line-height: 1.55;
+  color: var(--dshpp-mute);
 }
 .dshpp-policy-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 .dshpp-policy-row > label {
   font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-secondary);
+  color: var(--dshpp-mute);
   flex: 0 0 auto;
 }
 .dshpp-cwd-path {
   margin: 0 0 8px;
   font-family: var(--dshpp-mono);
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-secondary);
+  font-size: 11px;
+  color: var(--dshpp-mute);
   word-break: break-all;
+  line-height: 1.5;
 }
 .dshpp-cwd-list {
   display: flex;
   flex-direction: column;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-md);
-  background: transparent;
+  border: 1px solid var(--dshpp-line);
+  border-radius: 8px;
+  background: var(--dshpp-bg);
   overflow: hidden;
 }
 .dshpp-cwd-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px;
-  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--dshpp-line);
   cursor: pointer;
   margin: 0;
-  transition: background-color 0.16s ease-out;
 }
 .dshpp-cwd-item:last-child {
   border-bottom: 0;
 }
 .dshpp-cwd-item:hover {
-  background: var(--dsw-alias-interactive-bg-hover);
+  background: var(--dshpp-fill);
 }
 .dshpp-cwd-item.is-on {
-  background: var(--dsw-alias-bg-layer-3);
+  background: var(--dshpp-accent-soft);
 }
 .dshpp-cwd-item input {
   margin: 3px 0 0;
@@ -954,47 +855,41 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  font-family: var(--dsw-font-family);
-  font-size: 13px;
-  line-height: 20px;
-  color: var(--dsw-alias-label-primary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  font-family: var(--dshpp-display);
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--dshpp-ink);
 }
 .dshpp-cwd-badge {
   font-family: var(--dshpp-mono);
-  font-size: 12px;
+  font-size: 10px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: var(--dsw-radius-sm);
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  color: var(--dsw-alias-label-secondary);
-  line-height: 18px;
+  padding: 1px 7px;
+  border-radius: 99px;
+  border: 1px solid var(--dshpp-line);
+  color: var(--dshpp-mute);
+  line-height: 1.6;
 }
 .dshpp-cwd-size {
   font-family: var(--dshpp-mono);
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-secondary);
+  font-size: 11px;
+  color: var(--dshpp-mute);
 }
 .dshpp-cwd-sub {
-  margin-top: 4px;
+  margin-top: 3px;
   font-family: var(--dshpp-mono);
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  color: var(--dshpp-mute);
   word-break: break-all;
 }
 .dshpp-cwd-prev {
   margin-top: 4px;
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--dsw-alias-label-secondary);
-  max-height: 36px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--dshpp-mute);
+  max-height: 34px;
   overflow: hidden;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
 }
 @keyframes dshpp-pulse {
   0% {
@@ -1025,13 +920,57 @@
     animation: none;
   }
 }
-/* 인증/약관 모달: 라이트·다크 전용 오버라이드를 토큰으로 흡수했다 */
+body:not([data-ds-dark-theme]) .dshpp-auth-modal {
+  background: color-mix(
+    in srgb,
+    var(--dsw-alias-bg-layer-1, #fffcf7) 92%,
+    transparent
+  );
+  color: var(--dsw-alias-label-primary, #1a1916);
+  border-color: color-mix(
+    in srgb,
+    var(--dsw-alias-border-l1, #c9c3b6) 80%,
+    transparent
+  );
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+}
+body:not([data-ds-dark-theme]) .dshpp-auth-legal {
+  background: color-mix(
+    in srgb,
+    var(--dsw-alias-bg-layer-2, #f3f0e8) 90%,
+    transparent
+  );
+  color: var(--dsw-alias-label-primary, #1a1916);
+  border-color: color-mix(
+    in srgb,
+    var(--dsw-alias-border-l1, #c9c3b6) 80%,
+    transparent
+  );
+}
+body:not([data-ds-dark-theme]) .dshpp-auth-warn {
+  background: color-mix(in srgb, #f5e6c8 88%, transparent);
+  color: #6b4a10;
+}
+body:not([data-ds-dark-theme]) .dshpp-auth-ops button {
+  border-color: var(--dsw-alias-border-l1, #c9c3b6);
+  color: var(--dsw-alias-label-primary, #1a1916);
+  background: color-mix(
+    in srgb,
+    var(--dsw-alias-bg-layer-1, #fff) 88%,
+    transparent
+  );
+}
+body:not([data-ds-dark-theme]) .dshpp-auth-ops button.primary {
+  background: var(--dsw-alias-brand-primary, #3f6b52);
+  border-color: var(--dsw-alias-brand-primary, #3f6b52);
+  color: #fff;
+}
 .dshpp-auth-mask {
   position: fixed;
   inset: 0;
   z-index: 10100;
-  background: var(--dsw-alias-bg-mask-1);
-  backdrop-filter: var(--dsw-mask-blur);
+  background: rgba(0, 0, 0, 0.62);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1043,53 +982,39 @@
   max-height: min(88vh, 820px);
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 20px;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-lg);
-  background: var(--dsw-alias-bg-layer-1);
-  color: var(--dsw-alias-label-primary);
-  box-shadow: var(--dsw-elevation-panel);
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--dsw-alias-border-l1, #333);
+  border-radius: 12px;
+  background: var(--dsw-alias-bg-layer-1, #1a1a1a);
+  color: var(--dsw-alias-label-primary, #eee);
 }
 .dshpp-auth-modal h2 {
   margin: 0;
   font-size: 16px;
-  line-height: 24px;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--dsw-alias-label-primary);
-  word-break: keep-all;
-  overflow-wrap: anywhere;
 }
 .dshpp-auth-warn {
-  padding: 8px 12px;
-  border-radius: var(--dsw-radius-sm);
-  background: var(--dsw-alias-bg-layer-3);
-  color: var(--dsw-alias-state-warn-label);
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #3a2e18;
+  color: #f0d48a;
   font-size: 13px;
-  line-height: 20px;
 }
 .dshpp-auth-legal {
   overflow: auto;
   height: 300px;
   margin: 0;
-  padding: 12px;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-sm);
-  background: var(--dsw-alias-bg-layer-2);
-  color: var(--dsw-alias-label-primary);
+  padding: 10px 12px;
+  border: 1px solid var(--dsw-alias-border-l1, #333);
+  border-radius: 8px;
+  background: #121212;
   font-size: 13px;
-  line-height: 20px;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  line-height: 1.55;
 }
 .dshpp-auth-legal h3 {
-  margin: 16px 0 4px;
+  margin: 14px 0 4px;
   font-size: 13px;
-  line-height: 20px;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: var(--dsw-alias-label-primary);
 }
 .dshpp-auth-legal h3:first-child {
   margin-top: 0;
@@ -1102,8 +1027,6 @@
   flex-direction: column;
   gap: 8px;
   font-size: 13px;
-  line-height: 20px;
-  color: var(--dsw-alias-label-primary);
 }
 .dshpp-auth-checks label {
   display: flex;
@@ -1111,7 +1034,7 @@
   align-items: flex-start;
 }
 .dshpp-auth-checks label.locked {
-  opacity: 0.4;
+  opacity: 0.45;
 }
 .dshpp-auth-ops {
   display: flex;
@@ -1120,113 +1043,102 @@
 }
 .dshpp-auth-ops button {
   appearance: none;
-  box-sizing: border-box;
-  height: 28px;
-  padding: 0 10px;
-  border: 0.5px solid var(--dsw-alias-border-l3);
-  border-radius: var(--dsw-radius-sm);
+  border: 1px solid var(--dsw-alias-border-l1, #444);
   background: transparent;
-  color: var(--dsw-alias-label-primary);
+  color: inherit;
+  border-radius: 8px;
+  padding: 6px 12px;
   cursor: pointer;
   font: inherit;
-  font-family: var(--dsw-font-family);
-  font-size: 12px;
-  line-height: 18px;
-  letter-spacing: -0.01em;
-  transition:
-    background-color 0.16s ease-out,
-    color 0.16s ease-out,
-    border-color 0.16s ease-out;
 }
 .dshpp-auth-ops button.primary {
-  background: var(--dsw-alias-button-primary-fill);
-  border-color: transparent;
-  color: var(--dsw-alias-label-primary-foreground);
+  background: #2a4033;
+  border-color: #8fbf9a;
 }
 .dshpp-auth-ops button:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
   cursor: default;
 }
 .dshpp-icon-btn {
   appearance: none;
-  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
-  height: 28px;
+  gap: 6px;
+  height: 32px;
   padding: 0 10px;
-  border: 0.5px solid var(--dsw-alias-border-l3);
-  border-radius: var(--dsw-radius-sm);
+  border: 1px solid
+    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 45%, transparent);
+  border-radius: 8px;
   background: transparent;
-  color: var(--dsw-alias-label-secondary);
+  color: var(--dsw-alias-label-secondary, currentColor);
   cursor: pointer;
-  font: inherit;
-  font-family: var(--dsw-font-family);
-  font-size: 12px;
-  line-height: 18px;
-  letter-spacing: -0.01em;
+  font: 13px/1 inherit;
   white-space: nowrap;
   flex: 0 0 auto;
-  transition:
-    background-color 0.16s ease-out,
-    color 0.16s ease-out,
-    border-color 0.16s ease-out;
 }
 .dshpp-icon-btn:hover {
-  border-color: var(--dsw-alias-border-l4);
-  background: var(--dsw-alias-interactive-bg-hover);
-  color: var(--dsw-alias-label-primary);
+  border-color: var(--dsw-alias-brand-primary, #6dbf8c);
+  background: color-mix(
+    in srgb,
+    var(--dsw-alias-brand-primary, #6dbf8c) 12%,
+    transparent
+  );
+  color: var(--dsw-alias-label-primary, currentColor);
 }
 .dshpp-icon-btn.on {
-  border-color: var(--dsw-alias-button-ghost-active-border);
-  color: var(--dsw-alias-label-primary);
-  background: var(--dsw-alias-button-ghost-active-fill);
+  border-color: var(--dsw-alias-brand-primary, #6dbf8c);
+  color: var(--dsw-alias-brand-primary, #6dbf8c);
+  background: color-mix(
+    in srgb,
+    var(--dsw-alias-brand-primary, #6dbf8c) 16%,
+    transparent
+  );
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 28%, transparent);
 }
 .dshpp-hbtn {
   appearance: none;
-  box-sizing: border-box;
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
-  height: 28px;
-  padding: 0 10px;
-  border: 0.5px solid var(--dsw-alias-border-l3);
-  border-radius: var(--dsw-radius-sm);
+  gap: 6px;
+  border: 1px solid
+    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 55%, transparent);
   background: transparent;
-  color: var(--dsw-alias-label-secondary);
+  color: var(--dsw-alias-label-secondary, currentColor);
   cursor: pointer;
-  font: inherit;
-  font-family: var(--dsw-font-family);
-  font-size: 12px;
-  line-height: 18px;
-  letter-spacing: -0.01em;
+  font: 12px/1 inherit;
+  padding: 5px 10px;
+  border-radius: 8px;
   white-space: nowrap;
-  transition:
-    background-color 0.16s ease-out,
-    color 0.16s ease-out,
-    border-color 0.16s ease-out;
 }
 .dshpp-hbtn:hover {
-  border-color: var(--dsw-alias-border-l4);
-  background: var(--dsw-alias-interactive-bg-hover);
-  color: var(--dsw-alias-label-primary);
+  border-color: var(--dsw-alias-brand-primary, #6dbf8c);
+  background: color-mix(
+    in srgb,
+    var(--dsw-alias-brand-primary, #6dbf8c) 12%,
+    transparent
+  );
+  color: var(--dsw-alias-label-primary, currentColor);
 }
 .dshpp-hbtn.on {
-  border-color: var(--dsw-alias-button-ghost-active-border);
-  color: var(--dsw-alias-label-primary);
-  background: var(--dsw-alias-button-ghost-active-fill);
+  border-color: var(--dsw-alias-brand-primary, #6dbf8c);
+  color: var(--dsw-alias-brand-primary, #6dbf8c);
+  background: color-mix(
+    in srgb,
+    var(--dsw-alias-brand-primary, #6dbf8c) 18%,
+    transparent
+  );
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 32%, transparent);
 }
 .dshpp-live-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   flex: none;
-  background: var(--dsw-alias-state-success-primary);
-  outline: 2px solid
-    color-mix(in srgb, var(--dsw-alias-state-success-primary) 24%, transparent);
-  outline-offset: -1px;
+  background: var(--dsw-alias-brand-primary, #6dbf8c);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--dsw-alias-brand-primary, #6dbf8c) 28%, transparent);
 }
-/* 유리는 호스트 색상을 따른다. 글자 두께와 바탕의 불투명도를 분리한다: 껍데기는 투명하고, 글자는 더 실한 층 위에 앉는다. */
+/* 玻璃跟随宿主颜色。字重和底的不透明度分开：壳透，字坐在更实的一层上。 */

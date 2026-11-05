@@ -1,6 +1,6 @@
-> 아카이브 스냅샷: 원본 업스트림 저장소 `YuJunZhiXue/dsh-purge` 는 더 이상 접근할 수 없다. 이 문서의 업스트림 링크는 기록용이며 클릭하면 404 가 날 수 있다.
+> 归档快照：原上游仓库 `YuJunZhiXue/dsh-purge` 已不可访问，本文中的上游链接仅作历史记录，点击可能 404。
 
-> **Native panel fork:** This branch adds a separately installable presentation plugin in [`packages/purge-panel`](../../packages/purge-panel). Upstream backend behavior is unchanged. See [maintenance and update instructions](../../NATIVE-PANEL.md).
+> **Native panel fork:** This branch adds a separately installable presentation plugin in [`packages/purge-panel`](packages/purge-panel). Upstream backend behavior is unchanged. See [maintenance and update instructions](NATIVE-PANEL.md).
 
 <p align="center">
   <img src="docs/banner.svg" alt="dsh-purge" width="720">
@@ -11,7 +11,7 @@
 <p align="center"><strong>Version 1.1.71</strong></p>
 
 <p align="center">
-  <em>DeepSeek Harness jailbreak: every model, swap prompts per model. Default prompt for Little Code Sauce. Please star ⭐ If you build on this, see Attribution required.</em>
+  <em>DeepSeek Harness jailbreak: every model, swap prompts per model. Default prompt for 小码酱. Please star ⭐ If you build on this, see Attribution required.</em>
 </p>
 
 <p align="center">
@@ -30,7 +30,7 @@
 </p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.ko-KR.md">한국어</a>
+  <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a>
 </p>
 
 > **Updates paused.** The author has no steady income for now because of work. Maintenance is on hold: no new releases, issues / PRs are not taken, and new dsh versions are not guaranteed. The repo stays usable; see Sponsor below. When maintenance resumes, this README will say so.
@@ -105,17 +105,17 @@ Using them without attribution, hiding the source, or passing them off as your o
 
 ## Unauthorized commercial use
 
-Douyin live account **"Lao Zhang's AI"** (room name **"Lao Zhang AI Classroom"**) is selling this repository: taking fees in the live room, no attribution, and ignoring the non-profit rule above. The author was in the room. They still charged.
+Douyin live account **「老张的ai」** (room name **「老张AI讲堂」**) is selling this repository: taking fees in the live room, no attribution, and ignoring the non-profit rule above. The author was in the room. They still charged.
 
 This project is free and non-profit. Selling courses, the plugin, tokens, or reselling it voids the license on the spot. The author reserves the right to pursue it.
 
 Recorded 2026-10-12:
 
-<p align="center"><em>라이브 방송 화면 캡처는 제거했다(제3자 계정 정보 포함).</em></p>
+<p align="center"><em>直播间截图已移除（涉及第三方账号信息）。</em></p>
 
-WeChat name **"Lao Zhang AI Tech"**, same handle as the live-room viewer board. Asked if they were this repo's developer, they said they were. The author said they would report it.
+WeChat name **「老张的ai科技」**, same handle as the live-room viewer board. Asked if they were this repo's developer, they said they were. The author said they would report it.
 
-<p align="center"><em>WeChat 대화 화면 캡처는 제거했다(제3자 사생활 포함).</em></p>
+<p align="center"><em>微信聊天截图已移除（涉及第三方隐私）。</em></p>
 
 ---
 
@@ -325,7 +325,16 @@ dsh-purge --uninstall
 # /purge uninstall
 ```
 
-Plugin config lives in `cordis.patch.yml` (`postPrompt` is empty by default):
+<!-- legacy-standalone-config -->
+> [!WARNING]
+> **Historical standalone-package example: do not copy it into the community build.**
+> The community bundle already supplies its plugin entries. Adding another manual entry
+> can duplicate them or fail to resolve the old package name. A supported dependency alias
+> is not itself an error: inspect the active profile and actual package first.
+> Preserve and merge existing configuration; do not delete an entire insert group or entries
+> by name prefix. See [installation and troubleshooting](../INSTALLATION.md).
+
+Historical standalone plugin configuration (`postPrompt` is empty by default):
 
 ```yaml
 - insert:
@@ -351,25 +360,25 @@ The first time you open Drill you read the notice, wait out the countdown, scrol
 
 **Clean**
 
-![Clean](../preview/dock-clean.png)
+![Clean](docs/preview/dock-clean.png)
 
 **Drill authorization**
 
-![Drill authorization](../preview/dock-auth.png)
+![Drill authorization](docs/preview/dock-auth.png)
 
 **Drill**
 
-![Drill](../preview/dock-drill.png)
+![Drill](docs/preview/dock-drill.png)
 
 **Patches**
 
-![Patches](../preview/settings.png)
+![Patches](docs/preview/settings.png)
 
 **Own servers**
 
 On the Clean page, under Prompt. One host per line, then Save list. Steps are in [Own servers](#own-servers).
 
-![Own servers](../preview/own-servers-en.png)
+![Own servers](docs/preview/own-servers-en.png)
 
 | Area | What it shows |
 |---|---|

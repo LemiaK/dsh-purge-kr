@@ -1,86 +1,86 @@
 ---
 name: kimi-webbridge
-description: Moonshot 의 Kimi 브라우저 확장(WebBridge)으로 사용자의 실제 Chrome/Chromium 을 구동: 탐색, 페이지 읽기, 클릭, 폼 입력, JS 실행, 스크린샷
-whenToUse: 브라우저 로그인 세션으로 백오피스에 접근해야 하거나 / JS 렌더링 페이지가 필요하거나 / 실제 브라우저 지문이 필요할 때
+description: 用月之暗面 Kimi 浏览器扩展（WebBridge）驱动用户真实 Chrome/Chromium：导航、读取页面、点击、填表、执行 JS、截图
+whenToUse: 需要复用浏览器登录态访问后台/需要 JS 渲染的页面/需要真实浏览器指纹时
 role: recon
 enabled: true
 ---
 
-# Kimi WebBridge(브라우저 확장 + 로컬 데몬)
+# Kimi WebBridge（浏览器扩展 + 本地守护进程）
 
-설치되어 실행 중이다: 데몬 **v2.0.8**(systemd 서비스 `kimi-webbridge`, 부팅 시 자동 시작), `127.0.0.1:10086` 리스닝, 바이너리 `~/.kimi-webbridge/bin/kimi-webbridge`.
+已安装并运行：守护进程 **v2.0.8**（systemd 服务 `kimi-webbridge`，开机自启），监听 `127.0.0.1:10086`，二进制 `~/.kimi-webbridge/bin/kimi-webbridge`。
 
-## 현재 상태(2026-09 실측)
-- 데몬: **systemd 가 관리한다**(`/etc/systemd/system/kimi-webbridge.service`, `enabled` + `active`, `Restart=on-failure`).
-  상태 확인: `systemctl status kimi-webbridge`; 재시작은 `sudo systemctl restart kimi-webbridge`.
-  **`kimi-webbridge start`/`upgrade` 를 수동으로 다시 실행하지 않는다**, 그러면 떠도는 프로세스가 생기고 systemd 는 오히려 inactive 가 된다; 업그레이드는 다음 순서로 한다
-  `sudo systemctl stop kimi-webbridge && ~/.kimi-webbridge/bin/kimi-webbridge upgrade && sudo systemctl start kimi-webbridge`.
-- 확장: **Kimi WebBridge v2.0.8, 기업 정책으로 Chrome 웹 스토어에서 자동 설치된다**(확장 ID `fldmhceldgbpfpkbgopacenieobmligc`).
-  정책 파일 `/etc/opt/chrome/policies/managed/kimi-webbridge.json` 와 `/etc/chromium/policies/managed/kimi-webbridge.json`
-  둘 다 `ExtensionSettings.force_installed` + `ExtensionInstallForcelist` 를 설정하므로 **Chrome / Chromium 은 어떤 profile 로 열어도 확장이 기본 포함되고 자동 업데이트되며 상시 활성화된다**.
-- Chrome 137+ 는 `--load-extension` 을 무시하며(`--disable-features=…` 우회로도 통하지 않는다), 따라서 **압축 해제 로딩 경로를 다시 쓰지 않는다**.
-- `status` 에 `extension_connected: false` 가 보이면: 99% 는 **브라우저가 실행 중이 아닌 것**뿐이므로, 아무 브라우저나 기동하면(`kimi-chrome` 또는 Chrome/Chromium 아이콘 직접 클릭) 5초 안에 자동으로 연결된다.
-- 단순 페이지 내용 추출은 스킬 `browser-automation` 을 우선 쓴다(더 빠르고 브라우저 창에 의존하지 않는다); **실제 로그인 세션을 재사용해야 할 때는 반드시 이 스킬을 쓴다**
+## 当前状态（2026-09 实测）
+- 守护进程：**由 systemd 管理**（`/etc/systemd/system/kimi-webbridge.service`，`enabled` + `active`，`Restart=on-failure`）。
+  查状态：`systemctl status kimi-webbridge`；重启用 `sudo systemctl restart kimi-webbridge`。
+  **不要再手动跑 `kimi-webbridge start`/`upgrade`**，那会起一个游离进程、systemd 反而变 inactive；要升级用
+  `sudo systemctl stop kimi-webbridge && ~/.kimi-webbridge/bin/kimi-webbridge upgrade && sudo systemctl start kimi-webbridge`。
+- 扩展：**Kimi WebBridge v2.0.8，由企业策略自动从 Chrome 应用商店安装**（扩展 ID `fldmhceldgbpfpkbgopacenieobmligc`）。
+  策略文件 `/etc/opt/chrome/policies/managed/kimi-webbridge.json` 与 `/etc/chromium/policies/managed/kimi-webbridge.json`
+  都设置了 `ExtensionSettings.force_installed` + `ExtensionInstallForcelist`，所以 **Chrome / Chromium 的任何 profile 打开即自带扩展、自动更新、常驻启用**。
+- Chrome 137+ 已忽略 `--load-extension`（`--disable-features=…` 的逃生口也失效），所以**不要再走解压加载路线**。
+- 若 `status` 显示 `extension_connected: false`：99% 只是**没有浏览器在运行**，启动任一浏览器（`kimi-chrome` 或直接点 Chrome/Chromium 图标）后 5 秒内会自动连上。
+- 简单取页面内容可优先用技能 `browser-automation`（更快、不依赖浏览器窗口）；**需要复用真实登录态时必须用本技能**
 
-## 전제 조건
-1. 데몬이 실행 중이어야 한다: `~/.kimi-webbridge/bin/kimi-webbridge status` 가 `"running": true` 를 보여야 한다(부팅 시 자동 시작, 정상이라면 개입할 필요 없다).
-2. **브라우저 하나가 반드시 실행 중이어야 한다**(확장은 브라우저 프로세스가 살아 있을 때만 연결을 유지한다). 런처 `~/.local/bin/kimi-chrome`:
-   - 기본적으로 Chrome **기본 profile** 을 실행한다(실제 로그인 세션이 담겨 있고, 브리지의 가치가 여기에 있다);
-   - `KIMI_BROWSER=chromium kimi-chrome` 로 Chromium 을 쓴다; `KIMI_PROFILE=/path kimi-chrome` 로 별도 profile 을 지정한다(로그인 세션 없음).
-3. 연결 확인:
+## 先决条件
+1. 守护进程已运行：`~/.kimi-webbridge/bin/kimi-webbridge status` 应显示 `"running": true`（开机自启，正常无需干预）。
+2. **必须有一个浏览器在运行**（扩展只在浏览器进程存活时维持连接）。启动器 `~/.local/bin/kimi-chrome`：
+   - 默认启动 Chrome **默认 profile**（带真实登录态，桥接的价值就在这）；
+   - `KIMI_BROWSER=chromium kimi-chrome` 改用 Chromium；`KIMI_PROFILE=/path kimi-chrome` 指定独立 profile（无登录态）。
+3. 检查连接：
 ```bash
 curl -s http://127.0.0.1:10086/status | python3 -m json.tool
-# "extension_connected": true 가 보여야 하며, 아니면 이후 명령이 실패한다
+# 必须看到 "extension_connected": true，否则后续命令会失败
 ```
 
-## 호출 방식
+## 调用方式
 ```bash
 WB=http://127.0.0.1:10086/command
 call() { printf '%s' "$2" > /tmp/wb.json; curl -s -X POST $WB -H 'Content-Type: application/json' --data-binary @/tmp/wb.json; }
 ```
-> 유니코드(한글)가 포함된 JSON 은 항상 임시 파일 + `--data-binary` 로 보낸다, echo/heredoc 으로 인라인하지 않는다.
+> 含中文的 JSON 一律走临时文件 + `--data-binary`，不要用 echo/heredoc 内联。
 
-### 자주 쓰는 액션
+### 常用动作
 ```bash
-# 페이지 열기(새 탭)
+# 打开页面（新标签）
 call navigate '{"action":"navigate","args":{"url":"https://target.example.com/login","newTab":true,"group_title":"recon"},"session":"recon1"}'
 
-# 페이지 순수 텍스트 읽기(가장 많이 쓴다)
+# 读取页面纯文本（最常用）
 call evaluate '{"action":"evaluate","args":{"code":"(() => document.body.innerText.slice(0,6000))()"},"session":"recon1"}'
 
-# 접근성 트리 가져오기(@e 요소 참조가 포함되어 이후 click/fill 에 편하다)
+# 取无障碍树（带 @e 元素引用，便于后续 click/fill）
 call snapshot '{"action":"snapshot","args":{},"session":"recon1"}'
 
-# 임의 JS 실행: 프런트엔드 엔드포인트 목록 수집(정보 수집/엔드포인트 발견의 핵심)
+# 执行任意 JS：抓前端接口清单（信息收集/接口发现神器）
 call evaluate '{"action":"evaluate","args":{"code":"(() => {const s=new Set();for(const e of performance.getEntriesByType(\"resource\"))s.add(e.name);const m=document.documentElement.innerHTML.match(/[\\\"\\x27]\\/(api|v[0-9])\\/[a-zA-Z0-9_\\-\\/{}]+/g)||[];m.forEach(x=>s.add(x));return [...s].slice(0,200).join(\"\\n\")})()"},"session":"recon1"}'
 
-# 클릭 / 폼 입력
+# 点击 / 填表
 call click '{"action":"click","args":{"ref":"@e12"},"session":"recon1"}'
 call fill  '{"action":"fill","args":{"ref":"@e15","value":"admin"},"session":"recon1"}'
 
-# 스크린샷(파일 경로를 반환하며 base64 가 아니다)
-call screenshot '{"action":"screenshot","args":{"path":"$DSH_HOME/redteam/engagements/<TARGET>/runs/shot.png"},"session":"recon1"}'
+# 截图（返回文件路径，不是 base64）
+call screenshot '{"action":"screenshot","args":{"path":"$DSH_HOME/redteam/engagements/<靶标>/runs/shot.png"},"session":"recon1"}'
 
-# 네트워크 요청 수집(엔드포인트 찾기)
+# 抓网络请求（找接口）
 call network '{"action":"network","args":{},"session":"recon1"}'
 
-# 탭 목록/닫기
+# 列出/关闭标签
 call list_tabs '{"action":"list_tabs","args":{},"session":"recon1"}'
 call close_session '{"action":"close_session","args":{},"session":"recon1"}'
 ```
-원시 CDP 패스스루(고급): `{"action":"cdp","args":{"method":"Network.getAllCookies"}}`.
+原始 CDP 透传（高级）：`{"action":"cdp","args":{"method":"Network.getAllCookies"}}`。
 
-## 레드팀 흐름에서의 사용법
-- **엔드포인트 발견**: 사이트를 열고 → `evaluate` 로 resource timing + 페이지 내 JS 의 엔드포인트 경로를 수집하고 → 엔드포인트 목록을 취약점 탐지 역할에 넘겨 권한 우회/비인가 테스트를 한다.
-- **로그인 세션 페이지**: 사용자가 브라우저에서 이미 로그인한 백오피스는 `navigate` + `evaluate` 로 바로 내용을 읽을 수 있고 다시 로그인할 필요가 없다.
-- **JS 렌더링 사이트**: curl 보다 실제에 가깝고 SPA 렌더링 후의 DOM 을 얻을 수 있다.
-- 발견한 URL/제목은 평소대로 `redteam_asset_add` 로 되돌려 기록한다(`tool="kimi-webbridge"`).
+## 在红队流程里的用法
+- **接口发现**：打开站点 → `evaluate` 抓 resource timing + 页面内 JS 里的接口路径 → 把接口清单交给漏洞检测角色做越权/未授权测试。
+- **登录态页面**：用户在浏览器里已登录的后台，可直接 `navigate` + `evaluate` 读取内容，无需重新登录。
+- **JS 渲染站点**：比 curl 更真实，能拿到 SPA 渲染后的 DOM。
+- 发现的 URL/标题照常写回 `redteam_asset_add`（`tool="kimi-webbridge"`）。
 
-## 제약(반드시 알아야 한다)
-- **headless 없음**: 그래픽 세션이 반드시 있어야 한다(이 PC 는 `DISPLAY=:10.0` 사용 가능).
-- Chrome/Edge 만 지원한다; 교차 출처 iframe 은 지원하지 않는다; `click`/`fill` 은 합성 이벤트이므로 캡차/은행 보안 컨트롤에는 동작하지 않는다.
-- 확장과 데몬 버전이 강하게 결합되어 있다: `status` 의 `update_available` 이 비어 있지 않으면 위의 systemd 정지 → `upgrade` → 기동 절차로 데몬을 업그레이드한다; 확장은 정책에 따라 최신 버전으로 자동 업데이트된다.
-- Linux 는 공식 지원 매트릭스에 없다(동작하지만 보장하지 않는다).
+## 限制（务必知道）
+- **无 headless**：必须有图形会话（本机 `DISPLAY=:10.0` 可用）。
+- 只支持 Chrome/Edge；跨域 iframe 不支持；`click`/`fill` 是合成事件，验证码/银行控件无效。
+- 扩展与守护进程版本强耦合：`status` 里 `update_available` 不为空就按上面的 systemd 停机 → `upgrade` → 启机流程升级守护进程；扩展由策略自动更新到最新版。
+- Linux 不在官方支持矩阵（能用但不保证）。
 
-## 확장이 없을 때의 대체 수단
-스킬 `browser-automation` 을 참조한다(headless chromium 무의존성 방식).
+## 无扩展时的兜底
+见技能 `browser-automation`（headless chromium 零依赖方案）。

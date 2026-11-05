@@ -1,4 +1,4 @@
-// 세션 컴포저의 "되돌리기"(rewind) 버튼. YuJunZhiXue/dsh-purge 에서 이식했다
+// Session composer "回退" (rewind) button ported from YuJunZhiXue/dsh-purge
 // 1.1.71 (MIT). Original block: client.js 1.1.71 lines 2835-3474:
 // REWIND_CSS, RewindSafe/RewindFallback/RewindButton, installRewindUi,
 // installRewindWatch.
@@ -61,14 +61,14 @@ function rewindMenuNode(t, menuPos, menuRef, runRewind) {
           runRewind("once");
         },
       },
-      h("b", null, rewindText(t, "rewind.once", "한 번 되돌리기")),
+      h("b", null, rewindText(t, "rewind.once", "回退一次")),
       h(
         "span",
         null,
         rewindText(
           t,
           "rewind.once.hint",
-          "이번 라운드에서 보낸 문장을 입력창에 되돌려 놓고, 이번 라운드를 지웁니다",
+          "把这一轮发出去的那句放回输入框，并清掉这一轮",
         ),
       ),
     ),
@@ -87,14 +87,14 @@ function rewindMenuNode(t, menuPos, menuRef, runRewind) {
           runRewind("round");
         },
       },
-      h("b", null, rewindText(t, "rewind.round", "이전 라운드 되돌리기")),
+      h("b", null, rewindText(t, "rewind.round", "回退上一轮")),
       h(
         "span",
         null,
         rewindText(
           t,
           "rewind.round.hint",
-          "이번 라운드에서 보낸 문장을 입력창에 되돌려 놓습니다. 서브에이전트도 이번 라운드만 철회합니다",
+          "把这一轮发出去的那句放回输入框；子代理也只撤这一轮",
         ),
       ),
     ),
@@ -132,7 +132,7 @@ export class RewindFallback extends Component {
     })
       .then(async (data) => {
         if (!data || !data.ok || !data.sessionId || data.cleared === false) {
-          throw new Error((data && data.error) || "이전에 보낸 내용을 지우지 못했습니다");
+          throw new Error((data && data.error) || "没有清掉之前发送的内容");
         }
         noteRewindAt(data.at);
         const text = isPluginDraft(data.text) ? "" : data.text || "";
@@ -144,7 +144,7 @@ export class RewindFallback extends Component {
       .catch((e) => {
         this.setState({
           busy: false,
-          notice: "되돌리기 실패: " + String((e && e.message) || e),
+          notice: "回退失败: " + String((e && e.message) || e),
         });
       });
   }
@@ -168,10 +168,10 @@ export class RewindFallback extends Component {
     const sessionId = this.props.sessionId || currentSessionId(hostSessions());
     const t = this.props.t || null;
     const label = this.state.busy
-      ? "되돌리는 중…"
+      ? "回退中…"
       : this.state.notice
         ? this.state.notice.slice(0, 18)
-        : "되돌리기";
+        : "回退";
     return h(
       "div",
       {
@@ -209,7 +209,7 @@ export class RewindFallback extends Component {
   }
 }
 
-/** 되돌리기 버튼 표시 여부: 기본은 표시(원본 기능)이며, `purge-community rewind off` 로 끌 수 있다. */
+/** 回退按钮是否显示：默认显示（原版功能），可用 `purge-community rewind off` 关掉。 */
 let rewindVisible = true;
 let rewindProbe = null;
 
@@ -303,7 +303,7 @@ export function RewindButton(props) {
         body: JSON.stringify({ sessionId, mode }),
       });
       if (!data || !data.ok || !data.sessionId || data.cleared === false) {
-        throw new Error((data && data.error) || "이전에 보낸 내용을 지우지 못했습니다");
+        throw new Error((data && data.error) || "没有清掉之前发送的内容");
       }
       noteRewindAt(data.at);
       const text = isPluginDraft(data.text) ? "" : data.text || "";
@@ -311,7 +311,7 @@ export function RewindButton(props) {
       await openRewoundSession(sessions, data.sessionId);
       scheduleComposerFill(data.sessionId, text);
     } catch (e) {
-      const message = rewindText(t, "rewind.fail", "되돌리기 실패: {error}").replace(
+      const message = rewindText(t, "rewind.fail", "回退失败: {error}").replace(
         "{error}",
         String((e && e.message) || e),
       );
@@ -346,9 +346,9 @@ export function RewindButton(props) {
       : notice
     : "";
   const label = busy
-    ? rewindText(t, "rewind.busy", "되돌리는 중…")
-    : failLabel || rewindText(t, "rewind.label", "되돌리기");
-  const title = notice || rewindText(t, "rewind.aria", "되돌리기");
+    ? rewindText(t, "rewind.busy", "回退中…")
+    : failLabel || rewindText(t, "rewind.label", "回退");
+  const title = notice || rewindText(t, "rewind.aria", "回退");
   return h(
     "div",
     { className: "dshp-rewind-wrap", ref: wrapRef },
@@ -359,7 +359,7 @@ export function RewindButton(props) {
         type: "button",
         className: "dshp-rewind",
         title,
-        "aria-label": rewindText(t, "rewind.aria", "되돌리기"),
+        "aria-label": rewindText(t, "rewind.aria", "回退"),
         "aria-expanded": menu ? "true" : "false",
         disabled: busy || !sessionId,
         onMouseDown: (e) => e.preventDefault(),

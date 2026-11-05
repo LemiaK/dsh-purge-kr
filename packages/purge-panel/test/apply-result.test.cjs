@@ -8,7 +8,7 @@ const { buildSync } = require("esbuild");
 const code = buildSync({
   stdin: {
     contents:
-      'export { PurgifySection } from "./src/components/settings-form.js"; export { incompleteApplyDetail } from "./src/shared/apply-result.js"; export { ko, en, setTranslate } from "./src/shared/locale.js";',
+      'export { PurgifySection } from "./src/components/settings-form.js"; export { incompleteApplyDetail } from "./src/shared/apply-result.js"; export { zh, en, setTranslate } from "./src/shared/locale.js";',
     resolveDir: path.join(__dirname, ".."),
   },
   bundle: true,
@@ -60,7 +60,7 @@ function harness(result, applyStatus = 200) {
   vm.runInNewContext(code, context);
   const exports = context.module.exports;
   const tr = (key, values = {}) =>
-    (exports.ko[key] || key).replace(/\{(\w+)\}/g, (_, k) =>
+    (exports.zh[key] || key).replace(/\{(\w+)\}/g, (_, k) =>
       String(values[k] ?? ""),
     );
   exports.setTranslate(tr);
@@ -72,11 +72,11 @@ test("legacy incomplete response never invents a CMD failure or claims prompt pe
     { ok: true, complete: false, failed: 0, cmd_flash: { ok: true } },
     h.tr,
   );
-  assert.match(message, /구체적 원인을 반환하지 않았습니다/);
-  assert.doesNotMatch(message, /CMD|터미널 창 억제|프롬프트를 기록/);
+  assert.match(message, /未返回具体原因/);
+  assert.doesNotMatch(message, /CMD|窗口抑制|提示词已写入/);
   assert.match(
     h.incompleteApplyDetail({ complete: false }, h.tr),
-    /구체적 원인을 반환하지 않았습니다/,
+    /未返回具体原因/,
   );
 });
 test("explicit host, restoration and runtime failures remain distinct and visible", () => {
@@ -89,10 +89,10 @@ test("explicit host, restoration and runtime failures remain distinct and visibl
     },
     h.tr,
   );
-  assert.match(message, /대상 호스트/);
-  assert.match(message, /구성 복원/);
+  assert.match(message, /目标宿主/);
+  assert.match(message, /配置恢复/);
   assert.match(message, /CLI/);
-  assert.doesNotMatch(message, /터미널 창 억제/);
+  assert.doesNotMatch(message, /窗口抑制/);
 });
 test("actual terminal check failures and failed item IDs are retained together", () => {
   const h = harness();
@@ -105,23 +105,23 @@ test("actual terminal check failures and failed item IDs are retained together",
     h.tr,
   );
   assert.match(message, /#12,13/);
-  assert.match(message, /터미널 창 억제 검사가 통과하지 못했습니다 \(missing\)/);
+  assert.match(message, /窗口抑制检查未通过（missing）/);
   assert.match(
     h.incompleteApplyDetail({ failed: 1, failed_items: "bad" }, h.tr),
     /#\?/,
   );
 });
-test("new diagnostic strings have Korean and English translations", () => {
+test("new diagnostic strings have Chinese and English translations", () => {
   const h = harness();
   for (const key of ["host", "restore", "runtime", "unknown", "flash"])
-    for (const dict of [h.ko, h.en])
+    for (const dict of [h.zh, h.en])
       assert.equal(typeof dict["restart.incomplete." + key], "string");
 });
 for (const [name, result, expected] of [
   [
     "legacy unknown",
     { ok: true, complete: false, failed: 0, cmd_flash: { ok: true } },
-    /구체적 원인을 반환하지 않았습니다/,
+    /未返回具体原因/,
   ],
   [
     "confirmed host condition",
@@ -132,7 +132,7 @@ for (const [name, result, expected] of [
       cmd_flash: { ok: true },
       host_written: false,
     },
-    /대상 호스트/,
+    /目标宿主/,
   ],
 ])
   test(`actual Apply interaction renders ${name} as an error without restart or extra writes`, async () => {
@@ -146,7 +146,7 @@ for (const [name, result, expected] of [
     try {
       const apply = tree.root
         .findAllByType("button")
-        .find((b) => b.children.join("") === "적용");
+        .find((b) => b.children.join("") === "应用");
       assert(apply);
       await act(async () => {
         apply.props.onClick();
@@ -157,7 +157,7 @@ for (const [name, result, expected] of [
         (n) =>
           n.type === "span" &&
           n.props.className === "dshpp-notice is-bad" &&
-          n.children.join("").startsWith("적용이 끝나지 않았습니다"),
+          n.children.join("").startsWith("应用未完成"),
       );
       assert(notice.length > 0);
       assert(
@@ -166,7 +166,7 @@ for (const [name, result, expected] of [
         ),
       );
       assert.match(notice[0].children.join(""), expected);
-      assert.doesNotMatch(notice[0].children.join(""), /CMD 창 없이|프롬프트를 기록/);
+      assert.doesNotMatch(notice[0].children.join(""), /CMD 无感|提示词已写入/);
       assert.deepEqual(
         h.calls
           .filter((c) => c.method === "POST")
@@ -226,7 +226,7 @@ test("Apply HTTP 500 displays runtime details without restart or leaking respons
   try {
     const apply = tree.root
       .findAllByType("button")
-      .find((b) => b.children.join("") === "적용");
+      .find((b) => b.children.join("") === "应用");
     await act(async () => {
       apply.props.onClick();
       await flush();

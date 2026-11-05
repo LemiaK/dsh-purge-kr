@@ -1,4 +1,4 @@
-// 감사 회귀: 이 테스트 묶음은 보고와 사실이 어긋나는 결함 네 건에 대응한다. 고치기 전에는 전부 실패했다.
+// 审计回归：这一组用例对应四个“报告和事实不一致”的缺陷，修好之前它们全部失败。
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -11,21 +11,21 @@ import { dirBackup, dirRestore } from "../lib/update-install.js";
 
 const tmp = (tag) => fs.mkdtempSync(path.join(os.tmpdir(), `purge ${tag} `));
 
-test("패치 상태를 읽지 못하면 자기 점검을 전부 초록으로 보고하지 않는다", () => {
-  // patchStatus 가 예외를 던지면 selfCheck 는 status={} + statusError 를 넘긴다: 모든 계층이 unknown 이어야 한다.
+test("读取补丁状态失败时，自检不能报成全绿", () => {
+  // patchStatus 抛错后 selfCheck 传 status={} + statusError：每一层都必须是 unknown。
   const failed = rollupLayers({}, true, { statusError: "patchStatus boom" });
   assert(failed.every((l) => l.state === "unknown" && l.ok === false));
-  assert(failed.every((l) => l.broken.length === 0), "상태를 읽지 못한 것은 패치 손상과 같지 않다");
+  assert(failed.every((l) => l.broken.length === 0), "读不到状态不等于补丁损坏");
   assert(failed[0].note.includes("patchStatus boom"));
   assert.equal(failed[0].status_error, "patchStatus boom");
 
-  // 빈 상태 표는 대상 누락을 증명하지 못한다: 반환되지 않은 상태는 여전히 미지여야 한다.
+  // 空状态表不能证明目标缺失：未返回的状态仍应未知。
   assert(rollupLayers({}, true).every((l) => l.state === "unknown"));
-  // 호스트를 찾지 못한 경우도 unknown 이며, 위의 오류 분기에 삼켜지지 않는다.
+  // 未定位宿主仍是 unknown，不会被上面的错误分支吞掉。
   assert(rollupLayers({}, false).every((l) => l.state === "unknown"));
 });
 
-test("프리릴리스 구간은 숫자로 비교한다: rc.2 가 rc.10 보다 새롭지 않다", () => {
+test("预发布段按数字比较：rc.2 不比 rc.10 新", () => {
   assert.equal(versionIsNewer("0.2.1-rc.2", "0.2.1-rc.10"), false);
   assert.equal(versionIsNewer("0.2.1-rc.10", "0.2.1-rc.2"), true);
   assert.equal(versionIsNewer("0.2.1-rc.2", "0.2.1"), false);
@@ -34,13 +34,13 @@ test("프리릴리스 구간은 숫자로 비교한다: rc.2 가 rc.10 보다 �
   assert.equal(versionIsNewer("1.6.100", "1.6.99"), true);
 });
 
-test("sameRev 는 git sha 에만 접두 비교를 하고 apply:<버전> 을 같은 개정으로 보지 않는다", () => {
+test("sameRev 只对 git sha 做前缀比较，不把 apply:<版本> 当成同一修订", () => {
   assert.equal(sameRev("apply:1.6.2", "apply:1.6.27"), false);
   assert.equal(sameRev("abc1234", "abc1234def"), true);
   assert.equal(sameRev("abc1234", "fff9999"), false);
 });
 
-test("rename 이 일시적 점유를 만나면 물러섰다 재시도하고, 상태 파일 쓰기를 바로 실패시키지 않는다", () => {
+test("rename 撞到瞬时占用会退避重试，而不是直接让状态文件写失败", () => {
   const root = tmp("rename");
   const file = path.join(root, "state.json");
   fs.writeFileSync(file, "old");
@@ -54,10 +54,10 @@ test("rename 이 일시적 점유를 만나면 물러섰다 재시도하고, 상
     };
     atomicFiles(fake).atomicWriteSync(file, "new");
     assert.equal(fs.readFileSync(file, "utf8"), "new");
-    assert.equal(calls, 3, "앞의 두 번 EBUSY 뒤에 한 번 더 시도해야 한다");
-    assert.deepEqual(fs.readdirSync(root), ["state.json"], "재시도가 임시 파일을 남기면 안 된다");
+    assert.equal(calls, 3, "前两次 EBUSY 后应再试一次");
+    assert.deepEqual(fs.readdirSync(root), ["state.json"], "重试不应留下临时文件");
 
-    // 점유 계열이 아닌 오류는 재시도하지 않는다: 권한 오류 재시도는 의미가 없다.
+    // 非占用类错误不重试：权限错误重试没有意义。
     let fatal = 0;
     const deny = { ...fs, promises: { ...fs.promises } };
     deny.renameSync = () => {
@@ -71,7 +71,7 @@ test("rename 이 일시적 점유를 만나면 물러섰다 재시도하고, 상
   }
 });
 
-test("디렉터리 롤백은 백업이 의도적으로 건너뛴 node_modules 를 지켜 낸다", () => {
+test("目录回滚保住被备份有意跳过的 node_modules", () => {
   const root = tmp("dirrestore");
   const home = path.join(root, "home");
   const dir = path.join(root, "plugin");
@@ -81,14 +81,14 @@ test("디렉터리 롤백은 백업이 의도적으로 건너뛴 node_modules �
     fs.writeFileSync(path.join(dir, "lib", "index.js"), "v1");
     fs.writeFileSync(path.join(dir, "node_modules", "yaml", "index.js"), "dep");
     const backup = dirBackup(dir, { home, reason: "test" });
-    // 업그레이드가 소스를 망가뜨렸지만 node_modules 는 여전히 디스크에 있다
+    // 升级把源码写坏，但 node_modules 仍在盘上
     fs.writeFileSync(path.join(dir, "lib", "index.js"), "broken");
     dirRestore(backup, dir);
     assert.equal(fs.readFileSync(path.join(dir, "lib", "index.js"), "utf8"), "v1");
     assert.equal(
       fs.existsSync(path.join(dir, "node_modules", "yaml", "index.js")),
       true,
-      "롤백 뒤에도 의존성이 남아 있어야 한다. 없으면 플러그인의 import yaml 이 바로 실패한다",
+      "回滚后依赖必须还在，否则插件 import yaml 直接失败",
     );
   } finally {
     fs.rmSync(root, { recursive: true, force: true });

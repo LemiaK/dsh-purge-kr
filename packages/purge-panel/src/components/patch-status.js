@@ -44,11 +44,11 @@ export function shimKind(v) {
 }
 
 export const LAYER_GROUP = {
-  프롬프트: "prompt",
-  코드: "code",
-  도구: "tools",
-  "0.1.5 호환": "compat",
-  "0.2.0 호환": "dsh20",
+  提示词: "prompt",
+  代码: "code",
+  工具: "tools",
+  "0.1.5 兼容": "compat",
+  "0.2.0 兼容": "dsh20",
 };
 
 export const GROUP_ORDER = ["prompt", "code", "tools", "compat", "dsh20"];
@@ -76,6 +76,8 @@ export function tallyPatches(rows) {
     pending: 0,
     unmatched: 0,
     partial: 0,
+    drifted: 0,
+    disabled: 0,
     skipped: 0,
     total: 0,
   };
@@ -99,7 +101,7 @@ export function PatchGroups({ state }) {
     return h(
       "p",
       { role: "status" },
-      "읽기 실패. 패치 상세를 지금은 사용할 수 없습니다. 새로고침 후 다시 시도하세요.",
+      "读取失败，补丁明细暂不可用；请刷新重试。",
     );
   if (!state || !state.patch_status)
     return h("div", { className: "dshpp-skel", style: { height: 120 } });
@@ -125,6 +127,10 @@ export function PatchGroups({ state }) {
       notes.push(t("metric.unmatchedShort", { n: tally.unmatched }));
     if (tally.partial)
       notes.push(t("metric.partialShort", { n: tally.partial }));
+    if (tally.drifted)
+      notes.push(t("metric.driftedShort", { n: tally.drifted }));
+    if (tally.disabled)
+      notes.push(t("metric.disabledShort", { n: tally.disabled }));
     if (tally.skipped) notes.push(t("metric.skipShort", { n: tally.skipped }));
     const expanded = !!open[key];
     return h(

@@ -86,7 +86,7 @@ test('download/integrity failure never starts a backup, install or rollback', as
     prepareRelease:async()=>{throw Error('download integrity failure');},
   });
   assert.equal(result.ok,false);assert.deepEqual(calls,[]);
-  assert(!JSON.stringify(result).includes('롤백했습니다'));
+  assert(!JSON.stringify(result).includes('已回滚'));
   for(const site of targets) {
     assert.equal(JSON.parse(fs.readFileSync(path.join(site.dir,'package.json'))).version,'1.6.27');
     assert.equal(fs.readFileSync(path.join(site.profileDir,'cordis.patch.yml'),'utf8'),'PRIVATE SETTINGS');

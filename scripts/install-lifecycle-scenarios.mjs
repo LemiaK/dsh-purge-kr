@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
+import {resolveDshCli} from '../lib/instance.js';
 
 export async function runInstallLifecycle({runtime,cli,legacy,previous,archive,temp,scenarios=['official-first-install','bootstrap-first-install','legacy-migration','community-upgrade','alias-upgrade'],beforeInstall,afterInstall}) {
   const run=(exe,args,env,label)=>{
@@ -32,7 +33,7 @@ export async function runInstallLifecycle({runtime,cli,legacy,previous,archive,t
       NPM_CONFIG_CACHE:path.join(temp,'npm-cache'),XDG_CACHE_HOME:path.join(temp,'cache')};
     Object.assign(process.env,env);
     let seq=0;const label=step=>`${scenario}-${++seq}-${step}`;
-    const command=args=>run(runtime,[cli,...args],env,label(args.includes('add')?'add':'init'));
+    const command=args=>{const resolved=resolveDshCli({env,execPath:runtime});return run(runtime,[...resolved.args,...args],{...env,...resolved.env},label(args.includes('add')?'add':'init'));};
     const boot=(...extra)=>run(runtime,[bootstrap,'--profile=web',`--archive=${archive}`,`--sha256=${sha256}`,`--version=${meta.version}`,...extra],env,label('bootstrap'));
     // No fabricated profile manifests: the actual official CLI initializes it.
     assert.throws(()=>boot('--dry-run'),/Profile is not initialized/);
@@ -89,7 +90,7 @@ export async function runInstallLifecycle({runtime,cli,legacy,previous,archive,t
     fs.writeFileSync(path.join(home,'prompt-inject.md'),sentinelFiles['prompt-inject.md']);
     let rollbackId=backupId;
     if(!baseline) {
-      if(backupId)await assert.rejects(manager.rollback(backupId),/롤백할 플러그인이 없/);
+      if(backupId)await assert.rejects(manager.rollback(backupId),/没有插件可回滚/);
       rollbackId=(await manager.backup('installed-baseline')).id;
     }
     await manager.rollback(rollbackId);
@@ -108,7 +109,7 @@ export async function runInstallLifecycle({runtime,cli,legacy,previous,archive,t
       ['install',()=>manager.install(archive)],['rollback',()=>manager.rollback(rollbackId)]
     ]) {
       console.log('STEP '+label('failure-recovery-'+name));
-      await assert.rejects(operation,/복원/);
+      await assert.rejects(operation,/已恢复/);
       protectedFiles.forEach((file,i)=>assert.deepEqual(fs.readFileSync(file),bytes[i]));
       await verifyInstalledPackage(profile,meta);preserved();
     }

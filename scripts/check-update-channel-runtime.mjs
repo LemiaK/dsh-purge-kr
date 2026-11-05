@@ -15,7 +15,7 @@ if(process.platform==='win32') {
   result.proxy={registryReadMs:durations,powershellFallbackMatches:true};
 }
 const start=Date.now();
-const response=await requestUpdate('https://api.github.com/repos/wnduddld0513/dsh-purge-kr/releases/latest',{timeout:30000,maxBytes:1024*1024});
+const response=await requestUpdate('https://api.github.com/repos/kingcharleslzy-ai/dsh-purge/releases/latest',{timeout:30000,maxBytes:1024*1024});
 const release=JSON.parse(response.body.toString());assert.match(release.tag_name,/^v\d+\.\d+\.\d+/);
 result.publicMetadata={status:response.status,tag:release.tag_name,elapsedMs:Date.now()-start};
 console.log(JSON.stringify(result));

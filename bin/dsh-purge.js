@@ -8,24 +8,24 @@ import { realpathSync } from "node:fs";
 
 function printStatus(state) {
   const out = [];
-  out.push("dsh-purge 상태 / Status");
-  out.push("  호스트 / surface " + (state.surface || "web"));
+  out.push("dsh-purge 状态 / Status");
+  out.push("  宿主 / surface " + (state.surface || "web"));
   out.push("  DSH_HOME      " + state.dsh_home);
-  if (state.desktop_install) out.push("  데스크톱 설치   " + state.desktop_install);
+  if (state.desktop_install) out.push("  桌面安装       " + state.desktop_install);
   if (state.ai_base) {
-    out.push("  플러그인 루트 / root  " + state.ai_base);
+    out.push("  插件根 / root  " + state.ai_base);
     for (const [key, fp] of Object.entries(state.files)) {
       out.push(`    ${key.padEnd(22)} ${fp}`);
     }
   } else {
-    out.push("  플러그인 루트 / root  " + core.missingAiBaseMessage());
+    out.push("  插件根 / root  " + core.missingAiBaseMessage());
   }
-  out.push(`  shim 디렉터리   ${state.shim_dir || "미확인 / not found"}`);
-  out.push(`  백업 / backup  ${state.has_backup ? "있음 / yes" : "없음 / no"}`);
-  out.push(`  주입 파일       ${state.override_path}`);
-  out.push(`  주입 상태       ${state.override_status}`);
+  out.push(`  shim 目录      ${state.shim_dir || "未定位 / not found"}`);
+  out.push(`  备份 / backup  ${state.has_backup ? "有 / yes" : "无 / no"}`);
+  out.push(`  注入文件       ${state.override_path}`);
+  out.push(`  注入状态       ${state.override_status}`);
   out.push("");
-  out.push(`  패치 ${state.patches_applied}/${core.ALL_PATCHES.length} 정리됨, ${state.patches_pending} 정리 대기`);
+  out.push(`  补丁 ${state.patches_applied}/${core.ALL_PATCHES.length} 已清洗, ${state.patches_pending} 待清洗`);
   for (const p of core.ALL_PATCHES) {
     const s = state.patch_status[p.id];
     const mark = s === "applied" ? "✓" : s === "pending" ? "✗" : "·";
@@ -42,13 +42,13 @@ export async function main(args = process.argv.slice(2), dependencies = {}) {
   const mode = args.find((a) => ["--apply", "--revert", "--uninstall", "--status", "--edit", "--help"].includes(a));
 
   if (mode === "--help" || args.includes("-h")) {
-    console.log(`dsh-purge 사용법:
-  dsh-purge --status      상태 표시
-  dsh-purge --apply       모든 정리 적용(프롬프트+코드+shim+override)
-  dsh-purge --revert      롤백 및 되돌리기
-  dsh-purge --uninstall   플러그인 제거(적용된 경우 먼저 되돌린다)
-  dsh-purge --edit        주입 파일 prompt-inject.md 편집
-  dsh-purge --help        도움말`);
+    console.log(`dsh-purge 用法:
+  dsh-purge --status     显示状态
+  dsh-purge --apply      应用全部清洗（提示词+代码+shim+override）
+  dsh-purge --revert     回滚还原
+  dsh-purge --uninstall  卸载插件（已应用则先还原）
+  dsh-purge --edit       编辑注入文件 prompt-inject.md
+  dsh-purge --help       帮助`);
     return;
   }
 
@@ -60,21 +60,21 @@ export async function main(args = process.argv.slice(2), dependencies = {}) {
     let failed = false;
     if (!state.ai_base) {
       console.log("[ERROR] " + hostCore.missingAiBaseMessage());
-      console.log("  fix: DSH_BASE 를 dsh-agent-instructions/lib 가 있는 @deepseek-ai 디렉터리로 지정하세요");
+      console.log("  fix: 把 DSH_BASE 指到含 dsh-agent-instructions/lib 的 @deepseek-ai 目录");
       process.exit(1);
     }
     const inject = hostRules.resolveInjectText(state.dsh_home);
     if (!inject.text) {
-      console.log("[ERROR] 프롬프트와 규칙 세트가 모두 비어 있습니다. 먼저 프롬프트를 추가해야 합니다");
+      console.log("[ERROR] 提示词和规则集都是空的，必须先添加提示词");
       process.exit(1);
     }
     const { hosts, report } = await hostCore.applyPatchesAllHosts(hostCore.ALL_PATCHES, {
       preserveClientBundles: false,
       forApply: true,
     });
-    for (const h of hosts) console.log(`  호스트 / host → ${h.aiBase}`);
+    for (const h of hosts) console.log(`  宿主 / host → ${h.aiBase}`);
     for (const r of report) {
-      const m = r.status === "applied" ? "✓ 정리됨" : r.status === "already" ? "- 이미 최신" : r.status === "missing_file" ? "⚠ 파일 누락" : `✗ ${r.status}`;
+      const m = r.status === "applied" ? "✓ 已清洗" : r.status === "already" ? "- 已是最新" : r.status === "missing_file" ? "⚠ 文件缺失" : `✗ ${r.status}`;
       console.log(`  ${m} patch #${String(r.patch_id).padEnd(2)} ${r.name}`);
     }
     const summary = hostCore.summarizeApplyReport(report);
@@ -84,36 +84,36 @@ export async function main(args = process.argv.slice(2), dependencies = {}) {
     console.log(`  cmd-flash=${flash.entry} phase-1=${flash.phase1} ok=${flash.ok}`);
     if (flash.ok === false) failed = true;
     if (hosts.length > 1) {
-      console.log(`  다중 호스트 / multi-host: ${hosts.length}개 @deepseek-ai 정리됨`);
+      console.log(`  多宿主 / multi-host: ${hosts.length} 份 @deepseek-ai 已清洗`);
     }
     console.log(inject.source === "rule"
-      ? "  - 현재 규칙 세트를 사용합니다. 프롬프트 파일은 다시 쓰지 않습니다"
-      : "  - 기존 프롬프트 파일을 사용합니다");
+      ? "  - 使用当前规则集，不改写提示词文件"
+      : "  - 使用已有提示词文件");
     if (state.shim_dir) {
       const r = await hostCore.patchShim(state.shim_dir);
       for (const [fname, st] of Object.entries(r)) {
         if (typeof st === "string" && /^(error:|write_error|failed)/.test(st)) failed = true;
-        if (st === "patched") console.log(`  ✓ shim ${fname} 주입 / injected`);
-        else if (st === "already_patched") console.log(`  - shim ${fname} 이미 주입됨 / already injected`);
-        else if (st === "missing") console.log(`  - shim ${fname} 없음 / missing`);
+        if (st === "patched") console.log(`  ✓ shim ${fname} 注入 / injected`);
+        else if (st === "already_patched") console.log(`  - shim ${fname} 已注入 / already injected`);
+        else if (st === "missing") console.log(`  - shim ${fname} 不存在 / missing`);
         else console.log(`  ⚠ shim ${fname}: ${st}`);
       }
     } else {
-      console.log("  ⚠ shim 디렉터리를 확인하지 못해 주입을 건너뜁니다");
+      console.log("  ⚠ 未定位 shim 目录，跳过注入");
     }
     console.log("");
     if (failed) {
-      console.error("적용 미완료 / Apply incomplete. 위 오류를 처리하세요. 재시작으로는 쓰기 실패가 해결되지 않습니다.");
+      console.error("应用未完成 / Apply incomplete. 请处理上述错误；重启不能修复写入失败。");
       process.exitCode = 1;
-    } else console.log("전체 완료 / All done. dsh 를 재시작하면 적용됩니다 / Restart dsh to take effect.");
+    } else console.log("全部完成 / All done。重启 dsh 生效 / Restart dsh to take effect.");
   } else if (mode === "--revert") {
     let failed = false;
     if (state.ai_base || hostCore.enumeratePatchAiBases().length) {
       const { reverted, errors } = await hostCore.revertAllHosts();
       if (errors.length) failed = true;
-      for (const p of reverted) console.log(`  ✓ 되돌림 / Reverted ${p}`);
-      for (const [p, e] of errors) console.log(`  ⚠ 되돌리기 실패 ${p}: ${e}`);
-      if (reverted.length === 0) console.log("  - 되돌릴 패치 백업이 없습니다 / no patch backup");
+      for (const p of reverted) console.log(`  ✓ 已还原 / Reverted ${p}`);
+      for (const [p, e] of errors) console.log(`  ⚠ 还原失败 ${p}: ${e}`);
+      if (reverted.length === 0) console.log("  - 没有补丁备份可还原 / no patch backup");
     }
     if (state.shim_dir) {
       const r = await hostCore.revertShim(state.shim_dir);
@@ -125,36 +125,36 @@ export async function main(args = process.argv.slice(2), dependencies = {}) {
     }
     console.log("");
     if (failed) {
-      console.error("롤백 미완료 / Revert incomplete. 원본 파일과 실패한 백업은 보존됩니다. 위 오류를 처리하세요.");
+      console.error("回滚未完成 / Revert incomplete. 原文件与失败备份保留，请处理上述错误。");
       process.exitCode = 1;
-    } else console.log("롤백 완료 / Revert done. dsh 를 재시작하면 복원됩니다 / restart to restore.");
-    console.log("참고: prompt-inject.md 는 보존됩니다(사용자 파일) / prompt-inject.md kept (user file)");
+    } else console.log("回滚完成 / Revert done。重启 dsh 后恢复 / restart to restore.");
+    console.log("注: prompt-inject.md 保留（用户文件）/ prompt-inject.md kept (user file)");
   } else if (mode === "--uninstall") {
     const { uninstallPurge, finishUninstallCleanup } = await import("../lib/uninstall.js");
     const result = await finishUninstallCleanup(await uninstallPurge());
-    if (result.applied) console.log("  적용된 패치가 감지되어 원본으로 되돌렸습니다.");
-    else console.log("  적용된 패치가 감지되지 않았습니다. 그래도 플러그인 파일은 정리합니다.");
-    if (result.override?.removed) console.log(`  삭제됨 ${result.override.path}`);
-    if (result.stripped?.length) console.log(`  profile 에서 제거됨: ${result.stripped.join(", ")}`);
+    if (result.applied) console.log("  已检测到补丁，已还原回原版。");
+    else console.log("  未检测到已应用补丁，仍会清除插件文件。");
+    if (result.override?.removed) console.log(`  已删除 ${result.override.path}`);
+    if (result.stripped?.length) console.log(`  已从 profile 移除: ${result.stripped.join(", ")}`);
     for (const e of result.errors || []) console.log(`  ⚠ ${e}`);
     if (!result.ok) {
-      console.log("  제거 미완료: 위의 되돌리기·등록 해제·파일 정리 오류를 확인하세요.");
+      console.log("  卸载未完成：请检查上面的还原、注销或文件清理错误。");
       process.exit(1);
     }
     console.log("");
-    console.log("제거 완료. dsh 를 재시작하세요.");
+    console.log("卸载完成。请重启 dsh。");
   } else if (mode === "--edit") {
     const r = hostCore.editOverride(state.dsh_home);
     if (!r.ok && r.needCreate) {
       await hostCore.installOverride(state.dsh_home, true);
-      console.log(`  ✓ 기본 주입 파일을 만들었습니다: ${state.override_path}`);
+      console.log(`  ✓ 已创建默认注入文件：${state.override_path}`);
       hostCore.editOverride(state.dsh_home);
     } else {
-      console.log(`  → ${r.editor} 로 주입 파일을 열었습니다: ${r.path}`);
+      console.log(`  → 已打开 ${r.editor} 编辑注入文件：${r.path}`);
     }
-    console.log("  편집을 마친 뒤 dsh 를 재시작하면 적용됩니다.");
+    console.log("  编辑完成后重启 dsh 生效。");
   } else {
-    console.log("기본값은 정리하지 않습니다. --apply 로 정리를 적용합니다.");
+    console.log("默认不清洗，使用 --apply 应用清洗。");
   }
 }
 

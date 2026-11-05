@@ -19,16 +19,16 @@ function setup(extra = {}) {
 }
 test("preferences default to check-only and preserve legacy automatic-install intent without migration writes", () => {
   const f = setup(); try {
-    assert.deepEqual(preferences(f.home), { autoCheck: true, autoInstall: false, intervalHours: 6, proxyUrl: "", githubToken: "" });
+    assert.deepEqual(preferences(f.home), { autoCheck: true, autoInstall: false, intervalHours: 6, proxyUrl: "", githubToken: "", mirrorUrl: "" });
     assert.equal(preferences(f.home, { autoUpdateOnStart: true }).autoInstall, true);
     assert.deepEqual(fs.readdirSync(f.home), []);
     fs.writeFileSync(path.join(f.home, "cordis.patch.yml"), "CURRENT SETTINGS");
     savePreferences(f.home, { intervalHours: 12 }, { autoUpdateOnStart: true });
     assert.equal(preferences(f.home).autoInstall, true);
     assert.equal(fs.readFileSync(path.join(f.home, "cordis.patch.yml"), "utf8"), "CURRENT SETTINGS");
-    assert.throws(() => savePreferences(f.home, { autoApplyOnStart: true }), /알 수 없는 필드/);
+    assert.throws(() => savePreferences(f.home, { autoApplyOnStart: true }), /未知字段/);
     assert.throws(() => savePreferences(f.home, { intervalHours: 0 }), /1–168/);
-    assert.throws(() => savePreferences(f.home, { autoInstall: "true" }), /스위치/);
+    assert.throws(() => savePreferences(f.home, { autoInstall: "true" }), /开关/);
   } finally { f.close(); }
 });
 test("checking runs independently from autoApplyOnStart and never installs by default", async () => {
@@ -105,8 +105,8 @@ test("all updater results suppress automatic restart and client reload requests"
 });
 
 test("an uninstalled file: dependency is reported as skipped, not silently ignored", async () => {
-  // issue #118 의 실제 증상: profile 에 file:<tgz> 의존성이 있는데 디스크에 안착하지 않은 경우,
-  // 옛 planUpdates() 는 그냥 continue 해서 패널이 "업데이트 성공인데 아무것도 안 바뀐" 것처럼 보였다.
+  // issue #118 的真实症状：profile 里有 file:<tgz> 依赖但没落地时，
+  // 旧 planUpdates() 直接 continue，面板看起来"更新成功但什么都没变"。
   const home = fs.mkdtempSync(path.join(os.tmpdir(), "purge-plan-"));
   const prev = process.env.DSH_HOME;
   try {
@@ -128,7 +128,7 @@ test("an uninstalled file: dependency is reported as skipped, not silently ignor
     assert(Array.isArray(plan.skipped), "plan exposes skipped sites");
     const hit = plan.skipped.find((s) => s.package === "dsh-purge-community");
     assert(hit, "the file: dependency is surfaced");
-    assert.match(hit.reason, /설치 디렉터리가 없습니다/);
+    assert.match(hit.reason, /没有安装目录/);
     assert(hit.spec.startsWith("file:"), "the offending spec is included");
   } finally {
     if (prev === undefined) delete process.env.DSH_HOME;
@@ -149,7 +149,7 @@ function tempHome() {
   };
 }
 const readRaw = (f) => JSON.parse(fs.readFileSync(f.prefs, "utf8"));
-// 채널 자격 증명은 따로 저장되므로, 키 관련 어서션은 이 파일을 읽어야 한다.
+// 通道凭据单独落盘，密钥相关断言必须读这个文件。
 const readChannel = (f) => JSON.parse(fs.readFileSync(f.channel, "utf8"));
 
 test("updateEnv exposes only the channel proxy and token, never the host environment", () => {
@@ -175,20 +175,20 @@ test("updateEnv preserves inherited proxies and fails visibly on damaged setting
     savePreferences(f.home,{githubToken:TOKEN});
     assert.deepEqual(updateEnv(f.home,{},inherited),{...inherited,GITHUB_TOKEN:TOKEN});
     assert.equal(inherited.GITHUB_TOKEN,undefined);
-    fs.writeFileSync(f.channel,'broken json');assert.throws(()=>updateEnv(f.home),/읽지 못했습니다/);
+    fs.writeFileSync(f.channel,'broken json');assert.throws(()=>updateEnv(f.home),/无法读取/);
   } finally {f.done();}
 });
 
 test("savePreferences rejects unsupported proxies, missing hosts and malformed tokens", () => {
   const f = tempHome(); try {
-    assert.throws(() => savePreferences(f.home, { proxyUrl: "ftp://127.0.0.1:21" }), /http \/ https \/ socks5 프로토콜만 지원/);
-    assert.throws(() => savePreferences(f.home, { proxyUrl: "socks5://" }), /호스트 이름이 없습니다/);
-    assert.throws(() => savePreferences(f.home, { proxyUrl: "127.0.0.1:7890" }), /주소가 올바르지 않습니다/);
-    assert.throws(() => savePreferences(f.home, { proxyUrl: 7890 }), /문자열이어야 합니다/);
-    assert.throws(() => savePreferences(f.home, { githubToken: TOKEN.slice(0, 10) }), /키 형식이 올바르지 않습니다/);
-    assert.throws(() => savePreferences(f.home, { githubToken: TOKEN + " b" }), /키 형식이 올바르지 않습니다/);
-    assert.throws(() => savePreferences(f.home, { githubToken: "x".repeat(256) }), /키 형식이 올바르지 않습니다/);
-    assert.throws(() => savePreferences(f.home, { githubToken: null }), /문자열이어야 합니다/);
+    assert.throws(() => savePreferences(f.home, { proxyUrl: "ftp://127.0.0.1:21" }), /仅支持 http \/ https \/ socks5 协议/);
+    assert.throws(() => savePreferences(f.home, { proxyUrl: "socks5://" }), /缺少主机名/);
+    assert.throws(() => savePreferences(f.home, { proxyUrl: "127.0.0.1:7890" }), /地址无效/);
+    assert.throws(() => savePreferences(f.home, { proxyUrl: 7890 }), /必须为字符串/);
+    assert.throws(() => savePreferences(f.home, { githubToken: TOKEN.slice(0, 10) }), /密钥格式无效/);
+    assert.throws(() => savePreferences(f.home, { githubToken: TOKEN + " b" }), /密钥格式无效/);
+    assert.throws(() => savePreferences(f.home, { githubToken: "x".repeat(256) }), /密钥格式无效/);
+    assert.throws(() => savePreferences(f.home, { githubToken: null }), /必须为字符串/);
     assert.equal(fs.existsSync(f.prefs), false, "a rejected patch writes nothing");
     for (const proxyUrl of ["http://127.0.0.1:7890", "https://proxy.example:8443", "socks5://127.0.0.1:1080", "socks5h://user:pw@127.0.0.1:1080", "socks://127.0.0.1:1080"]) {
       assert.equal(savePreferences(f.home, { proxyUrl }).proxyUrl, proxyUrl, `${proxyUrl} is accepted`);
@@ -222,9 +222,9 @@ test("an empty githubToken keeps the stored secret; clearGithubToken is the only
     assert.deepEqual(updateEnv(f.home, {}, {}), { GITHUB_TOKEN: TOKEN }, "a new token can be set again afterwards");
     // A non-boolean clear flag is rejected outright instead of being silently
     // ignored: otherwise the panel could show "cleared" while the token survives.
-    assert.throws(() => savePreferences(f.home, { githubToken: TOKEN, clearGithubToken: "yes" }), /불리언/,
+    assert.throws(() => savePreferences(f.home, { githubToken: TOKEN, clearGithubToken: "yes" }), /布尔/,
       "a non-boolean clearGithubToken is rejected");
-    assert.throws(() => savePreferences(f.home, { clearGithubToken: 1 }), /불리언/,
+    assert.throws(() => savePreferences(f.home, { clearGithubToken: 1 }), /布尔/,
       "a numeric clearGithubToken is rejected");
     assert.equal(updateEnv(f.home, {}, {}).GITHUB_TOKEN, TOKEN, "a rejected patch leaves the stored token untouched");
     assert.equal(savePreferences(f.home, { clearGithubToken: true }).githubToken, "");

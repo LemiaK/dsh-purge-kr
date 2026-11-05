@@ -404,7 +404,7 @@ export async function openRewoundSession(sessions, sessionId) {
         } else if (typeof sessions?.open === "function") {
           sessions.open(sessionId);
         } else {
-          throw new Error("되돌리기 후 세션을 열 수 없습니다");
+          throw new Error("打不开回退后的会话");
         }
         const selected = workspace?.selection?.getSnapshot?.()?.sessionId;
         if (!workspace || selected === sessionId) {
@@ -421,5 +421,5 @@ export async function openRewoundSession(sessions, sessionId) {
     }
     await waitMs(120);
   }
-  throw new Error((lastError && lastError.message) || "되돌리기 후 세션이 열리지 않았습니다");
+  throw new Error((lastError && lastError.message) || "回退后的会话没有打开");
 }

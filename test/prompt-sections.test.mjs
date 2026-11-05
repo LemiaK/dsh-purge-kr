@@ -59,10 +59,10 @@ test("default tuning registers the inject at the head and the boost at the tail"
   });
 });
 
-// 호스트 rc.2 의 SECTION_ORDERS: persona-prefix 0, 도구 섹션 1000–3000, MCP 3100,
-// TOOLS_SDK 5000, DELIVERABLE 9000, STRUCTURED_OUTPUT 9900, HARNESS_SOURCE 10000,
-// WEB_SURFACE 10100, persona-suffix 10200. 0 보다 작은 order 는 persona 앞에 오므로,
-// "꼬리" 섹션은 GLOBAL_PROMPT_ORDER + n 으로 만들 수 없다(여전히 음수다).
+// 宿主 rc.2 的 SECTION_ORDERS：persona-prefix 0、工具段 1000–3000、MCP 3100、
+// TOOLS_SDK 5000、DELIVERABLE 9000、STRUCTURED_OUTPUT 9900、HARNESS_SOURCE 10000、
+// WEB_SURFACE 10100、persona-suffix 10200。低于 0 的 order 排在 persona 之前，
+// 所以"尾部"段不能用 GLOBAL_PROMPT_ORDER + n（仍是负数）。
 const HOST_TOOL_SECTIONS_MAX = 5000;
 const HOST_PERSONA_SUFFIX = 10200;
 
@@ -74,9 +74,9 @@ test("tail inject lands in the host tail range; the boost keeps its measured def
     const byName = Object.fromEntries(h.sections.map((s) => [s.name, s]));
     const tail = byName["dsh-purge-tail"];
     const boost = byName["dsh-purge-boost"];
-    // 꼬리 주입은 실제로 도구 섹션 뒤, persona-suffix 앞에 와야 한다.
+    // 尾部注入必须真的排在工具段之后、persona-suffix 之前。
     assert.ok(tail.order > HOST_TOOL_SECTIONS_MAX && tail.order < HOST_PERSONA_SUFFIX);
-    // 강화 섹션의 기본 위치는 실측에서 나왔다: 맨 앞에 두면 같은 거부 유발 요청 세트에서 첫 거부가 0/6, 9500 에 두면 2/6 이었다.
+    // 强化段的默认位置来自实测：放最前时同一组易拒请求 0/6 首拒，放 9500 时 2/6。
     assert.equal(boost.order, -50000);
   });
 });

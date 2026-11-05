@@ -1,6 +1,5 @@
 /* The first-run dialog is rendered before any settings page. It must own its
-   styles and cannot depend on the optional drill vendor stylesheet.
-   색·반경·폰트·그림자·모션은 DSH 토큰만 쓴다(테마 전환을 그대로 따라간다). */
+   styles and cannot depend on the optional drill vendor stylesheet. */
 .dshpp-welcome-mask {
   position: fixed;
   inset: 0;
@@ -10,9 +9,9 @@
   padding: 24px;
   overflow: auto;
   box-sizing: border-box;
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--dsw-alias-label-primary);
-  font-family: var(--dsw-font-family);
+  background: rgb(0 0 0 / 35%);
+  color: var(--dsw-alias-label-primary, #171717);
+  font-family: inherit;
   font-size: 14px;
   line-height: 1.6;
   text-align: left;
@@ -23,39 +22,36 @@
   overflow: auto;
   box-sizing: border-box;
   padding: 24px;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-lg);
-  background: var(--dsw-alias-bg-layer-1);
-  box-shadow: var(--dsw-elevation-panel);
+  border: 1px solid var(--dsw-alias-border-l1, #ddd);
+  border-radius: 16px;
+  background: var(--dsw-alias-bg-layer-1, #fff);
+  box-shadow: 0 16px 64px rgb(0 0 0 / 18%);
 }
 .dshpp-welcome-card h2 {
   margin: 0 0 6px;
   font: inherit;
-  font-family: var(--dsw-font-family);
   font-size: 20px;
   font-weight: 600;
 }
 .dshpp-welcome-card h3 {
   margin: 16px 0 6px;
   font: inherit;
-  font-family: var(--dsw-font-family);
   font-weight: 600;
 }
 .dshpp-welcome-lead {
-  color: var(--dsw-alias-label-secondary);
+  color: var(--dsw-alias-label-secondary, #666);
 }
 .dshpp-welcome-warn {
   margin: 16px 0;
   padding: 12px;
-  border: 0.5px solid var(--dsw-alias-border-l2);
-  border-radius: var(--dsw-radius-sm);
-  background: var(--dsw-alias-bg-layer-2);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2, #f5f5f5);
 }
 .dshpp-welcome-legal p {
   margin: 10px 0;
 }
 .dshpp-welcome-legal a {
-  color: var(--dsw-alias-link);
+  color: var(--dsw-alias-label-brand, #436ee8);
   overflow-wrap: anywhere;
 }
 .dshpp-welcome-check {
@@ -70,54 +66,30 @@
   width: 16px;
   height: 16px;
   margin: 4px 0 0;
-  accent-color: var(--dsw-alias-button-primary-fill);
+  accent-color: var(--dsw-alias-label-brand, #436ee8);
 }
 .dshpp-welcome-ops {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
 }
-/* CTA 대비: 배경/글자를 플러그인 색으로 고정하지 않고 DSH 주 버튼 토큰을 쓴다.
-   비활성일 때는 채도를 낮춘 fill + dimmed 글자 조합으로 대비를 유지한다
-   (투명도로 흐리면 글자가 배경에 묻히므로 opacity 를 쓰지 않는다). */
 .dshpp-welcome-ops button {
   min-height: 36px;
-  height: 36px;
-  padding: 0 14px;
+  padding: 8px 16px;
   border: 0;
-  border-radius: var(--dsw-radius-md);
-  background: var(--dsw-alias-button-primary-fill);
-  color: var(--dsw-alias-label-primary-foreground);
+  border-radius: 8px;
+  background: var(--dsw-alias-label-primary, #171717);
+  color: var(--dsw-alias-bg-base, #fff);
   font: inherit;
-  font-family: var(--dsw-font-family);
-  font-size: 14px;
-  line-height: 22px;
-  font-weight: 500;
   cursor: pointer;
-  transition:
-    background-color 0.16s ease-out,
-    color 0.16s ease-out,
-    border-color 0.16s ease-out;
-}
-.dshpp-welcome-ops button:hover:not(:disabled) {
-  background: var(--dsw-alias-button-primary-hover);
-}
-.dshpp-welcome-ops button:active:not(:disabled) {
-  background: var(--dsw-alias-button-primary-hover);
 }
 .dshpp-welcome-ops button:disabled {
-  border-color: transparent;
-  background: var(
-    --dsw-alias-button-primary-dimmed,
-    var(--dsw-alias-bg-layer-3)
-  );
-  color: var(--dsw-alias-label-dimmed, var(--dsw-alias-label-tertiary));
-  cursor: not-allowed;
-  opacity: 1;
+  opacity: 0.4;
+  cursor: default;
 }
 .dshpp-welcome-ops button:focus-visible,
 .dshpp-welcome-check input:focus-visible {
-  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color);
+  outline: 2px solid var(--dsw-alias-label-brand, #436ee8);
   outline-offset: 3px;
 }
 @media (max-height: 600px) {

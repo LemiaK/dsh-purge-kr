@@ -12,7 +12,7 @@ const patch = (id) => {
 
 const WEB_PROMPT = "const WEB_SURFACE_PROMPT = `You are interacting with the user through the DeepSeek Harness Web GUI whose URL the runtime context names. When the user refers to \"this page\", \"this GUI\", or \"this app\" without naming another target, they mean this GUI. The browser provides no implicit DOM, route, or screenshot context. The client-plugin HMR receiver is active, but client-plugin changes reload without a refresh only while \\`pnpm run dev:web\\` is also running from this same checkout to rebuild their bundles; verify that watcher before promising automatic updates. Every other change — the apps/web shell and plain packages — requires rebuilding the affected Web artifacts and verifying this existing URL after a page refresh. Starting another server does not update this GUI. The apps/web Vite entry builds the shell but is not a standalone application because only dsh web injects window.__DSH_BOOT__. Do not start a replacement server unless the user asks; if one is needed, use a managed background job and verify its exact URL.`;";
 
-const SYSTEM_PROMPT_ASSEMBLE = "\t\tconst transformed = await this.ctx.waterfall(scopeTarget(this, scope), \"system-prompt/assemble\", assembly, context, () => Promise.resolve(assembly));\n\t\tif (completeSection === void 0 && !runtimeContextSuppressed) return transformed;\n\t\tconst requiredContexts = new Set([...contextByName.values()].filter((entry) => entry.required === true).map((entry) => entry.name));\n\t\treturn {\n\t\t\t...transformed,\n\t\t\tsections: completeSection === void 0 ? transformed.sections : [completeSection],\n\t\t\tcontexts: runtimeContextSuppressed ? transformed.contexts.filter((entry) => requiredContexts.has(entry.name)) : transformed.contexts\n\t\t};\n";
+const SYSTEM_PROMPT_ASSEMBLE = "\t\tconst transformed = await this.ctx.waterfall(scopeTarget(this, scope), \"system-prompt/assemble\", assembly, context, () => Promise.resolve(assembly));\n\t\tif (completeSection === void 0 && !runtimeContextSuppressed) return {\n\t\t\t...transformed,\n\t\t\ttools\n\t\t};\n\t\tconst requiredContexts = new Set([...contextByName.values()].filter((entry) => entry.required === true).map((entry) => entry.name));\n\t\treturn {\n\t\t\t...transformed,\n\t\t\ttools,\n\t\t\tsections: completeSection === void 0 ? transformed.sections : [completeSection],\n\t\t\tcontexts: runtimeContextSuppressed ? transformed.contexts.filter((entry) => requiredContexts.has(entry.name)) : transformed.contexts\n\t\t};\n";
 
 const CONVERSATION_APPEND = "\t\t\tappend(record) {\n\t\t\t\tconst event = record.event;\n\t\t\t\tif (this.inputs.has(event.seq)) return \"none\";\n\t\t\t\tif (this.revised.size > 0) this.revised.clear();\n\t\t\t\tthis.inputs.set(event.seq, record);\n";
 
@@ -34,12 +34,12 @@ test("0.2.1 web-surface prompt: #32 neutralizes the product name, #53 drops iden
   assert.equal(applyReplacementsToText(after53, patch(53)).changed, false);
 });
 
-test("0.2.1 complete preset still carries the dsh-purge inject after assemble", () => {
+test("0.2.2 complete preset still carries the dsh-purge inject after assemble", () => {
   const out = applyReplacementsToText(SYSTEM_PROMPT_ASSEMBLE, patch(40));
   assert.equal(out.changed, true);
   assert.ok(out.text.includes("const dshPurgeSections ="));
-  // complete 모드: 주입 섹션이 공식 섹션보다 앞에 온다(일반 분기는 호스트 원래 순서를 유지한다).
-  assert.ok(out.text.includes("[...dshPurgeSections, ...dshPurgeRest]"));
+  // complete 模式保留原 complete 段，并把注入段一并带上。
+  assert.ok(out.text.includes("[completeSection, ...dshPurgeSections]"));
   assert.ok(out.text.includes("const requiredContexts = new Set("));
   assert.ok(out.text.includes("requiredContexts.has(entry.name)"));
   assert.equal(applyReplacementsToText(out.text, patch(40)).changed, false);
@@ -171,4 +171,50 @@ test("#57 upgrades a file that still carries the old deepseek-only marker", () =
 test("#57 covers both pi-ai paths that decide the developer role", () => {
   const files = patch(57).file;
   assert.deepEqual([...files].sort(), ["pi-ai-completions", "pi-ai-responses-shared"]);
+});
+
+// Run the real rc.5 method fragments, with observable host-service boundaries.
+// Supplying a source directory additionally checks a pristine npm package.
+test("rc.5 keeps complete persona, selected tools and required contexts; first-step prepare runs before assemble", async () => {
+  const fs = await import("node:fs/promises");
+  const vm = await import("node:vm");
+  const path = await import("node:path");
+  const fixture = JSON.parse(await fs.readFile(new URL("./fixtures/prompt-rc5-host.json", import.meta.url)));
+  const input = process.env.PURGE_RC5_SOURCE;
+  async function patched(fragment, pkg, id) {
+    const original = input ? await fs.readFile(path.join(input, pkg, "lib/index.js"), "utf8") : fragment;
+    assert.ok(original.includes(fragment));
+    const result = applyReplacementsToText(original, patch(id));
+    assert.ok(result.changed);
+    assert.equal(applyReplacementsToText(result.text, patch(id)).changed, false);
+    const part = applyReplacementsToText(fragment, patch(id)).text;
+    assert.ok(result.text.includes(part));
+    return part;
+  }
+  const tail = await patched(fixture.assembleTail, "dsh-system-prompt", 40);
+  const prepare = await patched(fixture.preStep, "dsh-agent-loop", 74);
+  const assemble = vm.runInNewContext('(async function(assembly, completeSection, runtimeContextSuppressed, contextByName) {' + tail + '})',
+    {scopeTarget: () => null, scope: null, context: {}});
+  const complete = {name:"user-persona", text:"User supplied text"};
+  const extra = {name:"dsh-purge-test", text:"User supplied supplement"};
+  const assembly = {sections:[{name:"other", text:"ordinary"}, complete, extra], tools:[{name:"read"}], contexts:[{name:"keep"}, {name:"drop"}]};
+  const ctx = {waterfall: async (_target, _event, original) => original};
+  const run = (persona, suppress) => assemble.call({ctx}, assembly, persona, suppress, new Map([["keep",{name:"keep",required:true}]]));
+  assert.equal(await run(undefined, false), assembly);
+  const result = await run(complete, true);
+  assert.deepEqual(Array.from(result.sections), [complete, extra]);
+  assert.deepEqual(Array.from(result.contexts), [assembly.contexts[0]]);
+  assert.equal(result.tools, assembly.tools);
+  ctx.waterfall = async () => { throw Error("provider failure"); };
+  await assert.rejects(run(complete, false), /provider failure/);
+  const events = [];
+  const method = vm.runInNewContext('({' + prepare + '}).preStep', {
+    __dshPurgePrepareAssemble: () => events.push("prepare"),
+    assembleContextFor: () => ({}), renderContextSections: () => [], joinContextSections: () => "",
+  });
+  const agent = {phase:{kind:"running",abort:new AbortController()}, inbox:{claim:()=>[]},
+    loopCtx:{systemPrompt:{assemble:async()=>{events.push("assemble");return assembly;}}},
+    dispatch:{waterfall:async(_event,_args,next)=>next()},runtimeContext:{project:()=>undefined}};
+  assert.equal((await method.call(agent,"next-turn",{turn:1})).assembly, assembly);
+  assert.deepEqual(events, ["prepare","assemble"]);
 });

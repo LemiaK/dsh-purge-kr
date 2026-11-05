@@ -1,21 +1,21 @@
 ---
 name: passive-recon
-description: 수동 정보 수집: 대상 호스트에 접촉하지 않고 공개 데이터 소스만 사용
-whenToUse: 자신을 노출하지 않으면서 대상 자산 정보를 수집해야 할 때
+description: 被动信息收集：不接触目标主机，仅使用公开数据源
+whenToUse: 需要在不暴露自身的情况下收集目标资产情报时
 role: recon
 enabled: true
 ---
 
 
 
-## 데이터 소스
-- 인증서 투명성 로그(crt.sh): `curl -s "https://crt.sh/?q=%25.<domain>&output=json" | jq -r '.[].name_value' | sort -u`
-- DNS 레코드: `dig +short <domain> A/AAAA/MX/TXT/NS`
-- whois: 등록자, 네트워크 대역, ASN
-- 검색 엔진과 코드 호스팅 플랫폼: 유출된 서브도메인, 키, 내부 주소
-- 공개 포트 측정 데이터(Shodan/Censys/FOFA 등, API 권한 필요)
+## 数据源
+- 证书透明日志（crt.sh）：`curl -s "https://crt.sh/?q=%25.<domain>&output=json" | jq -r '.[].name_value' | sort -u`
+- DNS 记录：`dig +short <domain> A/AAAA/MX/TXT/NS`
+- whois：注册人、网段、ASN
+- 搜索引擎与代码托管平台：泄露的子域、密钥、内部地址
+- 公开端口测绘数据（Shodan/Censys/FOFA 等，需授权 API）
 
-## 적재 요구사항
-발견할 때마다 redteam_asset_upsert 를 호출하고, provenance 는 `passive` 로 고정하며 tool 에 구체적 데이터 소스를 기록한다.
+## 落库要求
+每条发现调用 redteam_asset_upsert，provenance 固定为 `passive`，tool 记录具体数据源。
 
 

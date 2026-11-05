@@ -14,12 +14,12 @@ import { __dshPurgeDrill } from "../vendor/drill.js";
 import { readDrillAuth, setDock, requestDrill } from "../state/dock.js";
 
 const TABS = [
-  ["status", "상태", "호스트 호환, 패치, 탈옥 자체 점검"],
-  ["prompt", "프롬프트", "주입 본문과 탈옥 강화 섹션"],
-  ["rules", "규칙", "규칙 세트와 워크스페이스 정책"],
-  ["skills", "스킬", "DSH 스킬 카탈로그"],
-  ["drill", "드릴 콘솔", "레드팀 드릴과 환경 적응"],
-  ["more", "더 보기", "서버 목록, 업데이트, 유지보수"],
+  ["status", "状态", "宿主兼容、补丁、破甲自检"],
+  ["prompt", "提示词", "注入正文与破甲强化段"],
+  ["rules", "规则", "规则集与工作区策略"],
+  ["skills", "技能", "DSH 技能目录"],
+  ["drill", "演练台", "红队演练与环境适配"],
+  ["more", "更多", "服务器名单、更新与维护"],
 ];
 
 function PurgeGlyph({ size = 18 } = {}) {
@@ -58,67 +58,67 @@ export function StatusStrip({ info }) {
     h(
       "span",
       { className: "dshpp-strip-item" },
-      "호환 수준 ",
+      "兼容级别 ",
       h(
         "b",
         null,
         level === "qualified"
-          ? "회귀 검증됨"
+          ? "已回归验证"
           : level === "unverified"
-            ? "미검증 버전"
+            ? "未验证版本"
             : level === "mixed"
-              ? "컴포넌트 버전 불일치"
+              ? "组件版本不一致"
               : level
-                ? "호스트 미탐지"
+                ? "未定位宿主"
                 : info?.ok === false
-                  ? "읽기 실패"
-                  : "확인 중",
+                  ? "读取失败"
+                  : "检测中",
       ),
       h(
         HelpTip,
-        { title: "호환 수준" },
+        { title: "兼容级别" },
         compat.message ||
-          "호스트 컴포넌트 버전을 읽고 결론을 냅니다. qualified 는 해당 DSH 버전의 패치 앵커를 항목별로 회귀 검증했다는 뜻입니다.",
+          "读取宿主组件版本后给出结论。qualified 表示该 DSH 版本的补丁锚点已逐条回归。",
       ),
     ),
     h(
       "span",
       { className: "dshpp-strip-item" },
-      "디스크 기록 수 ",
+      "磁盘写入计数 ",
       h(
         "b",
         null,
         `${info?.patches_applied ?? "?"}/${info?.patches_total ?? "?"}`,
-        info?.patches_na > 0 ? ` · ${info.patches_na}건 이 컴퓨터에 해당 없음` : "",
+        info?.patches_na > 0 ? ` · ${info.patches_na} 条本机不适用` : "",
       ),
       h(
         HelpTip,
-        { title: "호스트 패치" },
-        `실제로 DSH 호스트 코드에 기록된 패치 수(분모는 이 컴퓨터에 해당하는 항목만). 전체 패치 ${info?.patches_total_all ?? "?"}건 중 ${info?.patches_na ?? 0}건은 대상 플러그인/프리셋이 설치되지 않았습니다. '적용 대기'는 앵커가 남아 있고 아직 쓰지 않았다는 뜻이고, '불일치'는 호스트 소스가 바뀌어 앵커를 다시 찾아야 한다는 뜻입니다.`,
+        { title: "宿主补丁" },
+        `实际写进 DSH 宿主代码的补丁条数（分母只算本机适用的）。全部补丁 ${info?.patches_total_all ?? "?"} 条，其中 ${info?.patches_na ?? 0} 条目标插件/预设未安装；待应用表示锚点还在、还没写入；没对上表示宿主源码已变，需要重新定位锚点。`,
       ),
     ),
     h(
       "span",
       { className: "dshpp-strip-item" },
-      "플러그인 ",
+      "插件 ",
       h("b", null, info?.plugin_version || __PANEL_VERSION__),
     ),
   );
 }
 
-/** 디스크 아카이브와 프로세스 진입점은 따로 표시한다. 디스크 기록만으로 런타임 로드를 추론하면 안 된다. */
+/** 磁盘归档与进程入口分别呈现；不能从磁盘写入推断运行时已加载。 */
 export function LayoutNotice({ info }) {
   if (!info || (!info.asar_still_sealed && !info.host_layout)) return null;
   const sealed = info.asar_still_sealed === true;
   const note =
     info.host_layout?.note ||
-    "대상 디스크에 아직 app.asar 가 있고, 현재 프로세스의 로드 출처는 아직 확인되지 않았습니다.";
+    "目标磁盘仍有 app.asar；当前进程加载来源尚未确认。";
   const handoff = info.asar_handoff
-    ? ` 패키지 교체 상태: ${{ not_scheduled: "아직 적용되지 않음. '적용'을 눌러야 패키지 교체가 예약됩니다", archive_reappeared: "아카이브가 다시 나타났습니다. 옛 교체 기록은 현재 완료를 뜻하지 않습니다", backup_missing: "원본 아카이브 백업이 없습니다. 진단을 확인하세요", unknown_target: "대상 인스턴스가 확정되지 않음", unreadable: "교체 기록을 읽을 수 없습니다. 진단을 확인하세요", starting: "도우미 시작 중(준비 확인 전)", ready: "도우미 준비 완료", waiting_for_quit: "완전 종료 대기(macOS ⌘Q / Windows 시스템 트레이)", waiting_for_unlock: "아카이브 잠금 해제 대기", moving: "원본 아카이브 보존 중", complete: "교체 완료. DSH 를 직접 여세요", already_unsealed: "아카이브를 옮겼습니다. DSH 를 직접 여세요", failed: "실패. 진단을 확인하고 복구 문서에 따라 조치하세요", expired: "대기 시간 초과. 다시 적용하거나 복구 문서에 따라 조치하세요", helper_stopped: "도우미가 예기치 않게 종료됐습니다. 다시 적용하거나 복구 문서에 따라 조치하세요" }[info.asar_handoff.phase] || info.asar_handoff.phase}.`
+    ? ` 换包状态：${{ not_scheduled: "尚未应用：点「应用」后才会安排换包", archive_reappeared: "归档再次出现，旧换包记录不代表当前已完成", backup_missing: "原归档备份缺失，请检查诊断", unknown_target: "目标实例未确定", unreadable: "换包记录不可读，请检查诊断", starting: "助手启动中（尚未确认就绪）", ready: "助手已就绪", waiting_for_quit: "等待完整退出（macOS ⌘Q / Windows 系统托盘）", waiting_for_unlock: "等待归档解锁", moving: "正在保留原归档", complete: "换包完成，请手动打开 DSH", already_unsealed: "归档已移走，请手动打开 DSH", failed: "失败，请查看诊断并按恢复文档操作", expired: "等待超时，请重新应用或按恢复文档操作", helper_stopped: "助手意外结束，请重新应用或按恢复文档操作" }[info.asar_handoff.phase] || info.asar_handoff.phase}。`
     : "";
   const failure = info.asar_handoff?.error;
   const detail = info.asar_handoff?.detail
-    ? ` 상세: ${info.asar_handoff.detail}${failure?.win32_code != null ? `(Windows 오류 ${failure.win32_code})` : ""}`
+    ? ` 详情：${info.asar_handoff.detail}${failure?.win32_code != null ? `（Windows 错误 ${failure.win32_code}）` : ""}`
     : "";
   const confirmed =
     info.host_layout?.state === "unpacked_entry" &&
@@ -126,7 +126,7 @@ export function LayoutNotice({ info }) {
     info.host_layout?.disk?.archive_exists === false;
   const diskNote =
     info.host_layout?.disk?.archive_exists === true
-      ? " 대상 디스크에 아직 app.asar 가 있습니다."
+      ? " 目标磁盘仍有 app.asar。"
       : "";
   if (sealed || !confirmed) {
     return h(
@@ -138,23 +138,23 @@ export function LayoutNotice({ info }) {
       detail,
     );
   }
-  // 패키지 교체가 정상이면 확인 한 줄만 남기고 설명은 details 로 접는다. "진입점이 곧 재로드"는
-  // 상시 설명이라 매번 한 줄을 차지할 이유가 없다.
+  // 换包正常时只留一行确认，说明折进 details：它讲的是"入口不代表已重载"，
+  // 属于常驻解释，不该每次都占一行注意力。
   return h(
     "details",
     { className: "dshpp-layout-details" },
-    h("summary", null, "✓ 언팩 디렉터리에서 시작됨(패키지 교체 완료)"),
+    h("summary", null, "✓ 已从解包目录启动（换包完成）"),
     h("p", { className: "dshpp-note" }, note, diskNote, handoff, detail),
   );
 }
 
-/** UI 와 백엔드가 같은 패키지가 아니면 눈에 띄게 알린다. 그렇지 않으면 사용자는 설정이 적용되지 않았다고 여긴다. */
+/** 界面与后端不是同一份包时，必须显眼提示——否则用户会以为设置没生效。 */
 export function VersionNotice({ info }) {
   if (info && info.ok === false) {
     return h(
       "p",
       { className: "dshpp-warn", role: "status" },
-      `상태 읽기 실패: ${info.error || "인터페이스 사용 불가"}. 현재 호스트와 패치 상태를 알 수 없습니다. '새로 고침'을 다시 눌러 보고, 계속 실패하면 운영체제, DSH/플러그인 버전과 이 오류를 알려 주세요.`,
+      `状态读取失败：${info.error || "接口不可用"}。当前宿主与补丁状态未知，请点「刷新」重试；持续失败时请提供操作系统、DSH/插件版本和此错误。`,
     );
   }
   const backend = info?.plugin_version;
@@ -162,7 +162,7 @@ export function VersionNotice({ info }) {
   return h(
     "p",
     { className: "dshpp-warn", role: "status" },
-    `공식 버전 ${backend}, UI ${__PANEL_VERSION__}. 둘이 다르면 설정이 적용되지 않을 수 있으니, 같은 버전으로 업데이트한 뒤 DSH 를 재시작하세요.`,
+    `官方版本 ${backend}；界面 ${__PANEL_VERSION__}。两者不一致时设置可能不生效，请更新到同一版本后重启 DSH。`,
   );
 }
 
@@ -179,7 +179,7 @@ export function PurgePage() {
     apiJson("/dsh-purge/status")
       .then(setInfo)
       .catch((error) => setInfo(unavailableStatus(error)));
-  // 하위 컴포넌트의 onStatus 가 의존성에 들어가므로 안정적인 참조여야 한다. 그렇지 않으면 렌더링마다 setInfo 가 한 번 더 실행된다.
+  // 子组件的 onStatus 在依赖里，必须是稳定引用，否则每次渲染都会再 setInfo 一次。
   const mergeInfo = useCallback((s) => s && setInfo(s), []);
   useEffect(() => {
     if (tab === "status") loadInfo();
@@ -220,7 +220,7 @@ export function PurgePage() {
             ? h(
                 "span",
                 { className: "dshpp-page-ver" },
-                "커뮤니티판 " + __PANEL_VERSION__,
+                "社区版 " + __PANEL_VERSION__,
               )
             : null,
         ),
@@ -292,7 +292,7 @@ export function PurgePage() {
                   h(
                     "p",
                     { className: "dshpp-muted" },
-                    "드릴 콘솔은 먼저 한 번 승인이 필요합니다.",
+                    "演练台需要先完成一次授权。",
                   ),
                   h(
                     Btn,
@@ -303,7 +303,7 @@ export function PurgePage() {
                         requestDrill("auth");
                       },
                     },
-                    "승인하러 가기",
+                    "去授权",
                   ),
                 ),
           )
@@ -313,8 +313,8 @@ export function PurgePage() {
       "footer",
       { className: "dshpp-page-foot" },
       __COMMUNITY__
-        ? "YuJunZhiXue/dsh-purge 1.1.71 기반 독립 유지 · MIT · 원저자 표기 유지"
-        : "UI 독립 유지 · YuJunZhiXue/dsh-purge 1.1.71 기반(MIT)",
+        ? "基于 YuJunZhiXue/dsh-purge 1.1.71 独立维护 · MIT · 保留原作者署名"
+        : "界面独立维护 · 基于 YuJunZhiXue/dsh-purge 1.1.71（MIT）",
     ),
   );
 }

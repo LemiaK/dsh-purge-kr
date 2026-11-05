@@ -30,27 +30,27 @@ test('proxy precedence, bypass and read-only Windows static proxy parsing',async
 });
 
 test('rate limits, auth failures and missing resources are distinct',async()=>{
-  assert.match(httpFailure(403,{'x-ratelimit-remaining':'0','x-ratelimit-reset':'1790000000'}),/할당량 소진.*재설정 시각/);
-  assert.match(httpFailure(401),/인증 실패/);
-  assert.match(httpFailure(404),/없거나 접근 권한이 없습니다/);
-  await assert.rejects(requestUpdate('https://api.github.com/x',{fetch:async()=>new Response('SECRET RESPONSE',{status:403,headers:{'x-ratelimit-remaining':'0'}})}),e=>e.message.includes('할당량 소진')&&!e.message.includes('SECRET'));
+  assert.match(httpFailure(403,{'x-ratelimit-remaining':'0','x-ratelimit-reset':'1790000000'}),/额度耗尽.*重置时间/);
+  assert.match(httpFailure(401),/认证失败/);
+  assert.match(httpFailure(404),/不存在或无访问权限/);
+  await assert.rejects(requestUpdate('https://api.github.com/x',{fetch:async()=>new Response('SECRET RESPONSE',{status:403,headers:{'x-ratelimit-remaining':'0'}})}),e=>e.message.includes('额度耗尽')&&!e.message.includes('SECRET'));
 });
 
 test('same transport enforces redirect allowlist, size cap, and total timeout',async()=>{
-  await assert.rejects(requestUpdate('https://github.com/x',{fetch:async()=>new Response(null,{status:302,headers:{location:'https://evil.example/x'}})}),/출처가 올바르지 않습니다/);
-  await assert.rejects(requestUpdate('https://github.com/x',{maxBytes:2,fetch:async()=>new Response('large')}),/너무 큽니다/);
-  await assert.rejects(requestUpdate('https://github.com/x',{timeout:20,fetch:async(_url,{signal})=>new Promise((_ok,no)=>{const timer=setTimeout(()=>no(Error('should abort first')),100);signal.addEventListener('abort',()=>{clearTimeout(timer);no(Error('aborted'));});})}),/시간 초과/);
+  await assert.rejects(requestUpdate('https://github.com/x',{fetch:async()=>new Response(null,{status:302,headers:{location:'https://evil.example/x'}})}),/来源无效/);
+  await assert.rejects(requestUpdate('https://github.com/x',{maxBytes:2,fetch:async()=>new Response('large')}),/过大/);
+  await assert.rejects(requestUpdate('https://github.com/x',{timeout:20,fetch:async(_url,{signal})=>new Promise((_ok,no)=>{const timer=setTimeout(()=>no(Error('should abort first')),100);signal.addEventListener('abort',()=>{clearTimeout(timer);no(Error('aborted'));});})}),/超时/);
 });
 
 test('API and Atom failures remain visible, including when a cached list is used',async()=>{
   const {listForkReleases}=await import('../lib/update.js');
-  const unavailable={releases:async()=>{throw Error('GitHub API 할당량 소진');},atom:async()=>({tags:[],error:'업데이트 프록시 연결 시간 초과'})};
+  const unavailable={releases:async()=>{throw Error('GitHub API 额度耗尽');},atom:async()=>({tags:[],error:'更新代理连接超时'})};
   const failed=await listForkReleases({fresh:true,services:unavailable});
-  assert.match(failed.error,/할당량 소진/);assert.match(failed.degraded,/프록시 연결 시간 초과/);
+  assert.match(failed.error,/额度耗尽/);assert.match(failed.degraded,/代理连接超时/);
   const fallback=await listForkReleases({fresh:true,services:{...unavailable,atom:async()=>({tags:['v1.6.28'],error:''}),verify:async item=>item}});
   assert.match(fallback.degraded,/releases.atom/);
   const cached=await listForkReleases();assert(cached.cached);assert.match(cached.degraded,/releases.atom/);
-  const stale=await listForkReleases({fresh:true,services:unavailable});assert(stale.stale);assert.match(stale.degraded,/프록시 연결 시간 초과/);
+  const stale=await listForkReleases({fresh:true,services:unavailable});assert(stale.stale);assert.match(stale.degraded,/代理连接超时/);
 });
 
 test('concurrent update contexts keep independent credentials across awaits and redirects',async()=>{
@@ -72,11 +72,11 @@ test('SOCKS handshake rejects unoffered authentication, invalid versions, abort 
  for(const response of [[5,4],[4,0],[5,2]]) {
   const sockets=[];const server=net.createServer(socket=>{sockets.push(socket);socket.once('data',()=>socket.end(Buffer.from(response)));});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
-  try {await assert.rejects(socksTunnel(new URL(`socks5://127.0.0.1:${server.address().port}`),'api.github.com',443,new AbortController().signal),/인증 방식/);}
+  try {await assert.rejects(socksTunnel(new URL(`socks5://127.0.0.1:${server.address().port}`),'api.github.com',443,new AbortController().signal),/认证方式/);}
   finally {sockets.forEach(s=>s.destroy());await new Promise(resolve=>server.close(resolve));}
  }
  const aborted=new AbortController();aborted.abort();
- await assert.rejects(socksTunnel(new URL('socks5://127.0.0.1:1'),'api.github.com',443,aborted.signal),/시간 초과/);
- await assert.rejects(socksTunnel(new URL('socks5://'+ 'a'.repeat(256)+':p@127.0.0.1:1'),'api.github.com',443,new AbortController().signal),/길이/);
- await assert.rejects(socksTunnel(new URL('socks5://%zz:p@127.0.0.1:1'),'api.github.com',443,new AbortController().signal),/인코딩/);
+ await assert.rejects(socksTunnel(new URL('socks5://127.0.0.1:1'),'api.github.com',443,aborted.signal),/超时/);
+ await assert.rejects(socksTunnel(new URL('socks5://'+ 'a'.repeat(256)+':p@127.0.0.1:1'),'api.github.com',443,new AbortController().signal),/长度/);
+ await assert.rejects(socksTunnel(new URL('socks5://%zz:p@127.0.0.1:1'),'api.github.com',443,new AbortController().signal),/编码/);
 });

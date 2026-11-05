@@ -1,7 +1,7 @@
 {
   "name": "dsh-purge-panel",
   "version": "1.1.2",
-  "description": "Purge UI: 독립된 오른쪽 진입점과 네이티브 스타일 설정 페이지. 공식 Purge 는 따로 업데이트할 수 있다.",
+  "description": "Purge 界面：独立右侧入口与原生风格设置页，官方 Purge 可单独更新。",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -52,7 +52,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wnduddld0513/dsh-purge-kr.git",
+    "url": "https://github.com/kingcharleslzy-ai/dsh-purge.git",
     "directory": "packages/purge-panel"
   }
 }

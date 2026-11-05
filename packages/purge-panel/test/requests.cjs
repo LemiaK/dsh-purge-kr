@@ -111,7 +111,7 @@ vm.runInNewContext(
 const ctx = {
   locale: {
     register: (_, v) => {
-      dict = v.ko;
+      dict = v.zh;
       return () => {};
     },
     bind:
@@ -184,7 +184,7 @@ const body = pageSeat.body;
   const btn = (text) =>
     tree.root.findAllByType("button").find((x) => x.children.join("") === text);
   assert.equal(
-    area("프롬프트 내용").props.disabled,
+    area("提示词内容").props.disabled,
     true,
     "Initial loading must not overwrite editable input",
   );
@@ -192,11 +192,11 @@ const body = pageSeat.body;
     resolveGet(reply(responses["/dsh-purge/override"]));
     await flush();
   });
-  assert.equal(area("프롬프트 내용").props.disabled, false);
+  assert.equal(area("提示词内容").props.disabled, false);
   fetchHook = null;
   await act(async () => {
-    btn("프롬프트").props.onClick();
-    area("프롬프트 내용").props.onChange({ target: { value: "first draft" } });
+    btn("提示词").props.onClick();
+    area("提示词内容").props.onChange({ target: { value: "first draft" } });
   });
   let resolvePost;
   fetchHook = (path, init) =>
@@ -207,42 +207,42 @@ const body = pageSeat.body;
       : null;
   const before = writes.length;
   await act(async () => {
-    btn("저장").props.onClick();
-    btn("저장").props.onClick();
+    btn("保存").props.onClick();
+    btn("保存").props.onClick();
     await flush();
   });
   assert.equal(writes.length, before + 1, "Duplicate save must be coalesced");
-  assert.equal(btn("저장").props.disabled, true);
+  assert.equal(btn("保存").props.disabled, true);
   await act(async () =>
-    area("프롬프트 내용").props.onChange({ target: { value: "newer draft" } }),
+    area("提示词内容").props.onChange({ target: { value: "newer draft" } }),
   );
   await act(async () => {
     resolvePost(reply({ ok: true, content: "first draft" }));
     await flush();
   });
   assert.equal(
-    area("프롬프트 내용").props.value,
+    area("提示词内容").props.value,
     "newer draft",
     "Slow save response must preserve newer edits",
   );
-  assert(JSON.stringify(tree.toJSON()).includes("현재 수정분은 아직 저장하지 않았습니다"));
+  assert(JSON.stringify(tree.toJSON()).includes("当前修改尚未保存"));
   fetchHook = (path, init) =>
     init.method === "POST"
       ? reply({ ok: true, content: "bad response" }, 500)
       : null;
   await act(async () => {
-    btn("저장").props.onClick();
+    btn("保存").props.onClick();
     await flush();
   });
   assert.equal(
-    area("프롬프트 내용").props.value,
+    area("提示词内容").props.value,
     "newer draft",
     "HTTP error must not apply response data",
   );
   assert(JSON.stringify(tree.toJSON()).includes("500 Error"));
   await act(async () => {
-    btn("더 보기").props.onClick();
-    area("서버 목록").props.onChange({
+    btn("更多").props.onClick();
+    area("服务器名单").props.onChange({
       target: { value: "first.example.test" },
     });
   });
@@ -254,14 +254,14 @@ const body = pageSeat.body;
       : null;
   const beforeOwn = writes.length;
   await act(async () => {
-    btn("목록 저장").props.onClick();
-    btn("목록 저장").props.onClick();
+    btn("保存名单").props.onClick();
+    btn("保存名单").props.onClick();
     await flush();
   });
   assert.equal(writes.length, beforeOwn + 1);
-  assert.equal(btn("목록 저장").props.disabled, true);
+  assert.equal(btn("保存名单").props.disabled, true);
   await act(async () =>
-    area("서버 목록").props.onChange({
+    area("服务器名单").props.onChange({
       target: { value: "newer.example.test" },
     }),
   );
@@ -269,8 +269,8 @@ const body = pageSeat.body;
     resolvePost(reply({ ok: true, content: "first.example.test" }));
     await flush();
   });
-  assert.equal(area("서버 목록").props.value, "newer.example.test");
-  assert.equal(btn("목록 저장").props.disabled, false);
+  assert.equal(area("服务器名单").props.value, "newer.example.test");
+  assert.equal(btn("保存名单").props.disabled, false);
   // A controlled timer fires the actual AbortController timeout; no real waiting.
   fetchHook = (path, init) =>
     init.method === "POST"
@@ -288,7 +288,7 @@ const body = pageSeat.body;
         })
       : null;
   await act(async () => {
-    btn("목록 저장").props.onClick();
+    btn("保存名单").props.onClick();
     await flush();
   });
   await act(async () => {
@@ -296,11 +296,11 @@ const body = pageSeat.body;
     await flush();
   });
   assert.equal(
-    btn("목록 저장").props.disabled,
+    btn("保存名单").props.disabled,
     false,
     "Timeout must unlock save",
   );
-  assert.equal(area("서버 목록").props.value, "newer.example.test");
+  assert.equal(area("服务器名单").props.value, "newer.example.test");
   assert(JSON.stringify(tree.toJSON()).includes("timeout"));
   await act(async () => tree.unmount());
   disposers.reverse().forEach((d) => d());

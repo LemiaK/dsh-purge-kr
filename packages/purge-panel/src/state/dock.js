@@ -49,7 +49,7 @@ export function writeDrillAuth(ok) {
       setDrillAuthLocal(!!(saved && saved.granted));
     })
     .catch(() => {
-      /* 페이지를 먼저 기억하고, 다음 동기화 때 현재 설치 디렉터리에 기록한다 */
+      /* 页面先记住，下次同步再写入当前安装目录 */
     })
     .finally(() => {
       drillGrantPosting = Math.max(0, drillGrantPosting - 1);
@@ -68,7 +68,7 @@ export function startGrantSync() {
 export function syncDrillGrant(attempt) {
   const n = attempt || 0;
   const gen = drillGrantGen;
-  /* 이전에 예약된 재시도 timer 를 초기화해 writeDrillAuth 가 여러 번 겹쳐 체인을 만들지 않게 한다 */
+  /* 复位上一次调度的重试 timer,避免多次 writeDrillAuth 叠加链条 */
   if (drillSyncRetryTimer) {
     try {
       clearTimeout(drillSyncRetryTimer);
@@ -178,7 +178,7 @@ export function requestDrill(kind) {
     }
     return;
   }
-  /* 미승인: 드릴 콘솔 탭으로 바로 전환하고 승인 창을 띄운다(정리 페이지에 머물러 "트리거되지 않음"처럼 보이는 것을 피한다) */
+  /* 未授权：直接切到演练台页签并弹出授权窗（不再停在清洗页，避免像「没触发」） */
   setDock({ open: true, tab: "drill", authOpen: true, pending: pending });
 }
 

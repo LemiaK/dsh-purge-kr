@@ -23,30 +23,30 @@ test("layout notice never equates a disk archive or absent archive with loaded c
   const render = (info) =>
     renderToStaticMarkup(React.createElement(LayoutNotice, { info }));
   const legacy = render({ asar_still_sealed: true });
-  assert.match(legacy, /로드 출처는 아직 확인되지 않았습니다/);
-  assert.doesNotMatch(legacy, /현재 프로세스가 여전히 로드/);
+  assert.match(legacy, /加载来源尚未确认/);
+  assert.doesNotMatch(legacy, /当前进程仍加载/);
   const unpacked = render({
     asar_still_sealed: false,
     host_layout: {
       state: "unpacked_entry",
       process: { matches_target: true },
-      note: "진입점 위치만으로는 이후에 기록한 내용이 다시 로드되었다고 증명하지 못한다.",
+      note: "入口位置不能证明之后写入的内容已重新加载。",
       disk: { archive_exists: false },
     },
   });
-  // 패키지 교체가 정상이면 설명은 details 로 접히지만 내용은 그대로 남는다. "이미 로드됨" 같은 단정은 절대 나오면 안 된다
-  assert.match(unpacked, /증명하지 못한다/);
-  assert.match(unpacked, /언팩 디렉터리에서 시작됨/);
-  assert.doesNotMatch(unpacked, /app\.asar 를 로드|로드된 app\.asar/);
+  // 换包正常时说明折进 details，但内容仍在，绝不能出现"已加载"这种断言
+  assert.match(unpacked, /不能证明/);
+  assert.match(unpacked, /已从解包目录启动/);
+  assert.doesNotMatch(unpacked, /已加载 app\.asar/);
   const different = render({
     asar_still_sealed: true,
     host_layout: {
-      note: "현재 서비스 진입점이 선택한 대상 설치와 다르다.",
+      note: "当前服务入口与所选目标安装不同。",
       disk: { archive_exists: true },
     },
   });
-  assert.match(different, /설치와 다르다/);
-  assert.match(different, /대상 디스크에 아직 app\.asar 가 있습니다/);
+  assert.match(different, /安装不同/);
+  assert.match(different, /目标磁盘仍有 app.asar/);
 });
 
 test("unknown, different and unreadable layouts never claim handoff completion", () => {
@@ -69,7 +69,7 @@ test("unknown, different and unreadable layouts never claim handoff completion",
         },
       }),
     );
-    assert.doesNotMatch(html, /패키지 교체 완료/);
+    assert.doesNotMatch(html, /换包完成/);
     assert.match(html, /183/);
     assert.match(html, /&lt;failure&gt;/);
   }

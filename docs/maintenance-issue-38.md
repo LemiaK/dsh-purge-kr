@@ -1,22 +1,22 @@
-# #38: 기본 프리셋의 진단 상태
+# #38：默认预设的诊断状态
 
-## 근본 원인
+## 根因
 
-1.6.30 의 집계 강화는 필수 파일이 없는데도 성공으로 표시되는 것을 막기 위한 것이었지만, 기본 제공 프리셋의 실제 상태를 놓쳤다. #76 은 일치하는 대상이 없을 때 핵심 상태가 여전히 skipped 이며, 옛 집계는 선택 항목을 무시했고 새 집계는 이를 broken 으로 판정했다.
+1.6.30 的统计收紧是为了避免必需文件缺失却显示成功，但漏测了自带默认预设的实际状态。#76 没有匹配目标时，核心状态仍是 skipped；旧统计忽略可选项，新统计将其判为 broken。
 
-## 수정 경계
+## 修复边界
 
-#76 에 넓은 settleWhenAbsent 를 추가하지 않고 core 의 검사나 쓰기 로직을 바꾸지 않는다. selfCheck 안에서만 #76 의 skipped 를 세분화한다: 명확한 DSH_HOME 아래 `.agent-presets/unrestricted/agent.cordis.yml` 을 읽고 YAML AST 로 단일 persona 의 리터럴 prefix 를 검사한다. !!js 를 실행하지 않고 별칭을 해석하거나 다른 home 에서 보충해 읽지 않는다.
+不向 #76 添加宽泛的 settleWhenAbsent，不改变 core 的检查或写入逻辑。只在 selfCheck 内细化 #76 的 skipped：读取明确 DSH_HOME 下的 .agent-presets/unrestricted/agent.cordis.yml，通过 YAML AST 检查单一 persona 的字面 prefix。不执行 !!js，不解析别名或从其他 home 补读。
 
-- 본문에 해당 목표 문장이 없음: not_needed. 자체 점검 필수 분모에서만 제외하고 설명은 남긴다.
-- 본문에 목표 문장은 있으나 현재 앵커가 맞지 않음: skipped/broken 을 유지한다.
-- 읽기 불가, 구조 이상, 동적 또는 상속 설정: unknown. 완료됐다고 주장하지 않으며 반복 적용이나 권한 수정으로 없애라고 권하지 않는다.
-- pending/applied/na 와 다른 패치 상태는 바뀌지 않는다. 모든 optional/skipped 를 성공으로 계산하도록 일반화하지 않는다.
+- 正文不含该项目标句：not_needed，仅从自检必需分母排除，保留说明。
+- 正文仍有目标句但当前锚点不匹配：保持 skipped/broken。
+- 无法读取、结构异常、动态或继承配置：unknown，不声称已完成，不建议通过反复应用或修改权限来消除。
+- pending/applied/na 与其他补丁状态不变。不要推广为所有 optional/skipped 都算成功。
 
-따라서 핵심 status/diagnose 와 selfcheck 의 원본 상태가 다를 수 있다. selfcheck 는 읽기 전용 정적 증거를 더하며, not_needed 는 한 번의 성공 적용이 아니다.
+因此核心 status/diagnose 与 selfcheck 的原始状态可能不同；selfcheck 多了只读静态证据，not_needed 不是一次成功应用。
 
-## 테스트와 유지보수
+## 测试与维护
 
-node --test test/selfcheck.test.mjs 는 실제 기본 프리셋, 실제 patchStatus, selfCheck 집계, 예외 경계를 포함한다. 소스와 릴리스 패키지를 모두 테스트한다. 설치 경로와 백업/롤백 구현은 바뀌지 않았고 이 버전에는 사용자 설정 마이그레이션이 없다. 옛 버전으로 롤백하면 옛 오탐이 돌아오지만 사용자 프리셋 파일을 복원하거나 덮어쓸 필요는 없다.
+node --test test/selfcheck.test.mjs 覆盖真实默认预设、实际 patchStatus、selfCheck 汇总及异常边界。源码与发行包均测试。安装路径和备份/回滚实现未变，本版无用户配置迁移；回滚旧版本会恢复旧误报，但不需要恢复或覆盖用户预设文件。
 
-실기 검증: macOS 207/212 통과, 5 항목 플랫폼 건너뜀. Windows 209/212 통과, 3 항목 플랫폼 건너뜀(실제 TLS 와 Electron 인계 모두 실행). 양쪽 모두 Electron 44.7.0 과 릴리스 패키지 smoke 를 통과했다. 테스트 스크립트의 ASAR 파일은 Electron 테스트 하위 프로세스가 끝난 뒤 삭제해야 하고, Windows 의 npm.cmd 는 고정 명령으로 기동한다. 이 모두 실제 설치기나 호스트를 바꾸지 않는다. 3 플랫폼 CI 에 패키징 검사를 추가해 이후 릴리스 게이트로 쓴다.
+实机验证：macOS 207/212 通过、5 项平台跳过；Windows 209/212 通过、3 项平台跳过（实际 TLS 与 Electron 交接均运行）。两端 Electron 44.7.0 与发行包 smoke 通过。测试脚本的 ASAR 文件需在 Electron 测试子进程退出后删除，Windows 的 npm.cmd 通过固定命令启动；这些均不修改实际安装器或宿主。三平台 CI 新增打包检查作为后续发布门禁。

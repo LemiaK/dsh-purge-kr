@@ -28,7 +28,7 @@ test("an empty home reports the layers as missing instead of pretending they are
     const report = await selfCheck(path.join(f.home, "no-host"), f.home);
     assert.equal(report.ok, false);
     assert.equal(report.host_version, "unknown");
-    assert.equal(report.layers.filter(l => l.title !== "기타 필수 대상 파일").length, BYPASS_LAYERS.length + 3); // + runtime / config / layout
+    assert.equal(report.layers.filter(l => l.title !== "其他必需目标文件").length, BYPASS_LAYERS.length + 3); // + runtime / config / layout
     const runtime = report.layers.find((l) => l.kind === "runtime");
     assert.equal(runtime.ok, false, "empty inject must not pass");
     const config = report.layers.find((l) => l.kind === "config");
@@ -82,7 +82,7 @@ test("runtime inject and profile policy are detected from the real files", async
 });
 
 test("pending patches are not reported as broken layers", () => {
-  // 24 는 적용 대기, 37 은 이미 적용 → 이 계층은 pending 이지 broken 이 아니다
+  // 24 待应用、37 已应用 → 这一层是 pending，不是 broken
   const pending = rollupLayers({ 24: "pending", 37: "applied" }, true);
   const layer = pending.find((l) => l.ids.includes(24));
   assert.equal(layer.state, "pending");
@@ -90,17 +90,17 @@ test("pending patches are not reported as broken layers", () => {
   assert.deepEqual(layer.pending, [24]);
   assert.deepEqual(layer.broken, []);
 
-  // 앵커가 맞지 않아야 진짜 고장이다
+  // 锚点对不上才是真的坏
   const broken = rollupLayers({ 24: "pattern_not_found", 37: "applied" }, true);
   const bad = broken.find((l) => l.ids.includes(24));
   assert.equal(bad.state, "broken");
   assert.equal(bad.broken[0].id, 24);
 
-  // 대상 플러그인이 설치되지 않음 → 해당 없음, 고장으로 세지 않는다
+  // 目标插件没装 → 不适用，不算坏
   const absent = rollupLayers({ 24: "na", 37: "na" }, true);
   const na = absent.find((l) => l.ids.includes(24));
   assert.equal(na.state, "ok");
-  assert(na.note.includes("해당 없음"));
+  assert(na.note.includes("不适用"));
 });
 
 
@@ -118,7 +118,7 @@ test("standalone JSON and text distinguish uncertainty from a confirmed policy m
     for (const format of ["--json","--text"]) {
       const unknown=spawnSync(process.execPath,["bin/community.js","selfcheck",format],{env,encoding:"utf8"});
       assert.equal(unknown.status,0,unknown.stderr);
-      assert(!unknown.stdout.includes("모든 계층이 정상 위치에 있다"));
+      assert(!unknown.stdout.includes("所有层都在位"));
       if(format==="--json")assert.equal(JSON.parse(unknown.stdout).state,"unknown");
     }
     fs.writeFileSync(path.join(f.profile,"cordis.patch.yml"),"- id: permission\n  config:\n    defaultPreset: workspace-write\n    presets:\n      workspace-write:\n        sandbox: workspace-write\n        approval: ask\n");
@@ -196,7 +196,7 @@ test("#38 shipped default preset with comments and unrelated JS tags needs no wo
     assert.equal(layer.applied,4);
     assert.equal(layer.required,4);
     assert.deepEqual(layer.absent,[76]);
-    assert.match(layer.note,/처리할 필요가 없습니다/);
+    assert.match(layer.note,/无需处理/);
     assert.equal(report.patch.total,ALL_PATCHES.length-1);
     assert.equal(report.patch.applied,ALL_PATCHES.length-1);
   }
@@ -282,4 +282,54 @@ test("#38 does not exempt arbitrary optional skips or required missing files",()
   const mixed=rollupLayers(states,true).find(l=>l.ids.includes(76));
   assert.equal(mixed.state,"broken","an uncertain preset must not hide another confirmed failure");
   assert(mixed.broken.some(p=>p.id===71));
+});
+
+test("observation policy requires every active method in each host layout", async () => {
+  const { patchApplied } = await import("../lib/core/shared.mjs");
+  const patch = ALL_PATCHES.find(p => p.id === 17);
+  const [write, check] = patch.replacements;
+  const edit = "\teditIntent(target, actor) {\n\t\t// [dsh-purge] observation bypass: edits are unconditional (no read-first gate).\n\t\treturn void 0;\n\t}";
+  const delegations = ["edit", "delete"].map(verb => '\t' + verb + 'Intent(target, actor) {\n\t\treturn this.requirePresent(target, actor, "' + verb + '");\n\t}');
+  const policy = (...methods) => ["var ObservedStateGate = class {", ...methods, "};"].join("\n");
+  const old = policy(write.replace, edit);
+  const modern = policy(write.replace, ...delegations, check.replace);
+  for (const full of [old, modern]) {
+    assert.equal(patchApplied(full, patch), true);
+    assert.equal(patchApplied(full.replaceAll("\n", "\r\n"), patch), true);
+  }
+  for (const partial of [
+    policy(write.pattern, edit), policy(write.replace), policy(write.replace, "/*"+edit+"*/"),
+    policy(write.replace, ...delegations, check.pattern), policy(write.pattern, ...delegations, check.replace),
+    policy(write.replace, delegations[0], check.replace), policy(write.replace, edit, check.replace),
+    old.replace("return void 0;", "return this.get(actor, target);"), modern + "\n" + modern,
+    policy(write.replace, edit, "\teditIntent(other) { throw Error(); }"),
+  ]) assert.equal(patchApplied(partial, patch), false);
+});
+
+test("apply refuses a partial observation rewrite and keeps the original bytes", async t => {
+  const {applyPatches, patchStatusDetail} = await import("../lib/core.js");
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "observation-transaction-"));
+  const home = path.join(root, "home");
+  const host = path.join(root, "node_modules/@deepseek-ai");
+  const file = path.join(host, "dsh-fs-observation-policy/lib/index.js");
+  fs.mkdirSync(path.dirname(file), {recursive:true});
+  fs.mkdirSync(home);
+  t.mock.method(process, "cwd", () => root);
+  const previous = process.env.DSH_HOME;
+  process.env.DSH_HOME = home;
+  t.after(() => {
+    if(previous === undefined) delete process.env.DSH_HOME;
+    else process.env.DSH_HOME = previous;
+    fs.rmSync(root, {recursive:true, force:true});
+  });
+  const patch = ALL_PATCHES.find(p => p.id === 17);
+  for (const write of [patch.replacements[0].pattern, patch.replacements[0].replace]) {
+    const original = "var ObservedStateGate = class {\n" + write + "\n\teditIntent(target, actor) { throw Error(); }\n};";
+    fs.writeFileSync(file, original);
+    const [result] = await applyPatches(host, [patch]);
+    assert.match(result.status, /incomplete_observation_policy|pattern_not_found/);
+    const report = await patchStatusDetail(host, [patch], {dshHome:home,surface:"desktop"});
+    assert.match(report.status[17], /pending|drifted/);
+    assert.equal(fs.readFileSync(file, "utf8"), original);
+  }
 });

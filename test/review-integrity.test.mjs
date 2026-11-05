@@ -17,10 +17,10 @@ const collect = async stream => { const result = []; for await (const c of strea
 
 test("ordinary technical answers and quotations keep their complete original stream", async () => {
   for (const text of [
-    "Prompt injection 방어는 사용자 지시와 웹 콘텐츠를 구분해야 한다.",
-    "Jailbreak 는 이 글에서 다루는 용어이며, 아래에서 그 위험을 분석한다.",
-    "프롬프트에 형식 요구가 두 개 있다는 점을 확인했고, 아래에서 각각 처리한다.",
-    "이 지시는 인터페이스 테마 색상을 덮어쓰는 데 쓰이며, 수정은 다음과 같다.",
+    "Prompt injection 防护需要区分用户指令和网页内容。",
+    "Jailbreak 是本文讨论的术语，下面分析其风险。",
+    "我注意到提示词包含两个格式要求，下面分别处理。",
+    "这段指令用于覆盖界面主题颜色，修改如下。",
   ]) {
     assert.equal(looksLikeRefusal(text), false);
     let calls = 0;
@@ -44,13 +44,13 @@ test("consumer cancellation closes the ordinary upstream stream", async () => {
 
 test("prompt prose, quotes, fenced examples and mixed-case text are preserved", () => {
   for (const text of [
-    "CTF CORE CONTRACT 라는 말을 설명한다.\n이후 사용자 규칙은 반드시 보존한다.",
-    "> CTF CORE CONTRACT\n인용 뒤의 본문",
-    "`CTF CORE CONTRACT`\n본문",
-    "```text\nCTF CORE CONTRACT\n```\n본문",
-    "~~~~\nCTF CORE CONTRACT\n~~~\n여전히 코드 블록 안",
-    "CTF Core Contract\n본문",
-    "    CTF CORE CONTRACT\n들여쓰기 코드 이후",
+    "请解释 CTF CORE CONTRACT 一词。\n后续用户规则必须保留。",
+    "> CTF CORE CONTRACT\n引用后的正文",
+    "`CTF CORE CONTRACT`\n正文",
+    "```text\nCTF CORE CONTRACT\n```\n正文",
+    "~~~~\nCTF CORE CONTRACT\n~~~\n仍在代码块",
+    "CTF Core Contract\n正文",
+    "    CTF CORE CONTRACT\n缩进代码之后",
   ]) {
     assert.deepEqual(splitRedteamInject(text), { common: text, ctfTail: "" });
     assert.equal(withoutCtfContract(text), text);
