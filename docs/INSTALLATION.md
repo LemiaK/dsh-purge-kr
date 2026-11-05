@@ -22,6 +22,8 @@ Windows 의 `DSH Desktop.exe` 와 옛 `DeepSeek Harness.exe` 는 모두 후보�
 ## 먼저 공식 진입점과 커뮤니티 설치기를 구분한다
 
 - **DSH 공식 방식**: 플러그인 UI 의 설치 확인 대화상자, 또는 `dsh plugin --profile <실제 이름> add <패키지 소스>`. 이것이 profile 의존성과 bundle 을 관리한다; 서드파티 마켓은 목록만 제공하고 설치 동작은 호스트가 수행한다.
+
+> 항상 최신 버전을 설치하려면 버전이 붙지 않은 별칭 자산을 쓴다: `https://github.com/wnduddld0513/dsh-purge-kr/releases/latest/download/dsh-purge-community.tgz` — 플러그인 추가 대화상자의 입력란에도 같은 주소를 넣으면 된다. 재현 가능한 설치가 필요하면 태그가 붙은 고정 URL 을 쓴다.
 - **Purge 커뮤니티 설치기**: 이 저장소의 `scripts/install.sh` / `scripts/install.ps1` 와 bootstrap. 공식 CLI 위에 Release 다운로드/SHA256, 영구 아카이브, 스냅샷, 옛 패키지 마이그레이션, 실패 복구를 더한 것으로 DeepSeek 공식 스크립트가 아니다.
 - 첫 설치는 어느 쪽이든 가능하다; 이미 `dsh-purge` 나 분리 패널이 설치되어 있으면 커뮤니티 설치기로 마이그레이션해 진입점 중복을 피한다. 먼저 제거하지 말고, 같은 이름의 npm 패키지도 설치하지 않는다.
 

@@ -94,6 +94,14 @@ dsh plugin --profile web add "https://github.com/wnduddld0513/dsh-purge-kr/relea
 
 `web` must match the profile you actually started, and a custom data directory follows that instance's `DSH_HOME`. This command uses this release's pinned-version URL; it is neither `npm install -g` nor a bare npm package-name install. This project ships through GitHub releases, so **do not change it to `add dsh-purge` or `add dsh-purge-community`**. An official CLI install does not run our installer's Release SHA256 comparison or migration snapshot. If you need those, choose method 3. [Official CLI install guide](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/develop/basic/publish.zh.md)
 
+To always install whatever version is newest, use the version-less asset that every release publishes as an alias:
+
+```sh
+dsh plugin --profile web add "https://github.com/wnduddld0513/dsh-purge-kr/releases/latest/download/dsh-purge-community.tgz"
+```
+
+The same URL works in the Plugins add dialog on desktop. The pinned URL above stays the recommendation when you need a reproducible version.
+
 ### Method 3: community installer (backup, older-version migration, restore)
 
 Install DSH first and open it once so the real profile is initialized. The commands below download **a script from this repository**, verify it, and install it. A passing `dry-run` means only that the precondition checks, the download, and SHA256 passed; it does not mean dependency installation, migration, or startup passed. Read the downloaded script before you use it.

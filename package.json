@@ -96,7 +96,7 @@
     },
     "install": {
       "preferred": "tarball",
-      "tarball": "https://github.com/wnduddld0513/dsh-purge-kr/releases/latest/download/dsh-purge-community-1.6.78.tgz",
+      "tarball": "https://github.com/wnduddld0513/dsh-purge-kr/releases/latest/download/dsh-purge-community.tgz",
       "git": "https://github.com/wnduddld0513/dsh-purge-kr.git"
     },
     "compatibility": {
