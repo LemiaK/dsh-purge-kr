@@ -11,6 +11,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { scanCode, applySpans, skeleton, hasCjk } from "../scripts/i18n/spans.mjs";
 import { loadTm, saveTm, tmKey } from "../scripts/i18n/tm.mjs";
+import { llmConfig, buildRequest, normalizeEffort, REASONING_EFFORTS } from "../scripts/i18n/translate.mjs";
 
 const FAKE_KEY = "test11221323213123";
 const FAKE_URL = "https://example.invalid/v1";
@@ -89,4 +90,25 @@ test("no repository file contains the fake key outside this test", () => {
     if (text.includes(FAKE_KEY)) offenders.push(file);
   }
   assert.deepEqual(offenders, [], "가짜 키가 저장소 파일에 남아 있다");
+});
+
+test("reasoning effort comes from an environment variable and is validated", () => {
+  assert.equal(normalizeEffort("HIGH"), "high");
+  assert.equal(normalizeEffort(" minimal "), "minimal");
+  assert.equal(normalizeEffort("turbo"), "");
+  assert.equal(normalizeEffort(undefined), "");
+  assert.deepEqual(REASONING_EFFORTS, ["minimal", "low", "medium", "high"]);
+
+  const on = llmConfig({ LLM_API_KEY: FAKE_KEY, LLM_REASONING_EFFORT: "Medium" });
+  assert.equal(on.reasoningEffort, "medium");
+  const off = llmConfig({ LLM_API_KEY: FAKE_KEY });
+  assert.equal(off.reasoningEffort, "");
+
+  const batch = [{ id: 0, text: "中文" }];
+  assert.equal(buildRequest(on, batch).reasoning_effort, "medium");
+  assert.equal("reasoning_effort" in buildRequest(off, batch), false);
+  // 제공자가 필드를 거부할 때를 대비한 경로: 필드를 빼고 만든 본문에는 키가 없다.
+  assert.equal("reasoning_effort" in buildRequest(on, batch, { withReasoning: false }), false);
+  // 키는 본문에 절대 들어가지 않는다.
+  assert.ok(!JSON.stringify(buildRequest(on, batch)).includes(FAKE_KEY));
 });

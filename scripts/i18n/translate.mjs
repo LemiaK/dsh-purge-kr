@@ -20,8 +20,34 @@ export function llmConfig(env = process.env) {
     key: env.LLM_API_KEY || "",
     baseUrl: (env.LLM_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, ""),
     model: env.LLM_MODEL || DEFAULT_MODEL,
+    reasoningEffort: normalizeEffort(env.LLM_REASONING_EFFORT),
     timeoutMs: Number(env.LLM_TIMEOUT_MS || 120000),
   };
+}
+
+/** 추론 강도는 제공자마다 표기가 달라서, 받아들이는 값만 통과시키고 나머지는 조용히 무시한다. */
+export const REASONING_EFFORTS = ["minimal", "low", "medium", "high"];
+export function normalizeEffort(value) {
+  const v = String(value ?? "").trim().toLowerCase();
+  return REASONING_EFFORTS.includes(v) ? v : "";
+}
+
+/**
+ * 요청 본문을 만든다. 추론 강도(LLM_REASONING_EFFORT)를 지정한 경우에만 필드를 넣는다.
+ * 일부 게이트웨이는 이 필드를 400 으로 거절하므로, 호출부는 400 이면 필드를 빼고 한 번 더 시도한다.
+ */
+export function buildRequest(cfg, batch, { withReasoning = Boolean(cfg.reasoningEffort) } = {}) {
+  const body = {
+    model: cfg.model,
+    temperature: 0,
+    messages: [
+      { role: "system", content: SYSTEM_PROMPT },
+      { role: "user", content: JSON.stringify({ items: batch }) },
+    ],
+    response_format: { type: "json_object" },
+  };
+  if (withReasoning && cfg.reasoningEffort) body.reasoning_effort = cfg.reasoningEffort;
+  return body;
 }
 
 const SYSTEM_PROMPT = [
@@ -41,17 +67,10 @@ const SYSTEM_PROMPT = [
  */
 export async function translateBatch(batch, cfg) {
   if (!cfg.key) throw new Error("LLM_API_KEY is not set");
-  const body = {
-    model: cfg.model,
-    temperature: 0,
-    messages: [
-      { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: JSON.stringify({ items: batch }) },
-    ],
-    response_format: { type: "json_object" },
-  };
+  let withReasoning = Boolean(cfg.reasoningEffort);
   let lastError = "";
   for (let attempt = 1; attempt <= 3; attempt += 1) {
+    const body = buildRequest(cfg, batch, { withReasoning });
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), cfg.timeoutMs);
     try {
@@ -64,6 +83,11 @@ export async function translateBatch(batch, cfg) {
       if (!res.ok) {
         // 본문을 읽지 않고 상태 코드만 남긴다.
         lastError = "http " + res.status;
+        // 추론 강도 필드를 모르는 제공자(400)라면 필드를 빼고 한 번 더 시도한다.
+        if (res.status === 400 && withReasoning) {
+          withReasoning = false;
+          continue;
+        }
         if (res.status >= 400 && res.status < 500 && res.status !== 429) break;
         await delay(800 * attempt);
         continue;
