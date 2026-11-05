@@ -13,6 +13,7 @@ import { scanCode, applySpans, skeleton, hasCjk, codeFingerprint } from "../scri
 import { loadTm, saveTm, tmKey } from "../scripts/i18n/tm.mjs";
 import { llmConfig, buildRequest, normalizeEffort, REASONING_EFFORTS, requestShapes, parseJsonContent } from "../scripts/i18n/translate.mjs";
 import { applyEdits } from "../scripts/i18n-repair.mjs";
+import { checkLocale } from "../scripts/i18n-check-locale.mjs";
 
 const FAKE_KEY = "test11221323213123";
 const FAKE_URL = "https://example.invalid/v1";
@@ -165,4 +166,12 @@ test("the client degrades the request shape and parses messy JSON", () => {
   assert.deepEqual(parseJsonContent('{"items":[{"id":0,"ko":"적용"}]}').items[0].ko, "적용");
   assert.deepEqual(parseJsonContent('Sure:\n```json\n{"items":[]}\n```').items, []);
   assert.deepEqual(parseJsonContent('prefix {"items":[{"id":1,"ko":"x"}]} suffix').items[0].id, 1);
+});
+
+test("the locale gate catches a new English key without a Korean one", () => {
+  const ok = checkLocale({ a: "가", b: "나" }, { a: "A", b: "B" });
+  assert.equal(ok.missing.length, 0);
+  const bad = checkLocale({ a: "가" }, { a: "A", b: "B" });
+  assert.deepEqual(bad.missing, ["b"]);
+  assert.equal(bad.enCount, 2);
 });
