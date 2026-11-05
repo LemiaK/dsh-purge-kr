@@ -11,7 +11,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { scanCode, applySpans, skeleton, hasCjk, codeFingerprint } from "../scripts/i18n/spans.mjs";
 import { loadTm, saveTm, tmKey } from "../scripts/i18n/tm.mjs";
-import { llmConfig, buildRequest, normalizeEffort, REASONING_EFFORTS } from "../scripts/i18n/translate.mjs";
+import { llmConfig, buildRequest, normalizeEffort, REASONING_EFFORTS, requestShapes, parseJsonContent } from "../scripts/i18n/translate.mjs";
 import { applyEdits } from "../scripts/i18n-repair.mjs";
 
 const FAKE_KEY = "test11221323213123";
@@ -143,4 +143,26 @@ test("the repair pass applies only exact, unprotected edits", () => {
   assert.match(fs.readFileSync(path.join(dir, "lib", "a.js"), "utf8"), /const a = 10;/);
   assert.equal(fs.readFileSync(path.join(dir, ".github", "w.yml"), "utf8"), "on: push\n");
   fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("the client degrades the request shape and parses messy JSON", () => {
+  const cfg = llmConfig({ LLM_API_KEY: FAKE_KEY, LLM_REASONING_EFFORT: "max" });
+  const shapes = requestShapes(cfg);
+  assert.ok(shapes.length >= 3);
+  assert.equal(shapes[0].withResponseFormat, true);
+  assert.equal(shapes[shapes.length - 1].withResponseFormat, false);
+  assert.equal(shapes[shapes.length - 1].withReasoning, false);
+
+  const batch = [{ id: 0, text: "中文" }];
+  const rich = buildRequest(cfg, batch, shapes[0]);
+  assert.equal(rich.reasoning_effort, "max");
+  assert.deepEqual(rich.response_format, { type: "json_object" });
+  const lean = buildRequest(cfg, batch, shapes[shapes.length - 1]);
+  assert.equal("reasoning_effort" in lean, false);
+  assert.equal("response_format" in lean, false);
+  assert.equal("temperature" in lean, false);
+
+  assert.deepEqual(parseJsonContent('{"items":[{"id":0,"ko":"적용"}]}').items[0].ko, "적용");
+  assert.deepEqual(parseJsonContent('Sure:\n```json\n{"items":[]}\n```').items, []);
+  assert.deepEqual(parseJsonContent('prefix {"items":[{"id":1,"ko":"x"}]} suffix').items[0].id, 1);
 });

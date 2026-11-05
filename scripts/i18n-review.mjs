@@ -10,7 +10,7 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { scanCode, scanMarkdown, hasCjk, codeFingerprint, kindOf } from "./i18n/spans.mjs";
 import { loadTm, saveTm, tmKey } from "./i18n/tm.mjs";
-import { llmConfig, sanitize } from "./i18n/translate.mjs";
+import { llmConfig, sanitize, postChat, parseJsonContent } from "./i18n/translate.mjs";
 
 const args = process.argv.slice(2);
 const arg = (name, fallback = undefined) => {
@@ -107,35 +107,24 @@ if (allowNetwork && !problems.length && changed.length) {
     }
     if (pairs.length) {
       try {
-        const res = await fetch(cfg.baseUrl + "/chat/completions", {
-          method: "POST",
-          headers: { "content-type": "application/json", authorization: "Bearer " + cfg.key },
-          body: JSON.stringify({
-            model: cfg.model,
-            temperature: 0,
-            ...(cfg.reasoningEffort ? { reasoning_effort: cfg.reasoningEffort } : {}),
-            messages: [
-              {
-                role: "system",
-                content: [
-                  "You review Korean translations of a JavaScript repository's Chinese strings.",
-                  "Flag only real defects: mistranslation, tone mismatch (must be polite 합니다체, labels noun-form),",
-                  "broken interpolation such as ${...}/{{model}}, or translated identifiers/paths/CLI flags.",
-                  "Do not suggest stylistic rewrites. Return JSON: {\"issues\":[{\"file\":...,\"src\":...,\"ko\":...,\"problem\":...}]},",
-                  "and an empty array when everything is fine.",
-                ].join(" "),
-              },
-              { role: "user", content: JSON.stringify({ pairs }) },
-            ],
-            response_format: { type: "json_object" },
-          }),
-          signal: AbortSignal.timeout(cfg.timeoutMs),
-        });
-        if (!res.ok) aiError = "review http " + res.status;
-        else {
-          const payload = JSON.parse((await res.json())?.choices?.[0]?.message?.content ?? "{}");
-          aiIssues = (payload.issues ?? []).filter((x) => x && typeof x.src === "string" && typeof x.ko === "string");
-        }
+        const payload = await postChat(cfg, () => ({
+          model: cfg.model,
+          messages: [
+            {
+              role: "system",
+              content: [
+                "You review Korean translations of a JavaScript repository's Chinese strings.",
+                "Flag only real defects: mistranslation, tone mismatch (must be polite 합니다체, labels noun-form),",
+                "broken interpolation such as ${...}/{{model}}, or translated identifiers/paths/CLI flags.",
+                "Do not suggest stylistic rewrites. Return JSON: {\"issues\":[{\"file\":...,\"src\":...,\"ko\":...,\"problem\":...}]},",
+                "and an empty array when everything is fine.",
+              ].join(" "),
+            },
+            { role: "user", content: JSON.stringify({ pairs }) },
+          ],
+        }));
+        const parsed = parseJsonContent(payload?.choices?.[0]?.message?.content ?? "{}");
+        aiIssues = (parsed.issues ?? []).filter((x) => x && typeof x.src === "string" && typeof x.ko === "string");
       } catch (error) {
         aiError = sanitize(error?.message ?? String(error), cfg.key);
       }

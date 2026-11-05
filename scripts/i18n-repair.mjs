@@ -8,7 +8,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
-import { llmConfig, sanitize } from "./i18n/translate.mjs";
+import { llmConfig, sanitize, postChat, parseJsonContent } from "./i18n/translate.mjs";
 
 const args = process.argv.slice(2);
 const arg = (n, d = undefined) => { const i = args.indexOf(n); return i === -1 ? d : args[i + 1]; };
@@ -95,24 +95,15 @@ async function askModel(logText, gateName, cfg) {
     ],
     log: trimLog(logText),
   };
-  const res = await fetch(cfg.baseUrl + "/chat/completions", {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: "Bearer " + cfg.key },
-    body: JSON.stringify({
-      model: cfg.model,
-      temperature: 0,
-      ...(cfg.reasoningEffort ? { reasoning_effort: cfg.reasoningEffort } : {}),
-      messages: [
-        { role: "system", content: "You repair a failing CI job by emitting minimal, exact text edits. Output JSON only." },
-        { role: "user", content: JSON.stringify(prompt) },
-      ],
-      response_format: { type: "json_object" },
-    }),
-    signal: AbortSignal.timeout(cfg.timeoutMs),
-  });
-  if (!res.ok) throw new Error("repair http " + res.status);
-  const payload = JSON.parse((await res.json())?.choices?.[0]?.message?.content ?? "{}");
-  return { edits: Array.isArray(payload.edits) ? payload.edits : [], reason: payload.reason ?? "" };
+  const payload = await postChat(cfg, () => ({
+    model: cfg.model,
+    messages: [
+      { role: "system", content: "You repair a failing CI job by emitting minimal, exact text edits. Output JSON only." },
+      { role: "user", content: JSON.stringify(prompt) },
+    ],
+  }));
+  const parsed = parseJsonContent(payload?.choices?.[0]?.message?.content ?? "{}");
+  return { edits: Array.isArray(parsed.edits) ? parsed.edits : [], reason: parsed.reason ?? "" };
 }
 
 async function main() {
