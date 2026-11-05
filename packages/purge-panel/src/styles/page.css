@@ -1,32 +1,90 @@
-/* 整页（左侧栏入口）样式：沿用 DSH 自己的字体、间距与主题变量，不引入自定义字体。 */
+/* 전체 페이지(왼쪽 사이드바 진입점) 스타일.
+   DSH 설정 화면과 같은 리듬으로 정돈한다: 좌우 20px · 상단 16px · 섹션 간 24px,
+   간격 스케일 4/8/12/16/20/24, 설정 행 padding 16px 0 + .5px 하단 구분선.
+   색·선·반경·모션은 전부 DSH 디자인 토큰(--dsw-*)이고, 타이포는 DSH 폰트 토큰의
+   크기/행간(14/22 본문, 13/20 보조, 12/18 캡션)을 그대로 가져다 쓴다. */
+/* --dshpp-* 이름은 클래스/구조/사용자 테마 오버라이드 호환을 위해 남긴 별칭이고,
+   값은 전부 DSH 토큰이다(base.css 가 페이지 문맥에서 이 이름을 참조한다). */
 .dshpp-page {
-  --dshpp-line: var(--dsw-alias-border-l1, rgba(127, 127, 127, 0.22));
-  --dshpp-line-strong: var(--dsw-alias-border-l2, rgba(127, 127, 127, 0.4));
-  --dshpp-fg: var(--dsw-alias-label-primary, currentColor);
-  --dshpp-mute: var(
-    --dsw-alias-label-secondary,
-    color-mix(in srgb, currentColor 62%, transparent)
-  );
-  --dshpp-bg: var(--dsw-alias-bg-layer-1, transparent);
-  --dshpp-bg-2: var(--dsw-alias-bg-layer-2, rgba(127, 127, 127, 0.06));
-  --dshpp-accent: var(--dsw-alias-brand-primary, #4d6bfe);
-  --dshpp-ok: var(--dsw-alias-state-success-primary, #1f9d55);
-  --dshpp-warn: var(--dsw-alias-state-warn-primary, #b7791f);
-  --dshpp-bad: var(--dsw-alias-state-error-primary, #d14343);
+  --dshpp-line: var(--dsw-alias-border-l1);
+  --dshpp-line-strong: var(--dsw-alias-border-l2);
+  --dshpp-fg: var(--dsw-alias-label-primary);
+  --dshpp-ink: var(--dsw-alias-label-primary);
+  --dshpp-mute: var(--dsw-alias-label-secondary);
+  --dshpp-bg: var(--dsw-alias-bg-layer-1);
+  --dshpp-paper: var(--dsw-alias-bg-layer-1);
+  --dshpp-bg-2: var(--dsw-alias-bg-layer-2);
+  --dshpp-mono: var(--dsw-font-markdown-code-font-family);
+  --dshpp-accent: var(--dsw-alias-brand-primary);
+  --dshpp-accent-soft: var(--dsw-alias-bg-layer-3);
+  --dshpp-fill: var(--dsw-alias-interactive-bg-hover);
+  --dshpp-ok: var(--dsw-alias-state-success-primary);
+  --dshpp-warn: var(--dsw-alias-state-warn-primary);
+  --dshpp-bad: var(--dsw-alias-state-error-primary);
+  /* 예전 고정색 자리(--dshpp-solid*)도 DSH 버튼/상태 토큰 별칭으로 남긴다. */
+  --dshpp-solid: var(--dsw-alias-button-primary-fill);
+  --dshpp-solid-hover: var(--dsw-alias-button-primary-hover);
+  --dshpp-solid-danger: var(--dsw-alias-state-error-primary);
+  --dshpp-solid-danger-hover: var(--dsw-alias-state-error-secondary);
   box-sizing: border-box;
+  width: 100%;
+  /* DSH 플러그인 설정 화면과 같은 폭 상한(넓은 화면에서는 중앙 정렬, 좁으면 100%). */
+  max-width: 1400px;
+  margin-inline: auto;
   height: 100%;
   min-height: 0;
   overflow: auto;
-  padding: 20px 24px 40px;
-  color: var(--dshpp-fg);
-  font: inherit;
-  line-height: 1.55;
+  /* DSH 설정 화면처럼 스크롤바는 감추고 스크롤 기능만 남긴다. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 16px 24px 48px;
+  color: var(--dsw-alias-label-primary);
+  font-family: var(--dsw-font-family);
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: var(--dsw-font-s-14-line-height);
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
+}
+.dshpp-page::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+/* 안쪽 목록/에디터 스크롤 영역도 같은 규칙을 따른다. */
+.dshpp-page :is(.dshpp-rulelist, .dshpp-cwd-list, .dshpp-editor, .dshpp-auth-legal, .dshpp-fold-inner, .dshpp-page-tabs) {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.dshpp-page :is(.dshpp-rulelist, .dshpp-cwd-list, .dshpp-editor, .dshpp-auth-legal, .dshpp-fold-inner, .dshpp-page-tabs)::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 .dshpp-page *,
 .dshpp-page *::before,
 .dshpp-page *::after {
   box-sizing: border-box;
+}
+
+/* 한국어 설명문은 단어 중간에서 끊지 않는다(word-break: keep-all).
+   넘칠 때만 overflow-wrap 으로 안전하게 접는다. */
+.dshpp-page :is(p, li, dd, dt, summary, .dshpp-muted, .dshpp-hint, .dshpp-note),
+.dshpp-page :is(.dshpp-tip, .dshpp-warn, .dshpp-strip, .dshpp-hero-hint),
+.dshpp-page .dshpp-page-title p {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* 제목·탭·버튼은 자간을 살짝 조인다(DSH 와 같은 -0.01em). 본문은 0. */
+.dshpp-page :is(h1, h2, h3, h4),
+.dshpp-page .dshpp-page-tabs button,
+.dshpp-page .dshpp-btn,
+.dshpp-page .dshpp-help-btn,
+.dshpp-page .dshpp-group-h,
+.dshpp-page .dshpp-fold > summary,
+.dshpp-page .dshpp-fold-inline > summary {
+  letter-spacing: -0.01em;
+  word-break: keep-all;
 }
 
 .dshpp-page-head {
@@ -41,10 +99,10 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  border-radius: 10px;
-  border: 1px solid var(--dshpp-line);
-  background: var(--dshpp-bg-2);
-  color: var(--dshpp-accent);
+  border-radius: var(--dsw-radius-md);
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-brand-primary);
   flex: none;
 }
 .dshpp-page-title {
@@ -52,70 +110,85 @@
 }
 .dshpp-page-title h1 {
   margin: 0;
-  font-size: 1.15em;
+  font-size: 16px;
+  line-height: 24px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
 }
 .dshpp-page-title p {
   margin: 2px 0 0;
-  font-size: 0.86em;
-  color: var(--dshpp-mute);
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  font-size: var(--dsw-font-xs-13-font-size);
+  line-height: var(--dsw-font-xs-13-line-height);
+  color: var(--dsw-alias-label-secondary);
 }
+/* 배지/필: 캡션 12/18, padding 2px 8px, radius sm, layer-2 바탕 + .5px 선 */
 .dshpp-page-ver {
-  padding: 1px 6px;
-  border-radius: 999px;
-  border: 1px solid var(--dshpp-line);
-  font-size: 0.92em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--dsw-radius-sm);
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
-/* 顶部一行状态摘要：不用卡片，跟 DSH 的 subtitle 行一致 */
+/* 상단 한 줄 상태 요약: 카드 대신 DSH 의 subtitle 행과 맞춘다 */
 .dshpp-strip {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 18px;
-  margin: 14px 0 2px;
-  padding: 10px 0 12px;
-  border-bottom: 1px solid var(--dshpp-line);
-  font-size: 0.86em;
-  color: var(--dshpp-mute);
+  align-items: center;
+  gap: 8px 16px;
+  margin: 12px 0 0;
+  padding: 12px 0;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+  color: var(--dsw-alias-label-secondary);
 }
 .dshpp-strip-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   min-width: 0;
 }
 .dshpp-strip-item b {
-  color: var(--dshpp-fg);
+  color: var(--dsw-alias-label-primary);
   font-weight: 600;
 }
 .dshpp-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--dshpp-mute);
+  background: var(--dsw-alias-label-secondary);
   flex: none;
 }
 .dshpp-dot.is-ok {
-  background: var(--dshpp-ok);
+  background: var(--dsw-alias-state-success-primary);
 }
 .dshpp-dot.is-warn {
-  background: var(--dshpp-warn);
+  background: var(--dsw-alias-state-warn-primary);
 }
 .dshpp-dot.is-bad {
-  background: var(--dshpp-bad);
+  background: var(--dsw-alias-state-error-primary);
 }
 
-/* 页签：下划线式，跟 DSH 设置页的 tab 一致 */
+/* 탭: DSH 알약형 탭. 컨테이너는 bg-module-platform, 활성 탭은 bg-layer-1. */
 .dshpp-page-tabs {
   display: flex;
-  gap: 2px;
-  margin: 10px 0 0;
-  border-bottom: 1px solid var(--dshpp-line);
+  gap: 4px;
+  margin: 16px 0 0;
+  padding: 4px;
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-alias-bg-module-platform);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -124,242 +197,441 @@
 }
 .dshpp-page-tabs button {
   appearance: none;
+  flex: none;
+  height: 34px;
+  padding: 0 12px;
   border: 0;
+  border-radius: var(--dsw-radius-md);
   background: transparent;
-  color: var(--dshpp-mute);
-  font: inherit;
-  font-size: 0.92em;
-  padding: 9px 12px 10px;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--dsw-font-family);
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: 20px;
+  letter-spacing: -0.01em;
   cursor: pointer;
   white-space: nowrap;
+  transition:
+    color 0.18s ease,
+    background-color 0.18s ease;
 }
 .dshpp-page-tabs button:hover {
-  color: var(--dshpp-fg);
+  color: var(--dsw-alias-label-primary);
 }
 .dshpp-page-tabs button[aria-selected="true"] {
-  color: var(--dshpp-fg);
-  border-bottom-color: var(--dshpp-accent);
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
   font-weight: 600;
 }
+.dshpp-page-tabs button:focus-visible {
+  outline: var(--dsw-focus-ring-width) solid var(--dsw-alias-border-l4);
+  outline-offset: -2px;
+}
 
+/* 본문/섹션 리듬: 섹션 사이는 24px */
 .dshpp-page-body {
-  padding-top: 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
+  padding-top: 16px;
   min-width: 0;
 }
 .dshpp-sec {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   min-width: 0;
 }
 .dshpp-sec[hidden] {
   display: none;
 }
 
-/* 卡片：DSH 的 layer-1 面板 */
-.dshpp-page .dshpp-card,
-.dshpp-page section.dshpp-panel {
-  border: 1px solid var(--dshpp-line);
-  border-radius: 12px;
-  background: var(--dshpp-bg);
-  padding: 16px 18px;
+/* 카드/패널: 그림자 없이 layer-1 단일 배경 + .5px 선. base.css 의 그림자·이중 배경을 덮는다. */
+.dshpp-page :is(.dshpp-card, .dshpp-panel) {
+  display: block;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-alias-bg-layer-1);
+  box-shadow: none;
+  padding: 16px;
   margin: 0;
   min-width: 0;
 }
-.dshpp-page .dshpp-card > h3:first-child,
-.dshpp-page section.dshpp-panel > h3:first-child {
-  margin: 0 0 12px;
-  font-size: 1em;
-  font-weight: 600;
+.dshpp-page section.dshpp-panel {
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-alias-bg-layer-1);
+  box-shadow: none;
+  padding: 16px;
+  margin: 0;
+  min-width: 0;
 }
-.dshpp-page .dshpp-panel {
+/* 카드 안 형제 요소는 12px 리듬. 제목은 위 16px/아래 8px 이고, 아래 값은 리듬과 병합되어 12px 로 수렴한다. */
+.dshpp-page :is(.dshpp-card, .dshpp-panel) > * + * {
+  margin-top: 12px;
+}
+.dshpp-page :is(.dshpp-card, .dshpp-panel) :is(h3, h4) {
+  margin: 16px 0 8px;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--dsw-alias-label-primary);
+}
+.dshpp-page :is(.dshpp-card, .dshpp-panel) :is(h3, h4):first-child {
+  margin-top: 0;
+}
+.dshpp-page
+  :is(.dshpp-card, .dshpp-panel)
+  :is(h3, h4):first-child:not(:last-child) {
+  margin-bottom: 12px;
+}
+/* 소제목 행: 제목과 우측 액션을 한 줄에 */
+.dshpp-page .dshpp-sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0 8px;
+}
+.dshpp-page .dshpp-sub > :is(h3, h4) {
+  margin: 0;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* 설정 행: 왼쪽 라벨 / 오른쪽 컨트롤. DSH 설정 화면과 같은 16px 상하 여백 + .5px 구분선 */
+.dshpp-page .dshpp-policy-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 16px 0;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+}
+.dshpp-page .dshpp-policy-row > label {
+  flex: 0 0 auto;
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: var(--dsw-font-s-14-line-height);
+  letter-spacing: 0;
+  color: var(--dsw-alias-label-primary);
+}
+/* .dshpp-field / .dshpp-area 는 input·select·textarea 에 붙는 컨트롤 클래스다(래퍼가 아니다).
+   여기서는 폰트·선·바탕만 페이지 규격으로 맞춘다. */
+.dshpp-page .dshpp-field {
+  font-family: var(--dsw-font-family);
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: var(--dsw-font-s-14-line-height);
+  letter-spacing: 0;
+  color: var(--dsw-alias-label-primary);
+  background: var(--dsw-alias-bg-layer-2);
+  border: 0.5px solid var(--dsw-alias-border-l3);
+  border-radius: var(--dsw-radius-sm);
+  padding: 8px 10px;
+  max-width: 100%;
+}
+.dshpp-page .dshpp-field:focus-visible {
+  outline: var(--dsw-focus-ring-width) solid var(--dsw-alias-border-l4);
+  outline-offset: 1px;
+}
+
+/* 보조 설명: 13/20 */
+.dshpp-page .dshpp-muted,
+.dshpp-page .dshpp-hint {
+  margin: 0;
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xs-13-font-size);
+  line-height: var(--dsw-font-xs-13-line-height);
+}
+.dshpp-page .dshpp-note {
+  margin: 4px 0 0;
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+}
+.dshpp-layout-details > summary {
+  cursor: pointer;
+  padding: 8px 0;
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+}
+
+/* 블록(정책/생성/목록): 카드 안에서 좌우 들여쓰기를 만들지 않고 .5px 선으로만 나눈다 */
+.dshpp-page .dshpp-block,
+.dshpp-page .dshpp-create {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-/* 字段行：左标题右控件；窄屏自动换行 */
-.dshpp-page .dshpp-field {
-  display: grid;
-  grid-template-columns: minmax(120px, 190px) 1fr;
-  gap: 8px 14px;
-  align-items: center;
-}
-.dshpp-page .dshpp-field > .dshpp-field-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.92em;
-  color: var(--dshpp-fg);
-}
-.dshpp-page .dshpp-field > .dshpp-field-body {
+  padding: 12px 0;
+  border-top: 0.5px solid var(--dsw-alias-border-l2);
+  background: transparent;
   min-width: 0;
 }
-@media (max-width: 720px) {
-  .dshpp-page .dshpp-field {
-    grid-template-columns: 1fr;
-  }
+/* 정책 행이 이미 하단 선을 그리므로 생성 블록의 위쪽 선은 겹치지 않게 한다 */
+.dshpp-page .dshpp-policy-row + .dshpp-create {
+  border-top: 0;
 }
-
-.dshpp-page .dshpp-muted,
-.dshpp-page .dshpp-hint {
-  color: var(--dshpp-mute) !important;
-  font-size: 0.86em !important;
-  line-height: 1.6;
-  margin: 0;
+.dshpp-page .dshpp-create-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .dshpp-page .dshpp-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   align-items: center;
+  gap: 8px;
   min-width: 0;
 }
 .dshpp-page input,
 .dshpp-page select,
 .dshpp-page textarea {
-  font: inherit;
-  color: var(--dshpp-fg);
-  background: var(--dshpp-bg-2);
-  border: 1px solid var(--dshpp-line);
-  border-radius: 8px;
-  padding: 7px 10px;
+  font-family: var(--dsw-font-family);
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: var(--dsw-font-s-14-line-height);
+  color: var(--dsw-alias-label-primary);
+  background: var(--dsw-alias-bg-layer-2);
+  border: 0.5px solid var(--dsw-alias-border-l3);
+  border-radius: var(--dsw-radius-sm);
+  padding: 8px 10px;
   max-width: 100%;
 }
 .dshpp-page input:focus-visible,
 .dshpp-page select:focus-visible,
 .dshpp-page textarea:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--dshpp-accent) 55%, transparent);
+  outline: var(--dsw-focus-ring-width) solid var(--dsw-alias-border-l4);
   outline-offset: 1px;
 }
 .dshpp-page textarea {
   width: 100%;
   min-height: 320px;
   resize: vertical;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.86em;
-  line-height: 1.6;
+  font-family: var(--dsw-font-markdown-code-font-family);
+  font-size: var(--dsw-font-xs-13-font-size);
+  line-height: var(--dsw-font-xs-13-line-height);
+  background: var(--dsw-alias-markdown-code-block);
 }
 
+/* 코드/프리: DSH markdown 코드 토큰. 프리 블록은 12/18 · padding 12px · radius sm */
+.dshpp-page :is(code, kbd, samp, pre) {
+  font-family: var(--dsw-font-markdown-code-font-family);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+}
+.dshpp-page :is(code, kbd, samp) {
+  padding: 1px 4px;
+  border-radius: var(--dsw-radius-xs);
+  background: var(--dsw-alias-markdown-inline-code);
+}
+.dshpp-page pre {
+  margin: 0;
+  padding: 12px;
+  border-radius: var(--dsw-radius-sm);
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-markdown-code-block);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow-x: auto;
+}
+
+/* 버튼: DSH 버튼 규격(36/28, radius md/sm, .16s ease-out) 그대로 */
 .dshpp-page .dshpp-btn {
-  font: inherit;
-  font-size: 0.9em;
-  border-radius: 8px;
-  padding: 6px 12px;
-  border: 1px solid var(--dshpp-line);
-  background: var(--dshpp-bg-2);
-  color: var(--dshpp-fg);
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 36px;
+  min-height: 0;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--dsw-radius-md);
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font-family: var(--dsw-font-family);
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: var(--dsw-font-s-14-line-height);
+  letter-spacing: -0.01em;
   cursor: pointer;
   white-space: nowrap;
-}
-.dshpp-page .dshpp-btn:hover:not(:disabled) {
-  border-color: var(--dshpp-line-strong);
+  transition:
+    background-color 0.16s ease-out,
+    color 0.16s ease-out,
+    border-color 0.16s ease-out,
+    opacity 0.15s ease-out;
 }
 .dshpp-page .dshpp-btn:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
 }
-/* 主按钮：不要用 brand-primary 当底色——深色模式下它是高亮文字色，
-   直接铺成背景就成了"白底白字"的方块。这里用固定的实心绿 + 白字。 */
-.dshpp-page {
-  --dshpp-solid: #2f6b4f;
-  --dshpp-solid-hover: #3a8260;
-  --dshpp-solid-danger: #a63b3b;
-  --dshpp-solid-danger-hover: #bd4747;
+.dshpp-page .dshpp-btn:focus-visible {
+  outline: var(--dsw-focus-ring-width) solid var(--dsw-alias-border-l4);
+  outline-offset: 2px;
 }
 .dshpp-page .dshpp-btn-primary {
-  background: var(--dshpp-solid);
-  border-color: var(--dshpp-solid);
-  color: #fff;
-  font-weight: 600;
+  background: var(--dsw-alias-button-primary-fill);
+  color: var(--dsw-alias-label-primary-foreground);
 }
 .dshpp-page .dshpp-btn-primary:hover:not(:disabled) {
-  background: var(--dshpp-solid-hover);
-  border-color: var(--dshpp-solid-hover);
+  background: var(--dsw-alias-button-primary-hover);
 }
+.dshpp-page .dshpp-btn-ghost {
+  background: transparent;
+}
+.dshpp-page .dshpp-btn-ghost:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+.dshpp-page .dshpp-btn-ghost:active:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-active);
+}
+.dshpp-page .dshpp-btn-outline {
+  border: 0.5px solid var(--dsw-alias-border-l3);
+  background: transparent;
+}
+.dshpp-page .dshpp-btn-outline:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+/* 상단 고정 액션 바는 DSH 툴바 버튼 색을 쓴다(primary/outline 은 각자 색 유지) */
+.dshpp-page .dshpp-actions .dshpp-btn-ghost {
+  background: var(--dsw-alias-button-tool-bar-fill);
+}
+.dshpp-page .dshpp-actions .dshpp-btn-ghost:hover:not(:disabled) {
+  background: var(--dsw-alias-button-tool-bar-hover);
+}
+/* danger 는 텍스트형: 배경 없이 글자색만 state-error-primary 로 낮춘다. */
+.dshpp-page .dshpp-btn-danger,
 .dshpp-page .dshpp-btn-solid-danger {
-  background: var(--dshpp-solid-danger);
-  border-color: var(--dshpp-solid-danger);
-  color: #fff;
+  background: transparent;
+  color: var(--dsw-alias-state-error-primary);
 }
+.dshpp-page .dshpp-btn-danger:hover:not(:disabled),
 .dshpp-page .dshpp-btn-solid-danger:hover:not(:disabled) {
-  background: var(--dshpp-solid-danger-hover);
-  border-color: var(--dshpp-solid-danger-hover);
-}
-.dshpp-page .dshpp-btn-danger {
-  color: var(--dshpp-bad);
-  border-color: color-mix(in srgb, var(--dshpp-bad) 40%, transparent);
+  background: var(--dsw-alias-interactive-bg-hover-danger);
+  color: var(--dsw-alias-state-error-primary);
 }
 .dshpp-page .dshpp-btn-tiny {
-  padding: 3px 8px;
-  font-size: 0.82em;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--dsw-radius-sm);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
 }
 
+/* 배지/필: 12/18, padding 2px 8px, radius sm, layer-2 바탕 + .5px 선.
+   상태는 글자색만 바꾼다(테두리/배경에 상태색을 섞지 않는다). */
 .dshpp-page .dshpp-pill {
   display: inline-flex;
   align-items: center;
-  padding: 1px 8px;
-  border-radius: 999px;
-  font-size: 0.8em;
-  border: 1px solid var(--dshpp-line);
-  color: var(--dshpp-mute);
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: var(--dsw-radius-sm);
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--dsw-font-family);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+  letter-spacing: 0;
 }
 .dshpp-page .dshpp-pill.is-ok {
-  color: var(--dshpp-ok);
-  border-color: color-mix(in srgb, var(--dshpp-ok) 35%, transparent);
+  color: var(--dsw-alias-state-success-primary);
 }
 .dshpp-page .dshpp-pill.is-wait {
-  color: var(--dshpp-warn);
-  border-color: color-mix(in srgb, var(--dshpp-warn) 35%, transparent);
+  color: var(--dsw-alias-state-warn-primary);
 }
 .dshpp-page .dshpp-pill.is-bad {
-  color: var(--dshpp-bad);
-  border-color: color-mix(in srgb, var(--dshpp-bad) 40%, transparent);
+  color: var(--dsw-alias-state-error-primary);
 }
 
+/* 표: 헤더 배경 없이 .5px 선만. 본문 13/20, 캡션 12/18 */
 .dshpp-page .dshpp-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.86em;
+  border: 0;
+  font-size: var(--dsw-font-xs-13-font-size);
+  line-height: var(--dsw-font-xs-13-line-height);
+  letter-spacing: 0;
 }
 .dshpp-page .dshpp-table th,
 .dshpp-page .dshpp-table td {
   text-align: left;
-  padding: 7px 10px;
-  border-bottom: 1px solid var(--dshpp-line);
+  padding: 12px 8px;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
   vertical-align: top;
+  background: transparent;
   overflow-wrap: anywhere;
 }
+/* 표 좌우 끝은 그룹/카드 텍스트와 같은 기준선에 맞춘다 */
+.dshpp-page .dshpp-table :is(th, td):first-child {
+  padding-left: 0;
+}
+.dshpp-page .dshpp-table :is(th, td):last-child {
+  padding-right: 0;
+}
 .dshpp-page .dshpp-table th {
-  color: var(--dshpp-mute);
+  color: var(--dsw-alias-label-secondary);
   font-weight: 500;
-  font-size: 0.95em;
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+  letter-spacing: 0;
+}
+.dshpp-page .dshpp-table tbody tr:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+/* 그룹(패치 상세): layer-1 바탕 + .5px 하단 구분선의 설정 행 스타일. 카드/그림자 없음. */
+.dshpp-page .dshpp-group {
+  border: 0;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: 0;
+  margin: 0;
+  background: var(--dsw-alias-bg-layer-1);
+  overflow: visible;
+}
+.dshpp-page .dshpp-group:last-child {
+  border-bottom: 0;
 }
 .dshpp-page .dshpp-group-h {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   border: 0;
   background: transparent;
-  color: inherit;
-  font: inherit;
-  padding: 8px 0;
+  color: var(--dsw-alias-label-primary);
+  font-family: var(--dsw-font-family);
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: var(--dsw-font-s-14-line-height);
+  letter-spacing: -0.01em;
+  padding: 16px 0;
   cursor: pointer;
 }
+.dshpp-page .dshpp-group-h:hover {
+  color: var(--dsw-alias-label-primary);
+}
+.dshpp-page .dshpp-group-h strong {
+  font-weight: 600;
+}
+.dshpp-page .dshpp-group-h em {
+  font-style: normal;
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+  color: var(--dsw-alias-label-secondary);
+}
 .dshpp-page .dshpp-count {
-  color: var(--dshpp-mute);
-  font-size: 0.85em;
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+  font-variant-numeric: tabular-nums;
 }
 
-/* 演练台占满剩余高度 */
+/* 드릴 콘솔이 남은 높이를 전부 차지한다 */
 .dshpp-page-drill {
   min-height: 60vh;
 }
@@ -369,14 +641,15 @@
 }
 
 .dshpp-page-foot {
-  margin-top: 28px;
-  padding-top: 14px;
-  border-top: 1px solid var(--dshpp-line);
-  font-size: 0.8em;
-  color: var(--dshpp-mute);
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 0.5px solid var(--dsw-alias-border-l2);
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
 }
 
-/* 名词解释：标题后面的小问号 */
+/* 이름 설명: 제목 뒤의 작은 물음표 */
 .dshpp-help {
   position: relative;
   display: inline-flex;
@@ -386,25 +659,29 @@
   appearance: none;
   border: 0;
   background: transparent;
-  color: var(--dshpp-mute);
-  font: inherit;
-  font-size: 0.85em;
+  color: var(--dsw-alias-label-secondary);
+  font-family: var(--dsw-font-family);
+  font-size: var(--dsw-font-xxs-12-font-size);
   line-height: 1;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 1px solid var(--dshpp-line);
+  border: 0.5px solid var(--dsw-alias-border-l3);
   cursor: help;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0;
+  transition:
+    background-color 0.16s ease-out,
+    color 0.16s ease-out,
+    border-color 0.16s ease-out;
 }
 .dshpp-help-btn:hover,
 .dshpp-help-btn[aria-expanded="true"] {
-  color: var(--dshpp-fg);
-  border-color: var(--dshpp-line-strong);
-  background: var(--dshpp-bg-2);
+  color: var(--dsw-alias-label-primary);
+  border-color: var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-interactive-bg-hover);
 }
 .dshpp-tip {
   position: absolute;
@@ -413,14 +690,14 @@
   z-index: 2147483000;
   width: max-content;
   max-width: min(340px, 70vw);
-  padding: 9px 11px;
-  border-radius: 8px;
-  border: 1px solid var(--dshpp-line);
-  background: var(--dsw-alias-bg-overlay, canvas);
-  color: var(--dshpp-fg);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  font-size: 0.82em;
-  line-height: 1.6;
+  padding: 8px 12px;
+  border-radius: var(--dsw-radius-sm);
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-bg-overlay);
+  color: var(--dsw-alias-label-primary);
+  box-shadow: var(--dsw-elevation-prominent);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
   white-space: normal;
   display: flex;
   flex-direction: column;
@@ -430,17 +707,19 @@
   font-weight: 600;
 }
 
+/* 경고/안내 한 줄: 선과 글자색만 쓰고 배경은 layer-2 하나로 정리 */
 .dshpp-page .dshpp-warn {
-  margin: 10px 0 0;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid color-mix(in srgb, var(--dshpp-warn) 45%, transparent);
-  color: var(--dshpp-warn);
-  background: color-mix(in srgb, var(--dshpp-warn) 10%, transparent);
-  font-size: 0.86em;
+  margin: 12px 0 0;
+  padding: 12px;
+  border-radius: var(--dsw-radius-sm);
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-state-warn-primary);
+  font-size: var(--dsw-font-xs-13-font-size);
+  line-height: var(--dsw-font-xs-13-line-height);
 }
 
-/* 操作条：最常用的「应用」固定在内容区顶部 */
+/* 액션 바: 가장 자주 쓰는 "적용"을 콘텐츠 영역 맨 위에 고정한다 */
 .dshpp-page .dshpp-actions {
   position: sticky;
   top: 0;
@@ -449,59 +728,65 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  padding: 10px 0 12px;
-  margin: -4px 0 6px;
-  background: linear-gradient(
-    var(--dsw-alias-bg-base, canvas) 78%,
-    transparent
-  );
-  backdrop-filter: blur(2px);
-  border-bottom: 1px solid var(--dshpp-line);
+  padding: 8px 0 12px;
+  margin: -4px 0 8px;
+  background: var(--dsw-alias-bg-base);
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
 }
 .dshpp-page .dshpp-actions .dshpp-pill {
   margin-left: auto;
 }
 
-/* 指标：三列紧凑 */
+/* 지표: 상태 요약 행은 제목 바로 아래 12px */
 .dshpp-page .dshpp-metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 10px;
-  margin: 4px 0 2px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  margin: 12px 0 0;
 }
 .dshpp-page .dshpp-metric {
-  border: 1px solid var(--dshpp-line);
-  border-radius: 10px;
-  padding: 10px 12px;
-  background: var(--dshpp-bg-2);
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: var(--dsw-radius-md);
+  padding: 12px;
+  background: var(--dsw-alias-bg-layer-2);
   min-width: 0;
 }
 .dshpp-page .dshpp-metric b {
   display: block;
-  font-size: 1.05em;
-  font-weight: 600;
   margin-bottom: 2px;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   overflow-wrap: anywhere;
 }
 .dshpp-page .dshpp-metric span {
-  color: var(--dshpp-mute);
-  font-size: 0.82em;
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
 }
 
-/* 折叠块：补丁明细 / 维护 / 自检 */
-.dshpp-page .dshpp-fold,
+/* 접이식 블록: 패치 상세 / 유지보수 / 자체 점검 — 설정 행처럼 선만 남긴다 */
+.dshpp-page .dshpp-fold {
+  border: 0;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
 .dshpp-page .dshpp-fold-inline {
-  border: 1px solid var(--dshpp-line);
-  border-radius: 10px;
-  background: var(--dshpp-bg);
-  padding: 0 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
 }
 .dshpp-page .dshpp-fold > summary,
 .dshpp-page .dshpp-fold-inline > summary {
   cursor: pointer;
-  padding: 10px 0;
-  font-size: 0.92em;
-  color: var(--dshpp-fg);
+  padding: 12px 0;
+  font-size: var(--dsw-font-xs-13-font-size);
+  line-height: var(--dsw-font-xs-13-line-height);
+  color: var(--dsw-alias-label-secondary);
   list-style: none;
   display: flex;
   align-items: center;
@@ -514,9 +799,9 @@
 .dshpp-page .dshpp-fold > summary::before,
 .dshpp-page .dshpp-fold-inline > summary::before {
   content: "▸";
-  color: var(--dshpp-mute);
-  font-size: 0.9em;
-  transition: transform 0.12s ease;
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  transition: transform 0.16s ease-out;
 }
 .dshpp-page .dshpp-fold[open] > summary::before,
 .dshpp-page .dshpp-fold-inline[open] > summary::before {
@@ -524,100 +809,104 @@
 }
 .dshpp-page .dshpp-fold > summary b,
 .dshpp-page .dshpp-fold-inline > summary b {
-  color: var(--dshpp-mute);
+  color: var(--dsw-alias-label-secondary);
   font-weight: 500;
   margin-left: auto;
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
+}
+.dshpp-page .dshpp-fold-inline > summary {
+  padding: 2px 0;
 }
 
-/* 状态行（自检 / 强化段） */
+/* 상태 행(자체 점검 / 강화 섹션) */
 .dshpp-page .dshpp-line {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
-  padding: 6px 0;
+  padding: 12px 0;
 }
 .dshpp-page .dshpp-line + .dshpp-line {
-  border-top: 1px solid var(--dshpp-line);
+  border-top: 0.5px solid var(--dsw-alias-border-l2);
 }
 .dshpp-page .dshpp-line-main {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.92em;
   min-width: 0;
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: var(--dsw-font-s-14-line-height);
 }
 .dshpp-page .dshpp-line-main b {
   font-weight: 600;
-}
-.dshpp-page .dshpp-fold-inline {
-  border: 0;
-  padding: 0;
-  background: transparent;
-}
-.dshpp-page .dshpp-fold-inline > summary {
-  padding: 2px 0;
-  color: var(--dshpp-mute);
-  font-size: 0.86em;
 }
 .dshpp-page .dshpp-fold-inline[open] {
   flex-basis: 100%;
 }
 
-/* 逐层自检：两列/多列网格，不再一条一行 */
+/* 계층별 자체 점검: 2열/다열 그리드로 바꿔 더 이상 한 줄에 하나씩 두지 않는다 */
 .dshpp-page .dshpp-checks {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 2px 14px;
-  padding: 6px 0 10px;
+  gap: 4px 16px;
+  padding: 6px 0 12px;
 }
 .dshpp-page .dshpp-check {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.84em;
   min-width: 0;
   padding: 2px 0;
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
 }
 .dshpp-page .dshpp-check.is-bad {
-  color: var(--dshpp-bad);
+  color: var(--dsw-alias-state-error-primary);
+}
+.dshpp-page .dshpp-check.is-warn {
+  color: var(--dsw-alias-state-warn-primary);
 }
 .dshpp-page .dshpp-check-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
+  word-break: keep-all;
 }
 .dshpp-page .dshpp-check-val {
   margin-left: auto;
-  color: var(--dshpp-mute);
+  color: var(--dsw-alias-label-secondary);
   font-variant-numeric: tabular-nums;
 }
 
-/* 状态页 hero：一眼看到"现在什么状态、下一步点哪" */
+/* 상태 페이지 hero: "지금 어떤 상태이고 다음에 어디를 누르는지"를 한눈에 보여준다 */
 .dshpp-page .dshpp-hero {
-  border: 1px solid var(--dshpp-line);
-  border-radius: 12px;
-  background: var(--dshpp-bg);
-  padding: 16px 18px;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-alias-bg-layer-1);
+  box-shadow: none;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 .dshpp-page .dshpp-hero-state {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1.02em;
   min-width: 0;
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: var(--dsw-font-s-14-line-height);
 }
 .dshpp-page .dshpp-hero-state b {
   font-weight: 600;
 }
 .dshpp-page .dshpp-hero-sub {
   margin-left: auto;
-  color: var(--dshpp-mute);
-  font-size: 0.82em;
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
 }
 .dshpp-page .dshpp-hero-actions {
   display: flex;
@@ -626,28 +915,38 @@
   gap: 8px;
 }
 .dshpp-page .dshpp-btn-lead {
-  padding: 9px 20px;
-  font-size: 0.98em;
-  font-weight: 600;
-  border-radius: 10px;
+  height: 36px;
+  padding: 0 20px;
+  font-size: var(--dsw-font-s-14-font-size);
+  line-height: var(--dsw-font-s-14-line-height);
 }
 .dshpp-page .dshpp-hero-hint {
   margin: 0;
-  color: var(--dshpp-mute);
-  font-size: 0.84em;
-  line-height: 1.6;
-}
-.dshpp-check.is-warn {
-  color: var(--dshpp-warn);
+  color: var(--dsw-alias-label-secondary);
+  font-size: var(--dsw-font-xs-13-font-size);
+  line-height: var(--dsw-font-xs-13-line-height);
 }
 
 .dshpp-page .dshpp-probe-msg {
-  margin: 6px 0 0;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px dashed var(--dshpp-line);
-  background: var(--dshpp-bg-2);
-  font-size: 0.82em;
+  margin: 8px 0 0;
+  padding: 12px;
+  border-radius: var(--dsw-radius-sm);
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-markdown-code-block);
+  color: var(--dsw-alias-label-primary);
+  font-family: var(--dsw-font-markdown-code-font-family);
+  font-size: var(--dsw-font-xxs-12-font-size);
+  line-height: var(--dsw-font-xxs-12-line-height);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dshpp-page .dshpp-btn,
+  .dshpp-page .dshpp-help-btn,
+  .dshpp-page-tabs button,
+  .dshpp-page .dshpp-fold > summary::before,
+  .dshpp-page .dshpp-fold-inline > summary::before {
+    transition: none;
+  }
 }

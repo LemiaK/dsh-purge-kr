@@ -1,5 +1,5 @@
-// 注入契约：瘦身后的 prompt-inject 必须仍包含每一条强制语句（逐字）。
-// 夹具由旧版注入正文抽取而来；改动注入时这条测试先红，除非确实删掉某条规则。
+// 주입 계약: 슬림화된 prompt-inject 도 모든 필수 문장을 (글자 그대로) 포함해야 한다.
+// 픽스처는 옛 주입 본문에서 추출했다; 주입을 고치면 이 테스트가 먼저 빨개진다, 정말로 규칙 하나를 삭제한 게 아니라면.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -14,12 +14,12 @@ const norm = (s) => s.replace(/\s+/g, " ").trim();
 function check(file, label) {
   const text = norm(fs.readFileSync(file, "utf8"));
   const missing = clauses.filter((c) => !text.includes(norm(c)));
-  assert.deepEqual(missing, [], `${label} 丢失 ${missing.length} 条强制语句`);
+  assert.deepEqual(missing, [], `${label} 에서 필수 문장 ${missing.length} 개가 누락됐다`);
 }
 
 test("shipped inject keeps every mandatory clause", () => {
   const shipped = path.join(here, "../presets/inject-core.md");
-  if (!fs.existsSync(shipped)) return; // 尚未启用瘦身版
+  if (!fs.existsSync(shipped)) return; // 아직 슬림화 버전을 켜지 않았다
   check(shipped, "presets/inject-core.md");
 });
 
@@ -31,6 +31,6 @@ test("installed inject (if present) keeps every mandatory clause", () => {
 
 test("the boost block asks for a plan and one confirmation line", async () => {
   const { BOOST_TEXT } = await import("../lib/boost.js");
-  assert.match(BOOST_TEXT, /要现在执行吗/);
+  assert.match(BOOST_TEXT, /지금 실행할까요\?/);
   assert.match(BOOST_TEXT, /don.t refuse or lecture/i);
 });

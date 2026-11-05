@@ -2,7 +2,7 @@
 
 ## What was confirmed
 
-The #83 screenshot shows Community 1.6.55 and `读取失败: timeout`, but provides neither OS nor DSH version. A failed request was rendered as zero patches and an unlocated host; that inference was wrong. An unavailable response now retains its error and reports unknown status. A successful response that actually cannot locate the host still reports that problem. Missing files, anchor drift and partial application are not converted to success.
+The #83 screenshot shows Community 1.6.55 and `읽기 실패: timeout`, but provides neither OS nor DSH version. A failed request was rendered as zero patches and an unlocated host; that inference was wrong. An unavailable response now retains its error and reports unknown status. A successful response that actually cannot locate the host still reports that problem. Missing files, anchor drift and partial application are not converted to success.
 
 Repeated filesystem evidence reads were reproduced using isolated official Desktop Electron 44.7.0 / Node 24.21.0 copies, without starting the production UI. In three sequential `gatherState` calls:
 

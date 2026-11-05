@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { installWithRegistryRecovery, missingPublicVersion, OFFICIAL_REGISTRY } from '../lib/install-registry.js';
-const missingLog = `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION\n1 lockfile entries failed verification:\n  @dsh-ops/bash-win32-x64@0.2.1 could not be checked against minimumReleaseAge (version not present in registry manifest)\n[WARN] HEAD https://github.com/kingcharleslzy-ai/dsh-purge error (UND_ERR_DESTROYED). Will retry`;
+const missingLog = `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION\n1 lockfile entries failed verification:\n  @dsh-ops/bash-win32-x64@0.2.1 could not be checked against minimumReleaseAge (version not present in registry manifest)\n[WARN] HEAD https://github.com/wnduddld0513/dsh-purge-kr error (UND_ERR_DESTROYED). Will retry`;
 const failure = () => Object.assign(Error('original install failure'), {stderr:missingLog});
 const metadata = () => ({name:'@dsh-ops/bash-win32-x64',time:{'0.2.1':'2026-10-08T11:00:18Z'},versions:{'0.2.1':{name:'@dsh-ops/bash-win32-x64',version:'0.2.1',dist:{integrity:'sha512-YWJjZA==',tarball:OFFICIAL_REGISTRY+'@dsh-ops/bash-win32-x64/-/bash-win32-x64-0.2.1.tgz'}}}});
 const official = async () => new Response(JSON.stringify(metadata()));
@@ -27,10 +27,10 @@ for (const log of [missingLog.replace('bash-win32-x64','private-package'),missin
  });
 }
 for(const registry of ['https://private.example/',OFFICIAL_REGISTRY,'undefined','http://registry.npmmirror.com/'])test('no public fallback from '+registry,async()=>{
- let count=0;await assert.rejects(installWithRegistryRecovery({run:async()=>{count++;throw failure()},config:async()=>registry,request:()=>assert.fail()}),/未关闭安全校验/);assert.equal(count,1);
+ let count=0;await assert.rejects(installWithRegistryRecovery({run:async()=>{count++;throw failure()},config:async()=>registry,request:()=>assert.fail()}),/안전 검증을 끄지 않았고/);assert.equal(count,1);
 });
 for(const change of [m=>delete m.versions['0.2.1'],m=>delete m.time,m=>m.versions['0.2.1'].dist.tarball='https://evil.example/a.tgz',m=>m.versions['0.2.1'].name='wrong',m=>delete m.versions['0.2.1'].dist.integrity])test('incomplete/untrusted official metadata never permits retry '+change,async()=>{
- let count=0;const m=metadata();change(m);await assert.rejects(installWithRegistryRecovery({run:async()=>{count++;throw failure()},config,request:async()=>new Response(JSON.stringify(m))}),/未关闭安全校验/);assert.equal(count,1);
+ let count=0;const m=metadata();change(m);await assert.rejects(installWithRegistryRecovery({run:async()=>{count++;throw failure()},config,request:async()=>new Response(JSON.stringify(m))}),/안전 검증을 끄지 않았고/);assert.equal(count,1);
 });
 test('official metadata failure and failed retry stop with useful diagnostics',async()=>{
  let count=0;await assert.rejects(installWithRegistryRecovery({run:async()=>{count++;throw failure()},config,request:async()=>{throw Error('offline')}}),/issue #7/);assert.equal(count,1);

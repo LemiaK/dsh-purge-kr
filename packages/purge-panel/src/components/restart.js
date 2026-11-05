@@ -45,7 +45,7 @@ export function RestartAsk(props) {
       return rd.createPortal(node, document.body);
     }
   } catch {
-    /* host 可能没暴露 react-dom */
+    /* 호스트가 react-dom 을 노출하지 않았을 수 있다 */
   }
   return node;
 }
@@ -56,7 +56,7 @@ export function reopenAfterRestart() {
 
 export function waitForRestart(setNotice, setBusy, t) {
   const started = Date.now();
-  // 必须先看到旧进程掉线，再等新进程就绪；否则同进程立刻 200 会被当成「重启成功」又弹重启。
+  // 먼저 옛 프로세스가 끊긴 것을 봐야 하고, 그다음 새 프로세스 준비를 기다린다. 그렇지 않으면 같은 프로세스가 곧바로 200 을 돌려줘 "재시작 성공"으로 오인해 다시 재시작 팝업을 띄운다.
   let sawDown = false;
   const ping = () => {
     fetch(apiUrl("/dsh-purge/status"), {

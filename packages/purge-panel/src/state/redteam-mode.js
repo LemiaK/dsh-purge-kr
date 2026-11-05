@@ -9,8 +9,8 @@ export function isRedteamPresetId(value) {
   if (!text) return false;
   if (text === "redteam") return true;
   if (/^red[\s_-]*team$/i.test(text)) return true;
-  const label = text.replace(/不是红队/g, "").replace(/非红队/g, "");
-  if (/红队/.test(label)) return true;
+  const label = text.replace(/레드팀 아님/g, "").replace(/비레드팀/g, "");
+  if (/레드팀/.test(label)) return true;
   return false;
 }
 
@@ -74,8 +74,8 @@ export function isRedteamModeActive() {
     /* ignore */
   }
   if (typeof document === "undefined" || !document.querySelector) return false;
-  /* 新会话：模式下拉里的「红队模式」chip（选好但还没写入 session）
-   * 优先走语义化 data-* 挂点,其次 class 子串模糊匹配 + 文本兜底。 */
+  /* 새 세션: 모드 드롭다운의 "레드팀 모드" chip(선택은 했지만 아직 session 에 기록되지 않음)
+   * 의미론적 data-* 마운트 지점을 우선 쓰고, 그다음 class 부분 문자열 퍼지 매칭 + 텍스트 폴백. */
   try {
     const semantic = document.querySelector(
       "[data-agent-preset='redteam'], [data-preset-id='redteam'], [data-mode='redteam']",
@@ -88,18 +88,18 @@ export function isRedteamModeActive() {
       const text = String(el.textContent || "")
         .replace(/\s+/g, " ")
         .trim();
-      if (/红队模式/.test(text) || /^RedTeam\b/i.test(text)) return true;
+      if (/레드팀 모드/.test(text) || /^RedTeam\b/i.test(text)) return true;
     }
   } catch {
     /* ignore */
   }
   try {
     const labels = document.querySelectorAll(
-      "[class*='label' i][class*='preset' i], [class*='presetLabel' i], [title*='红队'], [title*='RedTeam']",
+      "[class*='label' i][class*='preset' i], [class*='presetLabel' i], [title*='레드팀'], [title*='RedTeam']",
     );
     for (const el of labels) {
       const text = String(el.textContent || "").trim();
-      if (/红队模式/.test(text) || /^RedTeam\b/i.test(text)) return true;
+      if (/레드팀 모드/.test(text) || /^RedTeam\b/i.test(text)) return true;
       if (isRedteamPresetId(text)) return true;
     }
   } catch {
@@ -122,9 +122,9 @@ export function looksLikeSendControl(el) {
   ]
     .filter(Boolean)
     .join(" ");
-  if (/停止|Stop/i.test(label) && !/发送|Send/i.test(label)) return false;
-  if (/发送|Submit|Send(?!\s*feedback)/i.test(label)) return true;
-  /* composer 主按钮：data-composer-card 内的 primary */
+  if (/중지|정지|Stop/i.test(label) && !/전송|보내기|Send/i.test(label)) return false;
+  if (/전송|보내기|Submit|Send(?!\s*feedback)/i.test(label)) return true;
+  /* composer 주 버튼: data-composer-card 안의 primary */
   try {
     const card = btn.closest("[data-composer-card], [data-composer-seat]");
     if (card) {

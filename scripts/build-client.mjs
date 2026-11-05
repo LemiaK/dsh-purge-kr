@@ -1,8 +1,8 @@
 /**
- * 把 lib/redteam/client.js 抽成可嵌入的工厂片段，
- * 写进 client.js 里的 DSH_PURGE_DRILL 标记之间。
+ * lib/redteam/client.js 를 임베드 가능한 팩토리 조각으로 뽑아,
+ * client.js 안의 DSH_PURGE_DRILL 표식 사이에 기록한다.
  *
- * 用法：node scripts/build-client.mjs
+ * 사용법: node scripts/build-client.mjs
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -24,15 +24,15 @@ const end = raw.lastIndexOf(endMark);
 if (end < 0) throw new Error("cannot find factory end in drill client");
 let body = raw.slice(start + startMark.length, end);
 
-// 去掉末尾 exports（return 已在 endMark 外）
+// 끝부분 exports 제거(return 은 endMark 바깥에 있다)
 body = body
 	.replace(/\n\s*exports\.apply\s*=\s*apply\s*\n/, "\n")
 	.replace(/\n\s*exports\.inject\s*=\s*inject\s*\n/, "\n");
 
-// 替换 apply(ctx)：不再自己注册槽位，只导出 Panel / CSS / 状态
+// apply(ctx) 교체: 더 이상 직접 슬롯을 등록하지 않고 Panel / CSS / 상태만 export 한다
 const applyAt = body.lastIndexOf("function apply(ctx) {");
 if (applyAt < 0) throw new Error("apply(ctx) not found in drill client");
-// apply() 本体没有嵌套函数花括号冲突到 CSS（CSS 在前面），用括号深度即可
+// apply() 본문은 CSS(앞부분에 있음)까지 중첩 함수 중괄호가 부딪히지 않으므로 괄호 깊이만 세면 된다
 let d = 0;
 let j = body.indexOf("{", applyAt);
 for (; j < body.length; j += 1) {
@@ -53,7 +53,7 @@ const applyParts = `function applyDrillParts() {
 body = body.slice(0, applyAt) + applyParts + body.slice(j);
 
 const fragment = `${BEGIN}
-		// 内嵌演练台（源码在 lib/redteam，已并进本插件）
+		// 내장 드릴 콘솔(소스는 lib/redteam, 이 플러그인에 합쳐져 있다)
 		const __dshPurgeDrill = (() => {
 			var module = { exports: {} };
 			var exports = module.exports;

@@ -106,7 +106,7 @@ vm.runInNewContext(
 const ctx = {
   locale: {
     register: (_, v) => {
-      dict = v.zh;
+      dict = v.ko;
       return () => {};
     },
     bind: () => (k) => dict[k] || k,
@@ -170,33 +170,33 @@ const test = async () => {
     root.findAllByType("button").find((x) => x.children.join("") === text);
   const area = (label) =>
     root.findAllByType("textarea").find((x) => x.props["aria-label"] === label);
-  assert.equal(area("提示词内容").props.value, "Existing test prompt");
-  await act(async () => btn("提示词").props.onClick());
+  assert.equal(area("프롬프트 내용").props.value, "Existing test prompt");
+  await act(async () => btn("프롬프트").props.onClick());
   await act(async () =>
-    area("提示词内容").props.onChange({ target: { value: "UNSAVED prompt" } }),
+    area("프롬프트 내용").props.onChange({ target: { value: "UNSAVED prompt" } }),
   );
-  await act(async () => btn("更多").props.onClick());
+  await act(async () => btn("더 보기").props.onClick());
   await act(async () =>
-    area("服务器名单").props.onChange({
+    area("서버 목록").props.onChange({
       target: { value: "unsaved.example.test" },
     }),
   );
-  await act(async () => btn("状态").props.onClick());
+  await act(async () => btn("상태").props.onClick());
   await act(async () => {
-    btn("刷新").props.onClick();
+    btn("새로 고침").props.onClick();
     await new Promise((r) => setTimeout(r, 10));
   });
-  assert.equal(area("提示词内容").props.value, "UNSAVED prompt");
-  assert.equal(area("服务器名单").props.value, "unsaved.example.test");
+  assert.equal(area("프롬프트 내용").props.value, "UNSAVED prompt");
+  assert.equal(area("서버 목록").props.value, "unsaved.example.test");
   responses["/dsh-purge/status"].plugin_version = "2.0.0";
   await act(async () => {
-    btn("刷新").props.onClick();
+    btn("새로 고침").props.onClick();
     await new Promise((r) => setTimeout(r, 10));
   });
   assert(
     root
       .findAll((x) => x.props.role === "status")
-      .some((x) => x.children.join("").includes("官方版本 2.0.0")),
+      .some((x) => x.children.join("").includes("공식 버전 2.0.0")),
     "Compatibility banner must follow refreshed status",
   );
   assert.equal(
@@ -226,7 +226,7 @@ const test = async () => {
       1,
       "first-run welcome notice is restored into the overlay",
     );
-    assert(JSON.stringify(o.toJSON()).includes("用户须知"));
+    assert(JSON.stringify(o.toJSON()).includes("사용자 고지"));
     assert(
       !o.root
         .findAllByType("button")
@@ -241,7 +241,7 @@ const test = async () => {
     await act(async () => {
       o.root
         .findAllByType("button")
-        .find((x) => x.children.join("") === "我已知晓并继续")
+        .find((x) => x.children.join("") === "확인하며 계속합니다")
         .props.onClick();
     });
     assert.equal(dialogs().length, 0, "acknowledging closes the notice");
@@ -265,7 +265,7 @@ const test = async () => {
     assert(
       tree.root
         .findAll((x) => x.props.role === "status")
-        .some((x) => x.children.join("").includes("官方版本 2.0.0")),
+        .some((x) => x.children.join("").includes("공식 버전 2.0.0")),
     );
     await act(async () => tree.unmount());
     responses["/dsh-purge/status"] = { ok: false, error: "unavailable" };
@@ -276,7 +276,7 @@ const test = async () => {
     assert(
       tree.root
         .findAll((x) => x.props.role === "status")
-        .some((x) => x.children.join("").includes("状态读取失败：unavailable")),
+        .some((x) => x.children.join("").includes("상태 읽기 실패: unavailable")),
     );
     await act(async () => tree.unmount());
     assert.equal(writes.length, 0);
@@ -287,8 +287,8 @@ const test = async () => {
   console.log(
     "PASS: native registry, persistent tab, loaded values, draft preservation across tabs and refresh, no implicit writes, no legacy launchers",
   );
-  // 演练台：旧版靠外层 dock 把 .rt-* 的 CSS 注入 <head>，重构时丢了 → 面板在右侧栏里
-  // 完全没样式。这条守住"CSS 必须随组件一起发出"和"容器要能撑开"。
+  // 드릴 콘솔: 옛 버전은 바깥 dock 이 .rt-* CSS 를 <head> 에 주입했는데 리팩터링 때 사라져서, 패널이 오른쪽 사이드바에서
+  // 완전히 스타일 없이 떴다. 이 검사는 "CSS 가 컴포넌트와 함께 나가야 한다"와 "컨테이너가 늘어나야 한다"를 지킨다.
   const bundleText = fs.readFileSync(process.env.PANEL_CLIENT, "utf8");
   assert(
     bundleText.includes("data-dsh-purge-drill"),
