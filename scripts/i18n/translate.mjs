@@ -31,30 +31,45 @@ export function llmConfig(env = process.env) {
 /** 추론 강도는 제공자마다 표기가 달라서, 받아들이는 값만 통과시키고 나머지는 조용히 무시한다. */
 export const REASONING_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
 /** LLM_EXTRA_HEADERS="{\"x-foo\":\"bar\"}" 같은 JSON 을 헤더 객체로 읽는다(값은 로그에 남기지 않는다). */
-const REFUSAL_PATTERNS = [
-  /죄송/,
-  /유감/,
-  /번역할 수 없/,
-  /제공할 수 없/,
-  /옮길 수 없/,
-  /역할 수 없/,
-  /저작권/,
-  /sorry/i,
-  /cannot (?:translate|provide|reproduce)/i,
-  /unable to (?:translate|provide)/i,
-  /copyright/i,
-];
+// 거부 판별은 "낱말"이 아니라 "모양"으로 한다.
+//  - '저작권', '죄송' 같은 단어는 정상 번역문(법적 고지·오류 문구)에도 들어간다.
+//  - 거부문은 보통 ① 사용자에게 말을 거는 설명조이고 ② "번역/제공할 수 없다" 같은 서술을 함께 가진다.
+const REFUSAL_VERB = /(?:드릴|할|제공할|답변할)\s*수(?:는|가|도)?\s*없|어렵습니다|불가합니다/;
+const REFUSAL_ADDRESSED = /요청|말씀|질문|제가|저는|원문|가사|곡|콘텐츠|자료|문서/;
+const REFUSAL_APOLOGY = /죄송|유감|사과/;
+const REFUSAL_META = /번역|제공|저작권|답변|도움/;
+const REFUSAL_ENGLISH = /\b(?:I'?m sorry|I am sorry|I can'?t|I cannot|I am unable|unable to|copyright(?:ed)? (?:material|content|lyrics))\b/i;
 
-/** 번역 대신 거부문이 돌아왔는지 본다(그런 결과는 절대 저장하지 않는다). */
+/**
+ * 번역 대신 거부문이 돌아왔는지 본다(그런 결과는 절대 저장하지 않는다).
+ * 단순 키워드 매칭이 아니라 "거부문의 모양"을 본다:
+ *   - 원문 반사 / 한글 없음 → 즉시 거부
+ *   - "…할 수 없습니다" + 사용자 지칭(요청·가사·원문…) 또는 사과 → 거부
+ *   - 원문 자체에 같은 낱말이 있으면(정상 번역 가능) 결과가 2배 이상 길 때만 거부
+ */
 export function isRefusalTranslation(ko, src = "") {
   const text = String(ko ?? "").trim();
+  const source = String(src ?? "").trim();
   if (!text) return true;
-  if (REFUSAL_PATTERNS.some((re) => re.test(text))) return true;
-  // 원문에 한자가 있는데 결과에 한글이 전혀 없으면 번역이 아니다(영어 거부문·원문 반사 등).
-  if (/[\u3400-\u4DBF\u4E00-\u9FFF]/.test(String(src)) && !/[\uAC00-\uD7A3]/.test(text)) return true;
-  // 원문을 그대로 돌려준 경우.
-  if (String(src).trim() && text === String(src).trim()) return true;
-  return false;
+  if (source && text === source) return true;
+  const sourceHasCjk = /[\u3400-\u4DBF\u4E00-\u9FFF]/.test(source);
+  const hasHangul = /[\uAC00-\uD7A3]/.test(text);
+  if (sourceHasCjk && !hasHangul) return true;
+
+  if (REFUSAL_ENGLISH.test(text)) return true;
+
+  const verb = REFUSAL_VERB.test(text);
+  const addressed = REFUSAL_ADDRESSED.test(text);
+  const apology = REFUSAL_APOLOGY.test(text);
+  const meta = REFUSAL_META.test(text);
+  if (!verb && !apology) return false;
+  if (!(addressed || apology || meta)) return false;
+
+  // 원문에 같은 주제어가 들어 있으면 정상 번역일 수 있으므로, 과장되게 길 때만 거부로 본다.
+  const sourceHasMeta = /번역|제공|저작권|제한|요청|가사|원문/.test(source);
+  if (sourceHasMeta && text.length < source.length * 2) return false;
+
+  return verb && (addressed || apology);
 }
 
 export function parseHeaders(raw) {

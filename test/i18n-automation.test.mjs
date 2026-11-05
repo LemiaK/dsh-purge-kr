@@ -178,4 +178,8 @@ test("refusal replies are detected and never stored as translations", () => {
   assert.equal(isRefusalTranslation("我爱北京天安门", "我爱北京天安门"), true);
   assert.equal(isRefusalTranslation("I love Beijing Tiananmen", "我爱北京天安门"), true);
   assert.equal(isRefusalTranslation("", "应用"), true);
+  // 정상 번역문에 '저작권'·'제공할 수 없' 같은 낱말이 들어가는 경우(법적 고지·오류 문구)는 거부가 아니다
+  assert.equal(isRefusalTranslation("저작권은 원저자에게 있으며, 상업적 이용은 허용되지 않습니다.", "版权归原作者所有，不得用于商业用途。"), false);
+  assert.equal(isRefusalTranslation("이 버전은 라이선스를 제공할 수 없습니다.", "该版本无法提供许可证"), false);
+  assert.equal(isRefusalTranslation("요청을 처리하지 못했습니다. 잠시 후 다시 시도하세요.", "请求处理失败，请稍后重试"), false);
 });
