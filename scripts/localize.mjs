@@ -13,7 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { kindOf, scanCode, scanMarkdown, hasCjk, applySpans, structuralSkeleton } from "./i18n/spans.mjs";
 import { loadTm, saveTm, tmKey } from "./i18n/tm.mjs";
-import { llmConfig, translateAll, sanitize } from "./i18n/translate.mjs";
+import { llmConfig, translateAll, sanitize, isRefusalTranslation } from "./i18n/translate.mjs";
 
 const CONFIG_PATH = path.join("scripts", "i18n", "config.json");
 const REPORT_PATH = path.join("i18n", "last-report.json");
@@ -109,7 +109,7 @@ async function main() {
 
   const tm = loadTm();
   const tmAdditions = [];
-  const report = { files: [], totals: { tm: 0, ai: 0, miss: 0, rewritten: 0, review: 0, leftoverCjk: 0 } };
+  const report = { files: [], refusals: [], totals: { tm: 0, ai: 0, miss: 0, rewritten: 0, review: 0, leftoverCjk: 0, refused: 0 } };
   let pending = []; // {file, span, id}
   const perFile = new Map();
 
@@ -132,7 +132,16 @@ async function main() {
     for (const span of spans) {
       const ctx = span.kind;
       const key = tmKey(ctx, span.body);
-      if (tm.has(key)) { span.ko = tm.get(key); entry.tm += 1; }
+      if (tm.has(key)) {
+        const cached = tm.get(key);
+        if (isRefusalTranslation(cached, span.body)) {
+          report.refusals.push({ file, text: span.body, result: cached, reason: "tm" });
+          report.totals.refused += 1;
+        } else {
+          span.ko = cached;
+          entry.tm += 1;
+        }
+      }
       else pending.push({ file, span, ctx, key });
     }
     perFile.set(file, entry);
@@ -151,6 +160,11 @@ async function main() {
         const got = await translateAll(items, cfgLlm);
         pending.forEach((p, i) => {
           const ko = got.get(i);
+          if (typeof ko === "string" && isRefusalTranslation(ko, p.span.body)) {
+            report.refusals.push({ file: p.file, text: p.span.body, result: ko, reason: "model" });
+            report.totals.refused += 1;
+            return;
+          }
           if (typeof ko === "string" && ko.trim()) {
             p.span.ko = ko;
             perFile.get(p.file).ai += 1;
@@ -201,13 +215,17 @@ async function main() {
   fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2) + "\n", "utf8");
 
   const t = report.totals;
-  console.log(`localize: files=${report.files.length} tm=${t.tm} ai=${t.ai} miss=${t.miss} rewritten=${t.rewritten} review=${t.review} leftover=${t.leftoverCjk}`);
+  console.log(`localize: files=${report.files.length} tm=${t.tm} ai=${t.ai} miss=${t.miss} rewritten=${t.rewritten} review=${t.review} leftover=${t.leftoverCjk} refused=${t.refused}`);
+  if (report.refusals.length) {
+    console.error(`localize: 번역 대신 거부문이 돌아온 항목 ${report.refusals.length}건 — 사람 검토가 필요합니다.`);
+  }
   if (aiError) console.error("localize: " + aiError);
   if (checkOnly && leftover > 0) {
     console.error(`localize: 번역 대상이 ${leftover}개 남았습니다(정책 기준).`);
     process.exit(1);
   }
   if (failOnMiss && leftover > 0) process.exit(1);
+  if (flag("--fail-on-refusal") && report.refusals.length) process.exit(4);
 }
 
 main().catch((error) => {

@@ -11,7 +11,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { scanCode, applySpans, skeleton, hasCjk, codeFingerprint } from "../scripts/i18n/spans.mjs";
 import { loadTm, saveTm, tmKey } from "../scripts/i18n/tm.mjs";
-import { llmConfig, buildRequest, normalizeEffort, REASONING_EFFORTS, requestShapes, parseJsonContent } from "../scripts/i18n/translate.mjs";
+import { llmConfig, buildRequest, normalizeEffort, REASONING_EFFORTS, requestShapes, parseJsonContent, isRefusalTranslation } from "../scripts/i18n/translate.mjs";
 import { applyEdits } from "../scripts/i18n-repair.mjs";
 
 const FAKE_KEY = "test11221323213123";
@@ -165,4 +165,17 @@ test("the client degrades the request shape and parses messy JSON", () => {
   assert.deepEqual(parseJsonContent('{"items":[{"id":0,"ko":"적용"}]}').items[0].ko, "적용");
   assert.deepEqual(parseJsonContent('Sure:\n```json\n{"items":[]}\n```').items, []);
   assert.deepEqual(parseJsonContent('prefix {"items":[{"id":1,"ko":"x"}]} suffix').items[0].id, 1);
+});
+
+test("refusal replies are detected and never stored as translations", () => {
+  assert.equal(isRefusalTranslation("적용", "应用"), false);
+  assert.equal(isRefusalTranslation("플러그인이 이미 최신 버전이므로 업데이트할 필요가 없습니다.", "插件已是最新版本，无需更新。"), false);
+  // 거부문
+  assert.equal(isRefusalTranslation("죄송합니다. 가사 원문을 그대로 번역해 제공할 수는 없습니다.", "我爱北京天安门"), true);
+  assert.equal(isRefusalTranslation("(저작권 보호 대상인 가사 전문은 번역해 드릴 수 없습니다.)", "我爱北京天安门"), true);
+  assert.equal(isRefusalTranslation("Sorry, I cannot translate copyrighted lyrics.", "我爱北京天安门"), true);
+  // 원문 반사 / 한글 없음
+  assert.equal(isRefusalTranslation("我爱北京天安门", "我爱北京天安门"), true);
+  assert.equal(isRefusalTranslation("I love Beijing Tiananmen", "我爱北京天安门"), true);
+  assert.equal(isRefusalTranslation("", "应用"), true);
 });

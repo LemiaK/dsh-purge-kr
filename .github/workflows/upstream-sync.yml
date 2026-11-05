@@ -114,7 +114,7 @@ jobs:
         run: |
           body="$(mktemp)"
           if [ -f .sync/summary.md ]; then cat .sync/summary.md >> "$body"; fi
-          for extra in .sync/repair.md .sync/failure.md .sync/review.md; do
+          for extra in .sync/refusals.md .sync/repair.md .sync/failure.md .sync/review.md; do
             if [ -f "$extra" ]; then
               { printf '\n---\n\n'; cat "$extra"; } >> "$body"
             fi
