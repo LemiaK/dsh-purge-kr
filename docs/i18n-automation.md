@@ -62,3 +62,18 @@ LLM_API_KEY=... node scripts/localize.mjs --manifest .sync/changed.txt --write -
 # 게이트만 확인
 node scripts/localize.mjs --manifest .sync/changed.txt --check
 ```
+
+## 6. 검토(review) 단계
+
+번역·커밋 뒤 PR 을 열기 전에 `scripts/i18n-review.mjs` 가 한 번 더 본다.
+
+| 검사 | 내용 | 실패 시 |
+| --- | --- | --- |
+| 코드 지문 | 번역 대상(문자열·주석)을 지운 토큰 지문이 업스트림과 같은가 | `problems` → exit 2 |
+| 호스트 앵커 | `lib/patches|core` 의 여러 줄 문자열(앵커)이 업스트림과 바이트 동일한가 | `problems` → exit 2 |
+| 남은 중국어 | 번역 대상에 중국어가 남았는가(경고) | 경고만 |
+| AI 검토 | 새로 번역된 쌍의 톤·용어·보간(`${...}`) 오류 | 지적 시 exit 2, `--apply-fixes` 면 TM 교정 후 재번역 |
+
+잘못 번역된 앵커는 `scripts/i18n-restore-anchors.mjs` 가 업스트림 원문으로 되돌린다.
+
+게이트가 실패하면 워크플로는 PR 을 열되 **자동 머지하지 않고** `.sync/review.md` 를 본문에 붙인다.

@@ -11,7 +11,7 @@
 //   node scripts/localize.mjs --paths docs/README.md --check
 import fs from "node:fs";
 import path from "node:path";
-import { kindOf, scanCode, scanMarkdown, hasCjk, applySpans, skeleton } from "./i18n/spans.mjs";
+import { kindOf, scanCode, scanMarkdown, hasCjk, applySpans, structuralSkeleton } from "./i18n/spans.mjs";
 import { loadTm, saveTm, tmKey } from "./i18n/tm.mjs";
 import { llmConfig, translateAll, sanitize } from "./i18n/translate.mjs";
 
@@ -182,7 +182,7 @@ async function main() {
       if (!replaced.length) continue;
       const next = applySpans(source, replaced);
       // 코드 골격 불변 확인: 번역 전후의 영숫자 골격이 같아야 한다(문자열/주석만 바뀐다).
-      if (skeleton(next) !== skeleton(source)) {
+      if (structuralSkeleton(next, kindOf(file)) !== structuralSkeleton(source, kindOf(file))) {
         throw new Error("skeleton changed while rewriting " + file);
       }
       fs.writeFileSync(file, next, "utf8");

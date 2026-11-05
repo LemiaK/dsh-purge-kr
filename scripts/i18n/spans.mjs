@@ -53,7 +53,6 @@ export function scanCode(source) {
       while (j < n) {
         if (source[j] === "\\") { j += 2; continue; }
         if (source[j] === quote) { j += 1; closed = true; break; }
-        if (quote === "`" && source[j] === "\n") break; // 백틱이 여러 줄일 수 있지만 첫 줄만 다룬다
         j += 1;
       }
       if (!closed) { i = j; continue; }
@@ -98,5 +97,41 @@ export function applySpans(source, replacements) {
 
 /** 번역 후에도 코드 골격이 그대로인지 확인하기 위한 지문: 영숫자/기호만 남긴다. */
 export function skeleton(text) {
-  return text.replace(/[\u3400-\u4DBF\u4E00-\u9FFF\uAC00-\uD7A3]/g, "").replace(/\s+/g, " ").trim();
+  return String(text)
+    .replace(/[\uFF01-\uFF5E]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)) // 전각 → ASCII
+    .replace(/[\u3001\u3002\u300A-\u300F\u2018-\u201F\u2026]/g, (c) =>
+      ({ "\u3001": ",", "\u3002": ".", "\u300A": "<", "\u300B": ">", "\u2026": "..." }[c] ?? "'"))
+    .replace(/[\u3400-\u4DBF\u4E00-\u9FFF\uAC00-\uD7A3]/g, "") // 번역으로 바뀌는 글자
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * 번역 대상(문자열·주석·마크다운 줄)을 지운 "구조 골격".
+ * 번역만 했다면 두 버전의 구조 골격은 완전히 같아야 한다 — 이 불변식이 리뷰의 핵심이다.
+ */
+export function structuralSkeleton(text, kind = "code") {
+  if (kind === "markdown") {
+    return scanMarkdown(String(text))
+      .reduce((acc, span) => acc.slice(0, span.start) + acc.slice(span.end), String(text))
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+  const source = String(text);
+  let out = "";
+  let cursor = 0;
+  for (const span of scanCode(source)) {
+    out += source.slice(cursor, span.start) + "\u0000";
+    cursor = span.end;
+  }
+  out += source.slice(cursor);
+  return out.replace(/\s+/g, " ").trim();
+}
+
+/**
+ * 코드 지문: 번역 대상(문자열·주석)을 지운 뒤 영숫자/밑줄 토큰만 남긴다.
+ * 구두점 표기 차이(전각/반각)나 공백 변화에 흔들리지 않으면서, 코드가 실제로 바뀌면 반드시 달라진다.
+ */
+export function codeFingerprint(text) {
+  return structuralSkeleton(text, "code").replace(/[^A-Za-z0-9_$]+/g, " ").trim();
 }

@@ -144,7 +144,17 @@ function main() {
     log(`gate ${name}: ${res.status === 0 ? "ok" : "FAIL"}`);
     return res.status === 0;
   };
+  // 6-b) 검토: 코드 골격·앵커 불변(결정론) + 새 번역의 톤·용어(AI). 문제가 남으면 게이트 실패로 본다.
+  const reviewArgs = ["scripts/i18n-review.mjs", "--manifest", manifest, "--report", path.join(OUT_DIR, "review.md")];
+  if (!noAi) reviewArgs.push("--allow-network", "--apply-fixes");
+  const review = run("node", reviewArgs, { allowFail: true });
+  process.stdout.write(review.stdout || "");
+  if (review.stderr) process.stderr.write(review.stderr);
+  const reviewOk = review.status === 0;
+  if (!reviewOk) log("검토에서 문제가 발견되었습니다 — " + path.join(OUT_DIR, "review.md"));
+
   const ok =
+    reviewOk &&
     gate("check:docs", "node", ["scripts/check-docs.mjs"]) &&
     gate("bundle --check", "node", ["packages/purge-panel/scripts/build.mjs", "--check"]) &&
     gate("community --check", "node", ["packages/purge-panel/scripts/build.mjs", "--community", "--check"]) &&
@@ -160,6 +170,8 @@ function main() {
     `- leftover translation targets: see ${OUT_DIR}/../i18n/last-report.json`,
     "",
     ok ? "모든 게이트 통과." : "게이트 실패 — 자동 머지하지 말고 검토하세요.",
+    "",
+    fs.existsSync(path.join(OUT_DIR, "review.md")) ? fs.readFileSync(path.join(OUT_DIR, "review.md"), "utf8") : "",
   ].join("\n");
   fs.writeFileSync(path.join(OUT_DIR, "summary.md"), summary + "\n", "utf8");
   log(ok ? "게이트 통과" : "게이트 실패");
