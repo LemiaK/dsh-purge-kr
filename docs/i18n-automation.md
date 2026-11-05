@@ -13,11 +13,11 @@
 | `LLM_API_KEY` | **Environment secret** | 예(AI 사용 시) | — | 제공자 API 키. 로그·파일·커밋에 남기지 않는다 |
 | `LLM_BASE_URL` | Environment **variable** | 아니오 | `https://api.openai.com/v1` | OpenAI 호환 엔드포인트(`/chat/completions` 를 붙여 쓴다) |
 | `LLM_MODEL` | Environment variable | 아니오 | `gpt-4o-mini` | 번역 모델 이름 |
-| `LLM_REASONING_EFFORT` | Environment variable | 아니오 | (없음) | 추론 강도: `minimal` / `low` / `medium` / `high`. 없거나 다른 값이면 필드를 보내지 않는다 |
+| `LLM_REASONING_EFFORT` | Environment variable | 아니오 | (없음) | 추론 강도: `none` / `minimal` / `low` / `medium` / `high` / `xhigh` / `max`. 없거나 목록 밖 값이면 필드를 보내지 않는다 |
 | `LLM_TIMEOUT_MS` | Environment variable | 아니오 | `120000` | 호출 타임아웃(밀리초) |
 
 `LLM_REASONING_EFFORT` 동작:
-- 값이 허용 목록에 있으면 요청 본문에 `reasoning_effort` 필드로 실린다.
+- 값이 허용 목록에 있으면 요청 본문에 `reasoning_effort` 필드로 실린다. 목록: `none` `minimal` `low` `medium` `high` `xhigh` `max`.
 - 제공자가 이 필드를 모르고 `HTTP 400` 을 돌려주면, 필드를 빼고 **한 번 더 시도**한다(실패로 끝나지 않는다).
 - 대소문자는 무시되고, 알 수 없는 값은 조용히 무시된다(경고만 남기지 않고 필드 미전송).
 

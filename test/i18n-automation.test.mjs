@@ -97,7 +97,8 @@ test("reasoning effort comes from an environment variable and is validated", () 
   assert.equal(normalizeEffort(" minimal "), "minimal");
   assert.equal(normalizeEffort("turbo"), "");
   assert.equal(normalizeEffort(undefined), "");
-  assert.deepEqual(REASONING_EFFORTS, ["minimal", "low", "medium", "high"]);
+  assert.deepEqual(REASONING_EFFORTS, ["none", "minimal", "low", "medium", "high", "xhigh", "max"]);
+  assert.equal(normalizeEffort("MAX"), "max");
 
   const on = llmConfig({ LLM_API_KEY: FAKE_KEY, LLM_REASONING_EFFORT: "Medium" });
   assert.equal(on.reasoningEffort, "medium");

@@ -26,7 +26,7 @@ export function llmConfig(env = process.env) {
 }
 
 /** 추론 강도는 제공자마다 표기가 달라서, 받아들이는 값만 통과시키고 나머지는 조용히 무시한다. */
-export const REASONING_EFFORTS = ["minimal", "low", "medium", "high"];
+export const REASONING_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
 export function normalizeEffort(value) {
   const v = String(value ?? "").trim().toLowerCase();
   return REASONING_EFFORTS.includes(v) ? v : "";
