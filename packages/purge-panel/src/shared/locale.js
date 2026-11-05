@@ -405,6 +405,10 @@ export const ko = {
   "updch.title": "업데이트 채널: 프록시와 GitHub 키",
   "updch.scope":
     "여기 설정한 프록시와 키는 이 플러그인의 업데이트 확인·다운로드 채널에만 적용됩니다. 다른 모델 제공자 요청에는 영향을 주지 않고 호스트 프로세스 환경에도 쓰지 않습니다. 비워 두면 기존 업데이트 프록시 환경을 상속합니다.",
+  "updch.mirror": "GitHub 미러 (선택)",
+  "updch.mirror.ph": "https://미러호스트/",
+  "updch.mirror.hint":
+    "조회와 다운로드에만 쓰며 GitHub 키를 보내지 않습니다. 설치는 여전히 GitHub 에서 공식 검증값을 받아야 하고, 업데이트 프록시를 쓸 수 있습니다. 비워 두면 미러를 끕니다.",
   "updch.proxy": "프록시 주소",
   "updch.proxy.ph": "socks5://127.0.0.1:60808",
   "updch.proxy.hint":

@@ -44,11 +44,11 @@ export function shimKind(v) {
 }
 
 export const LAYER_GROUP = {
-  提示词: "prompt",
-  代码: "code",
-  工具: "tools",
-  "0.1.5 兼容": "compat",
-  "0.2.0 兼容": "dsh20",
+  프롬프트: "prompt",
+  코드: "code",
+  도구: "tools",
+  "0.1.5 호환": "compat",
+  "0.2.0 호환": "dsh20",
 };
 
 export const GROUP_ORDER = ["prompt", "code", "tools", "compat", "dsh20"];
@@ -101,7 +101,7 @@ export function PatchGroups({ state }) {
     return h(
       "p",
       { role: "status" },
-      "读取失败，补丁明细暂不可用；请刷新重试。",
+      "읽기 실패. 패치 상세를 지금은 사용할 수 없습니다. 새로고침 후 다시 시도하세요.",
     );
   if (!state || !state.patch_status)
     return h("div", { className: "dshpp-skel", style: { height: 120 } });
