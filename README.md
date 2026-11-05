@@ -2,227 +2,227 @@
 
 # dsh-purge Community
 
-**让 AI 更专注地辅助你的学习与动手实验。**
+**It helps the AI focus on learning and on the experiments it runs itself.**
 
-给 DeepSeek Harness 的自托管控件（俗称「破甲」插件）· 86 条宿主补丁 · 25 层状态自检 · 左侧栏整页设置
+Self-hosted controls for DeepSeek Harness (usually called a "jailbreak" plugin) · 86 host patches · 25-layer state self-check · full-sidebar page settings
 
-[![Release](https://img.shields.io/github/v/release/kingcharleslzy-ai/dsh-purge?label=release)](https://github.com/kingcharleslzy-ai/dsh-purge/releases)
-[![Checks](https://github.com/kingcharleslzy-ai/dsh-purge/actions/workflows/community.yml/badge.svg)](https://github.com/kingcharleslzy-ai/dsh-purge/actions/workflows/community.yml)
+[![Release](https://img.shields.io/github/v/release/wnduddld0513/dsh-purge-kr?label=release)](https://github.com/wnduddld0513/dsh-purge-kr/releases)
+[![Checks](https://github.com/wnduddld0513/dsh-purge-kr/actions/workflows/community.yml/badge.svg)](https://github.com/wnduddld0513/dsh-purge-kr/actions/workflows/community.yml)
 
-当前版本 **1.6.78** · 适配 **DSH Desktop 0.2.2-rc.1**（0.2.1-rc.1 / rc.2 / rc.3 / rc.5 同样通过） · [English](docs/README.en.md)
+Current version **1.6.78** · Matches **DSH Desktop 0.2.2-rc.1** (0.2.1-rc.1 / rc.2 / rc.3 / rc.5 pass in the same way)
 
-1.6.76 修复 DSH 0.2.2-rc.1 的预设加载，并校正旧版宿主的观察策略诊断。[发行说明](docs/releases/1.6.76.md)。
+1.6.76 fixes preset loading on DSH 0.2.2-rc.1 and corrects the observation-policy diagnostics for older hosts. [Release notes](docs/releases/1.6.76.md).
 
-**原项目与作者**：基于 [小杨 / YuJunZhiXue 的 dsh-purge](https://github.com/YuJunZhiXue/dsh-purge) 独立维护。原仓库已恢复；保留原作者署名、版权与 MIT 许可证。社区版由本仓库维护，并非原作者官方发行。
+**Original project and author**: Maintained independently on top of [xiaoyang / YuJunZhiXue's dsh-purge](https://github.com/YuJunZhiXue/dsh-purge). The original repository has been restored. The original author's signature, copyright, and MIT license are preserved as they were. This repository maintains the community edition, and it is not an official release by the original author.
 
 </div>
 
 ---
 
-## 搭配：本机出图（Qwen Studio）
+## Pairing: local image generation (Qwen Studio)
 
-破甲之后最直接的玩法，是把「生图」也搬到本机——不用网页、不用会员、不把提示词发到别人服务器。
+After the jailbreak, the most direct use is moving image generation itself onto your own machine. No web page, no membership, and prompts never go to someone else's server.
 
-配套插件 **Qwen Studio**（`dsh-qwen-studio`）把 Qwen Image 2.1 接进 DSH：
+The companion plugin **Qwen Studio** (`dsh-qwen-studio`) connects Qwen Image 2.1 to DSH:
 
-- **Apple Silicon Mac**：MLX / MFLUX 本机推理，模型用时加载、空闲释放；
-- **Windows / Linux + NVIDIA**：连你自己的 GPU 网关（ComfyUI 或 vLLM-Omni 协议），也支持 SSH 按需拉起；
-- 支持参考图编辑（按图改画风、换材质）、LoRA、ControlNet、蒙版、整套预设、图库与批量任务；
-- 装好之后，会话里直接说「画一张…」或「把这张改成水彩」，Agent 调用 `qwen_generate_image` 并把图返回到对话里。
+- **Apple Silicon Mac**: uses MLX / MFLUX local inference. It loads models only while in use and unloads them when idle;
+- **Windows / Linux + NVIDIA**: connects to your own GPU gateway (ComfyUI or the vLLM-Omni protocol). Starting it over SSH on demand is also supported;
+- supports reference-image editing (change the style or swap a material while looking at an image), LoRA, ControlNet, masks, preset sets, a gallery, and batch jobs;
+- once installed, say "draw me a picture…" or "turn this into a watercolor" in a session; the agent calls `qwen_generate_image` and returns the image in the conversation.
 
-**组合效果**：破甲让 Agent 不再反复确认「要不要画」，出图插件让它真的画出来，全程在你自己的机器上完成。
+**Pairing effect**: the jailbreak removes the agent's repeated "should I draw it?" confirmation, the image plugin actually produces the drawing, and the whole loop stays on your own machine.
 
-**仓库**：[kingcharleslzy-ai/dsh-qwen-studio](https://github.com/kingcharleslzy-ai/dsh-qwen-studio) · **下载**：[最新 Releases](https://github.com/kingcharleslzy-ai/dsh-qwen-studio/releases/latest) · **安装与硬件自查**：[docs/SETUP.md](https://github.com/kingcharleslzy-ai/dsh-qwen-studio/blob/main/docs/SETUP.md)（先看「这台机器能不能跑」再动手）
+**Repository**: [kingcharleslzy-ai/dsh-qwen-studio](https://github.com/kingcharleslzy-ai/dsh-qwen-studio) · **Download**: [latest releases](https://github.com/kingcharleslzy-ai/dsh-qwen-studio/releases/latest) · **Setup and hardware self-check**: [docs/SETUP.md](https://github.com/kingcharleslzy-ai/dsh-qwen-studio/blob/main/docs/SETUP.md) (check first whether it runs on this machine)
 
-## 它是什么
+## What it is
 
-dsh-purge Community 是一个跑在你自己机器上的 Harness 附加组件。它把日常使用里最消耗注意力的几件事收敛到一处：
+dsh-purge Community is a Harness add-on that runs on your own machine. It collects in one place the few things that eat the most attention in daily use:
 
-- **看清楚状态**：安装、补丁、注入到底有没有就绪，一条命令或一屏面板给结论；
-- **少一些往返**：把反复出现的确认与打断，收敛成一次设置；
-- **随时能回去**：应用、回滚、开关都留记录，操作前自动快照；
-- **方便做实验**：提示词、规则、预设集中管理，改坏了能撤。
+- **See state clearly**: judge whether install, patches, and injection are really ready from one command or one panel screen;
+- **Fewer round trips**: fold repeated confirmations and interruptions into a single setting;
+- **Go back any time**: apply, rollback, and toggles all leave a record, and an automatic snapshot is taken before the work;
+- **Easy to experiment**: manage prompts, rules, and presets in one place, and undo a bad edit.
 
-目标很简单：**让助手更连贯地配合你的学习与动手实验**，而不是每做一步都先停下来问一句。
+The goal is simple. **Make the assistant cooperate more consistently with learning and with the experiments it runs itself**, so it does not stop and ask at every step.
 
-社区里通常把它叫作「破甲」或「无限制模式」插件——指的是它降低了交互层面的摩擦，让 agent 能连续执行任务；它不改模型本身，也不改变你要做的事。
+In the community this is usually called a "jailbreak" or "unrestricted mode" plugin. It means lowering friction in the interaction layer so the agent runs work continuously. It neither replaces the model itself nor changes what you are trying to do.
 
-### 下载时报 `fetch failed`？
+### Seeing `fetch failed` when downloading?
 
-1.6.39 起，独立安装器会显示失败阶段和错误码，有限重试后可切换系统 curl；两条通道都保留来源、证书和 SHA256 校验。请先重新下载安装脚本再运行 dry-run，仍失败时提交脱敏诊断行即可。见 [下载排查说明](docs/maintenance-issue-52.md)。不会自动修改代理或重启 DSH。
+Since 1.6.39 the standalone installer shows the failing stage and error code, retries a set number of times, and then falls back to system curl. Both paths keep origin, certificate, and SHA256 verification intact. Re-download the install script and run a dry-run; if it still fails, send only the diagnostic lines with sensitive data removed. See [download troubleshooting](docs/maintenance-issue-52.md) for details. It does not switch your proxy and does not restart DSH.
 
-### 让不同预设保留自己的提示词
+### Each preset keeps its own prompt
 
-1.6.40 新增 `excludePresets`：默认空列表，保持原有行为；可将 `roleplay`、`minimal` 等预设排除在 Purge 提示词注入之外，保留命令、面板与工具。切换预设、并行会话和子 Agent 各自判断，宿主兜底也遵守排除。配置示例、升级步骤与边界见 [按预设排除说明](docs/maintenance-issue-53.md)。这不会撤销全局宿主补丁。
+1.6.40 added `excludePresets`. The default is an empty list, so existing behavior is unchanged. You can keep presets such as `roleplay` and `minimal` out of Purge prompt injection while still using the commands, panel, and tools. Preset switching, parallel sessions, and subagents decide for themselves, and host fallback follows the exclusion too. See [per-preset exclusion](docs/maintenance-issue-53.md) for configuration examples, the upgrade procedure, and boundaries. This does not revert global host patches.
 
-## 设计原则
+## Design principles
 
-| 原则 | 含义 |
+| Principle | Meaning |
 | --- | --- |
-| 本机优先 | 全部逻辑在本机运行，不改云端账号、不上传提示词或配置 |
-| 可见 | 每个动作都有状态与证据，不靠"应该生效了"这种判断 |
-| 可回滚 | 应用 / 安装 / 回滚前自动快照，保留原文件与校验清单 |
-| 不替你做决定 | 只减少摩擦，不改变你的目标；改什么、开什么，都由你确认 |
+| Local first | All logic runs locally. It does not change your cloud account and does not upload prompts or settings |
+| Visibility | Every action has state and evidence. It does not rely on guesses like "it was probably applied" |
+| Reversible | It creates an automatic snapshot before apply / install / rollback and keeps original files and a verification manifest |
+| Decides nothing for you | It reduces friction only and does not change the goal. You review what gets changed and switched on |
 
-## 适用场景
+## When to use it
 
-本机学习、个人项目、自动化实验与维护工作。请在你拥有或已获授权的环境中使用；涉及他人系统时，先取得许可。
+Use it for local learning, personal projects, automation experiments, and maintenance work. Use it in an environment you own or have permission for. Where someone else's systems are involved, get permission first.
 
-## 1.6.39 更新
+## 1.6.39 update
 
-修复独立安装器只显示 `fetch failed` 的问题：分阶段诊断、有限重试和系统 curl 备用下载，继续严格校验官方来源、证书和 SHA256。下载失败不触碰现有安装。[发行说明](docs/releases/1.6.48.md) · [配置与验收](docs/maintenance-issue-52.md)
+Fixed the standalone installer showing only `fetch failed`. It now provides per-stage diagnostics, a set number of retries, and a system curl fallback download, while still enforcing the official origin, certificate, and SHA256 checks strictly. If a download fails, it leaves the existing install alone. [Release notes](docs/releases/1.6.48.md) · [Configuration and acceptance](docs/maintenance-issue-52.md)
 
-## 安装
+## Installation
 
-**DSH 官方入口负责安装插件；下面的社区安装器由本仓库维护，不是 DeepSeek 官方脚本。** 首次安装可用官方界面或 CLI；已经装过 `dsh-purge` / 旧独立面板时，用社区安装器原地迁移，不要先卸载。安装、应用宿主补丁、手动重启是独立动作。
+**DSH's official entry point handles plugin installation. This repository maintains the community installer below, and it is not an official DeepSeek script.** Use the official UI or CLI for a first install. If you already installed `dsh-purge` or the older standalone panel, migrate in place with the community installer and do not remove it first. Installing, applying host patches, and restarting by hand are three separate actions.
 
-### 方式一：DSH 官方界面（首次安装）
+### Method 1: DSH official UI (first install)
 
-1. 先打开 DSH 完成初始化。按当前官方文档，进入「插件」，点击「实验性插件」旁的「更多」，启用「自定义插件市场」；然后进入「发现 → 添加索引源」。
-2. 本项目的**社区索引**：`https://kingcharleslzy-ai.github.io/dsh-purge/index.json`。
-3. 选择 dsh-purge Community，核对来源为 `kingcharleslzy-ai/dsh-purge`、包名为 `dsh-purge-community`，确认后安装。
+1. Open DSH first and finish initialization. Following the current official docs, go to "Plugins", click "More" next to "Experimental plugins", and switch on "Custom plugin market". Then go to "Discover → Add index source".
+2. This project's **community index**: `https://wnduddld0513.github.io/dsh-purge-kr/index.json`.
+3. Select dsh-purge Community, confirm the origin is `wnduddld0513/dsh-purge-kr` and the package name is `dsh-purge-community`, then install.
 
-界面和安装协议由 DSH 提供，索引与插件由社区维护。不同 DSH 版本的入口文字可能不同；第三方 `dsh-market` 也可能有额外的筛选与迁移限制。已有旧包时请使用方式三。[官方市场说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/guide/plugin-market.zh.md)
+DSH provides the UI and the install protocol; the community maintains the index and the plugin. Entry wording can differ between DSH versions, and the third-party `dsh-market` may have extra filters and migration limits. If a package already exists, use method 3. [Official market guide](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/guide/plugin-market.zh.md)
 
-### 方式二：DSH 官方 CLI（首次安装）
+### Method 2: DSH official CLI (first install)
 
-下面命令适用于**已经安装 `dsh` 命令、且使用 `web` profile 的 CLI/Web 用户**，在 macOS/Linux 终端或 Windows PowerShell 中运行。桌面版用户优先用上面的界面；不要为了安装插件再用 `npx` 下载另一套宿主。
+The command below is for **CLI/Web users who have the `dsh` command installed and use the `web` profile**. Run it in a macOS/Linux terminal or in Windows PowerShell. Desktop users should use the UI above first. Do not download another host with `npx` just to install the plugin.
 
 ```sh
-dsh plugin --profile web add "https://github.com/kingcharleslzy-ai/dsh-purge/releases/download/v1.6.78/dsh-purge-community-1.6.78.tgz"
+dsh plugin --profile web add "https://github.com/wnduddld0513/dsh-purge-kr/releases/download/v1.6.78/dsh-purge-community-1.6.78.tgz"
 ```
 
-`web` 必须与实际启动的 profile 一致；自定义数据目录需要沿用该实例的 `DSH_HOME`。命令使用本次发行的固定版本 URL；不是 `npm install -g`，也不是安装裸 npm 包名。本项目通过 GitHub 发行，**不要替换成 `add dsh-purge` 或 `add dsh-purge-community`**。官方 CLI 的安装不会额外运行我们安装器的 Release SHA256 比对及迁移快照；需要这些功能时选方式三。[官方 CLI 安装说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/develop/basic/publish.zh.md)
+`web` must match the profile you actually started, and a custom data directory follows that instance's `DSH_HOME`. This command uses this release's pinned-version URL; it is neither `npm install -g` nor a bare npm package-name install. This project ships through GitHub releases, so **do not change it to `add dsh-purge` or `add dsh-purge-community`**. An official CLI install does not run our installer's Release SHA256 comparison or migration snapshot. If you need those, choose method 3. [Official CLI install guide](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/develop/basic/publish.zh.md)
 
-### 方式三：社区安装器（备份、旧版迁移、恢复）
+### Method 3: community installer (backup, older-version migration, restore)
 
-先安装并打开一次 DSH，让实际 profile 初始化。以下命令下载**本仓库的脚本**，先校验，再安装；`dry-run` 通过仅代表前置检查、下载和 SHA256 通过，不代表依赖安装、迁移或启动已通过。请先阅读下载的脚本。
+Install DSH first and open it once so the real profile is initialized. The commands below download **a script from this repository**, verify it, and install it. A passing `dry-run` means only that the precondition checks, the download, and SHA256 passed; it does not mean dependency installation, migration, or startup passed. Read the downloaded script before you use it.
 
 #### macOS Desktop
 
-默认应用位置 `/Applications/DeepSeek Harness.app`、数据目录 `~/.dsh`、profile `desktop`。将下面两段放在同一个终端会话中执行：
+The default app location is `/Applications/DeepSeek Harness.app`, the data directory is `~/.dsh`, and the profile is `desktop`. Run both blocks in the same terminal session:
 
 ```sh
 PURGE_INSTALL_DIR="$(mktemp -d)"
-curl -fSL --connect-timeout 20 --max-time 90 "https://raw.githubusercontent.com/kingcharleslzy-ai/dsh-purge/master/scripts/install.sh" -o "$PURGE_INSTALL_DIR/install.sh"
+curl -fSL --connect-timeout 20 --max-time 90 "https://raw.githubusercontent.com/wnduddld0513/dsh-purge-kr/master/scripts/install.sh" -o "$PURGE_INSTALL_DIR/install.sh"
 sh "$PURGE_INSTALL_DIR/install.sh" --dry-run
 ```
 
-校验成功、核对目标实例后执行：
+Once verification succeeds and you have confirmed the target instance, run:
 
 ```sh
 sh "$PURGE_INSTALL_DIR/install.sh"
 ```
 
-自定义应用或 home 时，先设置 `DSH_APP` / `DSH_HOME`；自定义 profile 对两次命令都加 `--profile=实际名称`。不要照抄别人的路径。 macOS 支持从 XML/二进制 plist 读取真实可执行文件名；元数据无效会停止，不会换用其他应用。详见[定位边界](docs/INSTALLATION.md#应用定位边界pr-78)。
+To point at a specific app or home, set `DSH_APP` / `DSH_HOME` first. To pin a profile, add `--profile=actual-name` to both commands. Do not copy someone else's paths. On macOS it also reads the real executable name from XML or binary plists. If the metadata is invalid it stops and does not swap in a different app. See [app location boundaries](docs/INSTALLATION.md#앱-위치-지정-경계pr-78) for details.
 
 #### Windows Desktop · PowerShell 5.1 / 7
 
-脚本会尝试定位唯一的 DSH Desktop，默认 home 为用户的 `.dsh`。旧 Desktop CLI 默认 profile 为 `desktop`，带独立 dsh CLI 的新壳默认为 `web`；自定义 profile 用 `-Profile` 指定。不要求管理员权限；路径含空格也支持。
+The script tries to find the single DSH Desktop. The default home is the user's `.dsh`. The old Desktop CLI defaults its profile to `desktop`, and the new shell that ships its own dsh CLI defaults to `web`; pass `-Profile` to pin a custom profile. It does not ask for administrator rights and supports paths containing spaces.
 
 ```powershell
 $PurgeInstaller = Join-Path $env:TEMP ('purge-install-' + [guid]::NewGuid().ToString('N') + '.ps1')
-Invoke-WebRequest -UseBasicParsing -TimeoutSec 90 -Uri 'https://raw.githubusercontent.com/kingcharleslzy-ai/dsh-purge/master/scripts/install.ps1' -OutFile $PurgeInstaller
+Invoke-WebRequest -UseBasicParsing -TimeoutSec 90 -Uri 'https://raw.githubusercontent.com/wnduddld0513/dsh-purge-kr/master/scripts/install.ps1' -OutFile $PurgeInstaller
 powershell -NoProfile -ExecutionPolicy Bypass -File "$PurgeInstaller" -DryRun
 ```
 
-上一条退出码为 0、核对目标实例后，在同一个 PowerShell 会话中执行：
+Once the previous command exits with code 0 and you have confirmed the target instance, run this in the same PowerShell session:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File "$PurgeInstaller"
 ```
 
-找不到应用或有多个副本时，对两次命令都增加 `-DshExe '实际的 DeepSeek Harness.exe 完整路径'`；自定义目录用 `-DshHome`、profile 用 `-Profile`。`ExecutionPolicy Bypass` 只作用于这次子进程，不修改持久执行策略；组织策略仍可能禁止执行，遇到时报告错误，不修改系统策略。
+If the app was not found, or there are several copies, add `-DshExe 'full path to the real DeepSeek Harness.exe'` to both commands. Point at a directory with `-DshHome` and at a profile with `-Profile`. `ExecutionPolicy Bypass` applies only to this child process and does not change the persistent execution policy. An organization policy may still block execution, so in that case report the error as it is and leave system policy alone.
 
 #### Linux · CLI / Web
 
-先安装 Node ≥18 和 DSH CLI，并初始化实际使用的 profile。以下从下载开始，不要求已 clone 本仓库：
+Install Node ≥18 and the DSH CLI first, then initialize the profile you actually use. The procedure below starts at the download, so you do not need to have cloned this repository:
 
 ```sh
 PURGE_INSTALL_DIR="$(mktemp -d)"
-curl -fSL --connect-timeout 20 --max-time 90 "https://raw.githubusercontent.com/kingcharleslzy-ai/dsh-purge/master/scripts/install.sh" -o "$PURGE_INSTALL_DIR/install.sh"
+curl -fSL --connect-timeout 20 --max-time 90 "https://raw.githubusercontent.com/wnduddld0513/dsh-purge-kr/master/scripts/install.sh" -o "$PURGE_INSTALL_DIR/install.sh"
 sh "$PURGE_INSTALL_DIR/install.sh" --dry-run
 ```
 
-校验成功后，在同一终端执行 `sh "$PURGE_INSTALL_DIR/install.sh"`。默认使用 PATH 中的 `node` / `dsh` 与 `web` profile。自定义实例在两次调用中保持 `DSH_NODE`、`PURGE_DSH_CLI`、`DSH_HOME`、`--profile=名称` 一致。
+When verification succeeds, run `sh "$PURGE_INSTALL_DIR/install.sh"` in the same terminal. The defaults are `node` / `dsh` from PATH and the `web` profile. To pin an instance, keep `DSH_NODE`, `PURGE_DSH_CLI`, `DSH_HOME`, and `--profile=name` identical across both calls.
 
-### 安装会改什么，以及怎么确认
+### What the install changes, and how to verify it
 
-- 社区安装器在迁移前备份，调用当前实例的官方 `dsh plugin --profile … add …`，再核对安装版本和入口；保留提示词、规则、更新偏好及其他插件设置。
-- **不是“完全不碰宿主目录”**：解包桌面布局缺失/损坏 `app/runtime` 链接时，会保留旧链接并修复到该安装的 runtime；冲突则停止。Linux 系统宿主只读时可能创建用户副本，并在成功后切换用户启动器。详见[安装指南](docs/INSTALLATION.md)。
-- 插件加载前若市场安装失败（issue #7），插件本身尚未运行；先读脱敏错误、核对依赖来源，不能承诺安装器能修复所有市场或网络错误。
-- 不自动应用宿主补丁、不自动重启、不改代理、不修改全局 npm 源或清空缓存。脚本和 bootstrap 从本仓库 `master` 下载；Release 包另做 SHA256 校验，这不是对下载脚本的独立签名验证。
-- 命令退出码非零就视为失败。安装成功后记录 `backup_id`，核对磁盘版本；运行中的 DSH 仍可能显示旧版，待用户方便时手动退出重开。`dry-run` 成功、备份存在或市场卡片出现都不能替代安装成功证据。
-- 回滚优先用「Purge → 状态 → 本机备份」，选择本次安装前的备份；无界面时按[安装指南中的 CLI 回滚](docs/INSTALLATION.md#cli-rollback)执行。不要假设 `purge-community` 已加入系统 PATH。
+- The community installer backs up before migrating. It then calls the current instance's official `dsh plugin --profile … add …` and checks the installed version and entry point. It preserves prompts, rules, update preferences, and other plugins' settings.
+- **It does not mean "touching no host directory at all"**: in an unpacked desktop layout, if the `app/runtime` link is missing or broken, it repairs it to that installation's runtime while keeping the existing link. On a conflict it stops. If the Linux system host is read-only, it can create a user copy and, once that succeeds, switch to the user launcher. See the [installation guide](docs/INSTALLATION.md) for details.
+- A market install can fail before the plugin loads (issue #7); when that happens the plugin itself has not run yet. Read the error with sensitive data removed first and check the dependency origins. The installer does not promise to fix every market or network error.
+- It does not apply host patches automatically, does not restart automatically, does not change the proxy, does not modify the global npm registry, and does not clear caches. Scripts and bootstrap come from `master` in this repository. Release packages get a separate SHA256 check, but that is not independent signature verification of the downloaded script.
+- Any non-zero command exit code counts as failure. After a successful install, record the `backup_id` and check the version on disk. A running DSH may still show the old version, so quit and reopen it yourself when convenient. A passing `dry-run`, an existing backup, or a market card showing up is not by itself evidence of a successful install.
+- For rollback, prefer picking the backup from before this install under "Purge → Status → Local backups". Without the UI, follow the [CLI rollback in the installation guide](docs/INSTALLATION.md#cli-rollback). Do not assume `purge-community` was added to the system PATH.
 
-完整的实例选择、回滚与失败恢复步骤见 [安装指南](docs/INSTALLATION.md)，Agent 必须先读 [AGENTS.md §12](AGENTS.md#installation)。
+The full procedure for choosing an instance, rolling back, and recovering from failure is in the [installation guide](docs/INSTALLATION.md). Agents read [AGENTS.md §12](AGENTS.md) first.
 
-## 面板
+## Panel
 
-左侧栏一整页，不做悬浮按钮：
+One page that uses the whole sidebar; there is no floating button:
 
-- 顶部一句话说明当前状态，主操作是「应用」；
-- 其余分区折叠，说明收进 `?`，需要时再展开；
-- 维护页可看最近动作、备份占用、更新偏好；
-- 支持隐藏不用的入口（例如回退按钮），只影响显示。
+- The top explains the current state in one line, and the primary action is "Apply";
+- The remaining sections start collapsed, and their explanations sit inside `?` that you expand when needed;
+- The maintenance page shows recent actions, backup usage, and update preferences;
+- Entry points you do not use (for example the rewind button) can be hidden, and this setting affects display only.
 
-## 常用命令
+## Common commands
 
-| 命令 | 作用 |
+| Command | Role |
 | --- | --- |
-| `purge-community selfcheck [--json]` | 逐层状态与证据；不适用项单独标注 |
-| `purge-community status` | 宿主路径与计数 |
-| `purge-community host-status` | 只读查看安装布局与当前入口（不换包、不重启） |
-| `purge-community diagnose` | 锚点漂移诊断，给出文件、行号与候选落点 |
-| `purge-community reanchor …` | 把确认过的新锚点钉成本地覆盖，可撤销 |
-| `purge-community probe [new]` | 生成运行时探针，验证注入确实送达模型 |
-| `purge-community audit [--limit n]` | 最近动作记录 |
-| `purge-community boost [on\|off]` | 尾部强化段开关 |
-| `purge-community preset [status\|install]` | 「无限制模式」预设落盘 |
-| `purge-community retry [on\|off]` | 回答被中断时的单次重试开关 |
-| `purge-community usage` / `prune` | 备份占用与清理 |
-| `purge-community backup` / `rollback <id>` | 快照 / 回滚插件 |
+| `purge-community selfcheck [--json]` | Shows state and evidence per layer. Not-applicable items are marked separately |
+| `purge-community status` | Shows host paths and counts |
+| `purge-community host-status` | Reads the install layout and current entry point in read-only mode (no package swap, no restart) |
+| `purge-community diagnose` | Diagnoses anchor drift and shows file, line number, and candidate locations |
+| `purge-community reanchor …` | Pins a confirmed new anchor as a local override. Reversible |
+| `purge-community probe [new]` | Creates a runtime probe to verify that injection actually reached the model |
+| `purge-community audit [--limit n]` | Shows the recent action log |
+| `purge-community boost [on\|off]` | Turns the tail reinforcement section on and off |
+| `purge-community preset [status\|install]` | Writes the "unrestricted mode" preset to disk |
+| `purge-community retry [on\|off]` | Turns the single retry for an interrupted response on and off |
+| `purge-community usage` / `prune` | Checks and prunes backup usage |
+| `purge-community backup` / `rollback <id>` | Creates a snapshot, or rolls the plugin back |
 
-## 更新
+## Updates
 
-维护页分别设置「自动检查」与「自动安装」，默认只检查，间隔 6 小时。安装完成不会自动重启——你决定什么时候重开。
+Set "auto-check" and "auto-install" separately on the maintenance page. The default checks only, every 6 hours. An install finishing does not restart anything automatically. You decide when to reopen.
 
-## 兼容性
+## Compatibility
 
-| 组件 | 值 |
+| Component | Value |
 | --- | --- |
-| 插件 | `dsh-purge-community` 1.6.78 |
-| 已验证宿主 | DSH Desktop 0.2.2-rc.1 / 0.2.1-rc.1 / 0.2.1-rc.2 / 0.2.1-rc.3 / 0.2.1-rc.5 |
-| 其它宿主 | 允许安装，自检会标「未验证」；先看 `diagnose` |
-| Node | ≥18（桌面版自带运行时即可） |
+| Plugin | `dsh-purge-community` 1.6.78 |
+| Verified hosts | DSH Desktop 0.2.2-rc.1 / 0.2.1-rc.1 / 0.2.1-rc.2 / 0.2.1-rc.3 / 0.2.1-rc.5 |
+| Other hosts | Installation is allowed. The self-check marks them "unverified"; look at `diagnose` first |
+| Node | ≥18 (the runtime bundled with the desktop build is enough) |
 
-## 出问题怎么办
+## When something goes wrong
 
 ```sh
-purge-community selfcheck --json     # 先看哪一层不是 ok
-purge-community diagnose             # 锚点漂移时看候选位置
-purge-community audit --limit 20     # 最近动作
+purge-community selfcheck --json     # first see which layer is not ok
+purge-community diagnose             # if anchor drift appears, look at the candidate locations
+purge-community audit --limit 20     # look at recent actions
 ```
 
-面板打不开时，先确认版本一致，再按 [维护文档](docs/MAINTENANCE.md) 恢复；不要直接覆盖 `Resources/app`。
+If the panel does not open, check the version first and recover according to the [maintenance docs](docs/MAINTENANCE.md). Do not overwrite `Resources/app` directly.
 
-## 开发与验证
+## Development and verification
 
 ```sh
-npm test                 # 单元与契约测试
-npm run check:docs       # 版本与文档一致性
-npm run check:client     # 面板 bundle 与源码一致
-npm run test:electron    # 真实 Electron 环境（临时目录，不改安装）
-npm run smoke            # 发行包冒烟
+npm test                 # unit and contract tests
+npm run check:docs       # version and documentation consistency
+npm run check:client     # panel bundle matches the source
+npm run test:electron    # real Electron environment (temporary directory, no install changes)
+npm run smoke            # release package smoke
 ```
 
-面向 AI agent 的操作说明在 [AGENTS.md](AGENTS.md)，两者冲突时以它为准。
+Operating notes for AI agents are in [AGENTS.md](AGENTS.md). If the two conflict, AGENTS.md is the reference.
 
-**关键词**：破甲 · 无限制模式 · unrestricted · prompt injection · jailbreak · DSH 插件 · 状态自检 · 备份回滚
+**Keywords**: jailbreak · unrestricted mode · prompt injection · DSH plugin · state self-check · backup rollback
 
-## 贡献者
+## Contributors
 
-感谢原作者、代码贡献者，以及提供问题复现、分析与验证的朋友。头像链接直达 GitHub 主页；具体贡献见 [贡献记录](CONTRIBUTORS.md)，第三方来源见 [NOTICE.md](NOTICE.md)。
+Thanks to the original author, the code contributors, and everyone who reproduced, analyzed, and verified issues. Clicking an avatar goes straight to the GitHub profile. Specific contributions are in [the contribution log](CONTRIBUTORS.md), and third-party origins are in [NOTICE.md](NOTICE.md).
 
 <!-- CONTRIBUTORS:START -->
 <table>
@@ -269,8 +269,8 @@ npm run smoke            # 发行包冒烟
 </table>
 <!-- CONTRIBUTORS:END -->
 
-名单合并 GitHub 提交者与人工鸣谢记录，自动每日刷新并保留历史贡献者。头像顺序不代表贡献排名，也不将问题报告者误记为代码作者。
+The roster is refreshed automatically every day from GitHub committers combined with manual audit records, and past contributors are kept. Avatar order is not a ranking. People who reported a problem are not misrecorded as the author of the code.
 
-### DSH Store 收录信息
+### DSH Store listing details
 
-DSH Store 申请必须填写 **Plugin path：`.`**，安装根目录的 `dsh-purge-community`；不要留空或选独立面板包。逐版本兼容声明已放入 manifest，未验证版本保持 `unknown`。元数据修正不等于市场已批准安装；[路径、兼容证据和收录边界](docs/DSH-STORE.md)。
+The DSH Store application must state **Plugin path: `.`**, which is `dsh-purge-community` at the install root. Do not leave it blank and do not pick the standalone panel package. Version-specific compatibility declarations live in the manifest, and unverified versions stay `unknown`. Editing the metadata is not the same as approving a market install. [Path, compatibility evidence, and listing boundaries](docs/DSH-STORE.md).

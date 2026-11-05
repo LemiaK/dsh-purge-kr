@@ -1,45 +1,45 @@
-# DSH 0.2.2-rc.1 diagnostic display review
+# DSH 0.2.2-rc.1 진단 표시 검토
 
-## Scope
+## 범위
 
-This change repairs diagnostic presentation only. It does not change any patch definition, authorization behavior, prompt handling, preset, installation, or restart behavior. DSH 0.2.2-rc.1 remains unqualified; passing these checks is not evidence of complete plugin compatibility.
+이번 변경은 진단 표시만 고친다. 패치 정의, 권한 부여 동작, 프롬프트 처리, 프리셋, 설치, 재시작 동작은 바꾸지 않는다. DSH 0.2.2-rc.1 은 여전히 적격(qualified)이 아니며, 이 점검을 통과한 것이 플러그인 호환성 전체를 검증한 증거는 아니다.
 
-## Findings
+## 발견 사항
 
-The observed 65/78 disk-write summary contained 65 applied rows, eight drifted rows, two intentionally disabled rows, and three skipped rows. The panel's grouped 56/69 summary uses grouped display rows. Neither fraction alone means thirteen broken capabilities.
+관측된 65/78 디스크 쓰기 요약에는 적용 65행, 드리프트 8행, 의도적 비활성 2행, 건너뜀 3행이 있었다. 패널의 그룹 요약 56/69 는 그룹 표시 행을 쓴다. 두 분수만으로 열세 개 기능이 고장났다고 볼 수는 없다.
 
-`tallyPatches` incremented `drifted` and `disabled` without initializing them. Both became `NaN`. Summary and group headings also omitted these diagnostics. The fix initializes both counters and renders their existing localized labels, alongside partial-result counts in the overall summary. Applied counts and denominators remain unchanged; failures are not reclassified as success.
+`tallyPatches` 는 `drifted` 와 `disabled` 를 초기화하지 않은 채 증가시켜 둘 다 `NaN` 이 되었다. 요약과 그룹 제목도 이 진단을 빠뜨렸다. 수정은 두 카운터를 초기화하고 기존 지역화 라벨을 표시하며, 전체 요약에 부분 결과 카운트를 함께 보여 준다. 적용 수와 분모는 그대로이고, 실패를 성공으로 재분류하지 않는다.
 
-Read-only inspection found eight unmatched legacy patches: 14, 17, 54, 60, 62, 67, 74, and 82. No anchors or replacement logic were changed.
+읽기 전용 점검에서 일치하지 않는 옛 패치 여덟 개를 확인했다: 14, 17, 54, 60, 62, 67, 74, 82. 앵커나 대체 로직은 바꾸지 않았다.
 
-- 54: the original delivery guidance and its former comment anchor are absent in the shipped 0.2.2-rc.1 target. An old unmatched edit does not prove the previous instruction is still active.
-- 82: the official desktop host explicitly passes `profile: "desktop"` to its boot API. A real isolated host started with `DSH_PROFILE` absent, both before and after the installed modifications. This verifies desktop profile boot for this tested build, not every alternate launcher.
-- 14: unconditional escalation grants; 17: observation-policy write intent; 60: run_code sandbox approval; 62: approval-channel fallback. These four old authorization edits no longer match. Their definitions are unchanged, and their new-host equivalents were not repaired or qualified.
-- 74: default prompt injection before step assembly. Its legacy match no longer applies; injection behavior is not qualified by this review.
-- 67: missing-message-list crash guard. The original literal checks no longer match the new try-block indentation. The shipped preStep normally returns a messages array, and step also consumes it later; adapting just the old length checks is not a complete repair. A malformed callback can reproduce a visible error, but normal first/second turns did not reproduce missing messages. Coercing it to an empty array could hide the callback error and lose user input. The old patch remains unchanged and drifted; a real failing callback trace is needed before deciding an appropriate repair.
+- 54: 원래 전달 지침과 그 옛 주석 앵커가 배포된 0.2.2-rc.1 대상에 없다. 옛 편집이 일치하지 않는다고 해서 이전 지침이 아직 유효하다는 증거는 아니다.
+- 82: 공식 데스크톱 호스트는 부트 API 에 `profile: "desktop"` 을 명시적으로 넘긴다. 실제 격리 호스트를 `DSH_PROFILE` 없이, 설치 수정 전후 모두에서 기동했다. 이것은 테스트한 이 빌드의 데스크톱 profile 부팅을 검증한 것이지 모든 대체 런처를 검증한 것은 아니다.
+- 14: 무조건적 권한 상승 부여; 17: 관찰 정책 쓰기 의도; 60: run_code 샌드박스 승인; 62: 승인 채널 폴백. 이 네 옛 권한 편집은 더 이상 일치하지 않는다. 정의는 그대로이며, 새 호스트용 대응을 수리하거나 적격 판정하지도 않았다.
+- 74: 단계 조립 전 기본 프롬프트 주입. 옛 매칭이 더 이상 적용되지 않는다; 이번 검토로 주입 동작이 적격 판정된 것은 아니다.
+- 67: 메시지 목록 누락 충돌 가드. 원래 리터럴 검사가 새 try 블록 들여쓰기와 더 이상 일치하지 않는다. 배포된 preStep 은 보통 messages 배열을 반환하고 step 도 나중에 그것을 소비하므로, 옛 길이 검사만 맞추는 것으로는 완전한 수리가 아니다. 잘못된 콜백은 눈에 보이는 오류를 재현할 수 있지만, 정상적인 첫 턴과 두 번째 턴에서는 messages 누락이 재현되지 않았다. 빈 배열로 강제 변환하면 콜백 오류를 숨기고 사용자 입력을 잃을 수 있다. 옛 패치는 그대로 두고 드리프트로 남긴다; 적절한 수리를 정하려면 실제로 실패한 콜백 트레이스가 필요하다.
 
-## Validation
+## 검증
 
-- Full panel test command passed: 28 named tests plus existing registration, lifecycle, HTTP, context and UI checks.
-- Community bundled UI and both generated-bundle consistency checks passed.
-- Fourteen focused backend status/partial-result/optional-selection tests passed against isolated fixtures.
-- New mixed-state test recreates the 65 + 8 + 2 + 3 count distribution and verifies finite, exact counts.
-- Rendered-component regression verifies drift, disabled selections, partial results, pending work and unmatched failures remain visible in summary and group headings.
-- Actual shipped desktop host ran in Electron 44.7.0 with a fresh isolated HOME, DSH_HOME, profile and userData. The original runtime and a snapshot of the installed modified runtime both returned 303 for token exchange and 200 for authenticated requests with `DSH_PROFILE` absent.
+- 패널 전체 테스트 명령 통과: 이름 있는 테스트 28개와 기존 등록, 생애주기, HTTP, 컨텍스트, UI 점검.
+- 커뮤니티 번들 UI 와 두 가지 생성 번들 일치 점검 통과.
+- 격리 픽스처에서 백엔드 상태/부분 결과/선택형 선택 관련 집중 테스트 14개 통과.
+- 새 혼합 상태 테스트가 65 + 8 + 2 + 3 분포를 재현하고 유한하고 정확한 카운트를 검증한다.
+- 렌더링 컴포넌트 회귀가 드리프트, 비활성 선택, 부분 결과, 대기 작업, 미매칭 실패가 요약과 그룹 제목에 계속 보이는지 검증한다.
+- 실제 배포된 데스크톱 호스트를 Electron 44.7.0 에서 새 격리 HOME, DSH_HOME, profile, userData 로 실행했다. 원본 런타임과 설치 수정 런타임 스냅샷 모두 `DSH_PROFILE` 없이 토큰 교환에 303, 인증 요청에 200을 반환했다.
 
-The runtime probes did not load the user's third-party plugin configuration, send model requests, or qualify every plugin feature. The earlier restart hang was not reproduced. Windows validation for this change is delegated to the release CI; it is not a new full acceptance run on the affected Windows 4090.
+런타임 프로브는 사용자의 서드파티 플러그인 설정을 로드하지 않았고, 모델 요청을 보내지 않았으며, 모든 플러그인 기능을 적격 판정하지 않았다. 이전의 재시작 멈춤은 재현되지 않았다. 이 변경의 Windows 검증은 릴리스 CI 에 위임하며, 영향을 받은 Windows 4090 에서 새로운 전체 검수를 실행한 것은 아니다.
 
-## Native message-loop contract tests
+## 네이티브 메시지 루프 계약 테스트
 
-`test/agent-loop-022-contract.test.mjs` executes the shipped preStep and turn bodies from the original 0.2.2-rc.1 artifact. The fixture records source attribution and SHA256. Model, storage, dispatch and tool services are doubles; this is not a full DSH/model conversation acceptance test. Six checks cover native empty input, two ordinary turns, no-generation termination, explicit rejection, malformed callback output and provider errors. Errors and rejection remain visible, message objects are preserved, and acquired tool resources are disposed.
+`test/agent-loop-022-contract.test.mjs` 는 원본 0.2.2-rc.1 산출물의 배포된 preStep 과 turn 본문을 실행한다. 픽스처는 소스 출처와 SHA256 을 기록한다. 모델, 저장소, 디스패치, 도구 서비스는 더블이며, 이것은 전체 DSH/모델 대화 검수가 아니다. 여섯 항목이 네이티브 빈 입력, 일반 턴 두 번, 생성 없는 종료, 명시적 거부, 잘못된 콜백 출력, 제공자 오류를 다룬다. 오류와 거부는 계속 드러나고, 메시지 객체는 보존되며, 획득한 도구 리소스는 정리된다.
 
-## Local release checks
+## 로컬 릴리스 점검
 
-- Main Node suite: 489 passed, 21 platform/fixture-dependent skips, zero failures.
-- Panel suite: 28 named tests passed, plus existing registration/request/context/API scripts.
-- Explicit isolated Electron checks and maintenance suite passed (maintenance: 28 passed, two platform skips).
-- Bundle consistency, formatting, documentation version checks and packed-artifact smoke passed.
+- 메인 Node 스위트: 489 통과, 플랫폼/픽스처 의존 건너뜀 21, 실패 0.
+- 패널 스위트: 이름 있는 테스트 28개 통과, 기존 등록/요청/컨텍스트/API 스크립트 포함.
+- 명시적 격리 Electron 점검과 유지보수 스위트 통과(유지보수: 28 통과, 플랫폼 건너뜀 2).
+- 번들 일치, 포맷, 문서 버전 점검, 패키징 산출물 스모크 통과.
 
-## Deployment
+## 배포
 
-Prepared for 1.6.71. No production installation, user-settings change or DSH restart is part of this release work. Existing host patch definitions remain untouched. The affected Windows 4090 Defender rollback limitation from 1.6.69 remains unresolved; CI success must not be presented as resolving it. Release checks are recorded separately in the release workflow.
+1.6.71 용으로 준비했다. 이번 릴리스 작업에는 운영 설치, 사용자 설정 변경, DSH 재시작이 포함되지 않는다. 기존 호스트 패치 정의는 그대로다. 1.6.69 의 Windows 4090 Defender 롤백 제한은 여전히 해결되지 않았다; CI 성공을 그것이 해결되었다는 뜻으로 제시하면 안 된다. 릴리스 점검은 릴리스 워크플로에 따로 기록한다.
