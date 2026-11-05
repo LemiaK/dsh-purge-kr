@@ -25,6 +25,7 @@ jobs:
     env:
       LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
       LLM_MODEL: ${{ vars.LLM_MODEL }}
+      LLM_REASONING_EFFORT: ${{ vars.LLM_REASONING_EFFORT }}
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
       SYNC_VERSION: ""
     steps:
