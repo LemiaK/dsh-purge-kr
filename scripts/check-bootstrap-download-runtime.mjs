@@ -6,7 +6,7 @@ import { bootstrapInstall } from './bootstrap-install.mjs';
 const home=fs.mkdtempSync(path.join(os.tmpdir(),'purge-download-acceptance-'));
 const profile=path.join(home,'profiles/desktop');fs.mkdirSync(profile,{recursive:true});
 fs.writeFileSync(path.join(profile,'package.json'),'{}');fs.writeFileSync(path.join(profile,'cordis.patch.yml'),'PRIVATE SETTINGS SENTINEL');
-const version=process.argv[2]||'1.6.38';
+const version=process.argv[2]||process.env.PURGE_RELEASE_VERSION||JSON.parse(fs.readFileSync(new URL('../package.json',import.meta.url),'utf8')).version;
 try {
   for(const fallback of [false,true]) {
     const logs=[];
