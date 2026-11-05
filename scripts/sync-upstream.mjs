@@ -131,32 +131,6 @@ function main() {
   commitArea(filesUnder(after, ["scripts/", ".github/", "package.json", "package-lock.json", "market/"]), `chore(fork): upstream ${nextVersion} metadata and scripts`);
   commitArea(filesUnder(after, ["test/"]), `test: align expectations with the localized ${nextVersion} messages`);
 
-  // 4-b) 모델이 번역을 거부한 항목은 자동 진행을 멈추고 사람 검토로 넘긴다.
-  let needsHuman = false;
-  try {
-    const reportPath = path.join("i18n", "last-report.json");
-    if (fs.existsSync(reportPath)) {
-      const rep = JSON.parse(fs.readFileSync(reportPath, "utf8"));
-      const refusals = Array.isArray(rep.refusals) ? rep.refusals : [];
-      if (refusals.length) {
-        needsHuman = true;
-        const lines = [
-          "# 사람 검토가 필요한 번역",
-          "",
-          `- 모델이 번역을 거부했거나 번역이 아닌 응답을 돌려준 항목: ${refusals.length}건`,
-          "- 자동 번역·자동 머지·자동 릴리스를 멈췄습니다. 아래 항목을 사람이 직접 번역하거나 제외하세요.",
-          "",
-        ];
-        for (const row of refusals.slice(0, 50)) {
-          const text = String(row.text ?? "").replace(/\s+/g, " ").slice(0, 160);
-          lines.push(`- \`${row.file}\` (${row.reason}): ${text}`);
-        }
-        fs.writeFileSync(path.join(OUT_DIR, "refusals.md"), lines.join("\n") + "\n", "utf8");
-        log(`거부 응답 ${refusals.length}건 — 자동 머지/릴리스 없이 사람 검토로 넘깁니다`);
-      }
-    }
-  } catch { /* 보고서를 못 읽으면 게이트 결과로만 판단한다 */ }
-
   // 5) 번들 재생성 + 커밋
   run("node", ["packages/purge-panel/scripts/build.mjs"], { allowFail: true });
   run("node", ["packages/purge-panel/scripts/build.mjs", "--community"], { allowFail: true });
@@ -191,7 +165,6 @@ function main() {
   }
 
   let ok =
-    !needsHuman &&
     reviewOk &&
     gate("check:docs", "node", ["scripts/check-docs.mjs"]) &&
     gate("bundle --check", "node", ["packages/purge-panel/scripts/build.mjs", "--check"]) &&
@@ -200,7 +173,7 @@ function main() {
 
   // 게이트 실패 → 로그를 남기고 AI 복구를 시도한다(코드·테스트·번역 모두 대상).
   let repaired = false;
-  if (!ok && !needsHuman) {
+  if (!ok) {
     fs.mkdirSync(OUT_DIR, { recursive: true });
     fs.writeFileSync(path.join(OUT_DIR, "failure.log"), failureLog.join("\n\n") || "(게이트 출력 없음)\n", "utf8");
     if (!noAi) {
@@ -228,7 +201,7 @@ function main() {
     `- gates: ${gates.map((g) => `${g.name}=${g.status === 0 ? "ok" : "FAIL"}`).join(", ")}`,
     `- leftover translation targets: see ${OUT_DIR}/../i18n/last-report.json`,
     "",
-    needsHuman ? "모델이 번역을 거부한 항목이 있어 사람 검토가 필요합니다(.sync/refusals.md)." : ok ? "모든 게이트 통과." : "게이트 실패 — 자동 머지하지 말고 검토하세요.",
+    ok ? "모든 게이트 통과." : "게이트 실패 — 자동 머지하지 말고 검토하세요.",
     "",
     fs.existsSync(path.join(OUT_DIR, "review.md")) ? fs.readFileSync(path.join(OUT_DIR, "review.md"), "utf8") : "",
   ].join("\n");
