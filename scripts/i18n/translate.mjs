@@ -23,11 +23,27 @@ export function llmConfig(env = process.env) {
     reasoningEffort: normalizeEffort(env.LLM_REASONING_EFFORT),
     timeoutMs: Number(env.LLM_TIMEOUT_MS || 120000),
     debug: env.LLM_DEBUG === "1" || env.LLM_DEBUG === "true",
+    sessionId: env.LLM_SESSION_ID || "",
+    extraHeaders: parseHeaders(env.LLM_EXTRA_HEADERS),
   };
 }
 
 /** 추론 강도는 제공자마다 표기가 달라서, 받아들이는 값만 통과시키고 나머지는 조용히 무시한다. */
 export const REASONING_EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
+/** LLM_EXTRA_HEADERS="{\"x-foo\":\"bar\"}" 같은 JSON 을 헤더 객체로 읽는다(값은 로그에 남기지 않는다). */
+export function parseHeaders(raw) {
+  if (!raw) return {};
+  try {
+    const obj = JSON.parse(raw);
+    if (!obj || typeof obj !== "object" || Array.isArray(obj)) return {};
+    const out = {};
+    for (const [k, v] of Object.entries(obj)) {
+      if (typeof k === "string" && typeof v === "string" && k.trim()) out[k.trim()] = v;
+    }
+    return out;
+  } catch { return {}; }
+}
+
 export function normalizeEffort(value) {
   const v = String(value ?? "").trim().toLowerCase();
   return REASONING_EFFORTS.includes(v) ? v : "";
@@ -102,7 +118,12 @@ export async function postChat(cfg, bodyFor, { attemptsPerShape = 2 } = {}) {
       try {
         const res = await fetch(cfg.baseUrl + "/chat/completions", {
           method: "POST",
-          headers: { "content-type": "application/json", authorization: "Bearer " + cfg.key },
+          headers: {
+            "content-type": "application/json",
+            authorization: "Bearer " + cfg.key,
+            ...(cfg.sessionId ? { "x-opencode-session": cfg.sessionId } : {}),
+            ...(cfg.extraHeaders || {}),
+          },
           body: JSON.stringify(bodyFor(shape)),
           signal: controller.signal,
         });

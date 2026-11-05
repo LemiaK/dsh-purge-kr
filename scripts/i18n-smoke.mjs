@@ -23,6 +23,8 @@ console.log(JSON.stringify({
   model: cfg.model,
   reasoningEffort: cfg.reasoningEffort || "(unset)",
   hasKey: Boolean(cfg.key),
+  hasSessionHeader: Boolean(cfg.sessionId),
+  extraHeaderNames: Object.keys(cfg.extraHeaders || {}),
   items: items.length,
 }));
 
@@ -48,5 +50,6 @@ try {
   if (/http 401|http 403/.test(message)) console.error("힌트: 키가 이 엔드포인트에 유효하지 않습니다(LLM_BASE_URL/LLM_MODEL 확인).");
   if (/http 404/.test(message)) console.error("힌트: 모델 이름이나 base URL 경로가 틀렸을 수 있습니다.");
   if (/timeout/.test(message)) console.error("힌트: 네트워크 또는 LLM_TIMEOUT_MS 를 확인하세요.");
+  if (/MissingSessionID|x-opencode-session/.test(message)) console.error("힌트: 이 엔드포인트는 x-opencode-session 헤더가 필요합니다. Environment secret LLM_SESSION_ID(또는 LLM_EXTRA_HEADERS)를 설정하세요.");
   process.exit(1);
 }
