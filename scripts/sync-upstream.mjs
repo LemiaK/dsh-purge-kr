@@ -153,6 +153,13 @@ function main() {
   const reviewOk = review.status === 0;
   if (!reviewOk) log("검토에서 문제가 발견되었습니다 — " + path.join(OUT_DIR, "review.md"));
 
+  // 검토가 고친 내용(용어 교정 재번역 등)은 그대로 커밋해서 다음 단계로 넘긴다.
+  const reviewChanges = git(["status", "--porcelain"]).stdout.split("\n").map((l) => l.slice(3).trim()).filter(Boolean);
+  if (reviewChanges.length) {
+    commitArea(reviewChanges, "fix(i18n): apply review corrections",
+      "Re-translate the strings the review flagged and refresh the translation memory.");
+  }
+
   const ok =
     reviewOk &&
     gate("check:docs", "node", ["scripts/check-docs.mjs"]) &&

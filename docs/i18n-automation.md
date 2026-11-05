@@ -92,3 +92,13 @@ node scripts/localize.mjs --manifest .sync/changed.txt --check
 - 태그만 있고 릴리스가 없으면(중간 실패), 태그는 재사용하고 릴리스만 다시 만든다.
 - 태그 push 는 `GITHUB_TOKEN` 으로 하므로 다른 워크플로를 재트리거하지 않는다. 그래서 릴리스는 `workflow_dispatch` 로 **명시 호출**한다(이 이벤트는 예외적으로 허용됨).
 - 봇이 만든 커밋으로는 auto-release 가 돌지 않는다(수동 dispatch 는 허용).
+
+### 자동 머지와 릴리스 체인
+
+- 검토가 지적한 항목은 `--apply-fixes` 로 번역 메모리를 교정하고 해당 파일을 다시 번역한 뒤
+  `fix(i18n): apply review corrections` 커밋으로 남긴다. 즉 검토는 "읽기"가 아니라 **쓰기**까지 한다.
+- 게이트(check:docs · bundle --check ×2 · npm test)가 모두 통과하면 워크플로가 PR 을 **자동 머지**한다.
+  - 기본값은 켜짐이며, 저장소 variable `AUTO_MERGE=false` 로 끌 수 있다.
+  - 수동 실행 시에는 `auto_merge` 입력으로 그 실행만 끌 수 있다.
+- 머지 직후 `auto-release.yml` 을 **명시 호출**한다(봇의 master push 는 워크플로를 재트리거하지 않기 때문).
+  → 버전 태그 생성 → `release.yml` 을 태그에서 dispatch → 3개 OS 검증 → tgz·SHA256·릴리스.
