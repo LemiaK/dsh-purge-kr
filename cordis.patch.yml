@@ -1,9 +1,9 @@
 # dsh-purge bundle patch
 #
-# 清洗 + 演练台都在本插件内（lib/redteam、presets/redteam、skills/redteam）。
-# 只装 dsh-purge，不外接、不 link 其它红队包。
+# 정리 + 드릴 콘솔 모두 이 플러그인 안에 있다(lib/redteam, presets/redteam, skills/redteam).
+# dsh-purge 만 설치하고, 외부 연결이나 다른 레드팀 패키지 link 는 하지 않는다.
 
-# 关掉旧的独立红队包行（若用户以前装过 dsh-redteam-mode）
+# 구버전 독립 레드팀 패키지 항목을 끈다(사용자가 이전에 dsh-redteam-mode 를 설치한 경우)
 - id: redteam-store
   name: dsh-redteam-store
   disabled: true
@@ -50,24 +50,24 @@
         retryMax: 3
         autoContinue: false
         continueMax: 3
-        continueText: "继续"
+        continueText: "계속"
         capabilityProtocol: true
         hooksDenyBypass: true
 
-    # 演练台：预设 + 技能落地（本插件 lib/redteam）
+    # 드릴 콘솔: 프리셋 + 스킬 배치(이 플러그인 lib/redteam)
     - id: dsh-purge-redteam
       name: dsh-purge-community/redteam
 
-    # 自带 agent 预设：unrestricted（无限制模式）
+    # 내장 agent 프리셋: unrestricted(무제한 모드)
     - id: dsh-purge-presets
       name: dsh-purge-community/presets-plugin
 
-    # 演练台事实库（SQLite），数据在 $DSH_HOME/redteam
+    # 드릴 콘솔 팩트 저장소(SQLite), 데이터는 $DSH_HOME/redteam
     - id: dsh-purge-redteam-store
       name: dsh-purge-community/redteam/store
       config:
         root: !!js dshHomePath('redteam')
 
-    # 演练台 HTTP 桥 POST /redteam/api
+    # 드릴 콘솔 HTTP 브리지 POST /redteam/api
     - id: dsh-purge-redteam-ui
       name: dsh-purge-community/redteam/ui

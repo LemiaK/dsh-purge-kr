@@ -32,14 +32,14 @@ export function fetchEnvAdaptStatus() {
     .catch(() => null);
 }
 
-/* 同步探测的占位：不再做同步 XHR（会卡 UI 主线程）。调用方 mustBlockSubmit
- * 在 cache 过期/缺失时按"未知→保守 block"处理，同时 EnvAdaptSendGate 的
- * useEffect 轮询会异步 refresh，下次调用即可放行。 */
+/* 동기 프로브 자리: 더 이상 동기 XHR 을 하지 않는다(UI 메인 스레드가 막힌다). 호출자 mustBlockSubmit
+ * 은 cache 가 만료되었거나 없으면 "미지 → 보수적 block" 으로 처리하고, 동시에 EnvAdaptSendGate 의
+ * useEffect 폴링이 비동기로 refresh 하므로 다음 호출에서 통과한다. */
 export function fetchEnvAdaptStatusSync() {
   return null;
 }
 
-/** 红队发送前门禁：未就绪 → 授权并打开环境适配；可确认跳过。 */
+/** 레드팀 전송 전 게이트: 준비되지 않음 → 승인하고 환경 적응을 연다. 확인 후 건너뛸 수 있다. */
 export function EnvAdaptSendGate() {
   const t = useT();
   const [open, setOpen] = useState(false);
@@ -63,13 +63,13 @@ export function EnvAdaptSendGate() {
   const blockAndOpen = useCallback(() => {
     setConfirmSkip(false);
     refresh();
-    /* 第一次：只走完整授权窗 → 授权后进环境适配页 */
+    /* 첫 번째: 전체 승인 창만 띄운다 → 승인되면 환경 적응 페이지로 넘어간다 */
     if (!readDrillAuth()) {
       setOpen(false);
       requestDrillEnv();
       return true;
     }
-    /* 已授权过：只弹精简环境适配窗，不再自动拉开整块演练台 */
+    /* 이미 승인된 경우: 간소한 환경 적응 창만 띄우고 드릴 콘솔 전체를 다시 열지 않는다 */
     setOpen(true);
     return true;
   }, [refresh]);
@@ -77,7 +77,7 @@ export function EnvAdaptSendGate() {
   const mustBlockSubmit = useCallback(() => {
     if (!isRedteamModeActive()) return false;
     const cached = cacheRef.current;
-    /* cache 过期时触发异步刷新;本次调用按最后一次 cache 判断,未知保守 block */
+    /* cache 가 만료되면 비동기 갱신을 트리거한다. 이번 호출은 마지막 cache 로 판정하고, 미지는 보수적으로 block */
     if (!cached.at || Date.now() - cached.at > 2500) {
       refresh().catch(() => {});
     }
@@ -86,8 +86,8 @@ export function EnvAdaptSendGate() {
     return true;
   }, [blockAndOpen, refresh]);
 
-  /* 挂住宿主 SessionInputShell.submit —— 比点按钮启发式可靠。
-   * patch 必须可逆:存 origSubmit 到 WeakMap,unmount / 依赖变更时恢复。 */
+  /* 호스트의 SessionInputShell.submit 을 붙잡는다 — 버튼 클릭 휴리스틱보다 확실하다.
+   * patch 는 되돌릴 수 있어야 한다: origSubmit 을 WeakMap 에 저장하고 unmount / 의존성 변경 시 복원한다. */
   useEffect(() => {
     const patched = new WeakMap();
     const patchedShells = [];
@@ -106,7 +106,7 @@ export function EnvAdaptSendGate() {
         try {
           if (mustBlockSubmit()) return;
         } catch {
-          /* 门禁异常时不吞掉发送 */
+          /* 게이트가 예외를 내도 전송을 삼키지 않는다 */
         }
         return bound(mode);
       };

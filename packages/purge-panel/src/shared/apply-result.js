@@ -29,5 +29,5 @@ export function incompleteApplyDetail(result, t) {
       t("restart.incomplete.runtime"),
       ...runtimeRepairDetails(result.cli_repair),
     );
-  return parts.length ? parts.join("；") : t("restart.incomplete.unknown");
+  return parts.length ? parts.join(" · ") : t("restart.incomplete.unknown");
 }

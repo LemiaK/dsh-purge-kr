@@ -1,13 +1,17 @@
 /**
- * 红队锚点门。
+ * Red-team anchor gate.
  *
- * 只接梁神两阶段里这一段，不接两工具裁剪，也不切 PTC：
- * 第一段思考要像官方 Minimal（含 we、不含 let me）才放开输出上限；
- * 锚不住则最多 4 步。上限 1024 token，放开后拆掉，避免焊死在后面的请求上。
- * 上下文压缩把模型可见的表面整段重写，压缩后再关上，直到新的锚点或再走满 4 步。
+ * Of Liang's two-stage setup only this segment is inherited; it does not trim the
+ * two tools and does not switch to PTC: the first reasoning block must come out like
+ * official Minimal (contains we, does not contain let me) before the output cap opens.
+ * If it does not anchor, at most 4 steps. The cap is 1024 tokens, and once opened it is
+ * detached so it is not welded onto later requests. Context compaction rewrites the
+ * model-visible surface wholesale, so close it again after compaction and hold it closed
+ * until a new anchor is caught or the 4 steps fill up again.
  *
- * 红队指挥和执行角色一直看见原来的工具和人设。放开之后，整篇工作区说明
- * 改成点名文件路径，需要时再读。
+ * The red-team command and execution roles keep seeing the original tools and persona.
+ * Once the cap opens, the whole workspace description becomes a pointer to file paths
+ * and is read when needed.
  */
 export const name = 'dsh-purge-redteam-anchor'
 
@@ -17,7 +21,7 @@ export function countWord(text, regex) {
   return [...String(text ?? '').matchAll(regex)].length
 }
 
-/** 第一段思考：有 we、没有 let me，才算锚住。 */
+/** First reasoning block: anchored only if it has we and no let me. */
 export function classifyReasoning(text) {
   const trimmed = String(text ?? '').trim()
   const we = countWord(trimmed, /\bwe\b/gi)
@@ -34,14 +38,14 @@ export function hasAnchoredReasoning(content) {
 }
 
 /**
- * a) 用过工具且锚住，或已经走满 maxBootstrapSteps → 放开；
- * b) 用过工具，这一轮结束，且 promoteAfterFirstResponse → 放开；
- * c) 没有工具调用但已经回答，且 promoteAfterFirstResponse → 放开。
+ * a) A tool was used and reasoning is anchored, or maxBootstrapSteps was filled → open.
+ * b) A tool was used, this turn ended, and promoteAfterFirstResponse → open.
+ * c) No tool call but already responded, and promoteAfterFirstResponse → open.
  */
 export function decidePromotion(state, config) {
   if (state.toolCalled && config.anchorGate !== true) return true
   if (state.toolCalled && config.anchorGate === true && (state.anchored || state.steps >= config.maxBootstrapSteps)) return true
-  /* 红队指挥首轮必调工具；英文思考常写 I need 过不了 we 锚，但仍应在少量 step 后放开输出上限 */
+  /* Red-team command always calls a tool on the first turn. English reasoning usually says I need, which does not pass the we anchor, so the output cap must open after a few steps */
   if (state.toolCalled && config.anchorGate === true && state.steps >= 1 && config.promoteAfterFirstResponse === true) return true
   if (state.toolCalled && config.anchorGate === true && config.promoteAfterFirstResponse === true && state.turnEnded) return true
   if (!state.toolCalled && state.responded && config.promoteAfterFirstResponse === true) return true

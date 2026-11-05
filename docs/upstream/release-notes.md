@@ -1,14 +1,14 @@
-> 归档快照：原上游仓库 `YuJunZhiXue/dsh-purge` 已不可访问，本文中的上游链接仅作历史记录，点击可能 404。
+> 아카이브 스냅샷: 원본 업스트림 저장소 `YuJunZhiXue/dsh-purge` 는 더 이상 접근할 수 없다. 이 문서의 업스트림 링크는 기록용이며 클릭하면 404 가 날 수 있다.
 
 # 1.1.71
 
-## 中文
+## 한국어
 
-- 版本 **1.1.71**。
-- 修复 1.1.70 的 `??` 混 `||`：插件启用时 `failed to import`（桌面 / Web 同一入口）。
-- #86 只改 UI 队列 steer → followup；公共 `steer()` 收回 next-step，代理间 `send_message` 仍下一步插入。
-- `installed-rev` 跨版本不再沿用旧 `apply:x.y.z`。#88 按现行 `renderedPrompt` / 旧 `system` 锚点打中的那条落标记。
-- 发版前 `node --check` 主入口，避免再把语法错误打进 Release。
+- 버전 **1.1.71**.
+- 1.1.70 의 `??` 와 `||` 혼용을 수정했다: 플러그인을 켜면 `failed to import` 가 났다(데스크톱 / Web 동일 진입점).
+- #86 은 UI 대기열만 steer → followup 으로 바꾼다. 공용 `steer()` 는 next-step 으로 되돌렸고, 에이전트 간 `send_message` 는 여전히 다음 단계에 삽입된다.
+- `installed-rev` 는 버전이 바뀌어도 옛 `apply:x.y.z` 를 그대로 쓰지 않는다. #88 은 현재 `renderedPrompt` / 옛 `system` 앵커 중 실제로 적중한 쪽에 표식을 남긴다.
+- 릴리스 전에 `node --check` 로 주 진입점을 검사해 문법 오류가 다시 Release 에 실리지 않게 한다.
 
 ## English
 
@@ -20,13 +20,13 @@
 
 # 1.1.70
 
-## 中文
+## 한국어
 
-- 版本 **1.1.70**。
-- Hub / 残装若给 `dsh-purge` 加上 `pluginPackages`，Cordis 会一直 pending，宿主退出码 1。本版把依赖钉回 `systemPrompt` + `tools`。
-- 清洗页只合并升级链展示（免责、审批、挂全文、hooks 等），Apply 仍打全部补丁。
-- 去掉已无用的 #81 / #89 清单行；挂全文并进 #87，官方 phase-1 走静默放行。
-- 指挥端改为「按用户给的目标开工」。合并 #97 / #98 / #99。
+- 버전 **1.1.70**.
+- Hub / 잔여 설치가 `dsh-purge` 에 `pluginPackages` 를 덧붙이면 Cordis 가 계속 pending 으로 남고 호스트가 종료 코드 1 로 죽는다. 이 버전은 의존성을 `systemPrompt` + `tools` 로 다시 고정한다.
+- 정리 페이지는 업그레이드 체인(면책, 승인, 전체 부착, hooks 등)을 표시용으로만 합쳐 보여준다. Apply 는 여전히 모든 패치를 적용한다.
+- 쓸모없어진 #81 / #89 목록 행을 제거했다. 전체 부착은 #87 로 합쳤고, 공식 phase-1 은 조용히 통과시킨다.
+- 지휘 측은 '사용자가 준 목표대로 착수'로 바꿨다. #97 / #98 / #99 를 병합했다.
 
 ## English
 
@@ -38,14 +38,14 @@
 
 # 1.1.69
 
-## 中文
+## 한국어
 
-- 版本 **1.1.69**。
-- 发送时剥掉 ChatML / `project_instructions`，框和磁盘不动。
-- 应用 + 重启挂当前默认，不必再点保存；框里仍是插件旧默认会刷到加密槽。
-- 红队只排不折：注入 → cap → 红队正文；目标卡/角色段改名 `dshpg-*`。
-- 隔离 ctx 也注册 inject/cap；#86 steer 改 next-turn；#87 hang 用 LF 比对。
-- 红队操作稿锁「上面的提示词作准」；指挥端去掉「给了单位名就授权」。
+- 버전 **1.1.69**.
+- 전송할 때 ChatML / `project_instructions` 를 벗겨낸다. 입력창과 디스크는 그대로 둔다.
+- 적용 + 재시작이면 현재 기본값이 걸린다. 저장을 다시 누를 필요가 없다. 입력창이 아직 플러그인 옛 기본값이면 암호화 슬롯 값으로 갱신된다.
+- 레드팀은 배치만 하고 접지 않는다: 주입 → cap → 레드팀 본문. 목표 카드/역할 섹션 이름을 `dshpg-*` 로 바꿨다.
+- 격리 ctx 도 inject/cap 을 등록한다. #86 steer 는 next-turn 으로 바꿨고, #87 hang 은 LF 로 비교한다.
+- 레드팀 운용 원고는 '위의 프롬프트를 기준으로 한다'로 고정했다. 지휘 측에서 '회사 이름을 줬으니 권한이 있다'는 문구를 뺐다.
 
 ## English
 
@@ -58,15 +58,15 @@
 
 # 1.1.68
 
-## 中文
+## 한국어
 
-- 版本 **1.1.68**。
-- **#92**：技能面板认 YAML 块标量 `description`（`|` / `>`），不再误报不可用。
-- **#93**：红队「版本/更新」：`file://` 转成本地路径；Windows 用 `.cmd` + `shell` 起 npm/pnpm；npm 404 回落 GitHub tags。
-- **#94**：官方桌面 CLI 入口补 `app.asar.unpacked` 回退。Hub 首次安装仍可能撞官方 asar 路径。
-- **#95**：拆除 `refusal-recover`（读错字段永不触发；修好会无限复读）。
-- **#96**：bash 前台等待从插件标过的 600s 迁回 60s，后续工具不再被堵 10 分钟。
-- 注入置顶；capability 段改名 `dshpg-capabilities`；用户 prompt 一律 followup（#85）；默认关闭自动「继续」。
+- 버전 **1.1.68**.
+- **#92**: 스킬 패널이 YAML 블록 스칼라 `description`(`|` / `>`)을 인식해 더는 사용 불가로 잘못 보고하지 않는다.
+- **#93**: 레드팀 '버전/업데이트': `file://` 를 로컬 경로로 바꾸고, Windows 는 `.cmd` + `shell` 로 npm/pnpm 을 띄우며, npm 404 면 GitHub tags 로 되돌린다.
+- **#94**: 공식 데스크톱 CLI 진입점에 `app.asar.unpacked` 폴백을 보강했다. Hub 최초 설치에서는 여전히 공식 asar 경로와 부딪힐 수 있다.
+- **#95**: `refusal-recover` 를 철거했다(잘못된 필드를 읽어 절대 발동하지 않았고, 고치면 무한 반복이 된다).
+- **#96**: bash 포그라운드 대기를 플러그인이 표시했던 600초에서 60초로 되돌려, 이후 도구가 10분씩 막히지 않는다.
+- 주입을 맨 앞에 둔다. capability 섹션 이름을 `dshpg-capabilities` 로 바꿨고, 사용자 prompt 는 일률적으로 followup 이며(#85), 자동 '계속'은 기본적으로 꺼져 있다.
 
 ## English
 
@@ -80,20 +80,20 @@
 
 # 1.1.67
 
-## 中文
+## 한국어
 
-- 版本 **1.1.67**。
-- **#85**：continue 续跑在传输/429 连错时不再无限兜圈。`takeContinue` 加 failStreak 阈值；`refundContinue` 不清 `lastContinueSeq`，连错 ≥3 直接放弃。
-- **#84**：区域拦截的空 Assistant 流改为单批 `text-chunks` 记录（带 `.length`），不再卡住宿主 UI。
-- 启动种子：进程启动时若 `$DSH_HOME/prompt-inject.md` 为空或缺失，自动把加密默认稿写一次；用户改过的稿不动。清洗完点重启后，重启成功立刻就能用默认提示词。
-- Windows 官方包重启：restart 脚本名改成 `pid+random`，首启不与并发实例打架；多余的 `.cmd` 中介删掉，直接 `wscript.exe //nologo //B` 起脚本；本机旧版无 pid 后缀的脚本/日志超过 24h 启动时自动清。
-- 杀进程范围收紧：`ASAR_SWAP_PS1` 不再 `/IM` 杀全名同名进程，只按安装根下 pid 停，避免误伤第三方同名。
-- 官方 CLI shim 原地改写之前先存一份 `.dsh-purge.bak`，并走原子写，断电/盘满可回退。
-- 首装场景不卡：WScript 判 clean 时，两边都是 null（文件缺或读失败）放行启动，只有任一明确 dirty 才拦。
-- 探测缓存：`runningExes` / `shortcutExes` 空结果不再缓存；点"应用"前 `clearDesktopLocateCache()` 仍可强刷。
-- `scheduleAsarRenameWhenIdle` 的 `.rename-pending` 锁：时钟回拨或超过 30 分钟视为失效，清掉重做。
-- `execFileSync` 三处 PowerShell 调用加 `maxBuffer: 8MB`，大结果不再静默 ENOBUFS 掉。
-- 其他：net-scope region gate 指数退避 + IPv6 regex 收紧；identity `injectMatchers` 支持 >4096 分段匹配、`installAssembleGuard` 幂等；hooks-deny 删 R0 兜底规则改原子写；extract-asar commit 不删 `nextDir`，写 `.dshpurge-recover.json` 便回滚；client.js redteam preset 多路检测、shell.submit WeakMap 清理补齐。
+- 버전 **1.1.67**.
+- **#85**: continue 이어 달리기가 전송/429 연속 오류에서 더는 무한히 맴돌지 않는다. `takeContinue` 에 failStreak 임계값을 넣었고, `refundContinue` 는 `lastContinueSeq` 를 지우지 않으며, 연속 실패 3회면 바로 포기한다.
+- **#84**: 영역 차단의 빈 Assistant 스트림을 한 번에 묶은 `text-chunks` 기록(`.length` 포함)으로 바꿔, 더는 호스트 UI 가 멈추지 않는다.
+- 기동 시드: 프로세스 시작 시 `$DSH_HOME/prompt-inject.md` 가 비었거나 없으면 암호화 기본 원고를 한 번 써 둔다. 사용자가 고친 원고는 건드리지 않는다. 정리를 마치고 재시작을 누르면 재시작 성공 즉시 기본 프롬프트를 쓸 수 있다.
+- Windows 공식 패키지 재시작: restart 스크립트 이름을 `pid+random` 으로 바꿔 첫 기동이 동시 실행 인스턴스와 부딪히지 않는다. 남는 `.cmd` 중개를 지우고 `wscript.exe //nologo //B` 로 스크립트를 직접 띄운다. 이 PC 의 옛 버전(pid 접미사 없음) 스크립트/로그가 24시간을 넘기면 기동 시 자동으로 정리한다.
+- 프로세스 종료 범위 축소: `ASAR_SWAP_PS1` 이 더는 `/IM` 으로 같은 이름 프로세스를 전부 죽이지 않고, 설치 루트 아래 pid 만 중지해 동명의 서드파티를 잘못 건드리지 않는다.
+- 공식 CLI shim 을 제자리에서 다시 쓰기 전에 `.dsh-purge.bak` 를 먼저 남기고 원자 쓰기로 처리해, 정전이나 디스크 가득 참에서도 되돌릴 수 있다.
+- 최초 설치 시나리오가 막히지 않는다: WScript 가 clean 을 판정할 때 양쪽 모두 null(파일 없음 또는 읽기 실패)이면 기동을 허용하고, 어느 한쪽이 명확히 dirty 일 때만 막는다.
+- 탐색 캐시: `runningExes` / `shortcutExes` 의 빈 결과는 더 캐시하지 않는다. '적용' 전에 `clearDesktopLocateCache()` 로 강제 갱신하는 것은 그대로다.
+- `scheduleAsarRenameWhenIdle` 의 `.rename-pending` 잠금: 시계가 되돌아가거나 30분을 넘기면 무효로 보고 지운 뒤 다시 한다.
+- `execFileSync` 의 PowerShell 호출 세 곳에 `maxBuffer: 8MB` 를 넣어, 큰 결과가 조용히 ENOBUFS 로 빠지지 않는다.
+- 그 외: net-scope region gate 지수 백오프 + IPv6 정규식 강화; identity `injectMatchers` 가 4096자를 넘는 페이로드를 분할 매칭하고 `installAssembleGuard` 가 멱등; hooks-deny 는 R0 폴백 규칙을 지우고 원자 쓰기로 바꿨다; extract-asar 커밋은 `nextDir` 를 지우지 않고 `.dshpurge-recover.json` 을 써서 되돌릴 수 있게 했다; client.js redteam preset 다중 검출, `shell.submit` WeakMap 정리 보강.
 
 ## English
 
@@ -112,14 +112,14 @@
 
 # 1.1.66
 
-## 中文
+## 한국어
 
-- 版本 **1.1.66**。
-- **#80**：清洗页可关掉 hooks deny / ask 旁路。关掉且文件干净显示跳过，不计入已应用；关掉后再打开，64/65 会按官方形态再打一次。
-- **#81**：继续 / 拒答续跑的来源 kind 改为 `dsh-purge`；限流和传输失败不再自动续一轮。
-- 重启后不用点保存也会挂上默认提示词；每一轮都补回全文。空的应用请求不再清空磁盘上的提示词。
-- 声明过的 overlay 只剩 `.dshpurge.bak` 时，应用会先拷回再加载。
-- 红队报告补上得分点短名。中文 README 恢复题图和预览图。
+- 버전 **1.1.66**.
+- **#80**: 정리 페이지에서 hooks deny / ask 우회를 끌 수 있다. 끄고 파일이 깨끗하면 건너뜀으로 표시하며 적용됨에 넣지 않는다. 껐다가 다시 켜면 64/65 를 공식 형태로 한 번 더 적용한다.
+- **#81**: 계속 / 거부 재시도의 출처 kind 를 `dsh-purge` 로 바꿨다. 속도 제한과 전송 실패는 더 자동으로 한 라운드를 이어 가지 않는다.
+- 재시작 후에는 저장을 누르지 않아도 기본 프롬프트가 걸린다. 매 라운드마다 전문을 다시 채운다. 빈 적용 요청은 디스크의 프롬프트를 더는 비우지 않는다.
+- 선언된 overlay 가 `.dshpurge.bak` 로만 남아 있으면 적용 시 먼저 복사해 온 뒤 로드한다.
+- 레드팀 보고서에 득점 항목 약칭을 보강했다. 중국어 README 는 배너 이미지와 미리보기 이미지를 복구했다.
 
 ## English
 
@@ -132,14 +132,14 @@
 
 # 1.1.65
 
-## 中文
+## 한국어
 
-- 版本 **1.1.65**。
-- 默认提示词按 `lib/default-prompt-inject.md` 重新加密进槽。磁盘上仍是用户自己改过的稿时，不覆盖。
-- 红队接入截图登记、得分点看图，以及报告六段。可把某次演练导出成目录。
-- 技能正文缺工具路径、缺密钥或 VPS 还是占位符时，不再把整条技能标成不可用。缺口留在详情里。
-- 打开页面或组装提示词时，会把当前默认稿同步到磁盘，不必先点保存。
-- 删掉没有调用的桌面启动封装、旧迁移脚本，以及已经注释掉的手动继续入口。
+- 버전 **1.1.65**.
+- 기본 프롬프트를 `lib/default-prompt-inject.md` 기준으로 다시 암호화해 슬롯에 넣었다. 디스크에 아직 사용자가 고친 원고가 있으면 덮어쓰지 않는다.
+- 레드팀에 스크린샷 등록, 득점 항목 이미지 보기, 보고서 6단 구성을 붙였다. 특정 드릴을 디렉터리로 내보낼 수 있다.
+- 스킬 본문에 도구 경로, 키, VPS 가 아직 자리표시자로 빠져 있어도 스킬 전체를 사용 불가로 표시하지 않는다. 빈틈은 상세에 남긴다.
+- 페이지를 열거나 프롬프트를 조립할 때 현재 기본 원고를 디스크로 동기화하므로 저장을 먼저 누를 필요가 없다.
+- 호출되지 않는 데스크톱 기동 래퍼, 옛 마이그레이션 스크립트, 이미 주석 처리된 수동 계속 진입점을 삭제했다.
 
 ## English
 
@@ -152,19 +152,19 @@
 
 # 1.1.64
 
-## 中文
+## 한국어
 
-- 版本 **1.1.64**。
-- 红队流程八项。角色稿只在**新建靶标**时播种；已经建好的靶标，要在演练台里把智能体同步一次才会换成新稿。
-- **内网**改为叶子节点，自己按收集、梳理、发现、利用做，不再往下派活。
-- 并发名额：不带 key 的 release 只放最早的一条。子智能体结束由服务端自动释放；手动释放必须带上 acquire 返回的 key。
-- 预检带 `include` 时只体检点名的技能，不再被全局缺密钥拖成失败。缺项带上由用户执行的修复说明。
-- IPv6 计分至少两个冒号，`dc01:389` 这类主机名不再 ×3。计分只留在 `score-rules.js`。
-- 攻击链计分跳过已停用的得分点。
-- `.env` 认 `export KEY=value`。未加引号的行内注释会剥掉，引号里的 `#` 保留。
-- 内网计分 code 改为 `central-system`、`boundary-logical`、`boundary-strong` 等，以 `redteam_score_list` 实际返回为准。
-- 漏洞发现和利用从 `priority=high` 打起。优先级为空时，先回报指挥补一轮评估。
-- 删掉没有调用的代码。设置页里过期的 `legacyApplyPath(...)` 调用改为 `applyPathOp`。
+- 버전 **1.1.64**.
+- 레드팀 흐름 여덟 가지. 역할 원고는 **새 표적을 만들 때만** 심는다. 이미 만들어 둔 표적은 드릴 콘솔에서 에이전트를 한 번 동기화해야 새 원고로 바뀐다.
+- **내부망**을 리프 노드로 바꿔 스스로 수집, 정리, 발견, 이용을 하고 더는 아래로 작업을 나누지 않는다.
+- 동시 실행 정원: key 없는 release 는 가장 이른 한 건만 비운다. 서브에이전트 종료는 서버가 자동으로 풀어 주고, 수동 해제는 acquire 가 돌려준 key 를 반드시 붙여야 한다.
+- 사전 점검에 `include` 를 붙이면 지정한 스킬만 점검하고, 전역 키 누락 때문에 실패로 끌려가지 않는다. 빠진 항목에는 사용자가 실행할 수정 안내를 붙인다.
+- IPv6 득점은 콜론이 최소 두 개 필요해 `dc01:389` 같은 호스트 이름이 더는 ×3 이 되지 않는다. 득점은 `score-rules.js` 에만 둔다.
+- 공격 체인 득점은 비활성화된 득점 항목을 건너뛴다.
+- `.env` 는 `export KEY=value` 를 인식한다. 따옴표 없는 인라인 주석은 떼고, 따옴표 안의 `#` 는 유지한다.
+- 내부망 득점 code 를 `central-system`, `boundary-logical`, `boundary-strong` 등으로 바꾸며, `redteam_score_list` 의 실제 반환을 기준으로 한다.
+- 취약점 발견과 이용은 `priority=high` 에서 시작한다. 우선순위가 비면 먼저 지휘 측에 회신해 평가 한 라운드를 보충한다.
+- 호출되지 않는 코드를 삭제했다. 설정 페이지의 만료된 `legacyApplyPath(...)` 호출은 `applyPathOp` 로 바꿨다.
 
 ## English
 
@@ -182,10 +182,10 @@
 
 # 1.1.63
 
-## 中文
+## 한국어
 
-- 版本 **1.1.63**。
-- 官方更新脚本去掉中文注释，避免 `official update script is not ASCII`。
+- 버전 **1.1.63**.
+- 공식 업데이트 스크립트에서 중국어 주석을 빼 `official update script is not ASCII` 를 피한다.
 
 ## English
 
@@ -194,12 +194,12 @@
 
 # 1.1.62
 
-## 中文
+## 한국어
 
-- 版本 **1.1.62**。
-- 继续/重试重新打开。
-- 锚点门：首轮输出上限 1024→8192，最多 2 步；已调工具即放开，英文思考过不了 we 锚也不再卡住。
-- 已有预设的锚点配置与包内不一致时同步，不整份覆盖。
+- 버전 **1.1.62**.
+- 계속/재시도를 다시 켰다.
+- 앵커 게이트: 첫 라운드 출력 상한 1024→8192, 최대 2단계. 도구를 이미 호출했으면 풀리고, 영어로 사고해 we 앵커를 통과하지 못해도 더는 막히지 않는다.
+- 이미 있는 프리셋의 앵커 설정이 패키지 내부와 다르면 동기화하고, 통째로 덮어쓰지 않는다.
 
 ## English
 
@@ -210,15 +210,15 @@
 
 # 1.1.61
 
-## 中文
+## 한국어
 
-- 版本 **1.1.61**。
-- **多宿主 Apply**：npm-global 与桌面 `resources/app` 一并补丁（#72 类路径问题）。
-- **#73**：代理 / IP / DNS 等 benign 话题不再误触攻击闸门（`net-scope.js`）。
-- **#74**：自定义提示词持久化——`resolveInjectText` 读 `prompt-inject.md`，UI 保存走 `saveOverrideContent`，启动 `ensureOperatorBody`。
-- **极简**：#80 保持官方 persistent-shell；UI 选 minimal 以 `agent-preset/selected` 为准（不再被会话头 `standard` 误导）；`adaptInjectForMinimalPreset` 对齐 shell-only 工具表。
-- **拒答续跑**：`refusal-recover` 识别「我不做 / 不参与」等句式。
-- 注入链：`injectMatchers` 防重复段；默认提示词重加密进 `asset-table.js`。
+- 버전 **1.1.61**.
+- **다중 호스트 적용**: npm-global 과 데스크톱 `resources/app` 을 함께 패치한다(#72 계열 경로 문제).
+- **#73**: 프록시 / IP / DNS 같은 무해한 주제가 더는 공격 게이트를 잘못 건드리지 않는다(`net-scope.js`).
+- **#74**: 사용자 지정 프롬프트 영속화 — `resolveInjectText` 가 `prompt-inject.md` 를 읽고, UI 저장은 `saveOverrideContent` 를 거치며, 기동 시 `ensureOperatorBody` 를 호출한다.
+- **미니멀**: #80 은 공식 persistent-shell 을 유지하고, UI 에서 minimal 을 고르면 `agent-preset/selected` 를 기준으로 하며(더는 세션 헤더의 `standard` 에 속지 않는다), `adaptInjectForMinimalPreset` 이 shell-only 도구 표에 맞춘다.
+- **거부 재시도**: `refusal-recover` 가 '나는 하지 않는다 / 참여하지 않는다' 같은 문형을 인식한다.
+- 주입 체인: `injectMatchers` 가 중복 섹션을 막고, 기본 프롬프트를 `asset-table.js` 에 다시 암호화해 넣는다.
 
 ## English
 
@@ -232,14 +232,14 @@
 
 # 1.1.60
 
-## 中文
+## 한국어
 
-- 版本 **1.1.60**。
-- **极简 / PTC**：与标准同一任务却被拦，多半是 preset 里 `run_code`、沙箱、plan 文案未洗净，或内置 minimal 缺 `agent-instructions`。本版反转 #60/#61/#63，minimal 补插件（#26）。**完全退出 → 应用 → 重启 → 新开对话** 后再测。
-- **回退 → 重新发送**：「回退一次 / 回退上一轮」留在当前对话；已发送句回到输入框，本轮助手输出与 todo 撤掉。**1.1.60** 起按**当前轮**定位，多轮后不会又退到第一条用户消息（#74/#75 + `lib/rewind.js`）。
-- **应用 / 重启**：用户点应用、重启时写入 client 包，避免误报「清洗没有完成，已取消重启」。
-- 默认提示词从 `default-prompt-inject.md` **重新加密**进 `asset-table.js`；运行时只读加密槽。
-- **#66** Windows `app.asar` 无 JScript 时 PowerShell 换包；**#67** `dsh.cmd` 解包路径；**#69** 演练台 `position:fixed`；**#71** assemble 守卫幂等；**#70** 技能路径按本机 OS 判定；**#68** 文档改为 `desktop` profile + `.tar.gz`（Hub 一键仍走 git，见 README）。
+- 버전 **1.1.60**.
+- **미니멀 / PTC**: 표준에서는 되는 같은 작업이 막히면 대개 preset 안의 `run_code`, 샌드박스, plan 문구가 정리되지 않았거나 내장 minimal 에 `agent-instructions` 가 빠진 탓이다. 이 버전은 #60/#61/#63 을 뒤집고 minimal 에 플러그인을 보강한다(#26). **완전 종료 → 적용 → 재시작 → 새 대화** 후 다시 테스트한다.
+- **되돌리기 → 다시 보내기**: '되돌리기 한 번 / 이전 라운드로 되돌리기'는 현재 대화에 남는다. 보낸 문장은 입력창으로 돌아가고 이번 라운드의 어시스턴트 출력과 todo 는 철회된다. **1.1.60** 부터는 **현재 라운드** 기준으로 위치를 잡아 여러 라운드를 지나도 첫 사용자 메시지로 되돌아가지 않는다(#74/#75 + `lib/rewind.js`).
+- **적용 / 재시작**: 사용자가 적용, 재시작을 누를 때 client 번들을 기록해 '정리가 끝나지 않아 재시작을 취소했다'는 잘못된 보고를 막는다.
+- 기본 프롬프트를 `default-prompt-inject.md` 에서 `asset-table.js` 로 **다시 암호화**해 넣었다. 런타임은 암호화 슬롯만 읽는다.
+- **#66** Windows `app.asar` 에 JScript 가 없을 때 PowerShell 패키지 교체; **#67** `dsh.cmd` 언팩 경로; **#69** 드릴 콘솔 `position:fixed`; **#71** assemble 가드 멱등; **#70** 스킬 경로를 이 PC 의 OS 로 판정; **#68** 문서를 `desktop` profile + `.tar.gz` 로 변경(Hub 원클릭은 여전히 git 을 쓴다, README 참고).
 
 ## English
 
@@ -252,12 +252,12 @@
 
 # 1.1.59
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.59。
-- 点应用后不再因为宿主路径或旧标记对不上，就报「清洗没有写进当前宿主」（#65）。
-- `resources\app\node_modules` 和 `resources\app\dsh\node_modules` 都认。原文里已经没有官方身份句、也没有丢掉注入的写法时，不再要求那两条标记。
-- complete 段补丁同时认 tab 和空格。
+- 버전이 1.1.59 로 올라갔다.
+- 적용 후 호스트 경로나 옛 표식이 맞지 않는다는 이유로 '정리가 현재 호스트에 기록되지 않았다'고 더는 보고하지 않는다(#65).
+- `resources\app\node_modules` 와 `resources\app\dsh\node_modules` 를 모두 인정한다. 원문에 이미 공식 신원 문장이 없고 주입을 빠뜨린 작성도 없으면 그 두 표식을 요구하지 않는다.
+- complete 섹션 패치는 tab 과 공백을 함께 인정한다.
 
 ## English
 
@@ -268,12 +268,12 @@
 
 # 1.1.58
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.58。
-- 打开、应用、重启都会挂上提示词。磁盘上有正文就用磁盘，没有就用规则集，再没有就用内置默认，不用再点保存。
-- 启动不再在页面发出之后改写前端 client.js，避免输入框因模块版本号对不上而消失（#63）。
-- macOS / Linux 已解包桌面端点应用后会退出并重新打开；清洗标记两种写法都认（#64）。
+- 버전이 1.1.58 로 올라갔다.
+- 열기, 적용, 재시작 모두 프롬프트를 건다. 디스크에 본문이 있으면 디스크를, 없으면 규칙 세트를, 그것도 없으면 내장 기본값을 쓰므로 저장을 다시 누를 필요가 없다.
+- 기동 시 페이지가 나간 뒤에는 프런트엔드 client.js 를 더는 다시 쓰지 않아, 모듈 버전이 맞지 않아 입력창이 사라지지 않는다(#63).
+- macOS / Linux 언팩 데스크톱에서는 적용 후 종료하고 다시 열린다. 정리 표식은 두 가지 표기를 모두 인정한다(#64).
 
 ## English
 
@@ -284,13 +284,13 @@
 
 # 1.1.57
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.57。
-- 应用并重启后，设置框里的提示词直接挂到系统段；框空则用当前规则集。两者都空就停下来要求输入。
-- 创造、PTC、极简、unrestricted、梁神与标准模式一样清掉拦截和禁止，并保住各自的工具流程。
-- 演练授权按本机目录保存，更新后不用重授权；卸载成功后才清掉。空的环境初始化不再当成已配置。
-- 官方 Messages 请求的 system 字段改用当前系统提示，不再钉住第一条。
+- 버전이 1.1.57 로 올라갔다.
+- 적용 후 재시작하면 설정 상자의 프롬프트가 시스템 섹션에 바로 걸린다. 상자가 비면 현재 규칙 세트를 쓴다. 둘 다 비면 멈추고 입력을 요구한다.
+- cordis, PTC, 미니멀, unrestricted, liangshen 도 표준 모드와 같이 차단과 금지를 걷어내고 각자의 도구 흐름을 지킨다.
+- 드릴 인증은 이 PC 디렉터리에 저장되어 업데이트 후 다시 인증하지 않아도 된다. 제거가 성공한 뒤에만 지운다. 빈 환경 초기화는 더는 설정 완료로 보지 않는다.
+- 공식 Messages 요청의 system 필드는 첫 스냅샷에 고정하지 않고 현재 시스템 프롬프트를 쓴다.
 
 ## English
 
@@ -302,28 +302,28 @@
 
 # 1.1.56
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.56。
-- 应用按设置框、当前规则集、官方系统提示词的顺序选用。空框且没有规则时停下来要求输入，不再把内置默认写进磁盘。
-- 清洗和演练台跟随 DSH 主题的透明玻璃，去掉手动换色。
-- 说明只保留官方 Web 和官方桌面。
+- 버전이 1.1.56 로 올라갔다.
+- 적용은 설정 상자, 현재 규칙 세트, 공식 시스템 프롬프트 순서로 고른다. 상자가 비고 규칙도 없으면 멈추고 입력을 요구하며, 내장 기본값을 디스크에 더는 쓰지 않는다.
+- 정리 페이지와 드릴 콘솔이 DSH 테마를 따르는 투명 유리로 바뀌고 수동 색상 전환이 사라졌다.
+- 설명은 공식 Web 과 공식 데스크톱만 남긴다.
 
 ## English
 
 - Version 1.1.56.
 - Apply uses the settings box, then the active rule set, then the official system prompt. An empty box with no rules asks for a prompt and does not write the built-in default to disk.
-- 清洗 and the drill console use transparent glass that follows the DSH theme. The manual theme switch is gone.
+- The clean page and the drill console use transparent glass that follows the DSH theme. The manual theme switch is gone.
 - Docs keep official Web and the official desktop only.
 
 # 1.1.55
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.55。
-- 点「应用」并重启后，每一轮 assemble 都会把提示词补回最前；宿主换成新 assemble 也会再包一次，不会第二轮丢掉。
-- 空框不再在前端误取消应用；重启前先落下默认提示词。密封 asar 不会因为当前进程还是旧包而取消重启。
-- 第二次应用不会因为冷却把重启/注入当成取消；密封包在换掉之前每次应用都会重启一次，补丁写完后不再空转。
+- 버전이 1.1.55 로 올라갔다.
+- '적용'을 누르고 재시작하면 매 라운드 assemble 이 프롬프트를 다시 맨 앞에 보충한다. 호스트가 새 assemble 로 바꿔도 한 번 더 감싸 두 번째 라운드에서 주입이 빠지지 않는다.
+- 빈 상자가 프런트엔드에서 적용을 잘못 취소하지 않고, 재시작 전에 기본 프롬프트를 먼저 내려 둔다. 밀봉 asar 는 현재 프로세스가 아직 옛 패키지라는 이유로 재시작을 취소하지 않는다.
+- 두 번째 적용은 쿨다운 때문에 재시작/주입을 취소로 취급하지 않는다. 밀봉 패키지는 교체되기 전까지 적용마다 한 번 재시작하고, 패치 기록이 끝나면 더는 공회전하지 않는다.
 
 ## English
 
@@ -334,12 +334,12 @@
 
 # 1.1.54
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.54。
-- 官方桌面密封 asar 启动不再中途解包/杀进程：避开 Host Fiber._reload 的 INACTIVE_EFFECT / DesktopHostFatalError；补丁留给设置页「应用」。
-- 桌面 settle 延后并在 context 停用时退出；启动自愈只写盘、不 scheduleRestart（#59 / #60 / #61）。
-- 市场 tar 安装与空 sha / 缺 installed-rev 的无限重启修复仍在（#58–#61，1.1.53）。
+- 버전이 1.1.54 로 올라갔다.
+- 공식 데스크톱의 밀봉 asar 기동은 더는 중간에 언팩하거나 프로세스를 죽이지 않는다. Host Fiber._reload 의 INACTIVE_EFFECT / DesktopHostFatalError 를 피하고, 패치는 설정 페이지 '적용'으로 넘긴다.
+- 데스크톱 settle 은 늦추고 context 가 비활성화되면 종료한다. 기동 자가 복구는 디스크에 쓰기만 하고 scheduleRestart 를 하지 않는다(#59 / #60 / #61).
+- 마켓 tar 설치와 빈 sha / `installed-rev` 누락 시의 무한 재시작 수정은 그대로다(#58–#61, 1.1.53).
 
 ## English
 
@@ -350,13 +350,13 @@
 
 # 1.1.53
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.53。
-- 修复点「应用」后无限重启（#59 / #60 / #61）：tarball 安装没有 `installed-rev`、或 `applied.json` 空 sha 时，启动不再反复 reapply+restart；对齐后不再空转重启，并加冷却。
-- web 自愈重启不再自动弹浏览器，关窗后不会再被反复拉起新窗口（#59 / #61）。
-- 空 sha 只在非密封、且清洗标记还在（或找不到插件根）时补戳，避免冲掉密封宿主自愈（#56 / #57）。
-- 市场安装：`package.json` 标明优先 tar.gz/zip，避免 Hub 退回 `git ls-remote` 失败（#58）。
+- 버전이 1.1.53 로 올라갔다.
+- '적용' 후 무한 재시작을 수정했다(#59 / #60 / #61). tarball 설치에 `installed-rev` 가 없거나 `applied.json` 의 sha 가 비면 기동 시 reapply+restart 를 반복하지 않고, 정렬된 뒤에는 공회전 재시작을 하지 않으며 쿨다운을 둔다.
+- web 자가 복구 재시작이 더는 브라우저를 자동으로 띄우지 않아, 창을 닫은 뒤 새 창이 반복해서 올라오지 않는다(#59 / #61).
+- 빈 sha 는 비밀봉 상태이고 정리 표식이 남아 있거나 플러그인 루트를 찾을 수 없을 때만 보충해, 밀봉 호스트의 자가 복구를 덮어쓰지 않는다(#56 / #57).
+- 마켓 설치: `package.json` 이 tar.gz/zip 우선을 명시해 Hub 가 실패하는 `git ls-remote` 로 되돌아가지 않는다(#58).
 
 ## English
 
@@ -368,15 +368,15 @@
 
 # 1.1.52
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.52。
-- 官方桌面「应用/重启」不再自动跑官方 installer（#57）：宿主版本由用户自行升级；插件只解包打补丁，避免落盘前误判失败清掉 `resources\\app`。
-- 有 `applied.json` 但宿主又回到 sealed / 找不到插件根时，判定未对齐并自愈重打；面板提示「补丁已丢失，请重新应用」。
-- 插件启动路径永不自动更新，仅面板手动更新。
-- 默认提示词按本地 `default-prompt-inject.md` 重新加密写入 `asset-table.js`。
-- 用户自改提示词不会被「应用」盖回加密默认：磁盘正文与内置不同时一律保留；运行时内置默认只读加密槽。
-- 回退切点扩到整轮并在替换后清空 derive 缓存，避免下次发送仍带上被撤掉的内容。
+- 버전이 1.1.52 로 올라갔다.
+- 공식 데스크톱의 '적용/재시작'이 더는 공식 installer 를 자동 실행하지 않는다(#57). 호스트 버전은 사용자가 직접 올리고, 플러그인은 언팩과 패치만 한다. 기록 전에 실패로 잘못 판정해 `resources\\app` 를 지우는 일을 막는다.
+- `applied.json` 은 있는데 호스트가 다시 sealed 이거나 플러그인 루트를 찾을 수 없으면 미정렬로 판정해 자가 복구로 다시 적용한다. 패널은 '패치가 사라졌다, 다시 적용한다'고 알린다.
+- 플러그인 기동 경로는 절대 자동 업데이트하지 않고 패널에서만 수동 업데이트한다.
+- 기본 프롬프트를 로컬 `default-prompt-inject.md` 기준으로 다시 암호화해 `asset-table.js` 에 쓴다.
+- 사용자가 고친 프롬프트를 '적용'이 암호화 기본값으로 덮지 않는다. 디스크 본문이 내장과 다르면 일률적으로 보존하며, 런타임 내장 기본값은 암호화 슬롯에서만 읽는다.
+- 되돌리기 절단점을 라운드 전체로 넓히고 교체 후 derive 캐시를 비워, 다음 전송에 철회된 내용이 실리지 않게 했다.
 
 ## English
 
@@ -390,13 +390,13 @@
 
 # 1.1.51
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.51。
-- 修复 `/skills import` 对 `$DSH_HOME/skills` 自身导入时先删后拷把技能删空（#54）。
-- 补齐 `platformEnvAdaptStatus` / `platformEnvAdaptSkip`，发送门禁不再误报「环境还没配好」（#55）。
-- 修复官方桌面：无版本/同版本 `installer.exe` 被当成待更新劫持重启；更新失败时恢复 `resources/app`；空 sha 的 applied stamp 不再跳过 reapply（#56，0.1.7/0.2 同路径）。
-- 补丁 #52 兼容无 `.volatile()` 写法；#57 跟到 `useDeveloperRole` 并覆盖 responses 通路；#48 上游已删句按软完成；状态导出 `patches_ready`；桌面端 shim 显示「本端不需要」。
+- 버전이 1.1.51 로 올라갔다.
+- `/skills import` 가 `$DSH_HOME/skills` 자신을 가져올 때 먼저 지우고 복사해 스킬이 비는 문제를 수정했다(#54).
+- `platformEnvAdaptStatus` / `platformEnvAdaptSkip` 를 채워 전송 게이트가 '환경이 아직 준비되지 않았다'고 더는 잘못 막지 않는다(#55).
+- 공식 데스크톱 수정: 버전이 없거나 같은 버전인 `installer.exe` 를 대기 업데이트로 보고 재시작을 가로채지 않고, 업데이트 실패 시 `resources/app` 를 복원하며, 빈 sha 의 applied stamp 는 reapply 를 건너뛰지 않는다(#56, 0.1.7/0.2 동일 경로).
+- 패치 #52 는 `.volatile()` 이 없는 표기도 호환하고, #57 은 `useDeveloperRole` 까지 따라가 responses 경로를 덮으며, #48 은 업스트림이 문장을 지운 경우 소프트 완료로 처리한다. 상태에 `patches_ready` 를 내보내고, 데스크톱 shim 은 '이 단말에서는 필요 없다'를 표시한다.
 
 ## English
 
@@ -408,11 +408,11 @@
 
 # 1.1.50
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.50。
-- 修复 macOS 官方桌面：点「应用」假失败「失败: 正在重启。」、解包后 `dsh` CLI 失效、status 误标 ✗（#53）。
-- 修复点「应用」重启后默认提示词不注入：未改过时自动落盘内置默认，不必先点保存。
+- 버전 **1.1.50**.
+- macOS 공식 데스크톱을 수정한다: '적용' 클릭 시 '실패: 재시작 중.'이라는 가짜 실패가 뜨던 문제, 언팩 후 `dsh` CLI가 동작하지 않던 문제, status가 잘못 ✗ 로 표시되던 문제(#53).
+- '적용' 클릭 후 재시작하면 기본 프롬프트가 주입되지 않던 문제를 수정한다: 수정한 적이 없으면 내장 기본값을 자동으로 기록하므로 먼저 저장을 누를 필요가 없다.
 
 ## English
 
@@ -422,13 +422,13 @@
 
 # 1.1.49-beta.1
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.49-beta.1（#53 测试版）。
-- 修复 macOS 官方桌面点「应用」后假失败「失败: 正在重启。」：`scheduleRestart` helper/runtime 分支补回 `restarting: true`；Darwin 重启改为 osascript 优雅退出 + SIGTERM/SIGKILL，排除 CLI 进程后再 `open` 重开（剥掉 ELECTRON_RUN_AS_NODE）。
-- 解包 app.asar 后自动修补官方 `dsh` CLI 入口（asar/`app/` 回退）并补 `app/runtime -> ../runtime`，避免 `dsh web` 等全部 MODULE_NOT_FOUND。
-- `/purge status` 对多路径文件清单按数组逐项判断，不再把已打补丁文件标成 ✗。
-- 前端重启失败文案不再把成功分支的 note 当成 error。
+- 버전 **1.1.49-beta.1**(#53 테스트 버전).
+- macOS 공식 데스크톱에서 '적용'을 누르면 '실패: 재시작 중.'이라는 가짜 실패가 뜨던 문제를 수정한다: `scheduleRestart` 의 helper/runtime 분기에 `restarting: true` 를 되살린다; Darwin 재시작은 osascript 정상 종료 + SIGTERM/SIGKILL 로 바꾸고, CLI 프로세스를 제외한 뒤 `open` 으로 다시 연다(ELECTRON_RUN_AS_NODE 제거).
+- app.asar 언팩 후 공식 `dsh` CLI 진입점을 자동으로 보수하고(asar/`app/` 폴백) `app/runtime -> ../runtime` 를 추가해, `dsh web` 등을 포함한 전체가 MODULE_NOT_FOUND 로 죽지 않게 한다.
+- `/purge status` 는 다중 경로 파일 목록을 배열로 항목별 판정하며, 이미 패치된 파일을 ✗ 로 표시하지 않는다.
+- 프런트엔드 재시작 실패 문구가 성공 분기의 note 를 error 로 쓰지 않는다.
 
 ## English
 
@@ -440,12 +440,12 @@
 
 # 1.1.48
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.48。
-- 修复红队指挥「只派活」约束被组装时误删，导致不派 subagent；预设在 Agent Teams 下强制重开 classic subagent。
-- 增加按任务选用 skill/MCP 的协议（先读目录，再按任务调用；子代理与红队同样）；不改官方注册与工具面。
-- 子代理 maxDepth 适配 0.2 无 default 的 schema，补回默认 10。
+- 버전 **1.1.48**.
+- 레드팀 지휘의 '작업만 배분한다' 제약이 조립 과정에서 잘못 삭제되어 subagent 를 배분하지 않던 문제를 수정한다; 프리셋이 Agent Teams 아래에서 classic subagent 를 강제로 다시 켠다.
+- 작업에 맞춰 skill/MCP 를 고르는 프로토콜을 추가한다(먼저 목차를 읽고, 그다음 작업에 맞춰 호출한다; 서브에이전트와 레드팀도 동일); 공식 등록과 도구 표면은 바꾸지 않는다.
+- 서브에이전트 maxDepth 가 default 가 없는 0.2 스키마에 맞춰지고, 기본값 10 을 되살린다.
 
 ## English
 
@@ -456,15 +456,15 @@
 
 # 1.1.47
 
-## 中文
+## 한국어
 
-- 版本升级到 1.1.47。
-- 演练台「环境适配」接通 `platformConfigGet` / `Save` / `AssignToolkit`，修复 `unknown op: platformConfigGet`，工具路径与 FOFA/VPS 配置可正常读写。
-- 技能库目录探测增加 `$DSH_HOME/redteam/skills`，Windows 用 `homedir()` 回退，不再只信空的 `HOME`。
-- 知识库优先使用环境适配里的 nuclei 模板路径；空库时显示本机 `knowledge.db` 路径，避免误判成接口挂了。
-- 首次安装弹出用户须知：说明用途、免费开源、GitHub 仓库地址；声明背着作者营利将追究法律责任，并提示禁止违法用途。确认后本机不再弹出。
-- 桌面定位与表面检测放宽，安装目录名含 `DeepseekHarnessDesktop` 等也能找到本机 Harness；失败的定位缓存不再一直卡住「还没定位」。
-- 回退与请求路径小修，降低后轮卡住或假进度的情况。
+- 버전 **1.1.47**.
+- 드릴 콘솔의 '환경 적응'을 `platformConfigGet` / `Save` / `AssignToolkit` 에 연결해 `unknown op: platformConfigGet` 를 수정하고, 도구 경로와 FOFA/VPS 설정을 정상적으로 읽고 쓸 수 있게 한다.
+- 스킬 라이브러리 디렉터리 탐색에 `$DSH_HOME/redteam/skills` 를 추가하고, Windows 에서는 `homedir()` 로 폴백해 빈 `HOME` 만 믿지 않는다.
+- 지식 베이스는 환경 적응의 nuclei 템플릿 경로를 우선 사용한다; 라이브러리가 비어 있으면 로컬 `knowledge.db` 경로를 표시해 인터페이스가 죽었다고 잘못 판정하지 않는다.
+- 최초 설치 시 사용자 안내를 띄운다: 용도, 무료 오픈 소스, GitHub 저장소 주소를 설명한다; 저자를 등에 업고 영리 행위를 하면 법적 책임을 묻는다는 점과 불법 용도 금지를 함께 고지한다. 확인하면 그 기기에서는 다시 띄우지 않는다.
+- 데스크톱 위치 탐지와 표면 감지를 완화해, 설치 디렉터리 이름에 `DeepseekHarnessDesktop` 등이 들어 있어도 로컬 Harness 를 찾는다; 실패한 위치 캐시가 '아직 탐지되지 않음'에 계속 걸리지 않는다.
+- 되돌리기와 요청 경로를 소폭 수정해 뒷 라운드가 멈추거나 진행률이 가짜로 보이는 상황을 줄인다.
 
 ## English
 
@@ -478,9 +478,21 @@
 
 # 1.1.46
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.46銆?.1.45 鏈夐棶棰橈紝鐣ヨ繃锛屼笉瑕佸畨瑁呫€?- 榛樿鎻愮ず璇嶆寜 `default-prompt-inject.md` 閲嶆柊鍔犲瘑鍐欏叆銆?- 淇娉ㄥ叆涓嶇ǔ瀹氾細绗簩杞垨浠诲姟鍋氬埌涓€鍗婁汉璁惧け鏁堛€佽褰撴垚 `project_instructions` 鎷嗘帀鐨勯棶棰樸€?- 宸ヤ綔鍖烘浛鎹㈢鍜屼綔鐢ㄥ煙璇存槑鏀瑰洖 0.1.7 鐨勪紭鍏堢骇锛氫笉鑳藉帇杩?system銆乨eveloper 鍜岀敤鎴峰師璇濄€備富 intro 鐨勫弽杞嫆缁濆彞淇濇寔涓嶅彉銆傚凡缁忓彔涓婄殑浣滅敤鍩熷己鍙ユ暣娈垫敹鎴愯繖涓€鍙ャ€?- 杩涙ā鍨嬪墠鍓ユ帀澶栧眰 ChatML / `<project_instructions>` 澹筹紝閬垮厤妯″瀷鎶婄湡瀹?system 娉ㄥ叆褰撴垚椤圭洰璇存槑銆?- 缁勮鍚庣殑绯荤粺鎻愮ず娈电粺涓€淇濊瘉 `text` 涓哄瓧绗︿覆锛涗笉鍐嶄細璇濋拤姝绘暣娈?sections锛岄伩鍏嶇浜岃疆 `renderPrompt` 璇?`undefined.length` 鐩存帴姝绘帀骞舵姤 `(gateway/internal)`銆?- `agent/pre-step` 濮嬬粓鎶?`decision.messages` 瑙勮寖鎴愭暟缁勶紝閬垮厤绗簩杞彂閫佹椂璇荤┖ messages 鐐告帀銆?- 鍦板尯闂搁棬锛氬鍦板潃鍩熷悕涓嶈兘鍙洜鍏朵腑涓€涓В鏋愬埌鍙楁帶鍦板尯灏辨暣绔欐嫤姝伙紙CDN/澶氱嚎鍣０ IP锛夈€?- 鍥為€€鍚?`deriveMessages` / `systemNodes` 瀵圭己 `content` 鍋氬厹搴曪紝閬垮厤鍥為€€鍐嶅彂閫佹椂 `(gateway/internal)`銆?- 娓呮礂杩涘害锛氭湭瀹氫綅瀹夸富鏃朵笉鍐嶆樉绀哄悡浜虹殑 `0/63`锛涙湰鏈轰笉闇€瑕佹垨缁勪欢鏈鐨勯」璁″叆宸插氨缁紝閬垮厤鍋囩殑 `48/63`銆?- 鐐广€屽簲鐢ㄣ€嶅氨浼氬啓鍏ラ粯璁ゆ彁绀鸿瘝骞舵敞鍏ワ紝妗嗙┖鏃剁敤鍐呯疆榛樿锛屼笉蹇呭厛鐐逛繚瀛樸€?- 淇鍥為€€锛歚snapshotEvents()` 涓虹┖鏃朵笉鍐嶈 `undefined.length`锛岄伩鍏?`(gateway/internal)` 鎶ラ敊瀵艰嚧鍥為€€鏃犳晥銆?
+- 버전 **1.1.46**. 1.1.45 는 버그가 있으니 건너뛰고 설치하지 않는다.
+- `default-prompt-inject.md` 로 기본 프롬프트를 다시 봉인한다.
+- 주입 불안정 수정: 두 번째 턴이나 작업 도중 페르소나가 사라지던 문제, 모델이 시스템 주입을 `project_instructions` 로 오해해 거부한 경우를 포함한다.
+- 교체/스코프 워크스페이스 intro 가 다시 0.1.7 과 일치한다: system, developer, 사용자 직접 지시를 덮지 않는다. main intro 의 소프트 거부 방지 문구는 유지한다. 중첩된 스코프 문단은 그 한 문장으로 다시 접는다.
+- 텍스트가 모델에 도달하기 전에 바깥 ChatML / `<project_instructions>` 래퍼를 벗겨, 실제 시스템 주입이 프로젝트 지시로 읽히지 않게 한다.
+- 조립된 시스템 프롬프트 섹션을 정리해 `text` 가 항상 문자열이 되게 한다; 세션에 전체 섹션을 고정하지 않아, 두 번째 턴에서 `renderPrompt` 가 `undefined.length` 로 죽고 `(gateway/internal)` 를 내던 문제를 막는다.
+- `agent/pre-step` 에서 `decision.messages` 를 항상 배열로 정규화해, 두 번째 전송이 messages 목록 누락으로 죽지 않게 한다.
+- 지역 게이트: 해석된 IP 하나가 통제 지역에 있다는 이유만으로 다중 주소 호스트를 막지 않는다(CDN/노이즈).
+- 되돌리기 후 `deriveMessages` / `systemNodes` 가 누락된 `content` 를 허용해, 재전송이 `(gateway/internal)` 로 실패하지 않는다.
+- 정리 진행률: 호스트를 찾기 전에 겁주는 `0/63` 을 표시하지 않는다; 이 설치에 필요 없는 항목은 준비됨으로 계산해 가짜 `48/63` 이 나타나지 않는다.
+- 적용이 기본 프롬프트를 기록하고 주입한다; 입력 상자가 비어 있으면 내장 기본값을 쓰므로 따로 저장할 필요가 없다.
+- 되돌리기 수정: 빈 `snapshotEvents()` 가 더 이상 `undefined.length` 를 읽지 않아, 실행 취소가 `(gateway/internal)` 로 실패하지 않는다.
+
 ## English
 
 - Version 1.1.46. Skip 1.1.45; that version has bugs. Do not install it.
@@ -498,9 +510,16 @@
 
 # 1.1.44
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.44銆?- 瀹樻柟妗岄潰瑙ｅ紑 `app.asar` 鏃跺厛鍐欏埌鏃佽竟鐨勭洰褰曪紝瑙ｅ紑瀹屾垚鎵嶆崲涓?`resources/app`銆傜洰褰曢噷宸茬粡鏈夊涓讳箣鍚庡彧鏀硅繖浜涙枃浠躲€傚悓涓€浠藉綊妗ｅ張鍑虹幇鏃跺彧鎶婂畠鎸紑銆傚綊妗ｇ殑澶у皬鎴栨椂闂村彉浜嗭紝鎴栫洰褰曚笉鍦ㄤ簡锛屾墠鍐嶈В涓€娆°€傝В鍖呭崱浣忔垨琛ヤ竵娌″啓瀹岋紝鎶婁笂涓€浠芥斁鍥炲幓锛屽崌绾ф爣璁扮暀鍒颁笅娆″啀璇曘€?- 鍥為€€涓婁竴杞彧鎾ゆ帀鏈€鍚庝竴鏉″凡缁忓彂鍑虹殑娑堟伅鍜屽畠鐨勫洖澶嶏紝鏇存棭鐨勮疆娆＄暀鍦ㄥ璇濋噷锛屼篃浠庢ā鍨嬭姹傞噷鎷挎帀銆傝繛缁洖閫€鍚庣暀涓嬬殑绌烘爣璁颁笉鍐嶈繘涓嬩竴杞姹傦紝涓嬩竴鍙ユ寜鏂版秷鎭彂銆?- 鍙紪杈戞彁绀鸿瘝鏁翠唤鏀惧湪绯荤粺鎻愮ず鏈€鍓嶏紝鍚屼竴浠芥鏂囦笉鍐嶆嫾绗簩閬嶃€傛瘡涓€姝ョ敤褰撳墠杩欎竴浠芥浛鎹㈢涓€鏉＄郴缁熸彁绀恒€?- deepseek.com 鐨勭郴缁熸彁绀哄浐瀹氳蛋 system锛屾€濈淮閾剧収鏃у彂閫併€?- 鍦板尯鎷︽埅鍙湅杩欐浠诲姟閲岀殑鐩爣銆傝嚜宸辩殑鏈嶅姟鍣ㄥ彧璁ゅ悕鍗曚笂鐨勯偅涓€涓湴鍧€鎴栦富鏈哄悕銆傜姝㈠彞鍐欎笂涔嬪悗鎵嶇粨鏉熻繖涓€杞€?- 瀹樻柟濮嬬粓鐢ㄥ甫 CTF 鐨勯粯璁ゆ彁绀鸿瘝銆傜孩闃熷紑浜嗚鍒欓泦灏卞彧鐢ㄨ鍒欓泦锛涘惁鍒欑敤鍘绘帀 CTF 鐨勯粯璁ゆ彁绀鸿瘝锛屽啀鎺ョ孩闃熸搷浣溿€傚瓙浠ｇ悊璺熶富浼氳瘽鍚冨悓涓€浠姐€傜鐩樻病鏈夋彁绀鸿瘝鏃跺惎鍔ㄥ氨鐢ㄩ粯璁ら偅浠斤紝涓嶅繀鍏堢偣淇濆瓨銆?
+- 버전 **1.1.44**.
+- `app.asar` 언팩은 `resources/app` 옆에 쓰고, 언팩이 끝난 뒤에만 교체한다. 그 디렉터리를 쓸 수 있게 되면 이후 기동은 그 파일들만 수정한다. 같은 아카이브가 다시 나타나면 옆으로 치운다. 크기나 mtime 이 새 값이거나 디렉터리가 없으면 한 번 언팩한다. 언팩이 멈추거나 그 패치 라운드가 끝나지 않으면 이전 디렉터리를 되돌리고 업그레이드 표식을 다음 기동까지 남긴다.
+- 이전 라운드를 되돌리면 그 전송 메시지와 그 응답만 제거한다. 이전 라운드는 화면에 남고 다음 모델 요청에서 빠진다. 남은 되돌리기 표식은 다음 모델 요청에 실리지 않으므로, 다음 전송은 새 메시지가 된다.
+- 편집 가능한 프롬프트는 시스템 프롬프트 맨 앞에 한 번만 놓인다. 매 단계에서 첫 시스템 프롬프트를 그 현재 텍스트로 교체한다.
+- deepseek.com 용 지시는 system 역할에 남는다. 사고 과정은 계속 전송한다.
+- 지역 검사는 이 작업의 대상만 본다. 내 서버는 그 정확한 주소나 호스트 이름이 목록에 있을 때만 허용한다. 거부 문장을 쓴 뒤 턴이 끝난다.
+- 공식 모드는 CTF 를 포함해 항상 기본 프롬프트를 쓴다. 레드팀은 활성 규칙 세트만 쓰거나, CTF 를 뺀 기본 프롬프트 뒤에 레드팀 단계를 붙인다. 서브에이전트는 메인 세션과 같은 주입을 받는다. 프롬프트 파일이 비어 있으면 기동 시 저장을 요구하지 않고 내장 기본값을 쓴다.
+
 ## English
 
 - Version 1.1.44.
@@ -513,9 +532,13 @@
 
 # 1.1.43
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.43銆?- 杩樻病瀹氫綅鍒版湰鏈?Harness 鏃讹紝涓嶅啀鎶婃瘡涓€鏉℃樉绀烘垚璺宠繃锛屽垎缁勮鏁颁篃涓嶅啀鎶婅烦杩囩畻鎴愬凡瀹屾垚銆?- 琛ヤ竵鍒楄〃琛ラ綈鍒板叏閮?52 鏉★紝鎬绘暟鍜屽垎缁勫寰椾笂銆?- 鍚姩鏃跺鏋滄殏鏃舵壘涓嶅埌瀹夸富鐩綍锛屼笉鍐嶆妸杩欎釜绌虹粨鏋滅紦瀛樹綇銆?
+- 버전 **1.1.43**.
+- 이 설치의 위치를 찾기 전에는 행을 건너뜀으로 표시하지 않고, 건너뜀은 그룹 합계에서 완료로 세지 않는다.
+- 패치 목록이 52개 항목을 모두 포함해 총계가 그룹과 일치한다.
+- 호스트 디렉터리를 찾는 중의 미적중을 프로세스가 끝날 때까지 캐시하지 않는다.
+
 ## English
 
 - Version 1.1.43.
@@ -525,9 +548,14 @@
 
 # 1.1.42
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.42銆?- 娓呮礂椤垫彁绀鸿瘝涓嬮潰鍙互鐧昏鑷繁鐨勬湇鍔″櫒锛氭瘡琛屼竴涓?IP 鎴栧畬鏁翠富鏈哄悕锛岀偣淇濆瓨鍚嶅崟銆傝鏄庨噷鍐欎簡姝ラ锛屽苟闄勪簡鎴浘銆?- 鏂板璇濇妸鎻愮ず璇嶆斁鍦ㄧ郴缁熸彁绀烘渶鍓嶃€傞潰鏉挎敼涓虹櫧澧ㄧ幓鐠冿紝涓ょ涓婚閮借兘鐪嬫竻瀛椼€?- 琛ヤ竵杩涘害鍙宸插簲鐢ㄧ殑椤广€傜綉椤佃韩浠介偅鏉″湪鍚庝竴鏉℃敼鍐欏彞瀛愪箣鍚庯紝浠嶆樉绀哄凡搴旂敤銆?- 琛ヤ笂 0.1.x 鐨勫叆鍙ｉ拡銆傚凡缁忔墦杩囩殑 0.2.0 涓嶄細琚噸鍐欍€?
+- 버전 **1.1.42**.
+- 정리 페이지의 프롬프트 아래에서 내 서버를 등록한다: 한 줄에 IP 하나 또는 정확한 호스트 이름, 그다음 목록을 저장한다. 문서에 절차와 스크린숏이 있다.
+- 새 대화는 프롬프트를 시스템 프롬프트 맨 앞에 놓는다. 도크는 프로스트 유리이고, 라이트·잉크 두 테마 모두 읽을 수 있다.
+- 패치 수는 적용된 항목만 센다. 이후 문장 재작성 후에도 web-surface identity 행은 적용 상태로 남는다.
+- 0.1.x 진입점용 needle 을 추가했다. 이미 패치된 0.2.0 호스트는 다시 쓰지 않는다.
+
 ## English
 
 - Version 1.1.42.
@@ -538,9 +566,15 @@
 
 # 1.1.41
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.41銆?- 瀹樻柟妯″紡鍙敞鍏ュ綋鍓嶆彁绀鸿瘝锛涘惎鐢ㄨ鍒欓泦鍚庝互瑙勫垯闆嗕负涓汇€傜孩闃熷啀闄勪笂绾㈤槦鎿嶄綔瑕佹眰銆?- 鍥為€€鐣欏湪褰撳墠浼氳瘽锛氬厛閫夊洖閫€涓€娆℃垨涓婁竴杞紝涓婁竴鍙ユ斁鍥炶緭鍏ユ锛屽苟娓呮帀宸茬粡鍙戝嚭鍘荤殑鍐呭銆?- 瀹夸富娌℃竻娲楀畬锛屾垨娌℃湁鍙敞鍏ョ殑鎻愮ず璇嶆椂锛屼笉閲嶅惎銆?- 榛樿宸叉槸瀹屽叏鏉冮檺鏃讹紝鏂颁細璇濅笉鍐嶈閽夊洖鍙楅檺鏉冮檺銆傚畼鏂规ā鍨嬬殑 Session Log 涓婁紶榛樿鍏抽棴銆?- 鐩爣鍦板潃钀藉湪涓浗澶ч檰銆侀娓€佹境闂ㄦ椂鍋滄銆?
+- 버전 **1.1.41**.
+- 공식 모드는 편집 가능한 프롬프트를 주입하고, 규칙 세트가 켜져 있으면 활성 규칙 세트를 주입한다. 레드팀은 운영 섹션도 유지한다.
+- 되돌리기는 현재 세션에 머문다: 한 단계 또는 마지막 라운드를 고르고, 마지막 줄을 입력창으로 되돌리고, 이미 전송된 내용을 지운다.
+- 호스트가 정리되지 않았거나 주입 텍스트가 없으면 재시작을 취소한다.
+- 전체 접근 기본값이 다시 제한 프리셋으로 고정되지 않는다. 공식 모델 Session Log 업로드는 기본으로 꺼져 있다.
+- 주소가 중국 본토, 홍콩, 마카오에 속하는 대상은 중단한다.
+
 ## English
 
 - Version 1.1.41.
@@ -552,21 +586,28 @@
 
 # 1.1.40
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.40銆?- 閫傞厤 **DSH 0.2.0-rc.2**锛欰nthropic OAuth 涓嶅啀鍦ㄧ郴缁熸彁绀烘渶鍓嶉潰寮烘彃銆孻ou are Claude Code鈥︺€嶏紝鑷畾涔?`prompt-inject` 涓嶄細琚帇鍒板悗闈€?- 鍘绘帀鍦?0.2 閲屽凡涓嶅瓨鍦ㄧ殑 **patch 41**锛坉eveloper 瑙掕壊鏀瑰啓锛夛紝閬垮厤鏃犳晥琛ヤ竵鍗犱綅銆?- 璁剧疆椤电偣 **搴旂敤** 鎴愬姛鍚?**鑷姩閲嶅惎** 瀹夸富锛屼笉蹇呭啀鎵撳紑鎻掍欢鐐圭浜屾閲嶅惎銆?
+- 버전 **1.1.40**.
+- **DSH 0.2.0-rc.2** 에서 Anthropic OAuth 가 더 이상 시스템 프롬프트 앞에 "You are Claude Code" 를 붙이지 않아, 사용자 `prompt-inject` 가 Claude 정체성 블록 뒤로 밀리지 않는다.
+- 0.2 에서 해당 needle 이 사라졌으므로 **패치 41**(developer-role 재매핑)을 제거했다.
+- 설정에서 **적용** 후 호스트가 **자동으로 재시작**된다; 재시작 확인을 위해 플러그인을 다시 열 필요가 없다.
+
 ## English
 
 - Version 1.1.40.
-- For **DSH 0.2.0-rc.2**, Anthropic OAuth no longer prepends 鈥淵ou are Claude Code鈥︹€?ahead of your system prompt, so custom `prompt-inject` is not pushed behind a Claude identity block.
+- For **DSH 0.2.0-rc.2**, Anthropic OAuth no longer prepends "You are Claude Code" ahead of your system prompt, so custom `prompt-inject` is not pushed behind a Claude identity block.
 - Removed **patch 41** (developer-role remap) because those needles are gone in 0.2.
 - After **Apply** in settings, the host **restarts automatically**; you no longer need to open the plugin again to confirm restart.
 
 # 1.1.39
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.39銆?- 涓枃 Windows 涓婏紝瀹樻柟妗岄潰鐗堢偣銆屽畨瑁呭苟閲嶅惎銆嶄笉鍐嶅仠鍦ㄣ€屾鍦ㄥ噯澶囬噸鍚€嶃€傛洿鏂拌剼鏈琛屾敼涓虹函 ASCII锛岃矾寰勯噷鐨勪腑鏂囧啓鎴?`\u` 杞箟锛岄伩鍏?Windows Script Host 鎸?GBK 鎶婃崲琛屽悶杩涙敞閲娿€?- macOS 鍜?Linux 涓嶈蛋杩欐潯鑴氭湰锛岄噸鍚柟寮忎笉鍙樸€?
+- 버전 **1.1.39**.
+- 중국어 Windows 에서 공식 데스크톱의 설치 후 재시작이 '재시작 준비 중'에 계속 머물지 않는다. 업데이트 스크립트가 ASCII 주석으로 시작하고, 비ASCII 경로를 `\u` 이스케이프로 써서 Windows Script Host 가 파일을 GBK 로 읽을 때 개행을 삼키지 않는다.
+- macOS 와 Linux 는 이 스크립트를 쓰지 않는다. 두 플랫폼의 재시작 경로는 변하지 않는다.
+
 ## English
 
 - Version 1.1.39.
@@ -575,9 +616,18 @@
 
 # 1.1.38
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.38銆?- 绾㈤槦涓嶅啀鏇跨敤鎴蜂笅杞藉伐鍏枫€傛病鏈夊畨瑁呰剼鏈椂锛屽紩瀵兼敼璧版紨缁冨彴銆岀幆澧冮€傞厤銆嶏紝鐢辩敤鎴疯嚜宸卞～璺緞銆?- 闀挎椂闂翠换鍔′細鍦ㄧ郴缁熸彁绀鸿瘝閲屾斁涓€寮犮€屾湰娆＄洰鏍囥€嶅崱銆傛寚鎸ュ拰瀛愪唬鐞嗙湅鐨勬槸鍚屼竴寮狅細鍙墦杩欎釜鍗曚綅锛屽洖鎶ラ噷甯﹀嚭鏉ョ殑鍏跺畠鍗曚綅涓嶆墦銆傚瓙浠ｇ悊鎸夎鑹蹭娇鐢ㄨ嚜宸辩殑鎻愮ず璇嶏紝娲炬椿鏃剁殑鍗曚綅鍚嶇О蹇呴』鍜岃繖寮犲崱涓€鑷淬€?- 宸ュ叿鏌ユ壘璁ゅ彂琛岀増涓婄殑鐪熷疄鏂囦欢鍚嶏紝渚嬪 Kali 鐨?`httpx-toolkit`銆乣impacket-secretsdump`锛屼笉鍐嶆妸 Python 鐨?`httpx` 褰撴垚鎵弿鍣ㄣ€?- 瀹樻柟妗岄潰鍦?macOS銆丩inux 涓婁篃鑳芥壘鍒?`app.asar`锛圡ac 鐢?`Contents/Resources`锛夈€俉indows 浠ュ涓嶅啀鍖呬竴灞備細鎶?`require` 寮勫潖鐨勬帶鍒跺彴闅愯棌銆?- 绾㈤槦鎺ュ叆閿氱偣闂細寮€澶村嚑姝ヨ緭鍑轰笂闄?1024锛涚涓€娈垫€濊€冮噷鏈?`we`銆佹病鏈?`let me` 灏辨斁寮€锛屽惁鍒欏悓涓€杞渶澶氬啀璧?4 姝ャ€備笂涓嬫枃鍘嬬缉鍚庡啀鍏充竴娆°€傜孩闃熷伐鍏峰拰浜鸿淇濇寔鍘熸牱銆?- 闅忓寘鎶€鑳藉悓姝ュ埌 `$DSH_HOME/redteam/skills`锛岄璁剧敤 `dshHomePath` 鎸囧悜瀹冿紝涓嶅啀鎶婃煇涓€鍙扮數鑴戠殑 `node_modules` 璺緞鍐欒繘棰勮銆備綘鑷繁鐨勬妧鑳戒粛鍦?`$DSH_HOME/skills`锛屽悓鍚嶄互浣犵殑涓哄噯銆?- 淇ソ绾㈤槦妯″紡涓嶆樉绀猴細澹版槑棰勮鏃舵紡浜嗚矾寰勫彉閲忥紝鎻掍欢涓€旈€€鍑猴紝妯″紡涓嬫媺灏辨病鏈夎繖涓€椤广€?- 璇存槑閲屽姞鍥炶禐鍔╁湴鍧€銆?
+- 버전 **1.1.38**.
+- 레드팀이 더 이상 도구를 대신 내려받지 않는다. 설치 스크립트가 없으면 안내가 드릴 콘솔 환경 페이지를 가리켜, 사용자가 경로를 채우게 한다.
+- 장기 작업은 시스템 프롬프트에 대상 카드를 유지한다. 지휘자와 서브에이전트가 같은 카드를 본다: 그 조직에 머물고, 결과에 나타난 다른 이름으로 바꾸지 않는다. 각 서브에이전트는 자기 역할 텍스트를 로드하고, 배분된 작업은 카드의 이름을 써야 한다.
+- 도구 조회가 Kali 의 `httpx-toolkit`, `impacket-secretsdump` 같은 배포판 파일 이름을 받아들이고, Python 의 `httpx` 를 스캐너로 취급하지 않는다.
+- 공식 데스크톱 앱이 macOS 와 Linux 에서 `app.asar` 를 찾는다(Mac 은 `Contents/Resources`). Windows 밖에서는 `require` 를 깨뜨리던 콘솔 숨김 래퍼를 설치하지 않는다.
+- 레드팀은 앵커 게이트를 쓴다: 첫 단계의 출력을 1024 토큰으로 제한하고, 첫 사고 블록에 `we` 가 있고 `let me` 가 없으면 제한이 풀리며, 그렇지 않으면 그 턴에서 최대 4단계까지 유지되고, 컨텍스트 압축이 게이트를 다시 닫는다. 레드팀 도구와 페르소나는 그대로다.
+- 번들 스킬은 `$DSH_HOME/redteam/skills` 로 복사되고 프리셋은 기기별 `node_modules` 경로 대신 `dshHomePath` 로 그곳을 가리킨다. 사용자 스킬은 `$DSH_HOME/skills` 에 남고 같은 이름에서 우선한다.
+- 레드팀 모드가 다시 모드 목록에 보인다. 경로 변수가 빠졌다는 이유로 프리셋 선언이 조기 종료되지 않는다.
+- 후원 주소가 README 에 다시 들어갔다.
+
 ## English
 
 - Version 1.1.38.
@@ -592,9 +642,11 @@
 
 # 1.1.37
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.37銆?- 淇敼婕旂ず鍙扮幆澧冮厤缃粴鍔ㄩ棶棰樸€?
+- 버전 **1.1.37**.
+- 드릴 콘솔 환경 페이지가 스크롤되어 나머지 설정도 채울 수 있다.
+
 ## English
 
 - Version 1.1.37.
@@ -602,9 +654,11 @@
 
 # 1.1.36
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.36銆?- 瑙ｅ喅绾㈤槦妯″紡鎷掔粷闂銆?
+- 버전 **1.1.36**.
+- 레드팀 모드가 정리된 프롬프트를 거부하던 문제를 수정한다.
+
 ## English
 
 - Version 1.1.36.
@@ -612,9 +666,15 @@
 
 # 1.1.35
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.35銆?- 鍚姩鏃朵笉鍐嶈嚜鍔ㄦ洿鏂帮紝瑕佽嚜宸卞湪闈㈡澘閲岄€夋嫨銆?- dsh-purge 鍏ュ彛鏀瑰埌銆屼笂涓嬫枃銆嶆梺杈癸紝涓嶅啀鎸′綇鍒殑鎻掍欢鎸夐挳銆?- 寰楀垎鍙ｅ緞瀵归綈涓婃父锛?5 椤癸紝Web 搴旂敤澧炲姞鍏滃簳褰掔被銆?- 鐭ヨ瘑搴?14 绫昏鏁板寘鍚湰鏈?nuclei 妯℃澘锛岀偣鏌愪竴绫诲彲浠ョ瓫閫夈€?- 鎶€鑳借矾寰勮窡闅?`$DSH_HOME`锛屼笉鍐嶅洜涓虹ず渚嬭矾寰勫湪鏈満涓嶅瓨鍦ㄥ氨鎶婃暣鏉℃妧鑳芥爣鎴愪笉鍙敤銆?
+- 버전 **1.1.35**.
+- 기동 시 자동 업데이트를 하지 않는다; 패널에서 업데이트를 고른다.
+- dsh-purge 항목이 Context 옆에 있어 다른 플러그인 버튼을 가리지 않는다.
+- 채점이 업스트림과 일치한다: 25개 항목, 다른 웹 앱을 위한 폴백 버킷 포함.
+- 14개 지식 범주가 로컬 nuclei 템플릿을 세고, 범주가 목록을 필터링한다.
+- 스킬 경로가 `$DSH_HOME` 을 따른다. 이 기기에 예시 경로가 없다는 이유만으로 스킬을 사용 불가로 표시하지 않는다.
+
 ## English
 
 - Version 1.1.35.
@@ -626,9 +686,12 @@
 
 # 1.1.34
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.34銆?- **婕旂粌鍙扮煡璇嗗簱鐩存帴鍒楀嚭鏈満妯℃澘**銆傛墦寮€銆岀煡璇嗗簱 路 POC / EXP銆嶅氨鑳界湅鍒颁竴椤?nuclei 妯℃澘锛屽苟鍙互缈婚〉銆佹寜 CVE 鎴栫粍浠舵悳绱€備笉鍐嶅彧鏄剧ず銆屾湰鏈烘ā鏉?N銆嶃€佷笅闈㈡槸绌虹殑銆?- **鏇存柊鍖呭湪 Windows銆乵acOS銆丩inux 涓婇兘鑳借В鍘?*銆侺inux 涓嶅啀璋冪敤 PowerShell銆傞『搴忔槸锛歐indows 鐢?tar锛屼笉琛屽啀鐢?PowerShell锛沵acOS 鍜?Linux 鐢?tar銆乽nzip銆乸ython3銆乥sdtar銆傝繖浜涢兘娌℃湁鏃讹紝鐢?Node 鑷繁瑙?zip銆傛劅璋?@cracer4869 鍦?#44 鎶ュ嚭 Kali 涓婄殑 `spawnSync powershell ENOENT`銆?
+- 버전 **1.1.34**.
+- **드릴 지식 페이지가 로컬 템플릿을 나열한다.** 지식을 열면 nuclei 템플릿 페이지가 나오고, CVE 또는 컴포넌트로 페이징과 검색을 한다. 더 이상 템플릿 개수만 보여주지 않는다.
+- **업데이트 아카이브가 Windows, macOS, Linux 에서 압축을 푼다.** Linux 는 PowerShell 을 호출하지 않는다. Windows 는 tar, 그다음 PowerShell 을 시도한다. macOS 와 Linux 는 tar, unzip, python3, bsdtar 순으로 시도한다. 모두 없으면 Node 가 zip 을 직접 푼다. Kali 에서 `spawnSync powershell ENOENT` 를 보고한 #44 의 @cracer4869 에 감사한다.
+
 ## English
 
 - Version 1.1.34.
@@ -637,9 +700,11 @@
 
 # 1.1.33
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.33銆?- **淇宸茬粡閲嶅惎鍚庯紝鎵撳紑闈㈡澘浠嶅脊鍑恒€岄渶瑕侀噸鍚€?*銆傚畼鏂瑰鎴风宸茬粡浠庤В寮€鐨?`resources/app` 杩愯鏃讹紝涓嶅啀浠呭洜涓哄綋鍓嶆槸瀹樻柟杩涚▼灏卞啀瑕佹眰閫€鍑轰竴娆°€傚彧鏈夎繖娆＄湡鐨勬尓寮€浜?`app.asar`锛屾墠浼氭彁绀洪噸鍚€?
+- 버전 **1.1.33**.
+- **이미 재시작한 뒤 재시작 대화상자가 다시 뜨는 문제를 수정한다.** 공식 앱이 이미 언팩된 `resources/app` 에서 실행 중이면, 이 프로세스가 공식 프로세스라는 이유로 패널을 열 때 다시 종료를 요구하지 않는다. 재시작 안내는 이번 실행에서 `app.asar` 가 실제로 옮겨졌을 때만 나타난다.
+
 ## English
 
 - Version 1.1.33.
@@ -647,9 +712,12 @@
 
 # 1.1.32
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.32銆?- **鎸夋祴璇曠増鎺ヤ笂婕旂粌鍙板竷灞€**锛氶潰鏉垮彲鎷栧姩銆佸彲鏀瑰ぇ灏忥紝娴呰壊鍜屾繁鑹茶窡瀹夸富涓婚璧般€?- **璁剧疆椤典笉鍐嶅嚭鐜版湰鎻掍欢**銆備粠浼氳瘽鏍囬鏃佺殑 dsh-purge 鎵撳紑鍙充晶鏍忥紝娓呮礂鍜屾紨缁冨彴閮藉湪閲岄潰銆?
+- 버전 **1.1.32**.
+- **beta 의 도크 레이아웃을 stable 로 가져온다**: 패널을 드래그하고 크기를 조절할 수 있으며, 라이트와 다크가 호스트 테마를 따른다.
+- **플러그인이 더 이상 설정 페이지에 나타나지 않는다.** 세션 제목 옆 dsh-purge 에서 오른쪽 도크를 연다. 정리와 드릴이 모두 그 도크에 있다.
+
 ## English
 
 - Version 1.1.32.
@@ -658,9 +726,12 @@
 
 # 1.1.31
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.31銆?- **婕旂粌鍙拌繘鍏ユ寮忕増**銆傚彸渚ф爮涓ら〉锛氭竻娲椼€佹紨缁冨彴銆傜涓€娆¤繘鍏ユ紨缁冨彴瑕佽澹版槑骞剁‘璁ゆ巿鏉冦€傝祫浜с€佹妧鑳藉拰鏈満鐜閮藉湪鏈彃浠堕噷锛屼笉鍐嶅崟鐙娴嬭瘯鐗堢孩闃熷寘銆?- **淇鍥為€€鍫嗗垎鏀?*锛氬涓讳笉鑳藉湪鍘熶細璇濋噷鎴柇锛屽洖閫€鍚庝細鎶婃棫浼氳瘽浠庝晶杈规爮绉诲嚭锛屽閫€鍑犳涓嶄細鐣欎笅涓€涓插垎鏀€?
+- 버전 **1.1.31**.
+- **드릴 콘솔이 stable 릴리스에 들어왔다.** 오른쪽 도크에 정리와 드릴 두 페이지가 있다. 드릴을 처음 열면 고지를 읽고 권한을 확인한다. 자산, 스킬, 로컬 환경은 이 플러그인 안에 포함된다.
+- **되돌리기가 매번 브랜치를 남기던 문제를 수정한다.** 호스트는 세션을 제자리에서 자를 수 없다. 되돌리기 후 옛 세션이 사이드바에서 빠지므로 반복 실행 취소가 브랜치를 쌓지 않는다.
+
 ## English
 
 - Version 1.1.31.
@@ -669,9 +740,12 @@
 
 # 1.1.30
 
-## 涓枃
+## 한국어
 
-- 鐗堟湰鍗囩骇鍒?1.1.30銆?- **淇姝ｅ紡鐗堝拰 web 鍒囨崲鐗堟湰澶辫触**锛氫笉鍐嶇敤 `dsh plugin add` 鎷夊寘銆俻npm 璇锋眰 GitHub 鍘嬬缉鍖呬細 `http 302` 鎴?`fetch failed`銆傛敼鐢辨彃浠惰嚜宸变笅杞姐€?- **淇鎬濊€冨拰杈撳嚭姝诲惊鐜?*锛氬幓鎺夐粯璁ゆ彁绀鸿瘝閲屾病鏈夌粓姝㈡潯浠剁殑閲嶇疆銆?
+- 버전 **1.1.30**.
+- **데스크톱 앱과 web 의 버전 전환을 수정한다**: `dsh plugin add` 로 설치하는 방식을 중단한다. pnpm 의 GitHub 아카이브 fetch 가 `http 302` 또는 `fetch failed` 를 낸다. 플러그인이 패키지를 직접 내려받는다.
+- **사고·출력 루프를 수정한다**: 정지 조건이 없던 기본 프롬프트 리셋을 제거한다.
+
 ## English
 
 - Version 1.1.30.
@@ -680,19 +754,24 @@
 
 # 1.1.28
 
-## 涓枃
+## 한국어
 
-- **淇鏇存柊澶辫触 `http 302`**锛氫笅杞芥敼涓虹洿杩?`codeload.github.com`锛屽苟鎵嬪姩璺熼殢璺宠浆锛岄伩鍏?Electron/閮ㄥ垎 Node 瀵?github.com 鈫?codeload 鐨?302 澶勭悊澶辫触銆?- **淇娴嬭瘯鐗堝垪琛ㄧ┖鐧?*锛氬墠绔?`keepListedVersion` 涓庡悗绔竴鑷达紝姝ｅ紡鐗堝凡鍙戝竷鏃朵粛淇濈暀 beta tip / `beta` 鍒嗘敮锛泃ip SHA 鎷変笉鍒版椂鍥為€€ raw/jsDelivr 鎺㈡祴銆?
+- **업데이트 실패 `http 302` 수정**: `codeload.github.com` 으로 내려받고 리다이렉트를 직접 따라가, Electron/일부 Node 빌드가 github.com → codeload 302 에서 멈추지 않게 한다.
+- **빈 beta 목록 수정**: 클라이언트의 `keepListedVersion` 이 서버와 일치해, stable 이 나온 뒤에도 beta tip / `beta` 브랜치를 목록에 유지한다; tip SHA 를 가져올 수 없으면 raw/jsDelivr 로 폴백한다.
+
 ## English
 
-- **Fix update failure `http 302`**: download via `codeload.github.com` and follow redirects manually so Electron/some Node builds no longer stall on github.com 鈫?codeload 302.
-- **Fix empty beta list**: client `keepListedVersion` matches the server 鈥?keep the beta tip / `beta` branch after stable ships; fall back to raw/jsDelivr when tip SHA cannot be fetched.
+- **Fix update failure `http 302`**: download via `codeload.github.com` and follow redirects manually so Electron/some Node builds no longer stall on github.com → codeload 302.
+- **Fix empty beta list**: client `keepListedVersion` matches the server — keep the beta tip / `beta` branch after stable ships; fall back to raw/jsDelivr when tip SHA cannot be fetched.
 
 # 1.1.27
 
-## 涓枃
+## 한국어
 
-- **淇搴旂敤閲嶅惎鍚庤繘瑙勫垯璁惧畾浠嶅脊銆岄渶瑕侀噸鍚€?*锛氭墜鍔ㄣ€屽簲鐢ㄣ€嶆垚鍔熷悗鍐欏叆 `applied` 鎴筹紝閲嶅惎鍚?settle 涓嶅啀璇垽琛ヤ竵鏈榻愩€?- 鐐广€岄噸鍚€嶆竻鎺?`boot_full_quit` 绮樻€ф爣璁帮紱status 鎸夊竷灏斿€煎悓姝ュ脊绐椼€?- web `waitForRestart` 蹇呴』鍏堢湅鍒版棫杩涚▼鎺夌嚎鍐嶅垽瀹氭垚鍔燂紝閬垮厤鍚岃繘绋嬭鍒锋柊鍙堝脊绐椼€?
+- **적용 + 재시작 성공 후에도 재시작 안내가 남는 문제 수정**: 수동 적용이 성공하면 `applied` 스탬프를 기록해, settle 이 패치를 구버전으로 판단하지 않게 한다.
+- 재시작을 클릭하면 고착된 `boot_full_quit` 를 지운다; status 가 그 boolean 으로 모달을 동기화한다.
+- Web 의 `waitForRestart` 는 옛 프로세스가 내려간 뒤에만 재시작을 성공으로 보아, 같은 프로세스에서의 가짜 새로고침을 피한다.
+
 ## English
 
 - **Fix restart prompt still showing after Apply + successful restart**: write the `applied` stamp on successful manual Apply so settle does not think patches are out of date.
@@ -701,18 +780,23 @@
 
 # 1.1.26
 
-## 涓枃
+## 한국어
 
-- **淇娴嬭瘯閫氶亾琚寮忕増鍚屽彿钘忔帀**锛歚1.1.25` 姝ｅ紡鍙戝竷鍚庯紝`1.1.25-beta.*` 鍥犮€屾寮忓凡杩戒笂銆嶉€昏緫鏁撮€氶亾涓嶅彲瑙侊紱鐜?**beta 鍒嗘敮 tip 濮嬬粓鍒楀嚭**锛堟寮?娴嬭瘯骞惰锛屾祴璇曞甫绾㈤槦锛夈€?- 宸茶拷涓婄殑鏃?beta **鏍囩**浠嶄細闅愯棌锛沗1.1.11-beta` 浠嶄笅绾裤€?
+- **같은 번호 stable 에 가려진 beta 레인 수정**: `1.1.25` stable 이후 `1.1.25-beta.*` 가 'stable caught up' 필터로 사라졌다; **beta 브랜치 tip 은 항상 목록에 남는다**(병렬 채널; beta 가 레드팀을 담는다).
+- 이미 따라잡힌 옛 beta **태그**는 계속 숨는다; `1.1.11-beta` 는 철회 상태로 남는다.
+
 ## English
 
-- **Fix beta lane hidden by same-number stable**: after `1.1.25` stable, `1.1.25-beta.*` vanished via the 鈥渟table caught up鈥?filter; the **beta branch tip always stays listed** (parallel channels; beta carries red-team).
+- **Fix beta lane hidden by same-number stable**: after `1.1.25` stable, `1.1.25-beta.*` vanished via the "stable caught up" filter; the **beta branch tip always stays listed** (parallel channels; beta carries red-team).
 - Older caught-up beta **tags** still hide; `1.1.11-beta` stays withdrawn.
 # 1.1.25
 
-## 涓枃
+## 한국어
 
-- **淇 [#43](https://github.com/YuJunZhiXue/dsh-purge/issues/43)**锛氫笉鍐嶆妸 `profiles/*/cordis.patch.yml`锛堢敤鎴?patch 灞傦級绾冲叆 `backupAll`/`revertAll`锛涘崌绾ц嚜鎰堟椂涓嶄細鐢ㄦ棫 bak 瑕嗙洊鐢ㄦ埛鍚庢潵杩藉姞鐨?`insert`銆?- 鍚姩/杩樺師鏃朵富鍔ㄤ涪鎺夊巻鍙蹭笂璇缓鐨?`cordis.patch.yml.dshpurge.bak`锛屼繚鐣欏綋鍓嶇敤鎴锋枃浠躲€?- 鏂板 `npm run test:profile-patch`銆?
+- **수정 [#43](https://github.com/YuJunZhiXue/dsh-purge/issues/43)**: `backupAll`/`revertAll` 에 `profiles/*/cordis.patch.yml`(사용자 패치 계층)을 더 이상 포함하지 않아, 업그레이드 재적용이 이후 사용자 `insert` 위에 옛 bak 을 복원하지 않는다.
+- 낡은 `cordis.patch.yml.dshpurge.bak` 는 복원하지 않고 버린다; 실제 사용자 파일은 유지한다.
+- `npm run test:profile-patch` 를 추가한다.
+
 ## English
 
 - **Fix [#43](https://github.com/YuJunZhiXue/dsh-purge/issues/43)**: stop including `profiles/*/cordis.patch.yml` (user patch layer) in `backupAll`/`revertAll`, so upgrade reapply no longer restores an old bak over later user `insert`s.
@@ -720,9 +804,12 @@
 - Add `npm run test:profile-patch`.
 # 1.1.24
 
-## 涓枃
+## 한국어
 
-- **淇 [#40](https://github.com/YuJunZhiXue/dsh-purge/issues/40)**锛歚pathLooksDesktop` 涓嶅啀浠呭嚟璺緞閲岀殑 `deepseek-harness` 瀛愪覆鎶婃簮鐮佺増鍒ゆ垚妗岄潰绔紱闇€甯?`resources/` / `.exe` / `.app` 绛夊畨瑁呭舰鎬併€?- **淇 [#41](https://github.com/YuJunZhiXue/dsh-purge/issues/41)**锛氭簮鐮侀儴缃茬殑 `apps/cli`锛坱sdown 鏋勫缓浜х墿锛夌姝?hide-console 娉ㄥ叆锛沗revertAll` 鍦ㄦ棤 `.dshpurge.bak` 鏃跺彧璺宠繃銆佺粷涓嶅垹闄ょ洰鏍囨枃浠躲€?- 鏂板 `npm run test:surface` 鍥炲綊銆?
+- **수정 [#40](https://github.com/YuJunZhiXue/dsh-purge/issues/40)**: `pathLooksDesktop` 이 경로에 `deepseek-harness` 가 들어 있다는 이유만으로 소스 트리를 데스크톱으로 보지 않는다; 설치 형태(`resources/`, `.exe`, `.app`)를 요구한다.
+- **수정 [#41](https://github.com/YuJunZhiXue/dsh-purge/issues/41)**: 소스 `apps/cli` 빌드 산출물에 콘솔 숨김 주입을 건너뛴다; `.dshpurge.bak` 이 없으면 `revertAll` 이 대상을 삭제하지 않는다.
+- `npm run test:surface` 를 추가한다.
+
 ## English
 
 - **Fix [#40](https://github.com/YuJunZhiXue/dsh-purge/issues/40)**: `pathLooksDesktop` no longer treats source trees as desktop just because the path contains `deepseek-harness`; require install shapes (`resources/`, `.exe`, `.app`).
@@ -730,21 +817,29 @@
 - Add `npm run test:surface`.
 # 1.1.23
 
-## 涓枃
+## 한국어
 
-- **淇 [#38](https://github.com/YuJunZhiXue/dsh-purge/issues/38)**锛歚#1`/`#2`/`#3` 鎻愮ず璇嶈ˉ涓佹瘡娆?`apply` 鍙犲姞绾?+841 瀛楃銆佹案涓嶆敹鏁涖€?- **鍘熷洜**锛氭浛鎹骇鐗╀粛浠ュ墠涓€鐗堟枃鏈负鍓嶇紑锛屼笖鏈 `skipIfMarked`锛宍autoApplyOnStart` 姣忚疆閮戒細鍐嶅啓涓€灞傘€?- **淇**锛氫负 `#1`/`#2`/`#3` 琛?`skipIfMarked: true`锛圼#42](https://github.com/YuJunZhiXue/dsh-purge/pull/42)锛夛紝骞跺姞 `npm run test:idempotence` 鍥炲綊銆?- 宸茶啫鑳€鐨勫涓绘枃浠朵笉浼氳嚜鍔ㄧ缉鍥烇紝闇€杩樺師 `.dshpurge.bak` 鎴栭噸瑁?dsh 鍚庡啀 apply銆?
+- **수정 [#38](https://github.com/YuJunZhiXue/dsh-purge/issues/38)**: 프롬프트 패치 `#1`/`#2`/`#3` 이 `apply` 마다 약 +841자씩 늘어나 수렴하지 않았다.
+- **원인**: 교체 텍스트가 여전히 이전 패턴으로 시작하고 `skipIfMarked` 가 없어, `autoApplyOnStart` 가 매 기동마다 다시 썼다.
+- **수정**: `#1`/`#2`/`#3` 에 `skipIfMarked: true` 를 설정한다([#42](https://github.com/YuJunZhiXue/dsh-purge/pull/42)); `npm run test:idempotence` 를 추가한다.
+- 이미 비대해진 호스트 파일은 자동으로 줄지 않는다 — `.dshpurge.bak` 을 복원하거나 dsh 를 재설치한 뒤 다시 적용한다.
+
 ## English
 
 - **Fix [#38](https://github.com/YuJunZhiXue/dsh-purge/issues/38)**: prompt patches `#1`/`#2`/`#3` grew by ~+841 chars on every `apply` and never converged.
 - **Cause**: replacement text still starts with the previous pattern, and `skipIfMarked` was missing, so `autoApplyOnStart` rewrote every boot.
 - **Fix**: set `skipIfMarked: true` on `#1`/`#2`/`#3` ([#42](https://github.com/YuJunZhiXue/dsh-purge/pull/42)); add `npm run test:idempotence`.
-- Already-bloated host files are not auto-shrunk 鈥?restore `.dshpurge.bak` or reinstall dsh, then apply again.
+- Already-bloated host files are not auto-shrunk — restore `.dshpurge.bak` or reinstall dsh, then apply again.
 
 # 1.1.22
 
-## 涓枃
+## 한국어
 
-- **淇瀹樻柟妗岄潰鐐广€屽簲鐢ㄣ€嶆姤 ENOENT**銆俙app.asar` 杩樺湪鏃讹紝鏂板缓 `dsh-purge-child-process-hide.mjs` 浼氬け璐ワ紝璺緞琚啓鎴?`resources\app.asar\...\dsh-purge-child-process-hide.mjs`锛岃ˉ涓佸仠鍦ㄥ緟搴旂敤銆?- **鍘熷洜**锛氬畼鏂瑰鎴风杩樺甫鐫€ `app.asar` 鏃讹紝Electron 浼氭妸 `resources\app` 鏄犲皠杩涜繖涓綊妗ｃ€傚綊妗ｉ噷娌℃湁鐨勬柊鏂囦欢锛岀敤鏅€氭枃浠舵帴鍙ｅ幓鍒涘缓灏变細 ENOENT銆?- **涓ょ鍐欐硶閮戒繚鐣?*銆傚綊妗ｈ繕鍦ㄦ椂锛屾敼鍐欑湡瀹炵鐩樹笂鐨?`resources\app`銆傛病鏈?`app.asar` 鏃朵粛鐢ㄥ師鏉ョ殑 `node:fs`锛屽寘鎷?Web銆佺ぞ鍖烘闈紝浠ュ強瀹樻柟鍖呭凡缁忚В寮€骞舵妸褰掓。鎸垚 `app.asar.bak` 鐨勬儏鍐点€?- 瀹夎鐩綍涓嶅啓姝荤洏绗︺€俉eb 鍜岀ぞ鍖烘闈㈢殑搴旂敤銆侀噸鍚繚鎸佸師鏍枫€傚涓讳粛瀵瑰噯 **dsh 0.1.7-rc.2**銆?
+- **공식 데스크톱에서 적용할 때 나던 ENOENT 를 수정한다.** `app.asar` 가 아직 있는 동안 `dsh-purge-child-process-hide.mjs` 생성이 실패했다. 경로가 `resources\app.asar\...\dsh-purge-child-process-hide.mjs` 로 바뀌어 패치가 계속 pending 이었다.
+- **원인**: 아카이브가 남아 있으면 Electron 이 `resources\app` 를 `app.asar` 로 매핑한다. 아카이브에 아직 없는 파일을 일반 파일 API 로 만들면 ENOENT 가 난다.
+- **두 쓰기 경로를 모두 유지한다.** 아카이브가 남아 있으면 실제 `resources\app` 디렉터리에 쓴다. `app.asar` 가 없으면 이전 `node:fs` 경로가 그대로다. Web, 커뮤니티 데스크톱, 이미 언팩되어 아카이브가 `app.asar.bak` 으로 옮겨진 공식 설치를 모두 포함한다.
+- 설치 경로를 드라이브 문자에 고정하지 않는다. Web 과 커뮤니티 데스크톱은 기존 적용·재시작을 유지한다. 호스트 대상은 계속 **dsh 0.1.7-rc.2** 다.
+
 ## English
 
 - **Fixes ENOENT when Apply runs on the official desktop.** While `app.asar` is still present, creating `dsh-purge-child-process-hide.mjs` failed. The path was rewritten to `resources\app.asar\...\dsh-purge-child-process-hide.mjs`, and patches stayed pending.
@@ -754,9 +849,17 @@
 
 # 1.1.21
 
-## 涓枃
+## 한국어
 
-- **淇蹇呴渶琛ヤ竵澶辫触 #43銆?9銆?15銆?23銆?42**銆傜偣銆屽簲鐢ㄣ€嶄笉鍐嶅洜涓鸿繖 5 鏉℃姤銆屾竻娲楁湭瀹屾垚銆嶃€傛彁绀鸿瘝鏈潵灏变細鍐欏叆锛涜繖 5 鏉℃病鍐欎笂鏃讹紝鐣岄潰鍗存妸鏁存搴旂敤鍒ゅけ璐ワ紝鐪嬭捣鏉ュ儚鎻掍欢澶辨晥銆?- **鍘熷洜**锛氫笂绾ф枃浠跺す鍚嶅彨 DeepSeek Harness 鏃讹紝鏁存５鐩綍琚綋鎴愬畼鏂规闈€俉eb 鐨?npm 鍖呭洜姝よ鎺掗櫎锛岃繖 5 鏉″寰椾笂鐨勫師鏂囦篃娌″啓杩涘幓銆傚畨瑁呰矾寰勪笉鍐欐鐩樼銆傜幇鍦ㄥ彧鏈夋梺杈圭湡鏈夋闈㈢▼搴忥紝鎴栬矾寰勫湪璇ュ畨瑁呯殑 `resources/app` 閲岋紝鎵嶇畻妗岄潰瀹夎銆俉eb銆佺ぞ鍖烘闈€佸畼鏂规闈㈠悇鑷墦鑷繁鐨勫寘銆?- **#43**锛氬幓鎺?Web 鍥涗釜鍐呯疆棰勮锛坰tandard銆乸tc銆乧ordis銆乵inimal锛夐噷鐨勮韩浠藉彞銆傛病鍐欎笂鏃讹紝棰勮閲岀殑鍘熻韩浠藉彞浼氱暀鍦ㄦ敞鍏ユ梺杈广€?- **#9**锛氬鎵硅姹傝嚜鍔ㄦ斁琛屻€?- **#15**锛氭矙绠?`confine` 涓嶅啀鍖呬竴灞傦紝鍛戒护鎸夊師鏍锋墽琛屻€?- **#23**锛氬瓙浠ｇ悊榛樿娣卞害浠?1 鎻愬埌 10銆?- **#42**锛氱粰璁剧疆鏈嶅姟琛ュ洖鏃х殑 `register` / `get`锛岃繕鍦ㄨ皟鏃ф帴鍙ｇ殑鎻掍欢鎵嶈兘鍔犺浇銆?- 鏂囦欢鍦ㄣ€佷絾杩欎唤鍘熸枃涓嶅湪褰撳墠鐗堟湰閲屾椂锛屾樉绀鸿烦杩囷紝涓嶅啀鎶婃暣娆″簲鐢ㄥ垽澶辫触銆傚師鏂囪繕鍦ㄦ椂浠嶄細鍐欎笂銆?
+- **필수 패치 실패 #43, #9, #15, #23, #42 수정.** 적용이 이 다섯 때문에 정리를 미완으로 보고하지 않는다. 프롬프트는 이미 기록되었고, 실패 때문에 플러그인이 죽은 것처럼 보였다.
+- **원인**: 상위 폴더 이름이 DeepSeek Harness 이면 공식 데스크톱 설치로 처리해 Web npm 패키지가 제외되고 이 다섯이 기록되지 않았다. 설치 경로를 드라이브 문자에 고정하지 않는다. 데스크톱 실행 파일이 옆에 있거나 경로가 그 설치의 `resources/app` 아래일 때만 데스크톱 설치로 본다. Web, 커뮤니티 데스크톱, 공식 데스크톱이 각자 자기 패키지를 패치한다.
+- **#43**: 네 가지 내장 Web 프리셋(standard, ptc, cordis, minimal)에서 정체성 문장을 제거한다. 남겨두면 그 문장이 주입 옆에 계속 붙어 있다.
+- **#9**: 승인 요청이 자동 승인된다.
+- **#15**: 샌드박스 `confine` 이 더 이상 명령을 감싸지 않는다.
+- **#23**: 서브에이전트 기본 깊이가 1에서 10으로 올라간다.
+- **#42**: 설정 서비스가 옛 `register` / `get` 메서드를 되찾아, 여전히 호출하는 플러그인이 로드된다.
+- 파일은 있는데 이 버전에 그 원본 텍스트가 없으면 행이 skipped 로 표시되고 적용은 그대로 완료된다. 존재하는 텍스트는 계속 기록된다.
+
 ## English
 
 - **Fixes required-patch failures #43, #9, #15, #23, and #42.** Apply no longer reports the cleanse as incomplete because of these five. The prompt was already written; the failure made the plugin look dead.
@@ -770,9 +873,13 @@
 
 # 1.1.20
 
-## 涓枃
+## 한국어
 
-- **瀹夸富鐗堟湰**锛氬綋鍓嶅鍑?**dsh 0.1.7-rc.2**銆備笂涓€妗?**0.1.7-rc.1**锛堝惈 `0.1.7-rc.1.20260924.1`锛夌殑鏃ч敋鐐逛粛鍙敤銆?- **瀹樻柟妗岄潰鍗囩骇**锛氬凡缁忎笅杞界殑鏂扮増鏈細鍦ㄩ噸鍚紝鎴栧湪搴旂敤閲岀偣瀹夎骞堕噸鍚椂鐪熸瀹夎锛岀劧鍚庤В寮€鏂扮増鏈苟閲嶆柊鎵撹ˉ涓併€傛病鏈夋柊鐗堟湰鏃讹紝閲嶅惎浠嶆槸鍏虫帀鍐嶆墦寮€褰撳墠瀹㈡埛绔€傚畨瑁呯洰褰曚笉鍐欐鐩樼銆?- **琛ヤ竵**锛?14銆?35 璺熶笂 rc.2 鐨勫崌绾у啓娉曪紝涓嶅啀鎶ュ繀闇€琛ヤ竵澶辫触銆?29銆?33銆?36 鐨勬柊鎻愮ず鍙ヤ篃浼氭墦涓娿€?- Web 鍜岀ぞ鍖虹増 DSH Desktop 鐨勫簲鐢ㄣ€侀噸鍚繚鎸佸師鏍枫€?
+- **호스트 버전**: 현재 대상은 **dsh 0.1.7-rc.2** 다. 이전 대상 **0.1.7-rc.1**(`0.1.7-rc.1.20260924.1` 포함) 앵커도 계속 매칭된다.
+- **공식 데스크톱 업그레이드**: 내려받은 업데이트는 재시작 시 또는 앱 내 설치 후 재시작 동작에서 설치되고, 새 빌드가 언팩되어 패치된다. 대기 중인 업데이트가 없으면 재시작은 현재 클라이언트를 닫았다 다시 열 뿐이다. 설치 경로를 드라이브 문자에 고정하지 않는다.
+- **패치**: #14 와 #35 가 rc.2 에스컬레이션 텍스트와 매칭되어 이제 필수 패치 실패가 나지 않는다. #29, #33, #36 은 새 프롬프트 문구를 따른다.
+- Web 과 커뮤니티 DSH Desktop 은 기존 적용·재시작을 유지한다.
+
 ## English
 
 - **Host version**: current target is **dsh 0.1.7-rc.2**. Anchors for the previous target, **0.1.7-rc.1** (including `0.1.7-rc.1.20260924.1`), still match.
@@ -782,9 +889,13 @@
 
 # 1.1.19
 
-## 涓枃
+## 한국어
 
-- **瀹樻柟妗岄潰 EXE**锛氭敮鎸佸畼鏂?DeepSeek Harness銆傜偣銆屽簲鐢ㄣ€嶈В寮€ `app.asar` 骞惰ˉ涓婂師鐢熸ā鍧楋紝鍐嶇偣銆岄噸鍚€嶏紝瀹㈡埛绔嚜宸卞叧鎺夊苟閲嶆柊鎵撳紑銆俉eb 鍜岀ぞ鍖虹増 DSH Desktop 鐨勫簲鐢ㄣ€侀噸鍚繚鎸佸師鏍枫€?- **閲嶅惎**锛氬畼鏂瑰鎴风閫€鍑轰笉鍐嶈澶栧３褰撴垚宕╂簝锛屼篃涓嶄細鐣欎笅鍚庡彴 PowerShell銆傞噸鍚剼鏈笉鍐嶈皟鐢?Windows 鑴氭湰瀹夸富娌℃湁鐨?`toISOString`锛岄伩鍏嶅脊鍑鸿繍琛屾椂閿欒銆傛柊杩涚▼涓嶅啀缁ф壙 `ELECTRON_RUN_AS_NODE`锛屽惁鍒欎細鍒氭墦寮€灏遍€€鍑恒€?- **鏇存柊**锛氭崲鐗堟湰鎴栧洖閫€鏃讹紝鎸夎惤鍦扮殑閭ｄ竴鐗堣嚜鍔ㄨ繕鍘熷啀搴旂敤锛屼笉蹇呮瘡娆℃墜鍔ㄥ厛杩樺師鍐嶅簲鐢ㄥ啀閲嶅惎銆?- **琛ヤ竵鍒楄〃**锛氬涓诲凡缁忚嚜甯?`dsh-web-fetch-http` 鏃讹紝涓嶅啀鏄剧ず涓€鏉℃案杩滆烦杩囩殑 #20銆傚畨瑁呯洰褰曚笉鍐嶅啓姝荤洏绗︺€?
+- **공식 데스크톱 EXE**: 공식 DeepSeek Harness 에서 적용하면 `app.asar` 를 언팩하고 네이티브 모듈을 복원한 뒤, 재시작이 클라이언트를 닫았다 다시 연다. Web 과 커뮤니티 DSH Desktop 은 기존 적용·재시작을 유지한다.
+- **재시작**: 공식 호스트 종료가 더 이상 크래시로 처리되지 않고, PowerShell 프로세스도 남지 않는다. 헬퍼가 `toISOString` 을 호출하지 않아 Windows Script Host 런타임 오류 팝업이 사라졌다. 새 프로세스가 `ELECTRON_RUN_AS_NODE` 를 상속하지 않아 즉시 종료되지 않는다.
+- **업데이트**: 버전을 전환하거나 롤백하면 수동 되돌리기 없이 그 버전의 패치가 복원·재적용된다.
+- **패치 목록**: 이미 `dsh-web-fetch-http` 에 의존하는 호스트는 영구히 skipped 로 남던 #20 을 더 이상 표시하지 않는다. 설치 경로를 드라이브 문자에 고정하지 않는다.
+
 ## English
 
 - **Official desktop EXE**: Apply on official DeepSeek Harness unpacks `app.asar`, restores native modules, then Restart closes the client and opens it again. Web and community DSH Desktop keep their existing Apply and restart.
@@ -794,9 +905,11 @@
 
 # 1.1.18
 
-## 涓枃
+## 한국어
 
-- **閲嶅惎**锛氱偣銆岄噸鍚€嶅悗鏃ч〉闈㈢殑 token 浼氬け鏁堬紝鍙埛鏂扮瓑浜庢墦涓嶅紑銆傜幇鍦ㄤ細绛夌鍙ｉ噴鏀撅紙蹇呰鏃剁粨鏉熸棫杩涚▼锛夛紝骞舵寜鏂拌繘绋嬫墦鍗扮殑鍦板潃鎵撳紑娴忚鍣ㄣ€傝鐢ㄦ柊鎵撳紑鐨勯〉闈紝鍐嶆柊寮€涓€杞璇濄€?- **璁剧疆**锛?.1.17 涔嬪墠鑻ュ凡鎶?`legacyApplyPath` 鍙犺繘 `dsh-settings`锛岀偣銆屽簲鐢ㄣ€嶄細鏀舵垚涓€浠斤紝鎻愪緵鍟嗙洰褰曟墠鑳借捣鏉ャ€傛敹濂戒箣鍚庡啀閲嶅惎涓€娆°€?
+- **재시작**: 옛 페이지 토큰이 프로세스와 함께 사라져 새로고침하면 재시작이 아무것도 하지 않은 것처럼 보인다. 이제 재시작이 포트를 해제하고 새 `dsh web:` URL 로 브라우저를 연다. 그 페이지에서 새 대화를 시작한다.
+- **설정**: 적용이 이전 1.1.17 패치가 남긴 중복 `legacyApplyPath` 를 합쳐 `dsh-settings` 가 로드되게 한다. 그 적용 후 한 번 재시작한다.
+
 ## English
 
 - **Restart**: the old page token dies with the process, so a refresh looks like restart did nothing. Restart now frees the port and opens the browser at the new `dsh web:` URL. Use that page and start a new chat.
@@ -804,9 +917,12 @@
 
 # 1.1.17
 
-## 涓枃
+## 한국어
 
-- **绋冲畾鎬?*锛氫慨澶嶈缃ˉ涓?#42 鍦?dsh 0.1.7 涓婇噸澶嶆彃鍏?`legacyApplyPath` 鐨勯棶棰樸€傛鍓嶄細瀵艰嚧 `@deepseek-ai/dsh-settings` 鏃犳硶鍔犺浇銆佹彁渚涘晢鐩綍鎶ラ敊銆乵nemon 绛夋彃浠惰繛閿?pending銆傜幇鏀逛负 `skipIfMarked`锛屼笖涓嶅啀涓庡畼鏂瑰凡鑷甫鐨?`legacyApplyPath` 鍙犲啓銆?- **宸ヤ綔鍖哄己鎸囦护**锛?1/#2 鍚屾椂璇嗗埆 `WORKSPACE_*` 涓?`AGENT_*` 甯搁噺鍚嶏紝閬垮厤銆屽叏灞€/鏇挎崲寮忓厤璐ｃ€嶅湪鏃у涓讳笂鏄剧ず璺宠繃銆佸簲鐢ㄦ棤鏁堛€?- **鎷掔瓟涓庤蒋鎷?*锛氬畼鏂?`agent-instructions` 寮烘寚浠よˉ鍏呮湰鏈烘巿鏉冭瘎娴嬩笌鍙嶈蒋鎷掕瘽鏈紱鎻掍欢澧炲姞鍥哄畾 `dsh-purge:rules` 娈碉紙涓庢墽琛岃鍒欎竴鑷达級銆?*鏂板紑浼氳瘽骞堕噸鍚?dsh 鍚?*鐢熸晥銆?
+- **안정성**: 패치 #42 가 dsh 0.1.7 에 중복 `legacyApplyPath` 를 쌓지 않아 `@deepseek-ai/dsh-settings`, 프로바이더 카탈로그 로딩, 하위 플러그인이 깨지지 않는다. `skipIfMarked` 를 쓰고, 공식 패키지가 이미 포함한 헬퍼를 다시 삽입하지 않는다.
+- **워크스페이스 인트로**: 패치 #1/#2 가 `WORKSPACE_*` 와 `AGENT_*` 상수 이름을 모두 매칭해, 구버전 설치에서 행이 Skipped 로 보이지 않는다.
+- **거부/소프트 거부**: 더 강한 공식 워크스페이스 인트로와 고정된 `dsh-purge:rules` 섹션. 프롬프트 변경은 **dsh 를 재시작하고 새 대화를 시작**해야 반영된다.
+
 ## English
 
 - **Stability**: patch #42 no longer stacks duplicate `legacyApplyPath` on dsh 0.1.7, which broke `@deepseek-ai/dsh-settings`, provider catalog loading, and downstream plugins. Uses `skipIfMarked` and does not re-insert the helper the official package already ships.
@@ -815,9 +931,19 @@
 
 # 1.1.16
 
-## 涓枃
+## 한국어
 
-- 瀵瑰噯 **dsh 0.1.7-rc.1**銆傚伐浣滃尯璇存槑甯搁噺鏀瑰悕涓?`AGENT_INSTRUCTIONS_INTRO`锛屽彞瀛愭病鍙橈紝琛ヤ竵璺熺潃鏀广€?- 娌欑 `confine()` 宸叉槸 `async confine(argv, policy, signal)`锛岃ˉ涓佹寜鏂板嚱鏁板啓銆傜洿閫氳涓轰笌涓婁竴鐗堢浉鍚屻€?- 瀛愪唬鐞嗘繁搴︽敼鍒?`dsh-subagent`锛岄粯璁や粠 1 鎻愬埌 10銆傛繁搴︽鏌ヨ繕鍦ㄣ€?- 璁剧疆鏈嶅姟琛ュ洖鏃х殑 `register` / `get`銆俙dsh-mnemon`銆乣dsh-better-reasoning-effort` 杩欑被杩樺湪璋冩棫鎺ュ彛鐨勬彃浠跺彲浠ョ户缁敤銆傚畼鏂?`describe` / `update` 涓嶅姩銆傝ˉ涓佸彧鎵撲竴娆★紝涓嶄細鍦ㄥ惎鍔ㄦ椂閲嶅鎻掑叆銆?- 鍒犳帀 0.1.7 閲屽凡缁忓涓嶄笂鐨勬棫鏉℃枃锛屽寘鎷崟鐙粰 `dsh-base` 琛?`dsh-web-fetch-http` 渚濊禆鐨勯偅鏉°€傚畼鏂瑰寘宸茬粡鑷甫銆?- Web 鍥涗釜鍐呯疆棰勮锛坰tandard銆乸tc銆乧ordis銆乵inimal锛夊彧娓呯┖韬唤鍙ャ€傚伐浣滅洰褰曘€佸伐鍏峰垪琛ㄣ€乣ptc` 妯″紡锛屼互鍙?minimal 鐨?`complete: true` 鍜?`includeRuntimeContext: false` 涓嶅姩銆?- `complete: true` 鏃讹紝`prompt-inject.md` 浠嶆帴鍦ㄨ繖娈靛墠闈€傛崲瀹夸富鐗堟湰鎴栨棫閽╁瓙鍒犳涔嬪悗锛屾敞鍏ヤ笉浼氫涪銆傜偣銆屽簲鐢ㄣ€嶄箣鍚庝粛瑕佸啀鐐广€岄噸鍚€嶏紝鏂板紑涓€杞璇濇墠杩涘綋鍓嶄細璇濄€?- `dsh-compaction-instant` 缃戦〉绔粠宸插垹闄ょ殑 `settingsScope` 鏀瑰埌 `configForms`锛岄〉闈笉鍐嶅仠鍦?Failed to load plugins銆?- 鍥為€€鍦?0.1.7 涓婁細寤哄嚭鏂颁細璇濓紝浣嗙晫闈粛鍋滃湪鏃у璇濓紝鐪嬭捣鏉ュ儚娌″弽搴斻€?.1.7 宸叉病鏈?`sessions.open`銆傜幇鍦ㄦ敼鐢?`uiWorkspace.openSession` 鍒囧埌鏂颁細璇濓紝骞舵妸涓婁竴鍙ュ～鍥炶緭鍏ユ銆傚け璐ュ師鍥犳樉绀哄湪鎸夐挳涓娿€?- README 鐨勮禐璧忓尯鎹㈡垚闈炵泩鍒╁０鏄庯細涓ョ鍟嗕笟鍞崠銆佷粯璐瑰€掑崠鎴栭粦鐏颁骇鐗熷埄锛屼粎渚涙妧鏈弬鑰冦€?
+- **dsh 0.1.7-rc.1** 에 맞췄다. 워크스페이스 지시 상수가 이제 `AGENT_INSTRUCTIONS_INTRO` 다. 문장은 그대로이고 패치가 그것을 따른다.
+- 샌드박스 `confine()` 이 이제 `async confine(argv, policy, signal)` 이고, 패치가 그 함수와 매칭된다. 통과 동작은 이전 릴리스와 같다.
+- 서브에이전트 깊이는 `dsh-subagent` 에 있다. 기본값이 1에서 10으로 바뀐다. 깊이 검사는 그대로다.
+- 설정 서비스가 옛 `register` / `get` 메서드를 다시 노출해 `dsh-mnemon`, `dsh-better-reasoning-effort` 같은 플러그인이 계속 동작한다. 공식 `describe` / `update` 는 유지된다. 패치는 한 번 적용되고 기동 시 스스로 다시 삽입되지 않는다.
+- 0.1.7 에 더 이상 없는 패치 텍스트를 제거했다. `dsh-base` 에 붙이던 `dsh-web-fetch-http` 의존도 포함된다. 공식 패키지가 이미 의존한다.
+- 네 가지 내장 Web 프리셋(standard, ptc, cordis, minimal)은 정체성 문장만 잃는다. 작업 디렉터리 접미사, 도구 목록, `ptc` 모드, minimal 의 `complete: true` 와 `includeRuntimeContext: false` 는 유지된다.
+- `complete: true` 일 때 `prompt-inject.md` 는 여전히 그 섹션 앞에 붙는다. 호스트 업그레이드나 섹션을 떨어뜨리는 옛 훅이 주입을 잃지 않는다. 적용 후에도 재시작을 클릭하고 새 대화를 시작해야 세션에 들어간다.
+- `dsh-compaction-instant` 웹 클라이언트가 제거된 `settingsScope` 대신 `configForms` 를 써서, 페이지가 '플러그인 로드 실패'에서 멈추지 않는다.
+- 0.1.7 의 되돌리기는 새 세션을 만들고도 UI를 옛 대화에 남겨 클릭이 죽은 것처럼 보였다. 0.1.7 에는 `sessions.open` 이 없다. 이제 버튼이 `uiWorkspace.openSession` 으로 새 세션을 열고 이전 사용자 줄을 입력창에 되돌린다. 실패는 버튼에 표시된다.
+- README 후원 블록이 이제 비영리 고지다: 상업 재판매와 그레이 마켓 수익 없음, 기술 참조 목적만.
+
 ## English
 
 - Aligned with **dsh 0.1.7-rc.1**. The workspace-instruction constant is now `AGENT_INSTRUCTIONS_INTRO`. The sentence is unchanged, and the patch follows it.

@@ -23,7 +23,7 @@ test("boost switch round-trips with POSIX-private mode where supported", (t) => 
     assert.equal(readBoost(home), true);
     assert.equal(writeBoost(false, home), false);
     assert.equal(readBoost(home), false);
-    // 老版 boost.json 继续兼容
+    // 구버전 boost.json 도 계속 호환된다
     assert.equal(readBoost(home), false);
   } finally {
     fs.rmSync(home, { recursive: true, force: true });

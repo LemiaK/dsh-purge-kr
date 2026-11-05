@@ -1,60 +1,60 @@
 ---
 name: fofa-recon
-description: 用 FOFA API 批量测绘靶标资产（域名/IP/端口/标题/指纹）；内置限速客户端，严格单线程 + 最小间隔 + 退避重试，避免触发 45012
-whenToUse: 信息收集阶段需要快速铺开某单位/域名的互联网资产面时
+description: FOFA API 로 대상 자산(도메인/IP/포트/제목/지문)을 배치 측정한다; 속도 제한 클라이언트 내장, 엄격한 단일 스레드 + 최소 간격 + 백오프 재시도로 45012 트리거를 피한다
+whenToUse: 정보 수집 단계에서 특정 기관/도메인의 인터넷 자산면을 빠르게 펼쳐야 할 때
 role: recon
 enabled: true
 ---
 
-# FOFA 资产测绘（限速安全版）
+# FOFA 자산 측정(속도 제한 안전판)
 
-## 凭据
-- API Key：从环境变量 `FOFA_KEY` 读取（**任何 key 都不要写进仓库**；本技能所有脚本只读环境变量）
-- 接口：`GET https://fofa.info/api/v1/search/all`
-- 参数：`key`、`qbase64`（查询语句的 base64）、`size`、`page`、`fields`
+## 자격 증명
+- API Key: 환경 변수 `FOFA_KEY` 에서 읽는다(**어떤 key 도 저장소에 쓰지 않는다**; 이 스킬의 모든 스크립트는 환경 변수만 읽는다)
+- 엔드포인트: `GET https://fofa.info/api/v1/search/all`
+- 파라미터: `key`, `qbase64`(쿼리 문장의 base64), `size`, `page`, `fields`
 
-## 官方限额（fofa.info/vip，2026-09 核对）
+## 공식 한도(fofa.info/vip, 2026-09 확인)
 
-| 会员 | 查询请求 | 获取数据量 | **查询接口并发** |
+| 회원 등급 | 조회 요청 | 데이터 수량 | **조회 API 동시성** |
 |---|---|---|---|
-| 注册用户（免费） | 无 API（页面 300 次/月） | 页面 3,000 条/月 | — |
-| 个人版 | 10,000 次/月 | 100,000 条/月 | **1 秒 1 次** |
-| 专业版 | 80,000 次/月 | 800,000 条/月 | **1 秒 1 次** |
-| 商业版 | 900,000 次/月 | 9,000,000 条/月 | **1 秒 2 次** |
-| 企业版 V2 | 5,000,000 次/月 | 50,000,000 条/月 | **1 秒 5 次** |
+| 등록 사용자(무료) | API 없음(페이지 300회/월) | 페이지 3,000건/월 | — |
+| 개인판 | 10,000회/월 | 100,000건/월 | **1초 1회** |
+| 프로판 | 80,000회/월 | 800,000건/월 | **1초 1회** |
+| 상업판 | 900,000회/월 | 9,000,000건/월 | **1초 2회** |
+| 기업판 V2 | 5,000,000회/월 | 50,000,000건/월 | **1초 5회** |
 
-## 实测行为（实测验证）
-- 连续快速请求 → **HTTP 429**，响应体 `{"error":true,"errmsg":"[45012] 请求速度过快"}`
-- key 错误 → HTTP 200 + `{"error":true,"errmsg":"[-700] 账号无效"}`
-- 单页 `size` 到 1000 正常；请求间隔 ≥1 秒时连续请求均返回 200
-- 结论：**按 1 请求/秒 保守执行，绝不并发**；遇到 45012 必须退避，不要立即重试
+## 실측 동작(실측으로 검증)
+- 연속 고속 요청 → **HTTP 429**, 응답 본문 `{"error":true,"errmsg":"[45012] 요청 속도 초과"}`
+- key 오류 → HTTP 200 + `{"error":true,"errmsg":"[-700] 계정 무효"}`
+- 단일 페이지 `size` 는 1000 까지 정상이다; 요청 간격이 1초 이상이면 연속 요청도 모두 200 을 반환한다
+- 결론: **1초당 1요청으로 보수적으로 실행하고 절대 동시 실행하지 않는다**; 45012 를 만나면 반드시 백오프하며 즉시 재시도하지 않는다
 
-## 使用纪律（重要）
-1. **精确查询优先**：`domain=` / `cert=` / `org=` 先缩小范围，再考虑 `body=` / `title=` 等宽泛语句。宽语句返回几十万条没意义，还烧配额。
-2. **不要全量翻页**：默认只取前 1–3 页（每页 100 条）拿到测绘入口即可。
-3. **单进程单线程**：同一时刻只跑一个采集任务；多个查询串行排队。
-4. **结果落盘缓存**：同一查询不要重复拉，先看 `runs/fofa-*.jsonl` 是否已有。
-5. **长任务放后台**：用 `run_in_background` 跑，别阻塞对话。
-6. 配额耗尽或被限速时改用其他数据源（证书透明、DNS、搜索引擎），不要死磕。
+## 사용 규율(중요)
+1. **정밀 조회 우선**: `domain=` / `cert=` / `org=` 로 먼저 범위를 좁히고, 그다음 `body=` / `title=` 같은 넓은 문장을 고려한다. 넓은 문장은 수십만 건을 반환해 의미도 없고 쿼터만 태운다.
+2. **전체 페이지를 넘기지 않는다**: 기본적으로 앞 1–3 페이지만(페이지당 100건) 가져와 측정 입구를 확보하면 충분하다.
+3. **단일 프로세스 단일 스레드**: 같은 시각에 수집 작업은 하나만 돌린다; 여러 조회는 직렬로 대기시킨다.
+4. **결과 디스크 캐시**: 같은 조회를 반복해서 받지 않는다, 먼저 `runs/fofa-*.jsonl` 에 이미 있는지 본다.
+5. **긴 작업은 백그라운드로**: `run_in_background` 로 돌려 대화를 막지 않는다.
+6. 쿼터가 소진되거나 속도 제한을 받으면 다른 데이터 소스(인증서 투명성, DNS, 검색 엔진)로 바꾼다, 우기지 않는다.
 
-## 限速客户端（用这个，不要手写 curl 循环）
+## 속도 제한 클라이언트(이것을 쓰고 curl 루프를 직접 쓰지 않는다)
 ```bash
 cat > runs/fofa_client.py <<'PY'
 #!/usr/bin/env python3
-"""FOFA 采集（限速安全）：单线程 + 最小间隔 + 指数退避 + 结果缓存。
+"""FOFA 수집(속도 제한 안전): 단일 스레드 + 최소 간격 + 지수 백오프 + 결과 캐시.
 
-用法:
+사용법:
   python3 runs/fofa_client.py 'domain="example.com"' --pages 2 --size 100 --interval 2.0
-输出:
-  runs/fofa-<slug>.jsonl   每行一个资产 {host,ip,port,title,domain,server,protocol}
+출력:
+  runs/fofa-<slug>.jsonl   한 줄에 자산 하나 {host,ip,port,title,domain,server,protocol}
 """
 import argparse, base64, hashlib, json, os, sys, time, urllib.error, urllib.parse, urllib.request
 
 KEY = os.environ["FOFA_KEY"]
 API = "https://fofa.info/api/v1/search/all"
 FIELDS = "host,ip,port,title,domain,server,protocol"
-RETRY_BACKOFF = [5, 15, 45]          # 遇 45012 的退避秒数
-HARD_BUDGET = 30                      # 单次运行最多请求次数
+RETRY_BACKOFF = [5, 15, 45]          # 45012 를 만났을 때의 백오프 초
+HARD_BUDGET = 30                      # 1회 실행 최대 요청 수
 
 
 def fetch(query, page, size, timeout=30):
@@ -77,9 +77,9 @@ def fetch(query, page, size, timeout=30):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("query")
-    ap.add_argument("--pages", type=int, default=2, help="最多翻页数（默认 2）")
-    ap.add_argument("--size", type=int, default=100, help="每页条数（默认 100，不要调大）")
-    ap.add_argument("--interval", type=float, default=2.0, help="请求最小间隔秒（默认 2.0）")
+    ap.add_argument("--pages", type=int, default=2, help="최대 페이지 수(기본 2)")
+    ap.add_argument("--size", type=int, default=100, help="페이지당 건수(기본 100, 늘리지 않는다)")
+    ap.add_argument("--interval", type=float, default=2.0, help="요청 최소 간격(초, 기본 2.0)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -88,12 +88,12 @@ def main():
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
 
     if os.path.exists(out) and os.path.getsize(out) > 0:
-        print(f"[cache] {out} 已存在（{os.path.getsize(out)} bytes），如需重拉请先删除", file=sys.stderr)
+        print(f"[cache] {out} 이(가) 이미 존재한다({os.path.getsize(out)} bytes), 다시 받으려면 먼저 삭제한다", file=sys.stderr)
         return 0
 
     seen, rows, requests_made, last_ts = set(), [], 0, 0.0
     for page in range(1, args.pages + 1):
-        # ---- 限速：保证两次请求之间至少间隔 interval 秒 ----
+        # ---- 속도 제한: 두 요청 사이에 최소 interval 초를 보장한다 ----
         wait = args.interval - (time.time() - last_ts)
         if wait > 0:
             time.sleep(wait)
@@ -101,27 +101,27 @@ def main():
         status, data = None, None
         for attempt, backoff in enumerate([0] + RETRY_BACKOFF):
             if attempt:
-                print(f"[backoff] 等待 {backoff}s 后重试 (page={page})", file=sys.stderr)
+                print(f"[backoff] {backoff}s 대기 후 재시도 (page={page})", file=sys.stderr)
                 time.sleep(backoff)
             last_ts = time.time()
             requests_made += 1
             if requests_made > HARD_BUDGET:
-                print(f"[stop] 达到请求预算 {HARD_BUDGET}", file=sys.stderr)
+                print(f"[stop] 요청 예산 {HARD_BUDGET} 에 도달했다", file=sys.stderr)
                 break
             status, data = fetch(args.query, page, args.size)
             if status == 200 and not data.get("error"):
                 break
             errmsg = str(data.get("errmsg", ""))
             if "45012" in errmsg or status == 429:
-                continue                      # 限速 → 退避重试
-            print(f"[stop] 不可重试错误 http={status} {errmsg}", file=sys.stderr)
+                continue                      # 속도 제한 → 백오프 재시도
+            print(f"[stop] 재시도할 수 없는 오류 http={status} {errmsg}", file=sys.stderr)
             data = None
             break
         if data is None:
             break
 
         results = data.get("results") or []
-        print(f"[page {page}] {len(results)} 条 (size={data.get('size')}, 消耗F点={data.get('consumed_fpoint')})", file=sys.stderr)
+        print(f"[page {page}] {len(results)} 건 (size={data.get('size')}, 소모 F 포인트={data.get('consumed_fpoint')})", file=sys.stderr)
         for item in results:
             if isinstance(item, str):
                 item = [item]
@@ -140,12 +140,12 @@ def main():
                 "protocol": item[6] if len(item) > 6 else "",
             })
         if len(results) < args.size:
-            break                              # 已到末页
+            break                              # 마지막 페이지 도달
 
     with open(out, "w", encoding="utf-8") as f:
         for row in rows:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
-    print(f"[done] {len(rows)} 条资产 → {out}（共 {requests_made} 次请求）", file=sys.stderr)
+    print(f"[done] 자산 {len(rows)} 건 → {out}(총 {requests_made} 회 요청)", file=sys.stderr)
     return 0
 
 
@@ -154,26 +154,26 @@ if __name__ == "__main__":
 PY
 ```
 
-### 用法
+### 사용법
 ```bash
 mkdir -p runs
 python3 runs/fofa_client.py 'domain="example.com"' --pages 2 --size 100 --interval 2.0
 python3 runs/fofa_client.py 'cert="example.com"' --pages 3 --interval 2.0
-python3 runs/fofa_client.py 'org="示例科技有限公司"' --pages 2 --interval 2.0
+python3 runs/fofa_client.py 'org="<ORG_NAME>"' --pages 2 --interval 2.0
 ```
 
-### 落库
-读 `runs/fofa-*.jsonl`，逐条 `redteam_asset_add`：`provenance="passive"`、`tool="fofa"`，端口带 `url=host`、`title`、`product=server`；域名写进 `names`。
+### 적재
+`runs/fofa-*.jsonl` 을 읽어 건별로 `redteam_asset_add` 를 호출한다: `provenance="passive"`, `tool="fofa"`, 포트에 `url=host`, `title`, `product=server` 를 담고 도메인은 `names` 에 쓴다.
 
-## 常用查询语句
-| 目的 | 语句 |
+## 자주 쓰는 쿼리
+| 목적 | 문장 |
 |---|---|
-| 某域名全部资产 | `domain="example.com"` |
-| 证书包含该域名 | `cert="example.com"` |
-| 某 C 段 | `ip="203.0.113.0/24"` |
-| 单位名称 | `org="示例科技有限公司"` |
-| 按标题找后台 | `title="登录" && domain="example.com"` |
-| 按 body 特征 | `body="/seeyon/"` |
-| 指定端口 | `ip="203.0.113.0/24" && port="3306"` |
+| 특정 도메인의 전체 자산 | `domain="example.com"` |
+| 인증서에 해당 도메인 포함 | `cert="example.com"` |
+| 특정 C 대역 | `ip="203.0.113.0/24"` |
+| 기관 이름 | `org="<ORG_NAME>"` |
+| 제목으로 백오피스 찾기 | `title="로그인" && domain="example.com"` |
+| body 특징으로 찾기 | `body="/seeyon/"` |
+| 포트 지정 | `ip="203.0.113.0/24" && port="3306"` |
 
-> 宽泛语句（单独用 `body=` / `title=`）结果量大、消耗配额快，务必叠加域名或 IP 限定。
+> 넓은 문장(단독으로 `body=` / `title=` 사용)은 결과량이 많고 쿼터 소모가 빠르므로 반드시 도메인이나 IP 제한을 겹쳐 쓴다.

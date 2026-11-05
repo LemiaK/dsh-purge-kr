@@ -12,15 +12,15 @@ import { ALL_PATCHES, applyPatches, patchStatus } from "../lib/core.js";
 import { NATIVE_QUEUE_GUARD, OLD_QUEUE_FALLBACK } from "../lib/steering.js";
 import { removeTreeNoFollowSync } from "../lib/remove-tree.js";
 
-// 一条真能打上的补丁（单宿主、两个目标文件都在 fixture 里），用它的 applied
-// 结果证明"前一条目标缺失"没有把后面的补丁连坐。
+// 실제로 적용되는 패치 하나(단일 호스트, 대상 파일 두 개가 모두 fixture 안에 있다). 그 패치의 applied
+// 결과로 앞 패치의 대상 누락이 뒤 패치를 연좌하지 않았음을 증명한다.
 const APPLIES = ALL_PATCHES.find((p) => p.id === 90);
-assert.ok(APPLIES, "补丁 90 必须存在于 ALL_PATCHES，否则下面全部断言失去意义");
+assert.ok(APPLIES, "패치 90 은 ALL_PATCHES 에 반드시 있어야 한다. 없으면 아래 모든 어서션이 의미를 잃는다");
 const fixtureSource = JSON.parse(
   fs.readFileSync(new URL("./fixtures/steering-rc2.json", import.meta.url), "utf8"),
 );
-// fixtures 里的 controller 是"已打补丁"的样式，还原成宿主原文才是待打状态；
-// replace 未命中时会静默返回原文，那样测试会得到莫名其妙的 already，所以先断言。
+// fixtures 의 controller 는 이미 패치된 형태이므로 호스트 원문으로 되돌려야 패치 대기 상태가 된다;
+// replace 가 적중하지 않으면 원문이 조용히 반환되어 테스트가 엉뚱한 already 를 받는다. 그래서 먼저 어서션한다.
 const RESTORED_CONTROLLER = fixtureSource.controller.replace(
   NATIVE_QUEUE_GUARD,
   OLD_QUEUE_FALLBACK,
@@ -28,7 +28,7 @@ const RESTORED_CONTROLLER = fixtureSource.controller.replace(
 assert.notEqual(
   RESTORED_CONTROLLER,
   fixtureSource.controller,
-  "fixture 里应含 NATIVE_QUEUE_GUARD，否则无法还原成待打补丁的宿主原文",
+  "fixture 에는 NATIVE_QUEUE_GUARD 가 있어야 한다. 없으면 패치 대기 상태의 호스트 원문으로 되돌릴 수 없다",
 );
 
 function fixture({ withHostFiles = false }) {
@@ -55,7 +55,7 @@ async function withFixture(options, fn) {
   const f = fixture(options);
   const prevHome = process.env.DSH_HOME;
   const prevSurface = process.env.DSH_SURFACE;
-  // 指向 fixture：apply 前的 profile 快照写到临时 home，绝不碰真实 ~/.dsh。
+  // fixture 를 가리킨다: apply 전 profile 스냅샷은 임시 home 에 쓰고 실제 ~/.dsh 는 절대 건드리지 않는다.
   process.env.DSH_HOME = f.home;
   process.env.DSH_SURFACE = "desktop";
   try {
@@ -70,9 +70,9 @@ async function withFixture(options, fn) {
 }
 
 /**
- * 取一条"目标文件在本 fixture 里全都不存在"的补丁，用 patchStatus 实证，
- * 而不是按 ALL_PATCHES 的顺序假定第一条就缺——#74/#87 这类补丁的目标恰好是
- * fixture 里建出来的 agent-loop，靠顺序撞运气会在补丁重排后误判。
+ * 대상 파일이 이 fixture 안에 하나도 없는 패치를 patchStatus 로 실증해 고른다.
+ * ALL_PATCHES 순서를 믿고 첫 번째가 빠졌다고 가정하지 않는다 — #74/#87 같은 패치의 대상은
+ * fixture 에서 만들어 둔 agent-loop 이라, 순서 운에 기대면 패치가 재배열된 뒤 오판한다.
  */
 async function absentPatch(f) {
   const opts = { dshHome: f.home, surface: "desktop" };
@@ -80,7 +80,7 @@ async function absentPatch(f) {
   const found = ALL_PATCHES.find(
     (p) => p.id !== APPLIES.id && status[p.id] === "missing_file",
   );
-  assert.ok(found, "本 fixture 里应至少有一条目标文件全缺的补丁");
+  assert.ok(found, "이 fixture 에는 대상 파일이 전부 없는 패치가 적어도 하나 있어야 한다");
   return found;
 }
 
@@ -93,7 +93,7 @@ test("a patch whose target files are all absent is reported, not thrown", async 
     assert.equal(
       report[0].status,
       "missing_file",
-      "目标文件全缺时记 missing_file，整次 apply 不能抛异常",
+      "대상 파일이 전부 없으면 missing_file 로 기록하고, apply 전체가 예외를 던져서는 안 된다",
     );
     assert.ok(report[0].missing > 0);
   });
@@ -103,15 +103,15 @@ test("a missing target does not stop the patches that follow it", async () => {
   await withFixture({ withHostFiles: true }, async (f) => {
     const absent = await absentPatch(f);
     const report = await applyPatches(f.aiBase, [absent, APPLIES]);
-    assert.equal(report.length, 2, "第二条补丁必须也被处理");
+    assert.equal(report.length, 2, "두 번째 패치도 반드시 처리되어야 한다");
     assert.equal(report[0].patch_id, absent.id);
     assert.equal(report[0].status, "missing_file");
     const applied = report[1];
     assert.equal(applied.patch_id, APPLIES.id);
-    assert.equal(applied.status, "applied", "后面的补丁不能被前一条的缺失连坐");
+    assert.equal(applied.status, "applied", "뒤 패치는 앞 패치의 대상 누락에 연좌되어서는 안 된다");
     assert.ok(
       (fs.readFileSync(f.targets.controller, "utf8")).includes(NATIVE_QUEUE_GUARD),
-      "补丁内容必须真的写进磁盘",
+      "패치 내용은 실제로 디스크에 기록되어야 한다",
     );
   });
 });
@@ -122,7 +122,7 @@ test("re-applying after a missing target stays idempotent", async () => {
     await applyPatches(f.aiBase, [absent, APPLIES]);
     const once = fs.readFileSync(f.targets.controller, "utf8");
     const report = await applyPatches(f.aiBase, [absent, APPLIES]);
-    assert.equal(report[1].status, "already", "第二次应判 already，不重复写");
+    assert.equal(report[1].status, "already", "두 번째는 already 로 판정하고 다시 쓰지 않는다");
     assert.equal(fs.readFileSync(f.targets.controller, "utf8"), once);
   });
 });
