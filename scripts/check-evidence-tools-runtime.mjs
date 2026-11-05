@@ -1,4 +1,4 @@
-// Run against an isolated prefix containing the official DSH tool registry.
+// 공식 DSH 도구 레지스트리가 들어 있는 격리 prefix 를 대상으로 실행한다.
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import os from 'node:os'
@@ -60,7 +60,7 @@ try {
   const count = await run('unverified_count')
   assert.equal(count.ok, false)
   assert.equal(count.unverified_count, undefined)
-  console.log('PASS registered evidence, unknown, file import and containment tools:', process.platform, process.version, linkType)
+  console.log('통과: 증거·미지 등록, 파일 가져오기, 격리 도구가 실제 도구면에 등록됨:', process.platform, process.version, linkType)
 } finally {
   await ctx.fiber.dispose()
   fs.rmSync(tmp, {recursive:true, force:true})
