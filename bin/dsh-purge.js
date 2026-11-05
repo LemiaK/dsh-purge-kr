@@ -25,6 +25,12 @@ function printStatus(state) {
   out.push(`  주입 파일       ${state.override_path}`);
   out.push(`  주입 상태       ${state.override_status}`);
   out.push("");
+  if (!state.ai_base) {
+    // 호스트 루트가 없으면 실제 상태를 모른다. 0/86 이나 undefined 로 단정하면 이미 적용된 패치를 미적용으로 읽게 된다.
+    out.push("  패치 상태       미확인 / unknown — 플러그인 루트를 찾지 못해 읽지 않았습니다");
+    out.push(`  shim: dsh.cmd=${state.shim_cmd}  dsh.ps1=${state.shim_ps1}  dsh=${state.shim_bin}`);
+    return out.join("\n");
+  }
   out.push(`  패치 ${state.patches_applied}/${core.ALL_PATCHES.length} 정리됨, ${state.patches_pending} 정리 대기`);
   for (const p of core.ALL_PATCHES) {
     const s = state.patch_status[p.id];
