@@ -9,7 +9,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { scanCode, applySpans, skeleton, hasCjk } from "../scripts/i18n/spans.mjs";
+import { scanCode, applySpans, skeleton, hasCjk, codeFingerprint } from "../scripts/i18n/spans.mjs";
 import { loadTm, saveTm, tmKey } from "../scripts/i18n/tm.mjs";
 import { llmConfig, buildRequest, normalizeEffort, REASONING_EFFORTS } from "../scripts/i18n/translate.mjs";
 
@@ -112,4 +112,12 @@ test("reasoning effort comes from an environment variable and is validated", () 
   assert.equal("reasoning_effort" in buildRequest(on, batch, { withReasoning: false }), false);
   // 키는 본문에 절대 들어가지 않는다.
   assert.ok(!JSON.stringify(buildRequest(on, batch)).includes(FAKE_KEY));
+});
+
+test("the structural fingerprint ignores translation but catches code edits", () => {
+  const a = 'const x = 1; // 中文 주석\nfunction f() { return "值"; }\n';
+  const b = 'const x = 1; // 번역된 주석\nfunction f() { return "값"; }\n';
+  assert.equal(codeFingerprint(a), codeFingerprint(b));
+  const c = 'const x = 2; // 번역된 주석\nfunction f() { return "값"; }\n';
+  assert.notEqual(codeFingerprint(a), codeFingerprint(c));
 });
