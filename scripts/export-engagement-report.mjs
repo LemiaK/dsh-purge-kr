@@ -1,14 +1,14 @@
-#!/usr/bin/env node
 import { removeTreeNoFollowSync } from "../lib/remove-tree.js";
+#!/usr/bin/env node
 /**
- * 표적 하나의 점수 보고서를 옮길 수 있는 전달 패키지로 내보낸다: `<outDir>/<표적>-레드팀-성과-재현-보고서.md` + `<outDir>/shots/`.
+ * 把一个靶标的得分报告导出成可移动的交付包：`<outDir>/<靶标>-红队成果复现报告.md` + `<outDir>/shots/`。
  *
- * 패널에서 내려받은 markdown 은 증거 스크린샷이 절대 경로라서 남에게 보내면 이미지가 깨진다.
- * 여기서는 shots/ 를 출력 디렉터리에 함께 복사하고 markdown 은 상대 경로를 쓴다.
+ * 面板下载的 markdown 里，证据截图走绝对路径，发给别人会碎图。
+ * 这里把 shots/ 一并拷到输出目录，markdown 用相对路径。
  *
- * 실행 방법:
+ * 跑法：
  *   node scripts/export-engagement-report.mjs
- *   node scripts/export-engagement-report.mjs --out ~/산출물/표적명
+ *   node scripts/export-engagement-report.mjs --out ~/交付/靶标名
  *   node scripts/export-engagement-report.mjs --engagement <id>
  */
 import { mkdirSync, writeFileSync, cpSync, rmSync, existsSync, readdirSync } from "node:fs";
@@ -26,7 +26,7 @@ const root = process.env.REDTEAM_HOME || join(process.env.DSH_HOME || join(homed
 const store = new RedteamStore(root);
 const id = argOf("engagement", store.activeEngagementId());
 if (!id) {
-  console.error("사용할 표적이 없다: 패널에서 먼저 만들거나 --engagement <id> 로 지정한다");
+  console.error("没有可用靶标：先用面板创建，或用 --engagement <id> 指定");
   process.exit(1);
 }
 const outDir = resolve(argOf("out", process.cwd()));
@@ -41,11 +41,11 @@ if (existsSync(shotsSrc)) {
 
 const rep = store.scoreReport(id, { shotRef: "relative" });
 const name = String(rep.target || id).replace(/[/\\:*?"<>|]/g, "_");
-const outFile = join(outDir, name + "-레드팀-성과-재현-보고서.md");
+const outFile = join(outDir, name + "-红队成果复现报告.md");
 writeFileSync(outFile, rep.markdown, "utf8");
 store.close();
 
 const imgs = (rep.markdown.match(/!\[[^\]]*\]\([^)]+\)/g) || []).length;
-console.log("✓ 보고서: " + outFile);
-console.log("  합계 " + rep.summary.points + " 점 · 본문 " + rep.items.length + "개 · 삽입 스크린샷 " + imgs + "장"
-  + (existsSync(shotsDst) ? " (shots/ " + readdirSync(shotsDst).length + "개 파일, 보고서와 함께 복사하면 된다)" : ""));
+console.log("✓ 报告：" + outFile);
+console.log("  合计 " + rep.summary.points + " 分 · " + rep.items.length + " 条正文 · 嵌入截图 " + imgs + " 张"
+  + (existsSync(shotsDst) ? "（shots/ " + readdirSync(shotsDst).length + " 个文件，随报告一起拷走即可）" : ""));

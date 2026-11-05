@@ -1,5 +1,5 @@
 /**
- * client.js 를 오른쪽 dsh-purge 두 탭(정리 + 드릴 콘솔)으로 바꾸고, vendor 드릴 콘솔 UI 를 임베드한다.
+ * 把 client.js 改成右侧 dsh-purge 双页签（清洗 + 演练台），并嵌入 vendor 演练台 UI。
  * node scripts/patch-client-dock.mjs
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -18,31 +18,31 @@ const LEGAL = readFileSync(legalPath, "utf8").trim();
 
 let client = readFileSync(clientPath, "utf8").replace(/\r\n/g, "\n");
 
-// 1) 로케일 키
+// 1) locale keys
 if (!client.includes('"dock.clean"')) {
 	client = client.replace(
-		'\t\t\tnav: "규칙 설정",',
+		'\t\t\tnav: "规则设定",',
 		`\t\t\tnav: "dsh-purge",
-			"dock.clean": "정리",
-			"dock.drill": "드릴 콘솔",
+			"dock.clean": "清洗",
+			"dock.drill": "演练台",
 			"dock.toggle": "dsh-purge",
 			"dock.newSession": "dsh-purge",
-			"dock.full": "전체 보기",
-			"dock.close": "접기",
-			"dock.unauthorized": "미인증",
-			"auth.title": "드릴 콘솔 권한 확인",
-			"auth.lead": "정리에는 이 단계가 필요 없다. 드릴 콘솔에 처음 들어가거나 전체 보기를 열 때는 이 창을 먼저 완료해야 한다.",
-			"auth.warn": "보안 경고: 드릴 콘솔은 직접 관리 권한이 있는 이 PC, 오프라인 표적, 또는 서면 승인된 드릴 환경에만 쓴다. 승인되지 않은 침투·공격·절취·파괴는 일절 금지한다.",
-			"auth.hint.wait": "선언문을 읽는다. {n}초 뒤에 체크할 수 있다.",
-			"auth.hint.scroll": "카운트다운이 끝났다. 선언문을 끝까지 스크롤한 뒤 체크한다.",
-			"auth.hint.check": "카운트다운이 끝났다. 세 항목을 모두 체크한다.",
-			"auth.check.read": "나는 “보안 및 위법 금지 선언”을 모두 읽고 그 모든 조항에 동의한다.",
-			"auth.check.scope": "나는 이 PC 의 승인된 환경, 오프라인 표적, 또는 합법적 드릴에만 사용함을 확인한다.",
-			"auth.check.ban": "나는 어떤 위법 용도도 금지됨을 확인한다. 이 권한 확인을 마치지 않으면 드릴 콘솔을 쓸 수 없다.",
-			"auth.no": "들어가지 않음",
-			"auth.ok": "권한 확인",
-			"auth.ok.tab": "권한을 확인하고 드릴 콘솔로 들어가기",
-			"auth.ok.full": "권한을 확인하고 전체 보기 열기",`,
+			"dock.full": "全面浏览",
+			"dock.close": "收起",
+			"dock.unauthorized": "未授权",
+			"auth.title": "演练台授权确认",
+			"auth.lead": "清洗不需要这一步。第一次进入演练台，或打开全面浏览，都要先完成本窗。",
+			"auth.warn": "安全警告：演练台只用于你有权管理的本机、离线靶标，或已书面授权的演练环境。未经授权的渗透、攻击、窃取和破坏一律禁止。",
+			"auth.hint.wait": "请阅读声明。{n} 秒后才能勾选。",
+			"auth.hint.scroll": "倒计时已结束。请把声明滚到文末，再勾选。",
+			"auth.hint.check": "倒计时已结束。请勾选全部三项。",
+			"auth.check.read": "我已读完《安全与禁止违法声明》，并认可其中的全部条款。",
+			"auth.check.scope": "我确认只用在本机已授权环境、离线靶标或合规演练中。",
+			"auth.check.ban": "我确认禁止任何违法用途。未完成本授权，不得使用演练台。",
+			"auth.no": "暂不进入",
+			"auth.ok": "确认授权",
+			"auth.ok.tab": "确认授权并进入演练台",
+			"auth.ok.full": "确认授权并全面浏览",`,
 	);
 	client = client.replace(
 		'\t\t\tnav: "Rules",',
@@ -385,7 +385,7 @@ if (!client.includes("function PurgeDock()")) {
 
 // 4) Replace apply() settings.section with dock slots
 const oldApply = `		function apply(ctx) {
-			ctx.effect(() => ctx.locale.register(NS, { ko, en }), "dsh-purge: dictionaries");
+			ctx.effect(() => ctx.locale.register(NS, { zh, en }), "dsh-purge: dictionaries");
 			const t = ctx.locale.bind(NS);
 			translate = t;
 			ctx.slots.inject("settings.section", () => ctx.slots.register({
@@ -408,7 +408,7 @@ const oldApply = `		function apply(ctx) {
 		}`;
 
 const newApply = `		function apply(ctx) {
-			ctx.effect(() => ctx.locale.register(NS, { ko, en }), "dsh-purge: dictionaries");
+			ctx.effect(() => ctx.locale.register(NS, { zh, en }), "dsh-purge: dictionaries");
 			const t = ctx.locale.bind(NS);
 			translate = t;
 			ctx.slots.inject("shell.overlay", () => ctx.slots.register({

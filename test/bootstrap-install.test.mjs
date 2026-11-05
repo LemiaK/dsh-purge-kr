@@ -8,11 +8,11 @@ import {execFileSync} from 'node:child_process';
 import {bootstrapInstall,verifyChecksum,desktopCli} from '../scripts/bootstrap-install.mjs';
 const version='1.6.8',filename=`dsh-purge-community-${version}.tgz`;
 function fixture(t){
- const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'purge 공백 '));t.after(()=>fs.rmSync(tmp,{recursive:true,force:true}));
+ const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'purge 空格 '));t.after(()=>fs.rmSync(tmp,{recursive:true,force:true}));
  const home=path.join(tmp,'home'), profile=path.join(home,'profiles','desktop'),pack=path.join(tmp,'pack');
  fs.mkdirSync(profile,{recursive:true});fs.writeFileSync(path.join(profile,'package.json'),'{}');fs.writeFileSync(path.join(profile,'cordis.patch.yml'),'CURRENT PRIVATE SETTINGS');
  fs.mkdirSync(path.join(pack,'package/bin'),{recursive:true});
- fs.writeFileSync(path.join(pack,'package/package.json'),JSON.stringify({name:'dsh-purge-community',version,repository:{url:'git+https://github.com/wnduddld0513/dsh-purge-kr.git'}}));
+ fs.writeFileSync(path.join(pack,'package/package.json'),JSON.stringify({name:'dsh-purge-community',version,repository:{url:'git+https://github.com/kingcharleslzy-ai/dsh-purge.git'}}));
  fs.writeFileSync(path.join(pack,'package/bin/community.js'),`require('node:fs').writeFileSync(process.env.DSH_HOME+'/called.json',JSON.stringify({args:process.argv.slice(2),env:process.env.DSH_PROFILE,cli:process.env.PURGE_DSH_CLI}));`);
  const file=path.join(tmp,filename);const tar=process.platform==='win32'?path.join(process.env.SystemRoot,'System32/tar.exe'):'tar';execFileSync(tar,['-czf',filename,'-C','pack','package'],{cwd:tmp});const bytes=fs.readFileSync(file);
  const sum=createHash('sha256').update(bytes).digest('hex');

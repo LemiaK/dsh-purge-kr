@@ -29,7 +29,7 @@ This does not establish a false positive, nor does it establish a new regression
 
 ### Follow-up diagnosis, 2026-11-01
 
-All eight jobs in [Community checks for code commit 9c4124e](https://github.com/wnduddld0513/dsh-purge-kr/actions/runs/41319700558) completed successfully, including the hosted Windows npm installation/rollback job. This is separate from the affected Windows machine, where the blocker is reproducible.
+All eight jobs in [Community checks for code commit 9c4124e](https://github.com/kingcharleslzy-ai/dsh-purge/actions/runs/41319700558) completed successfully, including the hosted Windows npm installation/rollback job. This is separate from the affected Windows machine, where the blocker is reproducible.
 
 The affected file is 8,298 bytes. Its SHA256 above matches both release v1.6.68 and its original source commit `197cbdd67969b4f4bbbcdde200c0debcc0fe160d`. It contains literal PHP WebShell examples inside Markdown code fences. That is consistent with the reported PHP backdoor category, but neither the exact signature nor a false-positive determination is available from the event log.
 

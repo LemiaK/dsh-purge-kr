@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const repository = process.env.GITHUB_REPOSITORY || 'wnduddld0513/dsh-purge-kr';
+const repository = process.env.GITHUB_REPOSITORY || 'kingcharleslzy-ai/dsh-purge';
 if (!/^[\w.-]+\/[\w.-]+$/.test(repository)) throw Error('Invalid repository');
 const start = '<!-- CONTRIBUTORS:START -->', end = '<!-- CONTRIBUTORS:END -->';
 const snapshot = path.join(root, '.github/contributors.json');
@@ -50,7 +50,7 @@ const rows = [];
 for (let i = 0; i < cells.length; i += 6) rows.push('  <tr>\n' + cells.slice(i, i + 6).join('\n') + '\n  </tr>');
 const block = `${start}\n<table>\n${rows.join('\n')}\n</table>\n${end}`;
 const writes = [[snapshot, JSON.stringify(people, null, 2) + '\n']];
-for (const name of ['README.md']) {
+for (const name of ['README.md', 'README.zh-CN.md', 'docs/README.en.md']) {
   const file = path.join(root, name), text = fs.readFileSync(file, 'utf8');
   if (text.split(start).length !== 2 || text.split(end).length !== 2 || text.indexOf(end) < text.indexOf(start))
     throw Error(`Missing or duplicate contributor markers in ${name}`);

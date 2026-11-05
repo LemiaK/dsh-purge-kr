@@ -104,8 +104,8 @@ test("NEXT + rc.2：内核已回归，但整机不判 qualified", () => {
   assert.equal(compat.family_qualified, false, "NEXT 家族整体未验证");
   assert.equal(compat.qualified, false, "两层必须都过才算 qualified");
   assert.equal(compat.level, "kernel-verified", "不能报 qualified，也不能笼统报 unverified");
-  assert.match(compat.message, /커널 버전은 항목별 회귀를 통과했습니다/);
-  assert.match(compat.message, /검증되지 않아/);
+  assert.match(compat.message, /内核版本已逐条回归/);
+  assert.match(compat.message, /尚未验证/);
 });
 
 test("官方 bundled-host + rc.2：仍然判 qualified（回归不受影响）", () => {
@@ -244,7 +244,7 @@ test("resolveInstance：不可读的 DSH_BASE 给出具体错误，而不是「�
   assert.equal(resolved.resolved, false);
   assert.equal(resolved.probe.reason, "unreadable");
   assert.equal(resolved.probe.code, "EIO");
-  assert.match(resolved.reason, /읽을 수 없습니다/);
+  assert.match(resolved.reason, /无法读取/);
   assert.match(resolved.reason, /EIO/);
 });
 

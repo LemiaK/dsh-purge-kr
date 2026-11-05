@@ -3,7 +3,7 @@ import { h, react } from "./shared/react.js";
 import { PURGE_CSS } from "./styles/index.js";
 import { useDock, startGrantSync } from "./state/dock.js";
 import { AuthGate } from "./components/auth.js";
-import { NS, setTranslate, ko, en } from "./shared/locale.js";
+import { NS, setTranslate, zh, en } from "./shared/locale.js";
 import { SettingsRoot } from "./components/settings-shell.js";
 import { PurgePage, PurgeGlyph } from "./components/page.js";
 import { bindSessionContext } from "./state/session-context.js";
@@ -48,7 +48,7 @@ export function PanelOverlays() {
     // and the red-team environment gate next to the dock.
     h(WelcomeNotice, {
       repo: __COMMUNITY__
-        ? "https://github.com/wnduddld0513/dsh-purge-kr"
+        ? "https://github.com/kingcharleslzy-ai/dsh-purge"
         : undefined,
     }),
     h(EnvAdaptSendGate),
@@ -66,12 +66,7 @@ export function apply(ctx) {
   ctx.inject(["sessions", "uiWorkspace", "conversation"], (host) =>
     installRewindUi(host),
   );
-  ctx.effect(() => ctx.locale.register(NS, { ko, en }), "panel locale");
-  ctx.effect(() => {
-    const locale = ctx.locale;
-    if (!locale || typeof locale.addLanguage !== "function") return undefined;
-    return locale.addLanguage({ id: "ko", label: "한국어", fallback: "en" });
-  }, "panel locale language");
+  ctx.effect(() => ctx.locale.register(NS, { zh, en }), "panel locale");
   const t = ctx.locale.bind(NS);
   setTranslate(t);
   ctx.slots.inject("shell.overlay", () =>
@@ -84,7 +79,7 @@ export function apply(ctx) {
       PanelOverlays,
     ),
   );
-  // 왼쪽 사이드바 진입점: 아이콘 + 전체 페이지. 오른쪽 드로어는 중복을 피하기 위해 더 이상 등록하지 않는다.
+  // 左侧栏入口：图标 + 整页。右侧抽屉不再注册，避免两处重复。
   ctx.slots.inject("sidebar.panellist", () =>
     ctx.slots.register(
       {

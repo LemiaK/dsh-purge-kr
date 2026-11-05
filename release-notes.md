@@ -1,3 +1,66 @@
+# 1.6.84
+
+- `unauth-exploit` 现在说明如何通过已有的授权测试入口验证命令执行。每次生成新的挑战，分别提供 POSIX 和 Windows PowerShell 命令。仅能写入文件时，记录为文件写权限。
+- 随包新增 `scripts/exec-proof.mjs`，在操作端生成挑战、核对原始输出。它不连接目标，也不认证执行来源；仍须核对入口和退出状态。此次没有重新加入旧文档的 WebShell 和持久化命令示例。
+- 已在 Mac 和 Windows 4090 隔离环境运行技能中的命令；正确响应通过，原样回显、上一轮响应、混杂输出、空输出及静态文本均被拒绝。此次未修改宿主补丁、用户设置、预设和安装／回滚流程。
+
+1.6.83 未正式发行：Windows CI 的测试提取命令时只识别 LF。1.6.84 同时检查 LF 和 CRLF。
+
+Windows 从更旧版本迁移时，Defender 仍可能拦截旧包文件的完整快照；本版未修复或绕过该限制。见 [1.6.82 迁移说明](https://github.com/kingcharleslzy-ai/dsh-purge/releases/tag/v1.6.82)。
+
+# 1.6.82
+
+- Windows Desktop 换包助手现在能在宿主的 Job Object 结束后继续等待。用户手动退出后，助手校验原归档、保存备份并完成换包。见 [#89](https://github.com/kingcharleslzy-ai/dsh-purge/issues/89)。
+- pnpm 工作区的 Web 实例从当前运行的 CLI 包读取实际 bin 入口。即使工作区链接解析到 `apps/cli`，升级和回滚也能找到同一个实例及 profile。见 [#93](https://github.com/kingcharleslzy-ai/dsh-purge/issues/93)。
+- 随包技能 `unauth-exploit` 改用静态文本演示文件写权限，移除了文档中的可执行 WebShell 和持久化命令示例。原技能名称和工具入口继续可用。
+
+## 已实测通过
+
+| 环境 | 验收结果 |
+| --- | --- |
+| macOS，DSH rc.2 Web 工作区 | 分别从公开的 1.6.60、1.6.81 完整安装包升级到 1.6.82，再各自回滚。逐文件核对了旧包的 247、316 个文件，并保留备份后编辑的测试提示词。 |
+| Windows 11，RTX 4090，Defender 实时防护开启 | 用修订后文档构建的完整预发行测试包 1.6.82-rc.1 升级到 1.6.82，再从快照回滚到 rc.1。三个阶段均通过全部 316 个文件的 SHA256 校验。另测了 1.6.82 的完整安装、同版重装和快照回滚。rc.1 仅用于对照，未公开发行。 |
+| Windows 11，非管理员 PowerShell 5.1，隔离 Electron | 重现了旧助手随 Job 结束而退出。新版助手等待测试宿主完整退出后成功换包，从备份还原的 Electron 归档与原件 SHA256 一致。 |
+
+## Windows 从公开旧版迁移的已知限制
+
+1.6.60 与 1.6.81 的公开包仍含原始 `skills/redteam/unauth-exploit.md`。在受测机器上，Defender 将该内容记录为 `Backdoor:PHP/Chopper.E!dha`。有两个实际阻断位置：
+
+- **安装旧版时**，pnpm 向内容存储写入旧文件即可能失败。干净 profile 添加公开 1.6.81 时遇到了这一步。
+- **旧版已安装时**，升级前创建快照需要读取并复制旧文件。公开 1.6.60 在此处被拦，升级停止。从含原始示例的安装创建回滚前快照也可能在同一步停止。
+
+使用现有渠道更新 Defender 安全情报至 1.463.137.0 后，公开旧版往返仍未在这台 Windows 机器上通过。遇到上述情况请保留错误和原备份，核对 Defender 保护历史中的时间、文件名和检测名称。维护器需要完整快照；请勿跳过文件或把残缺备份用于回滚。
+
+[完整实测记录与修复范围（PR #148）](https://github.com/kingcharleslzy-ai/dsh-purge/pull/148)
+
+# 1.6.81
+
+- #146 接入 8 个证据账本与待查问题工具。引用和哈希匹配仅代表内容关联或一致；关闭待核实记录需要显式提交核实结果。旧记录保留，缺少核实记录的旧引用需重新核实。
+- 读取时核对实际内容。账本损坏或查询失败会报告异常；旧库可迁移至支持“撤回”的状态，操作不存在的记录会报告失败。
+- 截图及文件按当前靶标目录导入，可在其 `incoming/` 目录暂存，或直接传入内容。拒绝路径越界及指向外部的符号链接和 Windows 目录联接。
+- 已在 Mac 和 Windows 4090 的隔离环境实际调用官方 DSH 工具注册表，并验证外部标记文件完整。升级无需清空用户配置或历史证据。
+
+# 1.6.80
+
+- #143、#144：策略文案已去除品牌词的旧安装仍能完成 #61。#93 连续应用时校验三条策略文案；只匹配一部分时继续报告异常。
+- #144：首次安装到 DSH 0.2.1-rc.5 或从旧版升级时，#17 同时识别独立的写入和编辑方法。0.2.2-rc.1 继续检查共享的编辑和删除方法。未知方法保持原文件。
+- #145：Windows 换包测试保留助手退出状态、备份是否存在和原文件内容的断言；锁冲突和备份缺失仍须明确失败。感谢 PR 贡献者。
+
+---
+
+# 1.6.79
+
+## Windows CI 夹具路径修复（不是功能变更）
+
+1.6.77 的 release workflow 在 `windows-latest` 上失败，报 `windows-handoff-errors.ps1:24 FileNotFoundException`。定位结果：测试用 `path.resolve('test/fixtures/...')` 找夹具，依赖 `process.cwd()`；Windows runner 上 cwd 被外层脚本改掉后，拼出的绝对路径不存在，PowerShell 直接报找不到文件。同一 commit 的 macOS / ubuntu 全绿，1.6.78 的 release 也正常产出，说明与补丁逻辑无关。
+
+- `test/windows-electron-handoff.test.mjs` 改为用 `fileURLToPath(new URL('./fixtures/...', import.meta.url))` 定位，与测试文件绑定而非与启动目录绑定。
+- 新增 `test/fixture-paths.test.mjs`：扫描全部测试文件，禁止 `path.resolve('test/...')` 与 `process.cwd() + 'test/...'` 这类写法，并断言 Windows 交接夹具确实存在。
+
+## 验证
+
+`npm test` **544 通过 / 0 失败**。本轮不改任何宿主补丁、权限或提示词。
+
 # 1.6.78
 
 ## 红队模块补两处上游能力

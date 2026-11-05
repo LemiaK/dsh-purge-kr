@@ -7,7 +7,7 @@ import {hostFs} from '../lib/extract-asar.js';
 import {backupAll,revertAll,applyPatchesAllHosts} from '../lib/core.js';
 
 test('real backup descriptors close before atomic rename, rollback restores original bytes',async()=>{
- const root=fs.mkdtempSync(path.join(os.tmpdir(),'purge backup 한국어 '));
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'purge backup 中文 '));
  const oldHome=process.env.DSH_HOME;process.env.DSH_HOME=path.join(root,'home');
  try {
   const file=path.join(root,'dsh-settings/lib/index.js');fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,'original vendor code');

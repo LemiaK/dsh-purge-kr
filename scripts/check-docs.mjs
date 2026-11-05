@@ -1,96 +1,69 @@
-// 문서는 버전을 따라간다: 버전 번호, 릴리스 노트 첫 줄, README 의 버전 줄이 일치해야 한다.
-// README 는 영문 한 벌만 유지한다. README.ko-KR.md / docs/README.en.md 같은 사본 검사는 두지 않는다.
-// CI 에서 실행해 "코드는 릴리스했는데 README 는 이전 버전에 멈춰 있는" 상태를 막는다.
+// 文档跟着版本走：版本号、发行说明首行、英文 README 的版本行必须一致。
+// 放在 CI 里跑，避免"代码发版了、README 还停在上一个版本"。
 import fs from "node:fs";
 import { checkInstallExamples } from "./lib/check-install-examples.mjs";
 
 const read = (file) => fs.readFileSync(file, "utf8");
-const has = (file) => fs.existsSync(file);
 const pkg = JSON.parse(read("package.json"));
 const version = pkg.version;
+const notesFirst = read("release-notes.md").split("\n")[0].trim();
 const readme = read("README.md");
+const readmeEn = read("docs/README.en.md");
 const agents = read("AGENTS.md");
-const notes = read("release-notes.md");
-const repository = pkg.repository?.url?.replace(/^git\+/, "").replace(/\.git$/, "") || "";
-const rawBase = `raw.githubusercontent.com/wnduddld0513/dsh-purge-kr/master/scripts/install`;
 
 const problems = [];
-
-// 1. 릴리스 노트 첫 줄은 버전을 따른다.
-const notesFirst = notes.split("\n")[0].trim();
-if (notesFirst !== `# ${version}`) {
-  problems.push(`release-notes.md 첫 줄은 "# ${version}" 이어야 하는데 실제는 "${notesFirst}"`);
-}
-
-// 2. AGENTS.md 사람용 머리말과 §9 버전 표.
-if (!agents.includes(`현재 버전 **${version}**`)) {
-  problems.push(`AGENTS.md 에 "현재 버전 **${version}**" 가 없다`);
-}
-if (!agents.includes(`\`dsh-purge-community\` ${version}`)) {
-  problems.push(`AGENTS.md §9 버전 표가 ${version} 로 동기화되지 않았다`);
-}
-
-// 3. 유지보수·설치 문서의 현재 버전.
+if (read("README.zh-CN.md") !== readme) problems.push("README.zh-CN.md 必须与 README.md 保持一致");
 for (const file of ["docs/MAINTENANCE.md", "docs/INSTALLATION.md"]) {
-  if (!has(file)) {
-    problems.push(`${file} 가 없다`);
-    continue;
-  }
-  if (!read(file).includes(`현재 버전 **${version}**`)) problems.push(`${file} 의 현재 버전이 ${version} 로 동기화되지 않았다`);
+  if (!read(file).includes(`当前版本 **${version}**`)) problems.push(`${file} 当前版本未同步到 ${version}`);
 }
-
-// 4. README(영문 단일 본)에 반드시 있어야 하는 버전·설치 경계 문구.
-for (const needle of ["scripts/install.ps1", "issue #7", "before the plugin loads", "global npm registry"]) {
-  if (!readme.includes(needle)) problems.push(`README.md 에 설치 경계 문구가 없다: ${needle}`);
+for (const [file, needles] of [
+  ["README.md", ["scripts/install.ps1", "issue #7", "插件加载前", "不修改全局 npm 源"]],
+  ["AGENTS.md", ["scripts/install.ps1", "minimumReleaseAge=0", "不要安装后自动 apply/restart"]],
+]) {
+  for (const needle of needles) if (!read(file).includes(needle)) problems.push(`${file} 缺少安装边界：${needle}`);
+}
+if (notesFirst !== `# ${version}`) {
+  problems.push(`release-notes.md 首行应为 "# ${version}"，实际是 "${notesFirst}"`);
 }
 if (!readme.includes(`**${version}**`)) {
-  problems.push(`README.md 첫 화면에 버전 번호 **${version}** 가 없다`);
+  problems.push(`README.md 首屏缺少版本号 **${version}**`);
 }
-const hostLine = readme.match(/\*\*DSH Desktop ([0-9a-z.\-]+)\*\*/i);
-if (!hostLine) problems.push("README.md 에 “**DSH Desktop …**” 대응 버전 줄이 없다");
+if (!readme.includes("raw.githubusercontent.com/kingcharleslzy-ai/dsh-purge/master/scripts/install.sh")) {
+  problems.push("README.md 缺少安装器下载命令");
+}
+if (!readmeEn.includes(`Current version ${version}`)) {
+  problems.push(`docs/README.en.md 缺少 "Current version ${version}"`);
+}
+if (!agents.includes(`当前版本：**${version}**`)) {
+  problems.push(`AGENTS.md 缺少 "当前版本：**${version}**"`);
+}
+if (!agents.includes(`\`dsh-purge-community\` ${version}`)) {
+  problems.push(`AGENTS.md §9 版本表未同步到 ${version}`);
+}
+const hostLine = readme.match(/适配 \*\*DSH Desktop ([0-9a-z.\-]+)\*\*/i);
+if (!hostLine) problems.push("README.md 缺少「适配 DSH Desktop …」的版本行");
 
-// 5. 설치기는 이 포크의 master 에서 내려받아야 한다(다른 저장소 raw 경로 금지).
-for (const ext of ["sh", "ps1"]) {
-  if (!readme.includes(`scripts/install.${ext}`)) continue;
-  if (!readme.includes(`${rawBase}.${ext}`)) problems.push(`README.md 의 install.${ext} raw URL 이 이 포크(${rawBase}.${ext})가 아니다`);
-}
-const foreignInstallers = new Set();
-for (const [, host] of readme.matchAll(/raw\.githubusercontent\.com\/([^/\s]+\/[^/\s]+)\/master\/scripts\/install\./g)) {
-  if (host !== "wnduddld0513/dsh-purge-kr") foreignInstallers.add(host);
-}
-for (const host of foreignInstallers) problems.push(`README.md 에 다른 저장소의 설치기 raw URL 이 남아 있다: ${host}`);
-
-// 6. 복사해 쓰는 릴리스 명령은 패키지 버전을 따라가야 하며, 옛 TGZ 를 남기면 안 된다.
-{
-  const links = [...readme.matchAll(/releases\/download\/v([0-9.]+)\/dsh-purge-community-([0-9.]+)\.tgz/g)];
-  if (!links.length) problems.push(`README.md 에 고정 버전 v${version} TGZ 설치 출처가 없다`);
+// Copyable release commands must move with the package version, not retain an old TGZ.
+for (const file of ["README.md", "docs/README.en.md"]) {
+  const doc = read(file);
+  const links = [...doc.matchAll(/releases\/download\/v([0-9.]+)\/dsh-purge-community-([0-9.]+)\.tgz/g)];
+  if (!links.length) problems.push(`${file} 缺少固定版本的官方 CLI 安装来源`);
   for (const [, tag, archive] of links) if (tag !== version || archive !== version)
-    problems.push(`README.md 의 CLI 설치 링크 버전은 ${version} 이어야 하는데 v${tag}/dsh-purge-community-${archive}.tgz 가 있다`);
+    problems.push(`${file} CLI 安装链接版本必须为 ${version}`);
 }
+if (/安装器不会改动 DSH 本体|installer leaves DSH itself untouched/.test(readme + readmeEn))
+  problems.push("安装说明不能承诺安装器完全不写宿主目录");
 
-// 7. 설치기가 호스트를 전혀 쓰지 않는다는 약속은 사실이 아니므로 금지.
-if (/installer leaves DSH itself untouched|설치기가 DSH 본체를 건드리지 않는다/.test(readme))
-  problems.push("README.md 는 설치기가 호스트 디렉터리를 전혀 쓰지 않는다고 약속할 수 없다");
-
-// 8. 릴리스 저장소 식별자가 이 포크를 가리키는지(설치 명령이 상류로 새는 것을 막는다).
-if (repository && !repository.endsWith("wnduddld0513/dsh-purge-kr")) {
-  problems.push(`package.json repository 는 wnduddld0513/dsh-purge-kr 이어야 하는데 ${repository} 이다`);
-}
-
-// 9. 과거 YAML 예시는 원문 그대로 두되 실제 코드 블록에 경고를 붙인다.
-// 인용부호 변형으로 검사를 우회하지 못하도록 YAML 을 파싱하고, 산문은 설정으로 오인하지 않는다.
-for (const file of ["docs/upstream/README.md", "docs/upstream/README.zh-CN.md"]) {
-  if (!has(file)) continue;
+// Historical examples remain intact, with a warning attached to the actual YAML.
+// Parse entries so quote style cannot bypass the guard and prose is not mistaken for config.
+for (const file of ["docs/upstream/README.md", "docs/upstream/README.zh-CN.md"])
   for (const problem of checkInstallExamples(read(file), { archive: true })) problems.push(`${file}: ${problem}`);
-}
-for (const file of ["README.md", "docs/INSTALLATION.md", "docs/MAINTENANCE.md", "AGENTS.md"]) {
-  if (!has(file)) continue;
+for (const file of ["README.md", "README.zh-CN.md", "docs/README.en.md", "docs/INSTALLATION.md", "docs/MAINTENANCE.md", "AGENTS.md"])
   for (const problem of checkInstallExamples(read(file))) problems.push(`${file}: ${problem}`);
-}
 
 if (problems.length) {
-  console.error("✗ 문서와 버전이 일치하지 않는다:");
+  console.error("✗ 文档与版本不一致：");
   for (const p of problems) console.error("  - " + p);
   process.exit(1);
 }
-console.log(`✓ 문서 버전 일치: ${version} (README / release-notes / 유지보수 문서가 같은 버전을 가리킨다)`);
+console.log(`✓ 文档版本一致：${version}（README / release-notes / README.en 均指向该版本）`);

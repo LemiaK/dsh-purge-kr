@@ -100,7 +100,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
 
   const updateErrorText = (tr, e) => {
     const msg = String((e && e.message) || e || "");
-    if (msg === "timeout" || /aborted|abort|timeout|타임아웃|시간 ?초과/i.test(msg))
+    if (msg === "timeout" || /aborted|abort|超时/i.test(msg))
       return tr("update.timeout");
     if (/\b404\b/.test(msg) || /non-json/.test(msg))
       return tr("update.needRestart");
@@ -438,7 +438,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
               if (d.manualQuit) {
                 setNotice({
                   kind: "ok",
-                  text: "패치를 디스크에 기록했지만 현재 프로세스는 아직 로드하지 않았습니다. 패키지 교체 도우미가 완전 종료를 기다립니다(macOS 는 ⌘Q, Windows 는 시스템 트레이에서 종료). 교체가 끝난 것을 확인한 뒤 DSH 를 직접 여세요. 자동 재시작은 하지 않습니다.",
+                  text: "补丁已写入磁盘，当前进程尚未加载。换包助手等待你完整退出（macOS 用 ⌘Q，Windows 从系统托盘退出）。确认换包完成后再手动打开 DSH，不会自动重启。",
                 });
                 setAskRestart(false);
                 loadAll();
@@ -495,7 +495,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
         rejectNeedPrompt(t);
         return;
       }
-      if (!d || !d.ok) throw new Error((d && d.error) || "저장 실패");
+      if (!d || !d.ok) throw new Error((d && d.error) || "保存失败");
       const unchanged = readPromptBox() === content;
       if (unchanged && typeof d.content === "string") {
         overrideRef.current = d.content;
@@ -505,7 +505,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
         kind: "ok",
         text: unchanged
           ? t("saved.override")
-          : "제출한 버전을 저장했습니다. 현재 수정분은 아직 저장하지 않았습니다.",
+          : "已保存提交的版本；当前修改尚未保存。",
       });
     } catch (e) {
       if (ticket === actionTicket.current)
@@ -527,7 +527,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ content }),
       });
-      if (!d || !d.ok) throw new Error((d && d.error) || "저장 실패");
+      if (!d || !d.ok) throw new Error((d && d.error) || "保存失败");
       const unchanged = ownRef.current === content;
       if (unchanged && typeof d.content === "string") {
         ownRef.current = d.content;
@@ -536,7 +536,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
       setNotice({
         kind: "ok",
         text: !unchanged
-          ? "제출한 버전을 저장했습니다. 현재 수정분은 아직 저장하지 않았습니다."
+          ? "已保存提交的版本；当前修改尚未保存。"
           : d.dropped > 0
             ? t("saved.own.dropped", { n: d.dropped })
             : t("saved.own"),
@@ -580,7 +580,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
           kind: "ok",
           text: unchanged
             ? tr("saved.restoreInject")
-            : "기본값으로 되돌렸습니다. 현재 수정분은 아직 저장하지 않았습니다.",
+            : "已恢复默认值；当前修改尚未保存。",
         });
       })
       .catch((e) => {
@@ -837,18 +837,18 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
             "b",
             null,
             !s
-              ? "호스트 상태를 읽는 중…"
+              ? "正在读取宿主状态…"
               : s.ok === false
-                ? "상태 읽기 실패. 호스트와 패치 상태를 알 수 없습니다"
+                ? "状态读取失败，宿主与补丁状态未知"
                 : !located
                   ? sealedReady
-                    ? "호스트가 아직 풀리지 않았습니다. '적용'을 누르세요"
-                    : "호스트를 찾지 못했습니다. '적용'을 눌러 다시 시도하세요"
+                    ? "宿主还没解开：点「应用」"
+                    : "未定位到宿主：点「应用」重试"
                   : s?.asar_still_sealed
-                    ? `${applied}/${total}건 디스크 패치(종료 후 다시 열면 로드됩니다)`
+                    ? `${applied}/${total} 条磁盘补丁（退出重开后加载）`
                     : tally.pending
-                      ? `${tally.pending}건 더 적용 대기`
-                      : `${applied}/${total}건 패치 적용됨`,
+                      ? `还有 ${tally.pending} 条待应用`
+                      : `${applied}/${total} 条补丁已生效`,
           ),
           h(
             "span",
@@ -894,13 +894,13 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
               onClick: loadAll,
               disabled: patchBusy || uninstallBusy,
             },
-            "새로 고침",
+            "刷新",
           ),
         ),
         h(
           "p",
           { className: "dshpp-hero-hint" },
-          "플러그인을 설치했거나, DSH 를 업데이트했거나, 모델이 다시 회피하기 시작하면 '적용'을 한 번 누른 뒤 DSH 를 종료했다가 다시 열면 복구됩니다.",
+          "装好插件、更新过 DSH、或发现模型又开始推脱时：点一次「应用」，然后退出并重开 DSH，就会恢复。",
         ),
         noticeNode(notice),
       ),
@@ -921,7 +921,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
         h(
           "details",
           { className: "dshpp-editions" },
-          h("summary", null, "버전 관리"),
+          h("summary", null, "版本管理"),
           renderEdition("stable"),
           renderEdition("beta"),
         ),
@@ -933,17 +933,17 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
         h(
           "summary",
           null,
-          "패치 상세 ",
+          "补丁明细 ",
           h(
             "b",
             null,
             !s
-              ? "읽는 중"
+              ? "读取中"
               : s.ok === false
-                ? "상태 미확인"
+                ? "状态未知"
                 : s.ai_base
-                  ? `${applied}/${total} 적용됨`
-                  : "호스트 미탐지",
+                  ? `${applied}/${total} 已应用`
+                  : "未定位宿主",
           ),
         ),
         h(PatchGroups, { state: s }),
@@ -951,7 +951,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
       h(
         "details",
         null,
-        h("summary", null, "고급 옵션"),
+        h("summary", null, "高级选项"),
         h(HooksDenySection, { onSaved: loadAll }),
       ),
       askUninstall
@@ -1086,7 +1086,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
       h("textarea", {
         className: "dshpp-area",
         ref: promptAreaRef,
-        "aria-label": "프롬프트 내용",
+        "aria-label": "提示词内容",
         disabled: !overrideLoaded,
         value: override,
         onChange: (e) => {
@@ -1136,7 +1136,7 @@ export function PurgifySection({ page = "status", onStatus } = {}) {
       ),
       h("textarea", {
         className: "dshpp-area",
-        "aria-label": "서버 목록",
+        "aria-label": "服务器名单",
         disabled: !ownLoaded,
         value: ownServers,
         onChange: (e) => {

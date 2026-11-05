@@ -1,22 +1,22 @@
-# 1.6.65 유지보수 기록: #18/#19 스위치
+# 1.6.65 维护记录：#18/#19 开关
 
-## 기본으로 켜지 않는 이유
+## 为什么不默认开
 
-두 패치 모두 게이트가 아니라 컨텍스트 보호를 해제한다:
+两条补丁都取消上下文保护而非门禁：
 
-| 패치 | 역할 | 이점 | 대가 |
+| 补丁 | 作用 | 收益 | 代价 |
 |---|---|---|---|
-| #18 REPEAT_TOOL_REMINDER_DISABLED | 반복 호출 알림 끄기 | 도구 루프 프롬프트가 깔끔해진다 | 모델이 같은 지점에서 반복 시행착오를 할 수 있다 |
-| #19 TOOL_RESULT_PRUNER_DISABLED | 8192 자 도구 결과 트리밍 끄기 | 모델이 전체 출력을 볼 수 있다 | 도구 출력이 오래 컨텍스트를 차지해 더 빨리 한계에 닿고 비용이 커진다 |
+| #18 REPEAT_TOOL_REMINDER_DISABLED | 关掉重复调用提醒 | 工具循环提示词更干净 | 模型可能在同处反复试错 |
+| #19 TOOL_RESULT_PRUNER_DISABLED | 关掉 8192 字符工具结果修剪 | 模型能看到完整输出 | 工具输出长期占上下文，更快触顶/更贵 |
 
-## 상태 의미
+## 状态语义
 
-- `disabled`: `tuning.extraPatches` 에 나열되지 않은 상태. `patchStatusReady("disabled") === true`(이것은 선택이며 고장이 아니다).
-- 자체 점검의 `tallyPatchStatus.disabled` 는 `not_applicable` 로 계산하며 필수 분모에 들어가지 않는다.
-- `patchDrift` 는 disabled 를 건너뛰고 드리프트로 보고하지 않는다.
-- apply 집계: `disabled` 는 `ALWAYS_SOFT_STATUSES` 에서 소프트 통과로 계산해 `failed` 에 들어가지 않으며, 패널이 "선택에 따라 끔"을 더 이상 빨간 글씨로 렌더링하지 않는다. `write_failed`, 앵커 불일치 같은 실제 실패는 그대로 계산한다.
+- `disabled`：未在 `tuning.extraPatches` 中列出；`patchStatusReady("disabled") === true`（这是选择，不是故障）。
+- 自检 `tallyPatchStatus.disabled` 计入 `not_applicable`，不进入必需分母。
+- `patchDrift` 跳过 disabled，不报漂移。
+- apply 汇总：`disabled` 在 `ALWAYS_SOFT_STATUSES` 里算软通过，不进入 `failed`，面板不再把「按选择关闭」渲染成红字；`write_failed`、锚点不中等真失败照旧计入。
 
-## 검수
+## 验收
 
-- `test/opt-in-patches.test.mjs`: 기본 상태에서 쓰기 거부, 명시적으로 켠 뒤 쓰기와 상태 전환, tuning 중복 제거 필터. 또한 apply 집계에서 disabled 가 소프트 통과이고 `write_failed` 같은 실제 실패는 여전히 `failed` 에 들어감을 단언한다.
-- 실기 흐름: `patches enable 19` → 격리 rc.5 트리에 적용 → 상태 applied. `patches disable 19` → 상태 disabled.
+- `test/opt-in-patches.test.mjs`：默认拒绝写入、显式开启后写入并翻转状态、tuning 去重过滤；并断言 apply 汇总里 disabled 是软通过、`write_failed` 等真失败仍进 `failed`。
+- 真机流程：`patches enable 19` → 对隔离 rc.5 树应用 → 状态 applied；`patches disable 19` → 状态 disabled。

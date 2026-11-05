@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// 거부율 집계: audit.jsonl 의 refusal_retry + 최근 세션의 거부형 답변을 훑는다.
-// 사용법: node scripts/refusal-report.mjs [--days 7] [--home ~/.dsh]
+// 统计拒绝率：扫 audit.jsonl 的 refusal_retry + 最近会话里的拒绝式回答。
+// 用法：node scripts/refusal-report.mjs [--days 7] [--home ~/.dsh]
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -105,11 +105,11 @@ for (const file of files) {
   if (texts.length) perSession.push({ file: path.basename(path.dirname(file)), answers: texts.length, refusals: hit });
 }
 const rate = answers ? ((refusals / answers) * 100).toFixed(2) : "0.00";
-console.log(`구간: 최근 ${days}일 · 세션 ${files.length}개 · 어시스턴트 답변 ${answers}건 · 거부형 ${refusals}건 → 거부율 ${rate}%`);
-console.log(`재시도 이벤트(audit refusal_retry): ${retries.length}회`);
-if (retries.length) console.log("가장 최근:", JSON.stringify(retries[retries.length - 1]).slice(0, 200));
+console.log(`窗口：最近 ${days} 天 · 会话 ${files.length} 个 · 助手回答 ${answers} 条 · 拒绝式 ${refusals} 条 → 拒绝率 ${rate}%`);
+console.log(`重试事件（audit refusal_retry）：${retries.length} 次`);
+if (retries.length) console.log("最近一次：", JSON.stringify(retries[retries.length - 1]).slice(0, 200));
 if (perSession.length) {
-  console.log("\n세션별(거부가 있는 세션만 표시):");
+  console.log("\n按会话（有拒绝的才列出）：");
   for (const s of perSession.filter((x) => x.refusals > 0).slice(-10)) {
     console.log(`  ${s.file}: ${s.refusals}/${s.answers}`);
   }

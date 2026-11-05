@@ -182,12 +182,12 @@ test("ambiguous, missing or conflicting profiles fail explicitly instead of choo
     f.profile("desktop");
     assert.throws(
       () => defaultProfile(f.home, { env: {}, argv: [] }),
-      /하나로 정할 수 없습니다/,
+      /无法唯一确定/,
     );
     assert.throws(
       () =>
         defaultProfile(f.home, { env: { DSH_PROFILE: "missing" }, argv: [] }),
-      /찾지 못했습니다/,
+      /未找到/,
     );
     assert.throws(
       () =>
@@ -195,7 +195,7 @@ test("ambiguous, missing or conflicting profiles fail explicitly instead of choo
           env: {},
           argv: ["--profile", "web", "--profile=desktop"],
         }),
-      /--profile 이 여러 번/,
+      /多个 --profile/,
     );
     const r = await selfCheck(f.npm, f.home, {
       env: {},
@@ -205,7 +205,7 @@ test("ambiguous, missing or conflicting profiles fail explicitly instead of choo
     assert(
       r.layers
         .find((l) => l.kind === "config")
-        .detail.error.includes("하나로 정할 수 없습니다"),
+        .detail.error.includes("无法唯一确定"),
     );
   } finally {
     f.close();
@@ -214,7 +214,7 @@ test("ambiguous, missing or conflicting profiles fail explicitly instead of choo
 test("a nested single-package host root resolves to the component directory that actually holds the agent", () => {
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "purge-nested-host-")));
   try {
-    // 단일 패키지 레이아웃: @deepseek-ai/dsh/node_modules/@deepseek-ai/{dsh-agent-loop,…}
+    // 单包布局：@deepseek-ai/dsh/node_modules/@deepseek-ai/{dsh-agent-loop,…}
     const outer = path.join(root, "@deepseek-ai");
     const nested = path.join(outer, "dsh", "node_modules", "@deepseek-ai");
     for (const pkg of ["dsh-agent-loop", "dsh-system-prompt", "dsh-agent-instructions"]) {
@@ -225,15 +225,15 @@ test("a nested single-package host root resolves to the component directory that
     fs.writeFileSync(path.join(outer, "dsh", "package.json"), JSON.stringify({ name: "@deepseek-ai/dsh", version: "0.2.1-rc.2", bin: { dsh: "lib/bin.mjs" } }));
     fs.writeFileSync(path.join(outer, "dsh", "lib", "bin.mjs"), "");
 
-    // 바깥을 가리키든, dsh 패키지를 가리키든, 컴포넌트 루트를 가리키든 세 표기 모두 컴포넌트 루트로 착지해야 한다.
+    // 指到外层、指到 dsh 包、指到组件根，三种写法都要落到组件根。
     for (const given of [outer, path.join(outer, "dsh"), nested]) {
       assert.equal(resolveHost(given, { env: {}, argv: [] }), nested, `aiBase=${given}`);
       assert.equal(resolveHost("", { env: { DSH_BASE: given }, argv: [] }), nested, `DSH_BASE=${given}`);
     }
-    // dsh 자신의 CLI(argv)로 기동하면 dsh 패키지가 있는 @deepseek-ai 상위를 반환한다:
-    // resolveDshCli 가 dsh/<bin> 을 조립하는 기준이며, 컴포넌트 루트로 바꾸면 npmCli 가 bin 을 찾지 못한다.
+    // 从 dsh 自己的 CLI 启动（argv）时返回 dsh 包所在的 @deepseek-ai 外层：
+    // 这是 resolveDshCli 拼 dsh/<bin> 的基准，改成组件根会让 npmCli 找不到 bin。
     assert.equal(currentHost({ env: {}, argv: ["node", path.join(outer, "dsh", "lib", "bin.mjs")] }), outer);
-    // 무관한 디렉터리를 가리킬 때 다른 설치를 "슬쩍 찾아내서는" 안 된다.
+    // 指到不相干目录时不许「顺手找到」别的安装。
     assert.equal(currentHost({ env: { DSH_BASE: path.join(root, "elsewhere") }, argv: [] }), path.join(root, "elsewhere"));
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
@@ -251,7 +251,7 @@ test("Web CLI uses its own npm package metadata even when another Desktop is ins
       execPath: process.execPath,
     });
     assert.equal(cli.cli, f.cli);
-    assert.equal(cli.source, "현재 npm/Node 인스턴스");
+    assert.equal(cli.source, "当前 npm/Node 实例");
     assert.equal(cli.command, process.execPath);
   } finally {
     f.close();
@@ -271,7 +271,7 @@ test("explicit JS CLI override takes priority and a missing target is not replac
           argv: ["node", "unknown"],
           resourcesPath: undefined,
         }),
-      /현재 DSH 인스턴스의 CLI 를 찾을 수 없습니다/,
+      /无法定位当前 DSH 实例/,
     );
     assert.throws(
       () =>
@@ -279,7 +279,7 @@ test("explicit JS CLI override takes priority and a missing target is not replac
           env: { PURGE_DSH_CLI: path.join(f.root, "missing") },
           argv: [],
         }),
-      /파일이 없습니다/,
+      /文件不存在/,
     );
   } finally {
     f.close();
@@ -365,7 +365,7 @@ test("target-specific selfcheck does not mutate global surface or inspect anothe
     assert.equal(target.surface, "web");
     assert.equal(process.env.DSH_SURFACE, before);
     assert.equal(result.summary.layout.total, 0);
-    assert(!result.hints.some((h) => h.title === "호스트 디스크 레이아웃"));
+    assert(!result.hints.some((h) => h.title === "宿主运行方式"));
   } finally {
     f.close();
   }
@@ -381,7 +381,7 @@ test("foreign host profile directories are rejected instead of silently changing
           env: {},
           argv: ["node", "host", path.join(f.root, "other/profiles/web")],
         }),
-      /현재 DSH_HOME 에 속하지 않습니다/,
+      /不属于当前 DSH_HOME/,
     );
   } finally {
     f.close();
@@ -481,12 +481,12 @@ test("apply restart distinguishes sealed / cross-surface / manual", async () => 
   });
   const manual = planApplyRestartAction({ foreign: { asar: "/x/app.asar" }, desktopPid: 0 });
   assert.equal(manual.action, "manual");
-  assert.match(manual.reason, /데스크톱 호스트가 실행 중이 아니어서/);
+  assert.match(manual.reason, /桌面宿主未运行/);
   assert.deepEqual(planApplyRestartAction({}), { action: "plain" });
 });
 
 test("diskFs survives a read-only process.noDeprecation", async () => {
-  // PR #23: 호스트가 --no-deprecation 으로 기동하면 이 속성은 읽기 전용이라 ESM 엄격 모드의 대입이 예외를 던진다
+  // PR #23：宿主用 --no-deprecation 启动时该属性只读，ESM 严格模式下赋值会抛
   const { execFileSync } = await import("node:child_process");
   const script = `
     Object.defineProperty(process, "noDeprecation", { value: true, writable: false, configurable: true });
@@ -577,11 +577,11 @@ test("verified npm CLI shorthand selects its running profile when multiple profi
       const link = path.join(bin, "dsh"); fs.symlinkSync(f.cli, link);
       assert.equal(resolveProfile(f.home, { env: {}, argv: ["node", link, "web"] }).directory, web);
     }
-    assert.throws(() => resolveProfile(f.home, { env: {}, argv: ["node", path.join(f.root, "other.js"), "web"] }), /하나로 정할 수 없습니다/);
+    assert.throws(() => resolveProfile(f.home, { env: {}, argv: ["node", path.join(f.root, "other.js"), "web"] }), /无法唯一确定/);
     const nested = path.join(f.npm, "dsh/node_modules/other-plugin/bin.js");
     fs.mkdirSync(path.dirname(nested), { recursive: true }); fs.writeFileSync(nested, "");
-    assert.throws(() => resolveProfile(f.home, { env: {}, argv: ["node", nested, "web"] }), /하나로 정할 수 없습니다/);
-    assert.throws(() => resolveProfile(f.home, { env: {}, argv: ["node", f.cli, "plugin"] }), /하나로 정할 수 없습니다/);
+    assert.throws(() => resolveProfile(f.home, { env: {}, argv: ["node", nested, "web"] }), /无法唯一确定/);
+    assert.throws(() => resolveProfile(f.home, { env: {}, argv: ["node", f.cli, "plugin"] }), /无法唯一确定/);
   } finally { f.close(); }
 });
 
@@ -610,4 +610,27 @@ test("packaged community diagnostics stay within verified Electron resources", (
     assert.equal(diagnosticHost(options), host, "partial preferred extraction must not borrow a healthy sibling");
     assert.equal(fs.existsSync(host), false, "diagnostic lookup must not create files");
   } finally { fs.rmSync(root,{recursive:true,force:true}); }
+});
+
+test("#93 a pnpm workspace junction selects only the CLI package that owns the running entry", () => {
+  const f = fixture();
+  try {
+    const cliRoot = path.join(f.root, "apps/cli");
+    fs.cpSync(path.dirname(path.dirname(f.cli)), cliRoot, { recursive: true });
+    const bin = path.join(cliRoot, "lib/bin.mjs");
+    const link = path.join(f.root, "node_modules/.pnpm/node_modules/@deepseek-ai/dsh");
+    fs.mkdirSync(path.dirname(link), { recursive: true });
+    fs.symlinkSync(cliRoot, link, "junction");
+    const launch = { env: {}, argv: ["node", path.join(link, "lib/bin.mjs")] };
+    assert.equal(currentHost(launch), cliRoot);
+    assert.equal(resolveDshCli(launch).cli, bin);
+    assert.equal(resolveDshCli({ aiBase: currentHost(launch), env: {} }).cli, bin);
+    fs.cpSync(path.dirname(path.dirname(f.cli)), path.join(cliRoot, "dsh"), { recursive: true });
+    fs.unlinkSync(bin);
+    assert.throws(() => resolveDshCli(launch), /无法定位/);
+    const outside = path.join(cliRoot, "linked-dir");
+    fs.symlinkSync(path.dirname(f.cli), outside, "junction");
+    fs.writeFileSync(path.join(cliRoot, "package.json"), JSON.stringify({ name: "@deepseek-ai/dsh", bin: "linked-dir/bin.mjs" }));
+    assert.throws(() => resolveDshCli(launch), /无法定位/);
+  } finally { f.close(); }
 });

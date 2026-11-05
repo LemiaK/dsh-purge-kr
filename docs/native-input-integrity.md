@@ -1,53 +1,53 @@
-# 네이티브 메시지와 프롬프트 입력 무결성
+# Native message and prompt input integrity
 
-## 범위
+## Scope
 
-이것은 플러그인 측 데이터 무결성 수정이며, 승인, 권한, 주입 순서, 프리셋 정의, 저장된 선호를 바꾸는 변경이 아니다. 이후 기동 사고로 패치 #67 에 좁은 구문 수정 하나가 추가되었고 아래에 설명한다. 검토 중에 별도 작업이 1.6.73 을 배포했다. 이 브랜치는 그 잘못된 줄바꿈만 제외하고 해당 메인라인 변경을 유지한다; 아래 증거는 그 릴리스의 호스트 패치 호환성 주장을 검증하거나 보증하지 않는다. 현재 릴리스는 1.6.74 다.
+These are plugin-side data-integrity fixes, not changes to approvals, permissions, injection order, preset definitions or saved preferences. A later startup incident added one narrow syntax repair to patch #67, described below. During review, a separate task published 1.6.73. This branch retains those mainline changes except for that malformed newline; the evidence below does not verify or endorse that release's host-patch compatibility claims. The current release is 1.6.74.
 
-## 재현된 실패와 변경
+## Reproduced failures and changes
 
-1. pre-step 메시지 필터가 없거나 배열이 아닌 `decision.messages` 를 `[]` 로 강제 변환했다. 그러면 잘못된 콜백을 드러내는 대신 빈 성공 턴으로 보고될 수 있었다. 또한 명시적 거부 결정에 messages 필드를 덧붙였다. 이제 거부는 변경 없이 그대로 전달된다; 유효한 배열은 기존 동작과 메시지 객체를 유지하고, 잘못된 데이터는 메시지 내용을 포함하지 않은 채 `PURGE_INVALID_PRE_STEP_DECISION` 을 던진다. 의도적으로 빈 배열은 유효하다. 기존 선택 메시지 필터는 그대로다.
-2. 조립 가드가 네이티브 제공자/템플릿 오류를 잡아 빈 섹션, 컨텍스트, 도구를 반환했다. 조립 이벤트 핸들러는 별도로 하위 오류를 잡아 이전 조립으로 폴백했다. 이제 둘 다 원래 오류를 코드/원인과 함께 다시 던진다. 이렇게 해서 오래되었거나 누락된 사용자 지침이 겉보기에는 성공한 생성이 되는 것을 막는다. 제공자 문제가 해소되면 이후 정상 호출은 평소처럼 진행할 수 있다.
+1. The pre-step message filter coerced absent/non-array `decision.messages` to `[]`. This could report an empty successful turn instead of exposing a malformed callback. It also added a messages field to explicit rejection decisions. A rejection now passes through unchanged; valid arrays retain their existing behavior and message objects; malformed data throws `PURGE_INVALID_PRE_STEP_DECISION` without including message contents. An intentionally empty array stays valid. The existing selected-message filter is unchanged.
+2. The assembly guard caught native provider/template errors and returned empty sections, contexts and tools. The assembly event handler separately caught downstream errors and fell back to an earlier assembly. Both now rethrow the original error, retaining its code/cause. This prevents stale or missing user instructions from becoming an apparently successful generation. A later successful call can proceed normally after the provider problem is removed.
 
-이 수정은 누락된 사용자 메시지를 만들어 내지 않고, 거부된 작업을 재생하지 않으며, 임의로 망가진 서드파티 콜백에서의 복구를 보장하지 않는다. 그런 콜백은 여전히 고쳐야 한다; 이제는 데이터를 조용히 버리는 대신 오류가 드러난다.
+The fixes do not invent missing user messages, replay rejected tasks or guarantee recovery from an arbitrary broken third-party callback. Such callbacks still need to be corrected; errors are now visible instead of silently dropping data.
 
-## 증거
+## Evidence
 
-- 변경 전에는 새 5케이스 회귀 파일에서 실패 4건, 통과 1건이었고, 변경 후에는 다섯 건 모두 통과했다.
-- 문서 통합 후 루트 스위트: 509 통과, 조건부/플랫폼 건너뜀 21, 실패 0.
-- 배포된 0.2.2-rc.1 preStep/turn 메서드 본문 테스트와 플러그인 무결성 테스트: 13 통과. 모델/저장소 더블을 쓰며 모델 요청을 보내지 않는다.
-- macOS 와 Windows 4090 의 격리 Electron 44.7.0 에서 실제 공식 SystemPrompt, persona, scope 서비스가 일곱 묶음을 통과했다: 첫/두 번째 조립, persona 교체와 동시 scope, 하위 상속/오버라이드, 제공자 실패/복구, 충돌하는 complete 섹션, 이벤트/래퍼 실패 전파, 해제와 소스 보존.
-- Windows Node 에서도 13 케이스 모두 통과했다. Electron 은 실제 종료 코드와 출력을 확인하는 동기 자식 프로세스 래퍼로 다시 실행했다; PowerShell 이 GUI 실행 파일에서 반환되었다는 것만으로는 완료 증거로 인정하지 않는다.
-- 실제 DSH 인스턴스를 열거나 재시작하지 않았고 실행 파일로 사용하지도 않았다. 이 런타임 프로브는 운영 profile 이나 프록시 설정을 로드하거나 바꾸지 않았다. persona 소스 보존은 합성 픽스처 파일로 확인했다.
+- Before the changes, the new five-case regression file had four failures and one pass; after the changes all five passed.
+- Root suite after the documentation integration: 509 passed, 21 conditional/platform skips, zero failures.
+- Shipped 0.2.2-rc.1 preStep/turn method-body tests plus plugin integrity tests: 13 passed. They use model/storage doubles and make no model requests.
+- Actual official SystemPrompt, persona and scope services under isolated Electron 44.7.0 on macOS and the Windows 4090 passed seven groups: first/second assembly, persona replacement and concurrent scopes, child inheritance/override, provider failure/recovery, conflicting complete sections, event/wrapper failure propagation, and teardown/source preservation.
+- Windows Node also passed all 13 cases. Electron was re-run through a synchronous child-process wrapper checking the actual exit code and output; PowerShell returning from a GUI executable alone is not accepted as completion evidence.
+- No formal DSH instance was opened/restarted or used as an executable. No production profile or proxy settings were loaded/changed by these runtime probes. Persona source preservation was checked against a synthetic fixture file.
 
-이 테스트는 실제 공식 서비스와 격리된 플러그인 훅을 실행하며, GUI 프리셋 선택 전체, 실제 LLM 대화, 모든 서드파티 프리셋을 검증한 것은 아니다. 네이티브 정상 persona 로딩은 이 테스트에서 동작했다; 그것이 레거시 강제 주입 훅의 복원을 입증하지는 않는다.
+These tests exercise actual official services and isolated plugin hooks, not full GUI preset selection, a live LLM conversation, or every third-party preset. Native normal-persona loading worked in these tests; they do not establish restoration of the legacy forced-injection hook.
 
-## 재현
+## Reproduce
 
-격리된 공식 런타임의 `node_modules/@deepseek-ai` 를 `PURGE_TEST_HOST` 로, 격리된 Electron 실행 파일을 `PURGE_ELECTRON_EXEC` 로 두고 다음을 실행한다:
+Use an isolated official runtime's `node_modules/@deepseek-ai` as `PURGE_TEST_HOST` and an isolated Electron executable as `PURGE_ELECTRON_EXEC`, then run:
 
 ```sh
 node scripts/check-native-prompt-electron.mjs
 ```
 
-커밋된 CI 작업은 러너 임시 저장소에 0.2.2-rc.1 prompt/persona 패키지를 정확히 설치하고 macOS 와 Windows 에서 같은 점검을 실행한다. 기본 애플리케이션 바이너리로의 폴백은 쓰지 않는다. 기존 Windows Defender 롤백 제한은 무관하며 여전히 해결되지 않았다.
+The committed CI job installs exact 0.2.2-rc.1 prompt/persona packages in runner temporary storage and executes the same checks on macOS and Windows. No default application binary fallback is used. Existing Windows Defender rollback limits are unrelated and remain unresolved.
 
-## PR #131 문서 통합
+## PR #131 documentation integration
 
-역사적 독립 패키지 예시는 YAML 펜스 안에서 원문 그대로 두고, 경고를 그 옆에 붙인다. 문제 해결 문서는 이제 의존성 누락, 별칭, 끊긴 링크, profile 선택, 확인된 중복 항목을 구분한다. 원래 config 와 무관한 insert 항목을 모두 보존하도록 요구하고, 충돌 시 중단하며, 정당한 bundle 항목을 접두사로 삭제하라고 안내하지 않는다.
+The historical standalone examples remain unchanged inside their YAML fences, with local warnings. Troubleshooting now distinguishes missing dependencies, aliases, broken links, profile selection and verified duplicate entries. It requires preservation of all original config and unrelated insert entries, stops on conflicts, and never directs prefix-based deletion of legitimate bundle entries.
 
-원래 가드는 인용부호 없는 옛 항목을 추가해도 통과했고, 보호된 예시를 제거한 뒤에도 통과했다. 교체된 검사는 YAML 펜스 항목 목록을 파싱하고 인용부호, 하위 경로, 항목이 아닌 프롬프트 데이터, 위치가 어긋난 경고, 제거된 예시, 순환 별칭을 다루는 회귀 여덟 건을 가진다. 기존 마이그레이션/롤백 테스트 다섯 개가 이제 기본 스위트에 들어간다. 이 문서 변경으로 설치기 삭제나 마이그레이션 동작이 추가되지는 않았다.
+The original guard passed with an added unquoted legacy entry and also passed after the guarded example was removed. The replacement parses YAML fenced entry lists and has eight regression cases covering quoting, subpaths, non-entry prompt data, misplaced warnings, removed examples and cyclic aliases. Five existing migration/rollback tests are now in the default suite. No installer deletion or migration behavior was added by this documentation change.
 
-메인라인 1.6.73 과 통합한 뒤에도 로컬 스위트 전체가 509 케이스와 조건부 건너뜀 21로 다시 통과했다. 여덟 개 문서 점검과 다섯 개 마이그레이션/롤백 케이스도 Windows 4090 의 격리 Electron 44.7.0 에서 자식 종료 코드와 TAP 요약을 확인하며 통과했다. 이것은 회귀/서비스 점검이지 새 전체 애플리케이션 설치 검수가 아니다. 1.6.74 패키징 산출물은 import, CLI, bundle 스모크 점검을 통과했다.
+After integration with mainline 1.6.73, the complete local suite again passed 509 cases with 21 conditional skips. The eight documentation checks and five migration/rollback cases also passed under isolated Electron 44.7.0 on the Windows 4090, with the child exit code and TAP summary checked. These are regression/service checks, not a new full application installation acceptance. The 1.6.74 packed artifact passed import, CLI and bundle smoke checks.
 
-## 재현된 1.6.73 기동 실패
+## Reproduced 1.6.73 startup failure
 
-사용자의 크래시 로그는 필수 agent-loop 모듈이 `SyntaxError: Missing catch or finally after try` 로 가져오기에 실패했음을 보여 주었다. 설치된 전체 모듈의 구문을 검사해 재현했다. 패치 #67 이 줄 주석 뒤에 리터럴 역슬래시 n 을 남겨 다음 if 문을 삼키고 try 블록의 균형을 깨뜨렸다. 설치된 플러그인은 1.6.73 이었고, 미배포 검토 수정은 그곳에 설치되어 있지 않았다.
+The user's crash log identified the required agent-loop module failing to import with `SyntaxError: Missing catch or finally after try`. Syntax checking the installed full module reproduced it. Patch #67 emitted a literal backslash-n after a line comment, swallowing the following if statement and unbalancing the try block. The installed plugin was 1.6.73; the unpublished review fixes were not installed there.
 
-호스트 모듈과 설치된 템플릿을 모두 백업한 뒤, 잘못된 줄바꿈 한 곳만 고쳤다. profile 패치, profile 패키지 메타데이터, 오버라이드 상태 해시는 그대로였다. 사용자가 직접 DSH 를 종료하고 다시 열어 복구를 확인했고, 새 호스트 프로세스는 현재 루프백 리스너에서 HTTP 401 을 반환하며 그 프로세스에서 새 크래시는 없었다. 서드파티 전역 비활성화나 자동 재시작은 쓰지 않았다.
+Both the host module and installed template were backed up, then only the malformed newline was corrected. The profile patch, profile package metadata and override-state hashes were unchanged. The user manually exited/reopened DSH and confirmed recovery; the new host process returned HTTP 401 at its current loopback listener, with no new crash from that process. No global third-party disable or automated restart was used.
 
-릴리스는 템플릿을 고치고 역사적 잘못된 조인에 대한 정확한 마이그레이션을 추가한다. 진단은 그 알려진 손상 표식을 거부한다. 회귀 세 건이 LF/CRLF 와 들여쓰기를 다루고, 실제 배포된 turn 메서드를 컴파일하며, 구문 실패를 재현하고, 바이트 단위로 동일한 수리 결과와 멱등성을 검증하며, 무관한 구문 오류/이스케이프 문자열은 그대로 남긴다. 실제로 손상된 전체 모듈의 비공개 사본에 마이그레이션을 적용하니 로컬에서 수리한 파일과 정확히 같았고 구문 검사를 통과했다. 기존 메시지 길이 조건과 다른 패치는 그대로다. 문서화된 구문 수리에 맞춰 #67 의 기대 테스트 지문만 갱신한다.
+The release fixes the template and adds an exact migration for the historical malformed join. Diagnostics reject that known damaged marker. Three regression cases cover LF/CRLF and indentation, compile the actual shipped turn method, reproduce the syntax failure, verify byte-equivalent repaired output and idempotence, and retain unrelated syntax errors/escaped strings. Applying the migration to a private copy of the real damaged full module produced exactly the locally repaired file, which passed syntax checking. Existing message-length conditions and other patches are unchanged. Only #67's expected test fingerprint is updated for the documented syntax repair.
 
-최초의 Windows CI 실패는 LF 를 가정한 문서 테스트 픽스처의 제거 정규식에 있었다. 이제 LF 와 CRLF 를 모두 다루고 픽스처가 실제로 제거되었는지 검증한다; 파서 자체는 이미 둘 다 지원했다. 이것을 통과한 CI 실행으로 취급하지는 않는다: 수정한 커밋이 배포 전에 모든 작업을 통과해야 한다.
+An initial Windows CI failure was in the documentation test fixture's removal regex, which assumed LF. It now exercises both LF and CRLF and asserts the fixture was actually removed; the parser itself already supported both. This is not treated as a passing CI run: the corrected commit must pass all jobs before publication.
 
-기동 수리를 포함한 최종 로컬 루트 스위트는 512 테스트와 조건부/플랫폼 건너뜀 21, 실패 0으로 통과했다. Windows 4090 격리 Electron 은 문서, 마이그레이션, 줄바꿈 구문 회귀 열여섯 건을 모두 통과했다.
+With the startup repair included, the final local root suite passed 512 tests with 21 conditional/platform skips and zero failures. Windows 4090 isolated Electron passed all 16 documentation, migration and newline-syntax regression cases.

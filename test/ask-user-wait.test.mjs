@@ -1,5 +1,5 @@
-// #89: 모델이 준 대기 시간을 존중하고, -1(무한 대기)만 300초로 줄인다.
-// 동시에 옛 버전이 "1초로 강제 고정"하던 마이그레이션도 덮는다: 업그레이드 후에는 timeout = 1 이 다시 나타나지 않아야 한다.
+// #89：尊重模型给的等待时间，只把 -1（无限等）收成 300 秒。
+// 同时覆盖旧版「硬写 1 秒」的迁移：升级后必须不再出现 timeout = 1。
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { ALL_PATCHES, applyReplacementsToText } from "../lib/core.js";

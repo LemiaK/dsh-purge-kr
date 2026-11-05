@@ -74,10 +74,10 @@ test("mount/remount load existing backups and never preselect a rollback target"
   let tree = await mount(h);
   assert(text(tree).includes("first"));
   assert.equal(
-    tree.root.findByProps({ "aria-label": "롤백할 백업 선택" }).props.value,
+    tree.root.findByProps({ "aria-label": "选择回滚备份" }).props.value,
     "",
   );
-  assert(button(tree, "플러그인 롤백").props.disabled);
+  assert(button(tree, "回滚插件").props.disabled);
   await unmount(tree);
   rows = [backup("second")];
   tree = await mount(h);
@@ -98,17 +98,17 @@ test("loading, read failure and empty backup lists are distinct; refresh recover
       : reply({ ok: true, backups: [] }),
   );
   const tree = await mount(h);
-  assert(text(tree).includes("백업을 읽는 중…"));
-  assert(!text(tree).includes("백업 없음"));
+  assert(text(tree).includes("正在读取备份"));
+  assert(!text(tree).includes("暂无备份"));
   await act(async () => {
     resolve(reply({ ok: false, error: "profile ambiguous" }));
     await flush();
   });
-  assert(text(tree).includes("백업 읽기 실패: profile ambiguous"));
-  assert(!text(tree).includes("백업 없음"));
+  assert(text(tree).includes("读取备份失败：profile ambiguous"));
+  assert(!text(tree).includes("暂无备份"));
   mode = "empty";
-  await click(tree, "백업 목록 새로 고침");
-  assert(text(tree).includes("백업 없음"));
+  await click(tree, "刷新备份列表");
+  assert(text(tree).includes("暂无备份"));
   await unmount(tree);
 });
 test("HTTP 200 business failure shows the update error and rereads recovery backups without replaying writes", async () => {
@@ -132,14 +132,14 @@ test("HTTP 200 business failure shows the update error and rereads recovery back
     return reply({ ok: false, errors: ["CLI not located"] });
   });
   const tree = await mount(h);
-  await click(tree, "커뮤니티판 업데이트 확인");
-  await click(tree, "선택한 버전 설치");
+  await click(tree, "检查社区版更新");
+  await click(tree, "安装所选版本");
   assert(text(tree).includes("CLI not located"));
   assert(text(tree).includes("recovery"));
-  assert(!text(tree).includes("백업을 만들었다: undefined"));
+  assert(!text(tree).includes("备份已创建：undefined"));
   assert.equal(h.calls.filter((c) => c.body?.op === "update").length, 1);
   assert.equal(
-    tree.root.findByProps({ "aria-label": "롤백할 백업 선택" }).props.value,
+    tree.root.findByProps({ "aria-label": "选择回滚备份" }).props.value,
     "",
   );
   await unmount(tree);
@@ -161,11 +161,11 @@ test("successful update reports its version and DSH process restart, not a backu
           }),
   );
   const tree = await mount(h);
-  await click(tree, "커뮤니티판 업데이트 확인");
-  await click(tree, "선택한 버전 설치");
-  assert(text(tree).includes("플러그인을 설치했습니다: 1.6.4"));
-  assert(text(tree).includes("브라우저만 새로 고치면 새 백엔드가 로드되지 않습니다"));
-  assert(!text(tree).includes("백업을 만들었다: "));
+  await click(tree, "检查社区版更新");
+  await click(tree, "安装所选版本");
+  assert(text(tree).includes("插件已安装：1.6.4"));
+  assert(text(tree).includes("仅刷新浏览器不会加载新版后端"));
+  assert(!text(tree).includes("备份已创建："));
   await unmount(tree);
 });
 test("no-op, backup success and partial update failure keep their own result semantics", async () => {
@@ -175,8 +175,8 @@ test("no-op, backup success and partial update failure keep their own result sem
       : reply({ ok: true, id: "created" }),
   );
   const tree = await mount(h);
-  await click(tree, "지금 백업");
-  assert(text(tree).includes("백업을 만들었다: created"));
+  await click(tree, "立即备份");
+  assert(text(tree).includes("备份已创建：created"));
   await unmount(tree);
   const context = { module: { exports: {} }, exports: {}, require };
   context.exports = context.module.exports;
@@ -184,7 +184,7 @@ test("no-op, backup success and partial update failure keep their own result sem
   const { maintenanceNotice, assertMaintenanceResult } = context.module.exports;
   assert(
     maintenanceNotice("update", { ok: true, applied: false }).includes(
-      "새 버전을 설치하지 않았습니다",
+      "未安装新版本",
     ),
   );
   assert.match(
@@ -193,7 +193,7 @@ test("no-op, backup success and partial update failure keep their own result sem
       applied: true,
       cleanup_warnings: [{ stage: "checkpoint", code: "EPERM" }],
     }),
-    /정리를 마치지 못했습니다.*checkpoint:EPERM.*남은 파일은 보존했습니다/,
+    /清理未完成.*checkpoint:EPERM.*残留已保留/,
   );
   assert.throws(
     () =>
@@ -202,7 +202,7 @@ test("no-op, backup success and partial update failure keep their own result sem
         applied: true,
         error: "one target failed",
       }),
-    /일부 대상은 이미 업데이트했습니다/,
+    /部分目标已更新/,
   );
 });
 test("late reads from an unmounted panel cannot update a new panel", async () => {
@@ -242,30 +242,30 @@ test("update switches save separate preferences without invoking install or rest
     return reply({ ok: true, update_preferences: prefs });
   });
   const tree = await mount(h);
-  assert(text(tree).includes("DSH 를 직접 재시작하기를 기다립니다"));
+  assert(text(tree).includes("等待你手动重启"));
   await act(async () => {
     await tree.root
-      .findByProps({ "aria-label": "자동 업데이트 설치" })
+      .findByProps({ "aria-label": "自动安装更新" })
       .props.onChange({ target: { checked: true } });
     await flush();
   });
   assert.equal(h.calls.at(-1).body.value.autoInstall, true);
   assert.equal(
-    tree.root.findByProps({ "aria-label": "자동 업데이트 확인" }).props.checked,
+    tree.root.findByProps({ "aria-label": "自动检查更新" }).props.checked,
     true,
   );
   await act(async () => {
     await tree.root
-      .findByProps({ "aria-label": "자동 업데이트 확인" })
+      .findByProps({ "aria-label": "自动检查更新" })
       .props.onChange({ target: { checked: false } });
     await flush();
   });
   assert.equal(
-    tree.root.findByProps({ "aria-label": "자동 업데이트 설치" }).props.checked,
+    tree.root.findByProps({ "aria-label": "自动安装更新" }).props.checked,
     true,
   );
   assert.equal(
-    tree.root.findByProps({ "aria-label": "업데이트 확인 간격" }).props.disabled,
+    tree.root.findByProps({ "aria-label": "更新检查间隔" }).props.disabled,
     true,
   );
   assert(
@@ -273,10 +273,10 @@ test("update switches save separate preferences without invoking install or rest
   );
   await act(async () => {
     tree.root
-      .findByProps({ "aria-label": "자동 업데이트 설치 (설명 보기)" })
+      .findByProps({ "aria-label": "自动安装更新（查看说明）" })
       .props.onMouseEnter();
   });
-  assert(text(tree).includes("DSH 를 자동으로 재시작하지 않습니다"));
+  assert(text(tree).includes("不会自动重启 DSH"));
   await unmount(tree);
 });
 
@@ -290,24 +290,24 @@ test("selfcheck inferred and unknown values show warning labels and explanation 
               state: "unknown",
               layers: [
                 {
-                  title: "현재 profile 의 권한 선택",
+                  title: "当前 profile 的权限选择",
                   kind: "config",
                   state: "inferred",
                   ok: false,
                   applied: 0,
                   total: 1,
                   broken: [],
-                  note: "명시적으로 고정되지 않았고 호스트 추론이 이미 적용됐다",
+                  note: "未显式固定，宿主推导已生效",
                 },
                 {
-                  title: "호스트 실행 방식",
+                  title: "宿主运行方式",
                   kind: "layout",
                   state: "unknown",
                   ok: false,
                   applied: 0,
                   total: 1,
                   broken: [],
-                  note: "현재 프로세스에서 호스트를 찾지 못했다",
+                  note: "当前进程未定位宿主",
                 },
               ],
             },
@@ -316,11 +316,11 @@ test("selfcheck inferred and unknown values show warning labels and explanation 
   );
   const tree = await mount(h);
   const rendered = text(tree);
-  assert(rendered.includes("2개 계층 확인 필요"));
-  assert(rendered.includes("호스트 추론"));
-  assert(rendered.includes("미확인"));
-  assert(!rendered.includes("계층 미적용"));
-  assert(!rendered.includes("모두 정상"));
+  assert(rendered.includes("2 层需确认"));
+  assert(rendered.includes("宿主推导"));
+  assert(rendered.includes("未确认"));
+  assert(!rendered.includes("层未生效"));
+  assert(!rendered.includes("全部在位"));
   assert(!rendered.includes("is-bad"));
   await unmount(tree);
 });
@@ -332,21 +332,21 @@ test("cached releases and failed fallbacks are visible instead of claiming lates
         ? reply({ ok: true, backups: [] })
         : reply(
             failed
-              ? { ok: false, error: "API 할당량 소진; Atom 대체 실패: 프록시 시간 초과" }
+              ? { ok: false, error: "API 额度耗尽；Atom 降级失败：代理超时" }
               : {
                   ok: true,
                   versions: [],
                   hasUpdate: false,
                   stale: true,
-                  degraded: "API 할당량 소진, 최근 성공 목록을 그대로 쓴다",
+                  degraded: "API 额度耗尽，沿用最近一次成功列表",
                 },
           ),
     );
     const tree = await mount(h);
-    await click(tree, "커뮤니티판 업데이트 확인");
-    assert(text(tree).includes("할당량 소진"));
-    assert(text(tree).includes(failed ? "프록시 시간 초과" : "캐시 목록"));
-    assert(!text(tree).includes("이미 최신 정식 버전입니다"));
+    await click(tree, "检查社区版更新");
+    assert(text(tree).includes("额度耗尽"));
+    assert(text(tree).includes(failed ? "代理超时" : "缓存列表"));
+    assert(!text(tree).includes("当前已是最新正式版"));
     await unmount(tree);
   }
 });
@@ -369,14 +369,14 @@ test("update status distinguishes loaded code, pending disk version and independ
     pendingVersion: "1.6.41",
     restartRequired: true,
   });
-  assert(text(tree).includes("디스크 버전 1.6.41, 현재 실행 1.6.40"));
+  assert(text(tree).includes("磁盘版本 1.6.41，当前运行 1.6.40"));
   await render({
     runningVersion: "1.6.41",
     restartRequired: false,
     checkedAt: "2026-10-21T00:00:00Z",
     installError: "web rollback failed",
   });
-  assert(!text(tree).includes("DSH 를 직접 재시작하기를 기다립니다"));
+  assert(!text(tree).includes("等待你手动重启"));
   assert(text(tree).includes("web rollback failed"));
   await render({
     restartRequired: true,
@@ -385,11 +385,11 @@ test("update status distinguishes loaded code, pending disk version and independ
     error: "network timeout",
     installError: "web rollback failed",
   });
-  assert(text(tree).includes("설치 상태 확인 대기"));
+  assert(text(tree).includes("安装状态待核对"));
   assert(text(tree).includes("package unreadable"));
   assert(text(tree).includes("network timeout"));
   assert(text(tree).includes("web rollback failed"));
-  assert(!text(tree).includes("DSH 를 직접 재시작하기를 기다립니다"));
+  assert(!text(tree).includes("等待你手动重启"));
   assert.equal(
     h.calls.length,
     0,
@@ -427,7 +427,7 @@ test("saving a token does not erase masked proxy credentials or auto-update pref
   await act(async () =>
     field.props.onChange({ target: { value: "fixture-token" } }),
   );
-  await click(tree, "저장");
+  await click(tree, "保存");
   assert(saved);
   assert.equal(h.calls.length, 1);
   assert.deepEqual(h.calls[0].body, {
@@ -461,10 +461,10 @@ test("mirror changes save only the transport preference and clearing it is expli
         }),
       );
     });
-    const field = tree.root.findByProps({ placeholder: "https://미러호스트/" });
+    const field = tree.root.findByProps({ placeholder: "https://镜像主机/" });
     assert.equal(field.props.value, initial);
     await act(async () => field.props.onChange({ target: { value: next } }));
-    await click(tree, "저장");
+    await click(tree, "保存");
     assert.equal(h.calls.length, 1);
     assert.deepEqual(h.calls[0].body, {
       op: "preferences",

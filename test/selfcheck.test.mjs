@@ -28,7 +28,7 @@ test("an empty home reports the layers as missing instead of pretending they are
     const report = await selfCheck(path.join(f.home, "no-host"), f.home);
     assert.equal(report.ok, false);
     assert.equal(report.host_version, "unknown");
-    assert.equal(report.layers.filter(l => l.title !== "기타 필수 대상 파일").length, BYPASS_LAYERS.length + 3); // + runtime / config / layout
+    assert.equal(report.layers.filter(l => l.title !== "其他必需目标文件").length, BYPASS_LAYERS.length + 3); // + runtime / config / layout
     const runtime = report.layers.find((l) => l.kind === "runtime");
     assert.equal(runtime.ok, false, "empty inject must not pass");
     const config = report.layers.find((l) => l.kind === "config");
@@ -100,7 +100,7 @@ test("pending patches are not reported as broken layers", () => {
   const absent = rollupLayers({ 24: "na", 37: "na" }, true);
   const na = absent.find((l) => l.ids.includes(24));
   assert.equal(na.state, "ok");
-  assert(na.note.includes("해당 없음"));
+  assert(na.note.includes("不适用"));
 });
 
 
@@ -118,7 +118,7 @@ test("standalone JSON and text distinguish uncertainty from a confirmed policy m
     for (const format of ["--json","--text"]) {
       const unknown=spawnSync(process.execPath,["bin/community.js","selfcheck",format],{env,encoding:"utf8"});
       assert.equal(unknown.status,0,unknown.stderr);
-      assert(!unknown.stdout.includes("모든 계층이 정상 위치에 있습니다"));
+      assert(!unknown.stdout.includes("所有层都在位"));
       if(format==="--json")assert.equal(JSON.parse(unknown.stdout).state,"unknown");
     }
     fs.writeFileSync(path.join(f.profile,"cordis.patch.yml"),"- id: permission\n  config:\n    defaultPreset: workspace-write\n    presets:\n      workspace-write:\n        sandbox: workspace-write\n        approval: ask\n");
@@ -196,7 +196,7 @@ test("#38 shipped default preset with comments and unrelated JS tags needs no wo
     assert.equal(layer.applied,4);
     assert.equal(layer.required,4);
     assert.deepEqual(layer.absent,[76]);
-    assert.match(layer.note,/처리할 필요가 없습니다/);
+    assert.match(layer.note,/无需处理/);
     assert.equal(report.patch.total,ALL_PATCHES.length-1);
     assert.equal(report.patch.applied,ALL_PATCHES.length-1);
   }
@@ -331,5 +331,61 @@ test("apply refuses a partial observation rewrite and keeps the original bytes",
     const report = await patchStatusDetail(host, [patch], {dshHome:home,surface:"desktop"});
     assert.match(report.status[17], /pending|drifted/);
     assert.equal(fs.readFileSync(file, "utf8"), original);
+  }
+});
+
+test("two applies compose branding and read-only changes on a clean or upgraded policy", async t => {
+  const { applyPatches, patchStatusDetail, applyReplacementsToText } = await import("../lib/core.js");
+  const root = fakeHome();
+  t.after(() => root.close());
+  const previous = process.env.DSH_HOME;
+  process.env.DSH_HOME = root.home;
+  t.after(() => { if (previous === undefined) delete process.env.DSH_HOME; else process.env.DSH_HOME = previous; });
+  const host = path.join(root.home, "node_modules/@deepseek-ai");
+  const file = path.join(host, "dsh-sandbox-policy/lib/index.js");
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const native = fs.readFileSync(new URL("./fixtures/sandbox-policy-rc5.js.txt", import.meta.url), "utf8");
+  const patches = ALL_PATCHES.filter(p => [61,93].includes(p.id));
+  const brand = patches.find(p => p.id === 93);
+  const approval = patches.find(p => p.id === 61);
+  const brandedOnly = applyReplacementsToText(native, brand, file).text;
+  const approvalOnly = applyReplacementsToText(native, approval, file).text;
+  assert.notEqual(brandedOnly, native);
+  assert.notEqual(approvalOnly, native);
+  for (const start of [native, brandedOnly, approvalOnly]) {
+    fs.writeFileSync(file, start);
+    for (let i = 0; i < 2; i++) {
+      const rows = await applyPatches(host, patches);
+      assert.ok(rows.every(r => ["already","applied"].includes(r.status)), JSON.stringify(rows));
+      if (i) assert.ok(rows.every(r => r.status === "already"));
+      const disk = await patchStatusDetail(host, patches, {dshHome:root.home,surface:"desktop"});
+      assert.deepEqual(disk.status, {61:"applied",93:"applied"});
+    }
+  }
+  const complete = fs.readFileSync(file,"utf8");
+  for (const [partial,id] of [
+    [complete.replace("Current file policy: workspace-write", "Current DSH file policy: workspace-write"),93],
+    [complete.replace("approval is auto-granted", "unknown phrase"),61],
+    [native + "\n/*\n" + complete + "\n*/",61],
+  ]) {
+    fs.writeFileSync(file,partial);
+    assert.notEqual((await patchStatusDetail(host,patches,{dshHome:root.home,surface:"desktop"})).status[id],"applied");
+  }
+});
+
+test("a clean rc.5 observation policy and either previously migrated half converge on two applies", async () => {
+  const {applyReplacementsToText} = await import("../lib/core.js");
+  const {patchApplied} = await import("../lib/core/shared.mjs");
+  const p = ALL_PATCHES.find(row => row.id === 17);
+  const native = fs.readFileSync(new URL("./fixtures/observed-state-rc5.js.txt", import.meta.url), "utf8");
+  const [write,,edit] = p.replacements;
+  for (const start of [native, native.replace(write.pattern,write.replace), native.replace(edit.pattern,edit.replace)]) {
+    assert.equal(patchApplied(start,p),false);
+    const first = applyReplacementsToText(start,p);
+    assert.equal(first.changed,true);
+    assert.equal(patchApplied(first.text,p),true);
+    const second = applyReplacementsToText(first.text,p);
+    assert.equal(second.changed,false);
+    assert.equal(second.text,first.text);
   }
 });

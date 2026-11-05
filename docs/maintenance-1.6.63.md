@@ -1,21 +1,21 @@
-# 1.6.63 유지보수 기록: 업스트림 1.1.78–1.1.83 대조
+# 1.6.63 维护记录：上游 1.1.78–1.1.83 比对
 
-commit 과 release notes 를 항목별로 읽고 내린 판단:
+逐条读 commit 与 release notes 后的取舍：
 
-| 업스트림 항목 | 결론 |
+| 上游项 | 结论 |
 |---|---|
-| #188 drifted 판정(일반 부분) | **채택**: `filePatchOutcome` 에 `drifted` 추가, `ensureHostClean` 이 더 이상 `pattern_not_found` 를 걸러 내지 않음, 패널/자체 점검 동기화 |
-| #188 의 expect 적중 수 계약 | 보류: 변경 범위가 82 개 pattern 전부에 걸쳐 별도 검증 라운드가 필요 |
-| #174 DSH NEXT 식별 | 미채택: 서드파티 셸은 독립 호스트 계열이 필요(이 저장소 #98 / PR #102) |
-| #180 / #185 allowBuilds, pnpm 11/12 | 미채택: 이 fork 는 `pnpm-workspace.yaml` 을 쓰지 않고 `dsh plugin add` 를 쓴다 |
-| #191 빈 `[]` cordis.patch.yml | 미채택: 이 fork 는 insert 행을 자동으로 덧붙이지 않는다 |
-| #108 selectedDefault 정리 | 미채택: redteam 프리셋이 없고 사용자 기본 선택을 바꾸지 않는다 |
-| #170 zip 디렉터리 항목 | 이미 있음(`endsWith("/")` 로 디렉터리 생성) |
-| 서브에이전트가 상위 세션을 따라 프리셋을 읽음 | 미채택: #53 계약은 "하위 Agent 가 자기 실제 프리셋으로 판단"이며 이미 테스트로 고정되었다 |
-| 공인망 게이트 / 실습 환경 제한 | 일절 채택하지 않는다 |
+| #188 drifted 判定（通用部分） | **采纳**：`filePatchOutcome` 增加 `drifted`；`ensureHostClean` 不再过滤 `pattern_not_found`；面板/自检同步 |
+| #188 的 expect 命中数契约 | 暂不采纳：改动面覆盖全部 82 条 pattern，需要单独一轮验证 |
+| #174 DSH NEXT 识别 | 不采纳：第三方壳需要独立宿主家族（本仓库 #98 / PR #102） |
+| #180 / #185 allowBuilds、pnpm 11/12 | 不采纳：本 fork 不写 `pnpm-workspace.yaml`，走 `dsh plugin add` |
+| #191 空 `[]` cordis.patch.yml | 不采纳：本 fork 不自动追加 insert 行 |
+| #108 selectedDefault 清理 | 不采纳：无 redteam 预设，不改用户默认选择 |
+| #170 zip 目录条目 | 已具备（`endsWith("/")` 建目录） |
+| 子代理沿父会话读预设 | 不采纳：#53 契约是「子 Agent 按自己的实际预设判断」，已有测试锁定 |
+| 公网门禁 / 靶场限制 | 一律不取 |
 
-## 판정 세부
+## 判定细节
 
-- 자기 표식 패치: `replacements[].pattern` 에 `[dsh-purge]` 가 있으면 pattern 이 플러그인이 직접 쓴 흔적이므로, 찾지 못함 = 넣은 적 없음이 되어 `skipped` 를 유지한다.
-- `silentWhenMissing`: "누락이 곧 정상"이라고 명시한 패치(현재는 #76 사용자 프리셋 신원 행뿐). 깨끗한 프리셋을 드리프트로 보고하지 않게 한다.
-- 실기 0.2.1-rc.5 결과: 74 applied / 6 na(서드파티 미설치) / 2 skipped, `diagnose` 드리프트 0.
+- 自标记补丁：`replacements[].pattern` 含 `[dsh-purge]`，说明 pattern 是插件自己写入的痕迹，找不到＝没加过，保持 `skipped`。
+- `silentWhenMissing`：显式声明「缺失即正确」的补丁（当前仅 #76 用户预设身份行），避免把干净预设报成漂移。
+- 真机 0.2.1-rc.5 结果：74 applied / 6 na（第三方未装）/ 2 skipped，`diagnose` 零漂移。

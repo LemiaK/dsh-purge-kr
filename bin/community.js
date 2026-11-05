@@ -13,14 +13,14 @@ import { readBoost, writeBoost } from "../lib/boost.js";
 import { readTuning, writeTuning } from "../lib/tuning.js";
 import { createProbe, readProbe } from "../lib/probe.js";
 const rawArgs = process.argv.slice(2);
-// 원본 CLI 의 모든 동작(apply/revert/uninstall/edit/status)은 그대로 둔다.
-// purge-community 는 전달만 해 두 구현이 어긋나는 일을 막는다.
+// 原版 CLI 的全部动作（apply/revert/uninstall/edit/status）原样保留，
+// purge-community 只做转发，避免两套实现漂移。
 const LEGACY = { apply: "--apply", revert: "--revert", uninstall: "--uninstall", edit: "--edit", "legacy-status": "--status" };
 const [op = "status", argument, argument2] = rawArgs,
   home = process.env.DSH_HOME || findDshHome();
 // Resolve the running/explicit installation, not another machine-wide Desktop.
 const aiBase = currentHost();
-// 지연 생성: status / diagnose / selfcheck 는 profile 디렉터리가 잠시 쓸 수 없다고 바로 죽으면 안 된다.
+// 懒构造：status / diagnose / selfcheck 不该因为 profile 目录暂时不可用就直接崩。
 const maintenance = () => new Maintenance({
   home,
   profile: process.env.PURGE_PROFILE_DIR,
@@ -53,21 +53,21 @@ if (LEGACY[op]) {
       };
     } else if (sub === "show") {
       const row = byId(argument2);
-      if (!row) throw Error(`드리프트된 패치가 없습니다: #${argument2}`);
+      if (!row) throw Error(`没有漂移的补丁 #${argument2}`);
       result = row;
     } else if (sub === "clear") {
       const idx = rawArgs.indexOf("--index");
       const wanted = idx >= 0 ? Number(rawArgs[idx + 1]) : undefined;
-      if (idx >= 0 && !Number.isInteger(wanted)) throw Error("--index 에는 정수가 필요합니다");
+      if (idx >= 0 && !Number.isInteger(wanted)) throw Error("--index 需要整数");
       result = { cleared: true, overrides: clearOverride(home, argument2, wanted) };
     } else if (sub === "apply") {
       const row = byId(argument2);
-      if (!row) throw Error(`드리프트된 패치가 없습니다: #${argument2}`);
+      if (!row) throw Error(`没有漂移的补丁 #${argument2}`);
       const idxFlag = rawArgs.indexOf("--index");
       const wanted = idxFlag >= 0 ? Number(rawArgs[idxFlag + 1]) : NaN;
-      if (idxFlag >= 0 && !Number.isInteger(wanted)) throw Error("--index 에는 정수가 필요합니다");
+      if (idxFlag >= 0 && !Number.isInteger(wanted)) throw Error("--index 需要整数");
       const target = idxFlag >= 0 ? row.anchors.find((a) => a.index === wanted) : row.anchors[0];
-      if (!target) throw Error("해당 앵커를 찾지 못했습니다(--index 로 지정하세요)");
+      if (!target) throw Error("找不到对应的锚点（用 --index 指定）");
       const text = readFileSync(target.file, "utf8").replace(/\r\n/g, "\n");
       const lines = text.split("\n");
       const oldCount = String(target.head || "").split("\n").length;
@@ -76,7 +76,7 @@ if (LEGACY[op]) {
       let to;
       if (linesFlag >= 0) {
         const [a, b] = String(rawArgs[linesFlag + 1]).split("-").map(Number);
-        if (!Number.isInteger(a) || !Number.isInteger(b) || a < 1 || b < a) throw Error("--lines 는 120-132 같은 형식이어야 합니다");
+        if (!Number.isInteger(a) || !Number.isInteger(b) || a < 1 || b < a) throw Error("--lines 需要形如 120-132");
         from = a - 1;
         to = b;
       } else {
@@ -86,9 +86,9 @@ if (LEGACY[op]) {
         to = Math.min(lines.length, from + span);
       }
       const candidate = lines.slice(from, to).join("\n");
-      if (!candidate.trim()) throw Error("가져온 스니펫이 비어 있습니다. --lines 로 범위를 지정하세요");
+      if (!candidate.trim()) throw Error("取到的片段为空，用 --lines 指定范围");
       const occurrences = text.split(candidate).length - 1;
-      if (occurrences !== 1) throw Error(`후보 스니펫이 파일에 ${occurrences}번 나타납니다. 유일해야 하므로 --lines 로 범위를 좁히세요`);
+      if (occurrences !== 1) throw Error(`候选片段在文件里出现 ${occurrences} 次，必须唯一；用 --lines 缩小范围`);
       const preview = {
         patch: row.id,
         name: row.name,
@@ -103,7 +103,7 @@ if (LEGACY[op]) {
         ).changed,
       };
       if (!rawArgs.includes("--yes")) {
-        result = { dryRun: true, ...preview, hint: "확인했으면 --yes 를 붙여 로컬 재앵커 오버라이드를 기록하세요" };
+        result = { dryRun: true, ...preview, hint: "确认无误后加 --yes 写入本地重锚覆盖" };
       } else {
         writeOverride(home, row.id, target.index, candidate, { host: drift.host });
         logAudit("reanchor", { patch: row.id, index: target.index, host: drift.host }, home);
@@ -112,7 +112,7 @@ if (LEGACY[op]) {
         result = { written: true, ...preview, status: (await core.patchStatus(host))[row.id] };
       }
     } else {
-      throw Error("사용법: purge-community reanchor list | show <id> | apply <id> [--index n] [--lines a-b] [--yes] | clear <id>");
+      throw Error("用法：purge-community reanchor list | show <id> | apply <id> [--index n] [--lines a-b] [--yes] | clear <id>");
     }
   } else if (op === "patches") {
     const sub = (argument || "list").toLowerCase();
@@ -120,23 +120,23 @@ if (LEGACY[op]) {
     const ids = String(argument2 || "").split(",").map(Number).filter((n) => Number.isInteger(n) && n > 0);
     const optIn = (await import("../lib/core.js")).ALL_PATCHES.filter((p) => p.disabledByDefault).map((p) => p.id);
     if (sub === "enable" || sub === "disable") {
-      if (!ids.length) throw Error(`사용법: purge-community patches ${sub} ${optIn.join(",") || "<id,id>"}`);
+      if (!ids.length) throw Error(`用法：purge-community patches ${sub} ${optIn.join(",") || "<id,id>"}`);
       const known = new Set(optIn);
       const unknown = ids.filter((id) => !known.has(id));
-      if (unknown.length) throw Error(`기본 비활성 패치만 수동으로 켜고 끌 수 있습니다: ${[...known].join(",")} (알 수 없음: ${unknown.join(",")})`);
+      if (unknown.length) throw Error(`只有默认关闭的补丁可以手动开关：${[...known].join(",")}（未知：${unknown.join(",")}）`);
       const next = sub === "enable"
         ? [...new Set([...current, ...ids])].sort((a, b) => a - b)
         : current.filter((id) => !ids.includes(id));
       const saved = writeTuning({ extraPatches: next }, home);
       logAudit("patches_setting", { action: sub, ids: ids.join(","), effective: saved.extraPatches.join(",") }, home);
-      result = { ok: true, extraPatches: saved.extraPatches, restart_required: false, hint: sub === "enable" ? "“적용”을 한 번 눌러 호스트에 기록한 뒤 종료하고 다시 여세요" : "끄기는 이후 “적용”에만 영향을 줍니다. 호스트에서 실제로 제거하려면 “되돌리기”를 한 번 누르세요" };
+      result = { ok: true, extraPatches: saved.extraPatches, restart_required: false, hint: sub === "enable" ? "点一次「应用」写入宿主，然后退出重开" : "关闭只影响以后的「应用」；要从宿主真正移除，点一次「还原」" };
     } else {
       result = {
         ok: true,
         optIn,
         extraPatches: current,
         hint: "purge-community patches enable 18,19 | disable 18",
-        note: "기본 비활성: 켜면 중복 호출 알림과 도구 결과 트리밍이 해제되어 긴 세션의 컨텍스트가 커집니다",
+        note: "默认关闭：开启会取消重复调用提醒与工具结果修剪，长会话上下文会变大",
       };
     }
   } else if (op === "retry") {
@@ -156,8 +156,8 @@ if (LEGACY[op]) {
       result = { ok: true, rewind: readTuning(home).rewind !== false, hint: "purge-community rewind on|off" };
     }
   } else if (op === "inject") {
-    // 주입 위치: head / tail / both. 바꾸면 다음 대화 라운드부터 적용된다(section 이 매 라운드 tuning 을 다시 읽는다).
-    // 재시작은 필요 없고, 패널이 표시하는 위치는 다음 읽기에서 갱신된다.
+    // 注入位置：head / tail / both。改完下一轮对话即生效（section 每轮回读 tuning），
+    // 不需要重启；面板显示的段位会在下一次读取时刷新。
     const sub = (argument || "status").toLowerCase();
     const allowed = ["head", "tail", "both"];
     if (allowed.includes(sub)) {
@@ -167,7 +167,7 @@ if (LEGACY[op]) {
     } else if (sub === "status" || !argument) {
       result = { ok: true, injectPosition: readTuning(home).injectPosition || "head", hint: "purge-community inject head|tail|both" };
     } else {
-      result = { ok: false, error: "injectPosition 은 head / tail / both 만 받습니다", value: sub };
+      result = { ok: false, error: "injectPosition 只接受 head / tail / both", value: sub };
       process.exitCode = 2;
     }
   } else if (op === "probe") {
@@ -187,7 +187,7 @@ if (LEGACY[op]) {
     } else if (sub === "status" || sub === "path") {
       result = presetStatus(home);
     } else {
-      throw Error("사용법: purge-community preset [status|install [--force]]");
+      throw Error("用法：purge-community preset [status|install [--force]]");
     }
   } else if (op === "boost") {
     if (argument === "on" || argument === "off") result = { enabled: writeBoost(argument === "on") };
@@ -195,37 +195,37 @@ if (LEGACY[op]) {
   } else if (op === "selfcheck" || op === "check-bypass") {
     // The extracted installer runs migrate before runtime dependencies are installed.
     const { selfCheck } = await import("../lib/selfcheck.js");
-    // CLI 에서 직접 실행하면(node bin/community.js) argv 가 플러그인 자신을 가리켜 currentHost() 가 호스트를 못 알아본다.
-    // selfCheck 는 빈 aiBase 를 넘기면 자체 해석을 쓰므로, 여기서 DSH_HOME 을 함께 넘겨 기본값으로 다시 추측하지 않게 한다.
+    // 从 CLI 直接跑（node bin/community.js）时 argv 指向插件自身，currentHost() 认不出宿主；
+    // selfCheck 允许传空 aiBase 走自己的解析，这里把 DSH_HOME 一起传下去，避免用默认值再猜一次。
     const report = await selfCheck(aiBase || "", process.env.DSH_HOME || findDshHome());
     process.exitCode = report.state === "broken" ? 1 : 0;
     if (rawArgs.includes("--json")) result = report;
     else {
       const notApplicable = report.patch.not_applicable || 0;
-      const naNote = notApplicable ? `(별도 ${notApplicable}건은 명확히 해당 없음·비활성 또는 마이그레이션 불필요)` : "";
-      const missingNote = report.patch.missing_file ? ` · 대상 누락 ${report.patch.missing_file}건(진단 참고)` : "";
+      const naNote = notApplicable ? `（另 ${notApplicable} 条明确不适用、已关闭或无需迁移）` : "";
+      const missingNote = report.patch.missing_file ? ` · 目标缺失 ${report.patch.missing_file} 条（详见诊断）` : "";
       const lines = [
-        `Purge 탈옥 자체 점검 · ${report.host || "(호스트 미확인)"}`,
-        `  DSH ${report.host_version} · ${report.level} · 호스트 패치 ${report.patch.applied}/${report.patch.total}${naNote}${missingNote}`,
+        `Purge 破甲自检 · ${report.host || "(未定位宿主)"}`,
+        `  DSH ${report.host_version} · ${report.level} · 宿主补丁 ${report.patch.applied}/${report.patch.total}${naNote}${missingNote}`,
         "",
       ];
       for (const layer of report.layers) {
         const mark = ["pending", "inferred", "unknown"].includes(layer.state) ? "⏳" : layer.ok ? "✓" : "✗";
         const tail = layer.note
           || (layer.broken.length ? JSON.stringify(layer.broken) : "")
-          || (layer.pending && layer.pending.length ? `적용 대기 #${layer.pending.join("/#")}` : "");
+          || (layer.pending && layer.pending.length ? `待应用 #${layer.pending.join("/#")}` : "");
         lines.push(`  ${mark} ${layer.title}  ${layer.applied}/${layer.required ?? layer.total}${tail ? "  " + tail : ""}`);
       }
       const pendingCount = (report.summary && report.summary.pending && report.summary.pending.patches) || 0;
       lines.push(
         "",
         report.state === "pending"
-          ? `결론: ${pendingCount}건의 패치가 적용 대기 상태입니다. “적용”을 한 번 누른 뒤 DSH 를 종료하고 다시 열면 됩니다.`
+          ? `结论：有 ${pendingCount} 条补丁待应用 —— 点一次「应用」，然后退出重开 DSH 即可。`
           : report.state === "broken"
-            ? "결론: 실제로 적용되지 않은 계층이 있습니다(✗). 위를 참고하세요."
+            ? "结论：有层真的没生效（✗），见上面。"
             : ["unknown", "inferred"].includes(report.state)
-              ? "결론: 확인된 장애는 없지만 추론값이나 미확인 항목이 있습니다. 계층별 설명을 참고하세요."
-              : "결론: 모든 계층이 정상 위치에 있습니다.",
+              ? "结论：未发现已确认故障，但存在推导值或未确认项，见逐层说明。"
+              : "结论：所有层都在位。",
       );
       if (rawArgs.includes("--text")) {
         console.log(lines.join("\n"));
@@ -241,7 +241,7 @@ if (LEGACY[op]) {
     const drift = target
       ? await patchDrift(target, undefined, {surface:hostSurface(target),dshHome:home})
       : {host:"",state:"unknown",checked:0,drifted:[],optionalDrift:[],chained:[],missing:[],
-          note:"현재 인스턴스를 확인하지 못했습니다. DSH_BASE 또는 PURGE_DSH_CLI 를 명시하세요. 다른 설치를 스캔하지 않습니다"};
+          note:"未定位当前实例；请明确 DSH_BASE 或 PURGE_DSH_CLI，不扫描其他安装"};
     result = { name: "Purge Community", package: PACKAGE, compatibility: compatibility(target), ...drift };
   } else if (op === "status") {
     const target = diagnosticHost();
@@ -250,7 +250,7 @@ if (LEGACY[op]) {
       package: PACKAGE,
       compatibility: compatibility(target),
       host_selection: target ? "explicit-or-running" : "unresolved",
-      ...(target ? {} : { hint: "현재 인스턴스 진입점을 확인하지 못했습니다. DSH_BASE / PURGE_DSH_CLI 를 지정하거나 실행 중인 호스트의 패널 진단을 보세요. 이것은 플러그인 미설치의 증거가 아닙니다." }),
+      ...(target ? {} : { hint: "未取得当前实例入口；请指定 DSH_BASE / PURGE_DSH_CLI，或查看正在运行宿主的面板诊断。这不是插件未安装的证明。" }),
       backups: (() => { try { return maintenance().list(); } catch { return []; } })(),
     };
   } else if (op === "backup") result = await maintenance().backup("cli");
@@ -258,14 +258,14 @@ if (LEGACY[op]) {
   else if (op === "usage") result = maintenance().usage();
   else if (op === "rollback") result = await maintenance().rollback(argument);
   else if (op === "install" || op === "migrate") {
-    if (!argument) throw Error("설치 패키지 경로가 필요합니다");
+    if (!argument) throw Error("需要安装包路径");
     result = await maintenance().install(path.resolve(argument), {
       reason: op === "migrate" ? "before-migration" : "before-update",
       migrate: op === "migrate",
     });
   } else
     throw Error(
-      "사용법: purge-community status | host-status | diagnose | selfcheck [--json] | boost on|off | rewind on|off | patches [list|enable ids|disable ids] | probe [new] | audit [--limit n] | preset [status|install] | backup [prune|usage] | rollback <백업ID> | migrate <tgz> | apply | revert | uninstall | edit",
+      "用法：purge-community status | host-status | diagnose | selfcheck [--json] | boost on|off | rewind on|off | patches [list|enable ids|disable ids] | probe [new] | audit [--limit n] | preset [status|install] | backup [prune|usage] | rollback <备份ID> | migrate <tgz> | apply | revert | uninstall | edit",
     );
   console.log(JSON.stringify(result, null, 2));
 } catch (e) {
