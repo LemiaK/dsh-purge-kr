@@ -66,7 +66,7 @@ export function isRefusalTranslation(ko, src = "") {
   if (!(addressed || apology || meta)) return false;
 
   // 원문에 같은 주제어가 들어 있으면 정상 번역일 수 있으므로, 과장되게 길 때만 거부로 본다.
-  const sourceHasMeta = /번역|제공|저작권|제한|요청|가사|원문/.test(source);
+  const sourceHasMeta = /번역|제공|저작권|제한|요청|가사|원문|翻译|提供|版权|限制|请求|歌词|原文/.test(source);
   if (sourceHasMeta && text.length < source.length * 2) return false;
 
   return verb && (addressed || apology);
