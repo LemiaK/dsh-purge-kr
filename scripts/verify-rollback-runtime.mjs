@@ -66,7 +66,7 @@ if(host)m.aiBase=host;
 await m.install(candidate);await verifyInstalledPackage(profile,b);
 const before=fs.readFileSync(path.join(profile,'package.json')),lock=fs.readFileSync(path.join(profile,'pnpm-lock.yaml'));
 m.verifier=async()=>{throw Error('injected post-install import failure');};
-await assert.rejects(m.rollback(snapshot.id),/의존성, 설치, 매니페스트가 복원/);
+await assert.rejects(m.rollback(snapshot.id),/의존성, 설치, 매니페스트를 복원/);
 assert.deepEqual(fs.readFileSync(path.join(profile,'package.json')),before);
 assert.deepEqual(fs.readFileSync(path.join(profile,'pnpm-lock.yaml')),lock);
 await verifyInstalledPackage(profile,b);
