@@ -9,6 +9,10 @@ on:
         description: "번역해 볼 중국어 문자열(비우면 기본 샘플)"
         required: false
         default: ""
+      text_b64:
+        description: "긴 문자열용: 중국어를 base64 로 인코딩해 넣는다(text 보다 우선)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -33,9 +37,13 @@ jobs:
       - name: Call the model once
         env:
           INPUT_TEXT: ${{ inputs.text }}
+          INPUT_B64: ${{ inputs.text_b64 }}
         run: |
           set -euo pipefail
-          if [ -n "${INPUT_TEXT}" ]; then
+          if [ -n "${INPUT_B64}" ]; then
+            text="$(printf '%s' "${INPUT_B64}" | base64 -d)"
+            node scripts/i18n-smoke.mjs "${text}"
+          elif [ -n "${INPUT_TEXT}" ]; then
             node scripts/i18n-smoke.mjs "${INPUT_TEXT}"
           else
             node scripts/i18n-smoke.mjs
