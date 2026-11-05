@@ -74,6 +74,16 @@ Fixed the standalone installer showing only `fetch failed`. It now provides per-
 
 ## Installation
 
+### Install straight from git (recommended, always the newest commit)
+
+```sh
+dsh plugin --profile <profile> add "https://github.com/wnduddld0513/dsh-purge-kr.git"
+```
+
+This clones the repository and installs the current `master` tip, so it always picks up the newest release without waiting for an index refresh. The built `client.js` is committed, so nothing is compiled locally. Replace `<profile>` with the profile you actually start (`desktop` for the desktop app, `web` for CLI/Web). Then restart DSH, open the Purge panel, press **Apply**, and restart once more.
+
+If you need a reproducible version, install a pinned release tarball instead (Method 2 below), or a local checkout with `dsh plugin --profile <profile> add /absolute/path/to/dsh-purge-community`.
+
 **DSH's official entry point handles plugin installation. This repository maintains the community installer below, and it is not an official DeepSeek script.** Use the official UI or CLI for a first install. If you already installed `dsh-purge` or the older standalone panel, migrate in place with the community installer and do not remove it first. Installing, applying host patches, and restarting by hand are three separate actions.
 
 ### Method 1: DSH official UI (first install)
