@@ -9207,13 +9207,22 @@ var nativeSidebar = null;
 var rd = __toESM(require("react-dom"), 1);
 
 // src/shared/locale.js
-var NS = "settings.dsh-purge-panel";
-var translate = (key) => key;
+function interpolate(text, vars) {
+  if (!vars) return text;
+  return String(text).replace(
+    /\{(\w+)\}/g,
+    (match, name2) => name2 in vars ? String(vars[name2]) : match
+  );
+}
+function translate(key, vars) {
+  return interpolate(ko[key] ?? en[key] ?? key, vars);
+}
+var currentTranslate = translate;
 function setTranslate(t) {
-  translate = t;
+  currentTranslate = typeof t === "function" ? t : translate;
 }
 function useT() {
-  return translate;
+  return currentTranslate;
 }
 var ko = {
   nav: "\uADDC\uCE59 \uC124\uC815",
@@ -9435,6 +9444,7 @@ var ko = {
   "restart.fail": "\uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4: {error}",
   "restart.notStarted": "\uC7AC\uC2DC\uC791\uC774 \uC2DC\uC791\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uD074\uB77C\uC774\uC5B8\uD2B8\uB294 \uADF8\uB300\uB85C \uC788\uC73C\uBA70 \uC790\uB3D9\uC73C\uB85C \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
   "restart.already": "\uC774\uBC88 \uC7AC\uC2DC\uC791\uC740 \uC774\uBBF8 \uC2DC\uC791\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC7AC\uC2DC\uC791\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+  "restart.manualQuit": "\uC790\uB3D9\uC73C\uB85C \uB2E4\uC2DC \uC5F4 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. DSH \uB97C \uC9C1\uC811 \uC885\uB8CC\uD55C \uB4A4 \uB2E4\uC2DC \uC5F4\uC5B4 \uC8FC\uC138\uC694.",
   "restart.confirm": "\uC815\uB9AC\uAC00 \uB05D\uB0AC\uC2B5\uB2C8\uB2E4. \uC7AC\uC2DC\uC791\uD558\uBA74 \uC801\uC6A9\uB429\uB2C8\uB2E4.",
   "restart.confirm.desktop": "\uC815\uB9AC\uAC00 \uB05D\uB0AC\uC2B5\uB2C8\uB2E4. \uB370\uC2A4\uD06C\uD1B1 \uC571\uC744 \uC7AC\uC2DC\uC791\uD558\uBA74 \uC801\uC6A9\uB429\uB2C8\uB2E4.",
   "restart.ask.title": "\uC9C0\uAE08 \uC7AC\uC2DC\uC791\uD560\uAE4C\uC694",
@@ -9815,6 +9825,7 @@ var en = {
   "restart.fail": "Failed: {error}",
   "restart.notStarted": "Restart did not start. This client is still open, and it will not try again by itself.",
   "restart.already": "This restart already started. It will not restart again.",
+  "restart.manualQuit": "The app cannot reopen by itself. Quit DSH yourself and open it again.",
   "restart.confirm": "Apply finished. Restart to take effect.",
   "restart.confirm.desktop": "Apply finished. Restart the desktop app to take effect.",
   "restart.ask.title": "Restart now?",
@@ -14421,7 +14432,7 @@ function installRewindUi(ctx) {
         name: "conversation.input.right",
         id: "dsh-purge-rewind",
         order: 20,
-        inject: (sessionId) => ({ sessionId, t: ctx.locale.bind(NS) })
+        inject: (sessionId) => ({ sessionId, t: translate })
       },
       RewindSafe
     )
@@ -14905,7 +14916,7 @@ function EnvAdaptSendGate() {
 
 // src/entry.js
 var name = true ? "dsh-purge-community" : "dsh-purge-panel";
-var inject = ["slots", "locale"];
+var inject = ["slots"];
 function PurgeIcon({ size = 20 } = {}) {
   return h(
     "svg",
@@ -14951,14 +14962,8 @@ function apply(ctx) {
     ["sessions", "uiWorkspace", "conversation"],
     (host3) => installRewindUi(host3)
   );
-  ctx.effect(() => ctx.locale.register(NS, { ko, en }), "panel locale");
-  ctx.effect(() => {
-    const locale = ctx.locale;
-    if (!locale || typeof locale.addLanguage !== "function") return void 0;
-    return locale.addLanguage({ id: "ko", label: "\uD55C\uAD6D\uC5B4", fallback: "en" });
-  }, "panel locale language");
-  const t = ctx.locale.bind(NS);
-  setTranslate(t);
+  setTranslate(translate);
+  const t = translate;
   ctx.slots.inject(
     "shell.overlay",
     () => ctx.slots.register(
