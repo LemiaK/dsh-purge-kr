@@ -32,10 +32,31 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       - run: node market/validate.mjs market-dist/index.json
+      # Pages 가 꺼진 저장소(또는 Pages API 를 못 읽는 순간)에서 스케줄 작업이 실패하지 않도록 먼저 확인한다.
+      - name: Check whether Pages is enabled
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::GitHub Pages is not enabled for ${GITHUB_REPOSITORY}; the market index is only uploaded as an artifact."
+          fi
+      - name: Upload the index as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: market-dist
+          path: market-dist
+          if-no-files-found: error
       - uses: actions/configure-pages@v5
+        if: steps.pages.outputs.enabled == 'true'
       - uses: actions/upload-pages-artifact@v3
+        if: steps.pages.outputs.enabled == 'true'
         with:
           path: market-dist
       - name: Deploy index
         id: deployment
+        if: steps.pages.outputs.enabled == 'true'
         uses: actions/deploy-pages@v4

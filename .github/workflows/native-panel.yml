@@ -8,6 +8,10 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+# 같은 ref 에 새 실행이 오면 이전 실행을 취소한다(연속 푸시로 런이 겹치지 않게).
+concurrency:
+  group: native-panel-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   test:
     runs-on: ubuntu-latest

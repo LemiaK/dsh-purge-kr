@@ -1,0 +1,130 @@
+name: Upstream sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      auto_merge:
+        description: "게이트 통과 시 PR 을 자동 머지하고 릴리스까지 진행할지"
+        type: boolean
+        default: true
+  schedule:
+    - cron: "0 3,15 * * *"   # 하루 2회(UTC 03:00 / 15:00). GitHub cron 은 혼잡 시 수십 분 지연될 수 있다.
+  repository_dispatch:
+    types: [upstream-release]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    # 봇이 만든 커밋으로 다시 돌지 않게 한다.
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    # 키를 Environment 에만 두고, 필요하면 required reviewers 로 승인 게이트를 걸 수 있다.
+    environment: localization
+    env:
+      LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+      LLM_MODEL: ${{ vars.LLM_MODEL }}
+      LLM_REASONING_EFFORT: ${{ vars.LLM_REASONING_EFFORT }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_SESSION_ID: ${{ vars.LLM_SESSION_ID || github.run_id }}
+      SYNC_VERSION: ""
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: |
+          npm ci --ignore-scripts --legacy-peer-deps
+          npm --prefix packages/purge-panel ci --ignore-scripts --legacy-peer-deps
+
+      - name: Configure git
+        run: |
+          git config user.name "upstream-sync"
+          git config user.email "upstream-sync@users.noreply.github.com"
+          git remote add upstream https://github.com/kingcharleslzy-ai/dsh-purge.git
+
+      - name: Sync upstream and localize
+        id: sync
+        env:
+          # 키가 없으면 AI 없이 TM/보고서만 만든다.
+          HAS_KEY: ${{ secrets.LLM_API_KEY != '' }}
+        run: |
+          set -o pipefail
+          if [ "${HAS_KEY}" = "true" ]; then
+            node scripts/sync-upstream.mjs 2>&1 | tee sync.log
+          else
+            echo "::warning::LLM_API_KEY 가 없어 TM 재사용만으로 진행합니다."
+            node scripts/sync-upstream.mjs --no-ai 2>&1 | tee sync.log
+          fi
+          if git rev-parse --verify -q "sync/upstream-$(node -p "require('./package.json').version")" >/dev/null; then
+            echo "branch_created=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push branch
+        if: steps.sync.outputs.branch_created == 'true'
+        run: |
+          branch="$(git rev-parse --abbrev-ref HEAD)"
+          git push --force-with-lease origin "$branch"
+
+      - name: Open pull request
+        if: steps.sync.outputs.branch_created == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch="$(git rev-parse --abbrev-ref HEAD)"
+          body_file=".sync/summary.md"
+          if [ "${{ steps.sync.outcome }}" = "success" ]; then draft=""; else draft="--draft"; fi
+          if gh pr view "$branch" --json number >/dev/null 2>&1; then
+            gh pr edit "$branch" --body-file "$body_file"
+          else
+            gh pr create --head "$branch" --title "upstream sync: $(node -p "require('./package.json').version")" \
+              --body-file "$body_file" --label upstream-sync $draft
+          fi
+
+      - name: Merge and release when the gates are green
+        if: steps.sync.outputs.branch_created == 'true' && steps.sync.outcome == 'success' && (github.event_name != 'workflow_dispatch' || inputs.auto_merge) && vars.AUTO_MERGE != 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          branch="$(git rev-parse --abbrev-ref HEAD)"
+          # 게이트가 모두 통과한 경우에만 여기까지 온다(스크립트가 실패하면 워크플로가 먼저 멈춘다).
+          gh pr merge "$branch" --repo "$GITHUB_REPOSITORY" --squash --delete-branch
+          echo "::notice::PR 머지 완료 — 자동 릴리스 워크플로를 호출합니다."
+          # 봇이 만든 master push 는 다른 워크플로를 트리거하지 않으므로 명시 호출한다.
+          gh workflow run auto-release.yml --repo "$GITHUB_REPOSITORY" --ref master
+
+      - name: Fail visibly when a gate failed
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body="$(mktemp)"
+          if [ -f .sync/summary.md ]; then cat .sync/summary.md >> "$body"; fi
+          for extra in .sync/senior-fix.md .sync/repair.md .sync/failure.md .sync/review.md; do
+            if [ -f "$extra" ]; then
+              { printf '\n---\n\n'; cat "$extra"; } >> "$body"
+            fi
+          done
+          gh issue create --title "upstream sync 실패: $(date -u +%F)" \
+            --body-file "$body" --label upstream-sync || true
+
+      - name: Never upload the log with credentials
+        if: always()
+        run: |
+          # 로그에는 키가 남지 않지만, 실패 진단용으로 남길 때도 마스킹 규칙을 한 번 더 적용한다.
+          grep -v -F "${LLM_API_KEY:-__none__}" sync.log > sync.redacted.log || true
+          rm -f sync.log

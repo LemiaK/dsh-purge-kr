@@ -6,6 +6,11 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+# 같은 ref 에 새 실행이 오면 이전 실행을 명시적으로 취소한다.
+# (취소하지 않으면 macOS 잡이 큐에 쌓인 채 러너를 못 받고, 나중에 cancelled 로 정리되며 실행 전체가 빨간불이 된다.)
+concurrency:
+  group: community-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -40,6 +45,13 @@ jobs:
         with:
           node-version: 22
       - run: npm ci --ignore-scripts --legacy-peer-deps
+      - name: Resolve the released version for download checks
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="$(gh release list --repo wnduddld0513/dsh-purge-kr --limit 1 --json tagName --jq '.[0].tagName')"
+          echo "PURGE_RELEASE_VERSION=${tag#v}" >> "$GITHUB_ENV"
       - name: Full test suite
         if: runner.os != 'Windows'
         run: npm test
@@ -140,9 +152,15 @@ jobs:
           touch "$PURGE_TEST_NPM_ROOT/.purge-test-only"
           npm install --prefix "$PURGE_TEST_NPM_ROOT" --no-package-lock --no-audit --no-fund @deepseek-ai/dsh@0.2.1-rc.2 pnpm@10.32.1
           export PATH="$PURGE_TEST_NPM_ROOT/node_modules/.bin:$PATH"
-          gh release download v1.6.36 --repo wnduddld0513/dsh-purge-kr --pattern dsh-purge-community-1.6.36.tgz --dir "$RUNNER_TEMP/purge-baseline"
+          # baseline 은 "이미 공개된 이전 릴리스" 중에서 고른다(하드코딩 금지). 두 번째로 최신, 없으면 최신.
+          tags="$(gh release list --repo wnduddld0513/dsh-purge-kr --limit 10 --json tagName --jq '.[].tagName')"
+          baseline_tag="$(printf '%s\n' "$tags" | sed -n '2p')"
+          [ -n "$baseline_tag" ] || baseline_tag="$(printf '%s\n' "$tags" | sed -n '1p')"
+          baseline_version="${baseline_tag#v}"
+          baseline_archive="dsh-purge-community-${baseline_version}.tgz"
+          gh release download "$baseline_tag" --repo wnduddld0513/dsh-purge-kr --pattern "$baseline_archive" --dir "$RUNNER_TEMP/purge-baseline"
           npm pack --ignore-scripts
-          node scripts/check-npm-install-runtime.mjs "$RUNNER_TEMP/purge-baseline/dsh-purge-community-1.6.36.tgz" "dsh-purge-community-$(node -p 'require("./package.json").version').tgz"
+          node scripts/check-npm-install-runtime.mjs "$RUNNER_TEMP/purge-baseline/$baseline_archive" "dsh-purge-community-$(node -p 'require("./package.json").version').tgz"
           PURGE_TEST_HOST="$PURGE_TEST_NPM_ROOT/node_modules/@deepseek-ai" node scripts/check-native-skills-runtime.mjs
           export PURGE_LINK_TEST_CLI="$PURGE_TEST_NPM_ROOT/node_modules/@deepseek-ai/dsh/lib/bin.js"
           export PURGE_LINK_TEST_PNPM="$PURGE_TEST_NPM_ROOT/node_modules/pnpm/bin/pnpm.cjs"
@@ -158,8 +176,8 @@ jobs:
             export ELECTRON_RUN_AS_NODE=1
           fi
           "$engine" --test test/remove-tree.test.mjs
-          "$engine" scripts/check-linked-install-runtime.mjs "$RUNNER_TEMP/purge-baseline/dsh-purge-community-1.6.36.tgz" "dsh-purge-community-$(node -p 'require("./package.json").version').tgz"
-          "$engine" scripts/check-npm-alias-runtime.mjs "$RUNNER_TEMP/purge-baseline/dsh-purge-community-1.6.36.tgz" "dsh-purge-community-$(node -p 'require("./package.json").version').tgz"
+          "$engine" scripts/check-linked-install-runtime.mjs "$RUNNER_TEMP/purge-baseline/$baseline_archive" "dsh-purge-community-$(node -p 'require("./package.json").version').tgz"
+          "$engine" scripts/check-npm-alias-runtime.mjs "$RUNNER_TEMP/purge-baseline/$baseline_archive" "dsh-purge-community-$(node -p 'require("./package.json").version').tgz"
 
   native-prompt-022:
     strategy:

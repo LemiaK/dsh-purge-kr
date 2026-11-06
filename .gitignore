@@ -37,3 +37,6 @@ market-dist/
 
 # Local-only notes: the collected patch rules stay on this machine.
 docs/patch-rules.md
+
+i18n/last-report.json
+.sync/

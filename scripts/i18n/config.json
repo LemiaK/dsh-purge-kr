@@ -1,0 +1,36 @@
+{
+  "$comment": "자동 번역 정책. 파일 종류별로 무엇을 번역 대상으로 볼지 정한다. 정책에 없는 문자열은 건드리지 않는다.",
+  "skipGlobs": [
+    "docs/releases/**",
+    "docs/upstream/**",
+    "test/fixtures/**",
+    "client.js",
+    "packages/purge-panel/client.js",
+    "package-lock.json",
+    "i18n/**",
+    "node_modules/**",
+    "**/*.lock"
+  ],
+  "commentOnlyGlobs": [
+    "lib/patches/**",
+    "lib/core/**",
+    "presets/**"
+  ],
+  "stringAllowGlobs": [
+    "lib/*.js",
+    "lib/redteam/**",
+    "bin/**",
+    "scripts/**",
+    "packages/purge-panel/src/**"
+  ],
+  "reviewGlobs": [
+    "**/*.yml",
+    "**/*.yaml",
+    "**/*.json",
+    "**/*.ps1",
+    "**/*.sh"
+  ],
+  "skipSecretScanGlobs": [
+    "test/i18n-automation.test.mjs"
+  ]
+}
