@@ -3,7 +3,7 @@
 // REWIND_CSS, RewindSafe/RewindFallback/RewindButton, installRewindUi,
 // installRewindWatch.
 import { h, useState, useEffect, useRef, Component } from "../shared/react.js";
-import { NS, useT } from "../shared/locale.js";
+import { translate, useT } from "../shared/locale.js";
 import { apiJson } from "../api/client.js";
 import {
   armComposerFill,
@@ -427,7 +427,7 @@ export function installRewindUi(ctx) {
         name: "conversation.input.right",
         id: "dsh-purge-rewind",
         order: 20,
-        inject: (sessionId) => ({ sessionId, t: ctx.locale.bind(NS) }),
+        inject: (sessionId) => ({ sessionId, t: translate }),
       },
       RewindSafe,
     ),

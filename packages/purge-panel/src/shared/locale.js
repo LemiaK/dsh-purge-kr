@@ -2,14 +2,30 @@
 
 export const NS = "settings.dsh-purge-panel";
 
-export let translate = (key) => key;
+// 패널 문구는 이 번들 안에서만 해석한다.
+// 호스트 locale 카탈로그에 언어를 얹거나(addLanguage) 네임스페이스를 등록하면(register),
+// 전역 언어 목록에 "한국어" 항목이 생기고 같은 id 를 쓰는 공식 한국어 지원이나 다른 한국어
+// 언어팩과 충돌한다(호스트는 중복 id 에서 throw 한다). 그래서 화면 언어는 항상 한국어이고,
+// 클라이언트 언어 설정과 무관하다. 사전에 없는 키만 영어로 폴백한다.
+function interpolate(text, vars) {
+  if (!vars) return text;
+  return String(text).replace(/\{(\w+)\}/g, (match, name) =>
+    name in vars ? String(vars[name]) : match,
+  );
+}
+
+export function translate(key, vars) {
+  return interpolate(ko[key] ?? en[key] ?? key, vars);
+}
+
+export let currentTranslate = translate;
 
 export function setTranslate(t) {
-  translate = t;
+  currentTranslate = typeof t === "function" ? t : translate;
 }
 
 export function useT() {
-  return translate;
+  return currentTranslate;
 }
 
 export const ko = {
@@ -275,6 +291,8 @@ export const ko = {
     "재시작이 시작되지 않았습니다. 클라이언트는 그대로 있으며 자동으로 다시 시도하지 않습니다.",
   "restart.already":
     "이번 재시작은 이미 시작되었습니다. 다시 재시작하지 않습니다.",
+  "restart.manualQuit":
+    "자동으로 다시 열 수 없습니다. DSH 를 직접 종료한 뒤 다시 열어 주세요.",
   "restart.confirm": "정리가 끝났습니다. 재시작하면 적용됩니다.",
   "restart.confirm.desktop":
     "정리가 끝났습니다. 데스크톱 앱을 재시작하면 적용됩니다.",
@@ -719,6 +737,8 @@ export const en = {
   "restart.notStarted":
     "Restart did not start. This client is still open, and it will not try again by itself.",
   "restart.already": "This restart already started. It will not restart again.",
+  "restart.manualQuit":
+    "The app cannot reopen by itself. Quit DSH yourself and open it again.",
   "restart.confirm": "Apply finished. Restart to take effect.",
   "restart.confirm.desktop":
     "Apply finished. Restart the desktop app to take effect.",

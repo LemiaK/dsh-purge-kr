@@ -3,7 +3,7 @@ import { h, react } from "./shared/react.js";
 import { PURGE_CSS } from "./styles/index.js";
 import { useDock, startGrantSync } from "./state/dock.js";
 import { AuthGate } from "./components/auth.js";
-import { NS, setTranslate, ko, en } from "./shared/locale.js";
+import { setTranslate, translate } from "./shared/locale.js";
 import { SettingsRoot } from "./components/settings-shell.js";
 import { PurgePage, PurgeGlyph } from "./components/page.js";
 import { bindSessionContext } from "./state/session-context.js";
@@ -14,7 +14,7 @@ import { EnvAdaptSendGate } from "./components/env-gate.js";
 
 export const name = __COMMUNITY__ ? "dsh-purge-community" : "dsh-purge-panel";
 
-export const inject = ["slots", "locale"];
+export const inject = ["slots"];
 
 export function PurgeIcon({ size = 20 } = {}) {
   return h(
@@ -66,14 +66,11 @@ export function apply(ctx) {
   ctx.inject(["sessions", "uiWorkspace", "conversation"], (host) =>
     installRewindUi(host),
   );
-  ctx.effect(() => ctx.locale.register(NS, { ko, en }), "panel locale");
-  ctx.effect(() => {
-    const locale = ctx.locale;
-    if (!locale || typeof locale.addLanguage !== "function") return undefined;
-    return locale.addLanguage({ id: "ko", label: "한국어", fallback: "en" });
-  }, "panel locale language");
-  const t = ctx.locale.bind(NS);
-  setTranslate(t);
+  // 호스트 locale 카탈로그에 언어를 추가하거나 사전을 등록하지 않는다.
+  // (전역 언어 목록 오염과, 공식/서드파티 한국어 언어팩과의 "ko" 중복 충돌을 막는다.)
+  // 패널 문구는 번들 안의 사전으로 해석하므로 클라이언트 언어와 무관하게 항상 한국어다.
+  setTranslate(translate);
+  const t = translate;
   ctx.slots.inject("shell.overlay", () =>
     ctx.slots.register(
       {
