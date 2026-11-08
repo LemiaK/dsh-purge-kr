@@ -234,7 +234,7 @@ function main() {
     gate("check:docs", "node", ["scripts/check-docs.mjs"]),
     gate("bundle --check", "node", ["packages/purge-panel/scripts/build.mjs", "--check"]),
     gate("community --check", "node", ["packages/purge-panel/scripts/build.mjs", "--community", "--check"]),
-    gate("npm test", "npm", ["test"]),
+    gate("npm test", process.platform === "win32" ? "npm.cmd" : "npm", ["test"]),
   ].every(Boolean);
   let ok = reviewOk && gateOk;
 
