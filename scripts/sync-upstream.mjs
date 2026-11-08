@@ -182,6 +182,8 @@ function main() {
   commitArea(filesUnder(after, ["README.md", "AGENTS.md", "docs/", "skills/", "presets/"]), `i18n(docs): localize upstream ${nextVersion} documentation`);
   commitArea(filesUnder(after, ["scripts/", ".github/", "package.json", "package-lock.json", "market/"]), `chore(fork): upstream ${nextVersion} metadata and scripts`);
   commitArea(filesUnder(after, ["test/"]), `test: align expectations with the localized ${nextVersion} messages`);
+  // 이번 동기화에서 새로 얻은 번역을 TM 에 남긴다. 커밋하지 않으면 다음 실행이 같은 문자열을 다시 번역한다.
+  commitArea(filesUnder(after, ["i18n/"]), `i18n(tm): record the translations used in the ${nextVersion} sync`);
 
   // 5) 번들 재생성 + 커밋
   run("node", ["packages/purge-panel/scripts/build.mjs"], { allowFail: true });
