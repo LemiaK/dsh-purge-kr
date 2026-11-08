@@ -66,8 +66,8 @@ export function StatusStrip({ info }) {
         level
           ? compatibilityLevelText(t, level)
           : info?.ok === false
-            ? "读取失败"
-            : "检测中",
+            ? "읽기 실패"
+            : "확인 중",
       ),
       h(
         HelpTip,
