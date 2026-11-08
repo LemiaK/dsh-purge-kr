@@ -111,7 +111,8 @@ async function main() {
     report.totals.tm += entry.tm;
     report.totals.ai += entry.ai;
     report.totals.miss += entry.miss;
-    if (!entry.ko && !misses.length) continue;
+    // 번역이 하나도 없는 파일은 쓸 것이 없다(미번역만 있는 경우).
+    if (!entry.spans.some((s) => typeof s.ko === "string")) continue;
 
     if (!checkOnly && !dryRun) {
       const source = fs.readFileSync(file, "utf8");
