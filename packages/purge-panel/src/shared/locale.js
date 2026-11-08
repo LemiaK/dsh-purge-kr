@@ -28,10 +28,16 @@ export function useT() {
   return currentTranslate;
 }
 
-export const ko = {
-  nav: "규칙 설정",
-  "dock.clean": "정리",
-  "dock.drill": "드릴 콘솔",
+export function compatibilityLevelText(t, level) {
+  const key = "compat.level." + (level || "unknown");
+  const hit = t(key);
+  return hit && hit !== key ? hit : zh[key] || level || t("unknown");
+}
+
+export const zh = {
+  nav: "规则设定",
+  "dock.clean": "清洗",
+  "dock.drill": "演练台",
   "dock.toggle": "dsh-purge",
   "dock.newSession": "dsh-purge",
   "dock.inSession": "dsh-purge",
@@ -89,20 +95,23 @@ export const ko = {
   "envGate.skipYes": "설정하지 않고 계속",
   "envGate.go": "환경 적응 열기",
   "compat.host":
-    "dsh-purge Community {version} · 호스트 DSH {host} · 호환 등급: {level}",
-  "compat.loading": "호스트 버전을 읽는 중…",
-  "compat.unavailable": "호스트 호환 정보를 읽지 못했습니다: {error}",
-  "compat.level.qualified": "회귀 검증 완료",
-  "compat.level.unverified": "미검증 버전",
-  "compat.level.mixed": "컴포넌트 버전 불일치",
-  "compat.level.no-host": "호스트 미확인",
-  "compat.level.unknown": "알 수 없음",
-  "theme.aria": "테마",
-  "theme.white": "라이트",
-  "theme.ink": "잉크",
-  "purge.title": "패치",
-  "override.title": "프롬프트",
-  "own.title": "내 서버",
+    "dsh-purge Community {version} · 宿主 DSH {host} · 兼容级别：{level}",
+  "compat.loading": "正在读取宿主版本…",
+  "compat.unavailable": "读不到宿主兼容信息：{error}",
+  "compat.level.qualified": "已回归验证",
+  "compat.level.unverified": "未验证版本",
+  "compat.level.mixed": "组件版本不一致",
+  "compat.level.sealed": "已定位归档宿主",
+  "compat.level.kernel-verified": "内核已验证，宿主未验证",
+  "compat.level.missing": "未定位宿主",
+  "compat.level.no-host": "未定位宿主",
+  "compat.level.unknown": "未知",
+  "theme.aria": "外观",
+  "theme.white": "白",
+  "theme.ink": "墨",
+  "purge.title": "补丁",
+  "override.title": "提示词",
+  "own.title": "自己的服务器",
   "own.hint":
     "한 줄에 IP 하나 또는 전체 호스트명 하나입니다. 계정@호스트 형태도 되고, 계정은 이 표기를 알아보는 용도일 뿐입니다. 호스트명은 그때 해석된 주소까지 함께 통과시킵니다. 키, 비밀번호, 대역은 쓰지 마세요.",
   "own.save": "목록 저장",
@@ -541,6 +550,9 @@ export const en = {
   "compat.level.qualified": "regression verified",
   "compat.level.unverified": "unverified version",
   "compat.level.mixed": "mixed component versions",
+  "compat.level.sealed": "host archive located",
+  "compat.level.kernel-verified": "kernel verified, host unverified",
+  "compat.level.missing": "host not located",
   "compat.level.no-host": "host not located",
   "compat.level.unknown": "unknown",
   "theme.aria": "Appearance",

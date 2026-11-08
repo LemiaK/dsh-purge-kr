@@ -9224,10 +9224,15 @@ function setTranslate(t) {
 function useT() {
   return currentTranslate;
 }
-var ko = {
-  nav: "\uADDC\uCE59 \uC124\uC815",
-  "dock.clean": "\uC815\uB9AC",
-  "dock.drill": "\uB4DC\uB9B4 \uCF58\uC194",
+function compatibilityLevelText(t, level) {
+  const key = "compat.level." + (level || "unknown");
+  const hit = t(key);
+  return hit && hit !== key ? hit : zh[key] || level || t("unknown");
+}
+var zh = {
+  nav: "\u89C4\u5219\u8BBE\u5B9A",
+  "dock.clean": "\u6E05\u6D17",
+  "dock.drill": "\u6F14\u7EC3\u53F0",
   "dock.toggle": "dsh-purge",
   "dock.newSession": "dsh-purge",
   "dock.inSession": "dsh-purge",
@@ -9240,60 +9245,63 @@ var ko = {
   "welcome.warn": "\uC774 \uD50C\uB7EC\uADF8\uC778\uC740 \uBB34\uB8CC \uC624\uD508\uC18C\uC2A4\uC785\uB2C8\uB2E4. \uC81C\uC791\uC790 \uBAB0\uB798 \uD310\uB9E4\uD558\uAC70\uB098 \uC720\uB8CC\uB85C \uB418\uD314\uAC70\uB098 \uC774 \uD504\uB85C\uC81D\uD2B8\uB85C \uC774\uC775\uC744 \uC5BB\uB294 \uD589\uC704\uB294 \uBC95\uC801 \uCC45\uC784\uC744 \uC9D1\uB2C8\uB2E4.",
   "welcome.body": "dsh-purge \uB294 DeepSeek Harness \uC758 \uB85C\uCEEC \uBCF4\uC548 \uB808\uB4DC\uD300 \uD3C9\uAC00\xB7\uC815\uB9AC \uD50C\uB7EC\uADF8\uC778\uC785\uB2C8\uB2E4. \uD1B5\uC81C\uB41C \uB85C\uCEEC \uD658\uACBD\uC5D0\uC11C \uD504\uB86C\uD504\uD2B8\uC640 \uD328\uCE58\uB97C \uC870\uC815\uD558\uACE0, \uC2B9\uC778 \uBC94\uC704 \uC548\uC5D0\uC11C \uB4DC\uB9B4 \uCF58\uC194 \uC791\uC5C5\uC744 \uD569\uB2C8\uB2E4. \uBB34\uB8CC\xB7\uBE44\uC601\uB9AC \uD504\uB85C\uC81D\uD2B8\uC774\uBA70 \uC18C\uC2A4 \uC800\uC7A5\uC18C\uB294 \uB2E4\uC74C\uACFC \uAC19\uC2B5\uB2C8\uB2E4:",
   "welcome.repo": "https://github.com/YuJunZhiXue/dsh-purge",
-  "welcome.ban1": "\uC2B9\uC778\uB418\uC9C0 \uC54A\uC740 \uB124\uD2B8\uC6CC\uD06C \uACF5\uACA9, \uCE68\uC785, \uB370\uC774\uD130 \uD0C8\uCDE8, \uC2DC\uC2A4\uD15C \uD30C\uAD34, \uADF8 \uBC16\uC758 \uC704\uBC95 \uD589\uC704\uC5D0 \uC774 \uD504\uB85C\uC81D\uD2B8\uB97C \uC4F0\uB294 \uAC83\uC744 \uAE08\uC9C0\uD569\uB2C8\uB2E4.",
-  "welcome.ban2": "\uC0C1\uC5C5\uC801 \uD310\uB9E4, \uC720\uB8CC \uB418\uD314\uAE30, \uD68C\uC0C9\xB7\uAC80\uC740 \uC2DC\uC7A5 \uC218\uC775, \uC81C\uC791\uC790\uB97C \uC228\uAE34 \uC601\uB9AC \uBAA9\uC801 \uC7AC\uBC30\uD3EC\uB97C \uAE08\uC9C0\uD569\uB2C8\uB2E4.",
-  "welcome.ban3": "\uC0AC\uC6A9\uC790\uB294 \uAC70\uC8FC\uC9C0 \uBC95\uB839\uACFC \uD50C\uB7AB\uD3FC \uADDC\uBC94\uC744 \uC2A4\uC2A4\uB85C \uC9C0\uCF1C\uC57C \uD569\uB2C8\uB2E4. \uC704\uBC95\uC758 \uACB0\uACFC\uB294 \uD589\uC704\uC790\uAC00 \uC9C0\uBA70 \uC81C\uC791\uC790\uC640 \uBB34\uAD00\uD569\uB2C8\uB2E4.",
-  "welcome.bans": "\uAE08\uC9C0 \uC0AC\uD56D",
-  "welcome.check": "\uC704 \uC0AC\uC6A9\uC790 \uACE0\uC9C0\uB97C \uC77D\uACE0 \uC774\uD574\uD588\uC73C\uBA70 \uD569\uBC95\uC801\uC73C\uB85C \uC4F0\uB294 \uB370 \uB3D9\uC758\uD569\uB2C8\uB2E4.",
-  "welcome.ok": "\uD655\uC778\uD558\uBA70 \uACC4\uC18D\uD569\uB2C8\uB2E4",
-  "auth.title": "\uB4DC\uB9B4 \uCF58\uC194 \uC2B9\uC778 \uD655\uC778",
-  "auth.lead": "\uC815\uB9AC\uC5D0\uB294 \uC774 \uB2E8\uACC4\uAC00 \uD544\uC694 \uC5C6\uC2B5\uB2C8\uB2E4. \uB4DC\uB9B4 \uCF58\uC194\uC5D0 \uCC98\uC74C \uB4E4\uC5B4\uAC00\uAC70\uB098 \uC804\uCCB4 \uBCF4\uAE30\uB97C \uC5F4 \uB54C\uB294 \uC774 \uCC3D\uC744 \uBA3C\uC800 \uB05D\uB0B4\uC138\uC694.",
-  "auth.warn": "\uBCF4\uC548 \uACBD\uACE0: \uB4DC\uB9B4 \uCF58\uC194\uC740 \uAD00\uB9AC \uAD8C\uD55C\uC774 \uC788\uB294 \uB85C\uCEEC \uD638\uC2A4\uD2B8, \uC624\uD504\uB77C\uC778 \uD45C\uC801, \uC11C\uBA74 \uC2B9\uC778\uC744 \uBC1B\uC740 \uB4DC\uB9B4 \uD658\uACBD\uC5D0\uB9CC \uC4F0\uC138\uC694. \uC2B9\uC778 \uC5C6\uB294 \uCE68\uD22C\xB7\uACF5\uACA9\xB7\uD0C8\uCDE8\xB7\uD30C\uAD34\uB294 \uC77C\uC808 \uAE08\uC9C0\uD569\uB2C8\uB2E4.",
-  "auth.hint.wait": "\uC120\uC5B8\uC744 \uC77D\uC5B4 \uC8FC\uC138\uC694. {n}\uCD08 \uD6C4\uC5D0 \uC120\uD0DD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
-  "auth.hint.scroll": "\uCE74\uC6B4\uD2B8\uB2E4\uC6B4\uC774 \uB05D\uB0AC\uC2B5\uB2C8\uB2E4. \uC120\uC5B8\uC744 \uB05D\uAE4C\uC9C0 \uC2A4\uD06C\uB864\uD55C \uB4A4 \uCCB4\uD06C\uD558\uC138\uC694.",
-  "auth.hint.check": "\uCE74\uC6B4\uD2B8\uB2E4\uC6B4\uC774 \uB05D\uB0AC\uC2B5\uB2C8\uB2E4. \uC138 \uD56D\uBAA9\uC744 \uBAA8\uB450 \uCCB4\uD06C\uD558\uC138\uC694.",
-  "auth.check.read": "'\uBCF4\uC548 \uBC0F \uC704\uBC95 \uAE08\uC9C0 \uC120\uC5B8'\uC744 \uB2E4 \uC77D\uC5C8\uACE0 \uBAA8\uB4E0 \uC870\uD56D\uC744 \uC778\uC815\uD569\uB2C8\uB2E4.",
-  "auth.check.scope": "\uB85C\uCEEC \uC2B9\uC778 \uD658\uACBD, \uC624\uD504\uB77C\uC778 \uD45C\uC801, \uADDC\uC815\uC744 \uC9C0\uD0A8 \uB4DC\uB9B4\uC5D0\uB9CC \uC4F0\uACA0\uB2E4\uACE0 \uD655\uC778\uD569\uB2C8\uB2E4.",
-  "auth.check.ban": "\uC5B4\uB5A4 \uC704\uBC95 \uC6A9\uB3C4\uB85C\uB3C4 \uC4F0\uC9C0 \uC54A\uACA0\uB2E4\uACE0 \uD655\uC778\uD569\uB2C8\uB2E4. \uC774 \uC2B9\uC778\uC744 \uB9C8\uCE58\uC9C0 \uC54A\uC73C\uBA74 \uB4DC\uB9B4 \uCF58\uC194\uC744 \uC4F8 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.",
-  "auth.no": "\uB4E4\uC5B4\uAC00\uC9C0 \uC54A\uC74C",
-  "auth.ok": "\uC2B9\uC778 \uD655\uC778",
-  "auth.ok.tab": "\uC2B9\uC778\uD558\uACE0 \uB4DC\uB9B4 \uCF58\uC194 \uC5F4\uAE30",
-  "auth.ok.full": "\uC2B9\uC778\uD558\uACE0 \uC804\uCCB4 \uBCF4\uAE30 \uC5F4\uAE30",
-  "auth.ok.env": "\uC2B9\uC778\uD558\uACE0 \uD658\uACBD \uC801\uC751 \uC5F4\uAE30",
-  "envGate.title": "\uD658\uACBD\uC774 \uC544\uC9C1 \uC900\uBE44\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4",
-  "envGate.lead": "\uB808\uB4DC\uD300 \uBAA8\uB4DC\uB294 \uBCF4\uB0B4\uAE30 \uC804\uC5D0 \uB85C\uCEEC \uB3C4\uAD6C\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4. \uC4F8 \uC218 \uC788\uB294 \uD658\uACBD\uC774 \uAC10\uC9C0\uB418\uC9C0 \uC54A\uC73C\uBA74 \uBA3C\uC800 \uD658\uACBD \uC801\uC751\uC73C\uB85C \uAC00\uAC70\uB098 \uC124\uC815\uD558\uC9C0 \uC54A\uC74C\uC744 \uD655\uC778\uD558\uC138\uC694.",
-  "envGate.kaliHint": "Kali \uAC00 \uAC10\uC9C0\uB418\uBA74 \uB85C\uCEEC \uB3C4\uAD6C\uB97C \uBC14\uB85C \uC4F0\uACE0 \uACBD\uB85C\uB97C \uB123\uC9C0 \uC54A\uC544\uB3C4 \uB429\uB2C8\uB2E4. Kali \uAC00 \uC5C6\uC73C\uBA74 \uD658\uACBD \uC801\uC751\uC5D0\uC11C \uAC01 \uB3C4\uAD6C \uACBD\uB85C\uB97C \uB123\uAC70\uB098 \uD1B5\uD569 \uD3F4\uB354 \uD558\uB098\uB97C \uACE8\uB77C \uC790\uB3D9 \uBC30\uBD84\uD558\uC138\uC694.",
-  "envGate.skip": "\uC9C0\uAE08\uC740 \uC124\uC815 \uC548 \uD568",
-  "envGate.skipConfirm": "\uD655\uC778\uD558\uBA74 \uC774\uBC88\uC5D0\uB294 \uB300\uD654\uB97C \uACC4\uC18D\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uC2A4\uCE94\xB7\uD65C\uC6A9 \uACC4\uC5F4 \uC2A4\uD0AC\uC740 \uB3C4\uAD6C\uAC00 \uC5C6\uC5B4 \uC5EC\uC804\uD788 \uC4F8 \uC218 \uC5C6\uACE0, \uC774\uD6C4 dsh-purge \u2192 \uD658\uACBD \uC801\uC751\uC5D0\uC11C \uACBD\uB85C\uB97C \uCC44\uC6B8 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
-  "envGate.skipNo": "\uB3CC\uC544\uAC00\uAE30",
-  "envGate.skipYes": "\uC124\uC815\uD558\uC9C0 \uC54A\uACE0 \uACC4\uC18D",
-  "envGate.go": "\uD658\uACBD \uC801\uC751 \uC5F4\uAE30",
-  "compat.host": "dsh-purge Community {version} \xB7 \uD638\uC2A4\uD2B8 DSH {host} \xB7 \uD638\uD658 \uB4F1\uAE09: {level}",
-  "compat.loading": "\uD638\uC2A4\uD2B8 \uBC84\uC804\uC744 \uC77D\uB294 \uC911\u2026",
-  "compat.unavailable": "\uD638\uC2A4\uD2B8 \uD638\uD658 \uC815\uBCF4\uB97C \uC77D\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
-  "compat.level.qualified": "\uD68C\uADC0 \uAC80\uC99D \uC644\uB8CC",
-  "compat.level.unverified": "\uBBF8\uAC80\uC99D \uBC84\uC804",
-  "compat.level.mixed": "\uCEF4\uD3EC\uB10C\uD2B8 \uBC84\uC804 \uBD88\uC77C\uCE58",
-  "compat.level.no-host": "\uD638\uC2A4\uD2B8 \uBBF8\uD655\uC778",
-  "compat.level.unknown": "\uC54C \uC218 \uC5C6\uC74C",
-  "theme.aria": "\uD14C\uB9C8",
-  "theme.white": "\uB77C\uC774\uD2B8",
-  "theme.ink": "\uC789\uD06C",
-  "purge.title": "\uD328\uCE58",
-  "override.title": "\uD504\uB86C\uD504\uD2B8",
-  "own.title": "\uB0B4 \uC11C\uBC84",
-  "own.hint": "\uD55C \uC904\uC5D0 IP \uD558\uB098 \uB610\uB294 \uC804\uCCB4 \uD638\uC2A4\uD2B8\uBA85 \uD558\uB098\uC785\uB2C8\uB2E4. \uACC4\uC815@\uD638\uC2A4\uD2B8 \uD615\uD0DC\uB3C4 \uB418\uACE0, \uACC4\uC815\uC740 \uC774 \uD45C\uAE30\uB97C \uC54C\uC544\uBCF4\uB294 \uC6A9\uB3C4\uC77C \uBFD0\uC785\uB2C8\uB2E4. \uD638\uC2A4\uD2B8\uBA85\uC740 \uADF8\uB54C \uD574\uC11D\uB41C \uC8FC\uC18C\uAE4C\uC9C0 \uD568\uAED8 \uD1B5\uACFC\uC2DC\uD0B5\uB2C8\uB2E4. \uD0A4, \uBE44\uBC00\uBC88\uD638, \uB300\uC5ED\uC740 \uC4F0\uC9C0 \uB9C8\uC138\uC694.",
-  "own.save": "\uBAA9\uB85D \uC800\uC7A5",
-  "saved.own": "\uB0B4 \uC11C\uBC84\uB97C \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4",
-  "saved.own.dropped": "\uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4. {n}\uAC1C \uC904\uC774 \uB2E8\uC77C IP \uB098 \uD638\uC2A4\uD2B8\uBA85\uC774 \uC544\uB2C8\uC5B4\uC11C \uBC84\uB838\uC2B5\uB2C8\uB2E4",
-  "metric.purged": "\uAE30\uB85D\uB428",
-  "metric.purged.skip": "\uAE30\uB85D\uB428. {n}\uAC1C \uD56D\uBAA9\uC744 \uAC74\uB108\uB6F0\uC5C8\uC2B5\uB2C8\uB2E4. \uC774 \uC124\uCE58\uBCF8\uC5D0 \uADF8 \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
-  "metric.pendingShort": "\uB300\uAE30 {n}",
-  "metric.unmatchedShort": "\uBD88\uC77C\uCE58 {n}",
-  "metric.partialShort": "\uBD80\uBD84 \uC801\uC911 {n}",
-  "metric.driftedShort": "\uC575\uCEE4 \uB4DC\uB9AC\uD504\uD2B8 {n}",
-  "metric.disabledShort": "\uC120\uD0DD \uD574\uC81C {n}",
-  "metric.skipShort": "\uAC74\uB108\uB700 {n}",
+  "welcome.ban1": "\u7981\u6B62\u5C06\u672C\u9879\u76EE\u7528\u4E8E\u672A\u6388\u6743\u7684\u7F51\u7EDC\u653B\u51FB\u3001\u5165\u4FB5\u3001\u7A83\u53D6\u6570\u636E\u3001\u7834\u574F\u7CFB\u7EDF\u6216\u4EFB\u4F55\u8FDD\u6CD5\u72AF\u7F6A\u3002",
+  "welcome.ban2": "\u7981\u6B62\u5546\u4E1A\u552E\u5356\u3001\u4ED8\u8D39\u5012\u5356\u3001\u9ED1\u7070\u4EA7\u725F\u5229\uFF0C\u4EE5\u53CA\u9690\u7792\u4F5C\u8005\u7684\u8425\u5229\u6027\u518D\u5206\u53D1\u3002",
+  "welcome.ban3": "\u4F7F\u7528\u8005\u987B\u81EA\u884C\u9075\u5B88\u6240\u5728\u5730\u6CD5\u5F8B\u6CD5\u89C4\u4E0E\u5E73\u53F0\u89C4\u8303\uFF1B\u8FDD\u6CD5\u540E\u679C\u7531\u884C\u4E3A\u4EBA\u81EA\u884C\u627F\u62C5\uFF0C\u4E0E\u4F5C\u8005\u65E0\u5173\u3002",
+  "welcome.bans": "\u7981\u6B62\u4E8B\u9879",
+  "welcome.check": "\u6211\u5DF2\u9605\u8BFB\u5E76\u7406\u89E3\u4E0A\u8FF0\u7528\u6237\u987B\u77E5\uFF0C\u540C\u610F\u5408\u6CD5\u5408\u89C4\u4F7F\u7528\u3002",
+  "welcome.ok": "\u6211\u5DF2\u77E5\u6653\u5E76\u7EE7\u7EED",
+  "auth.title": "\u6F14\u7EC3\u53F0\u6388\u6743\u786E\u8BA4",
+  "auth.lead": "\u6E05\u6D17\u4E0D\u9700\u8981\u8FD9\u4E00\u6B65\u3002\u7B2C\u4E00\u6B21\u8FDB\u5165\u6F14\u7EC3\u53F0\uFF0C\u6216\u6253\u5F00\u5168\u9762\u6D4F\u89C8\uFF0C\u90FD\u8981\u5148\u5B8C\u6210\u672C\u7A97\u3002",
+  "auth.warn": "\u5B89\u5168\u8B66\u544A\uFF1A\u6F14\u7EC3\u53F0\u53EA\u7528\u4E8E\u4F60\u6709\u6743\u7BA1\u7406\u7684\u672C\u673A\u3001\u79BB\u7EBF\u9776\u6807\uFF0C\u6216\u5DF2\u4E66\u9762\u6388\u6743\u7684\u6F14\u7EC3\u73AF\u5883\u3002\u672A\u7ECF\u6388\u6743\u7684\u6E17\u900F\u3001\u653B\u51FB\u3001\u7A83\u53D6\u548C\u7834\u574F\u4E00\u5F8B\u7981\u6B62\u3002",
+  "auth.hint.wait": "\u8BF7\u9605\u8BFB\u58F0\u660E\u3002{n} \u79D2\u540E\u624D\u80FD\u52FE\u9009\u3002",
+  "auth.hint.scroll": "\u5012\u8BA1\u65F6\u5DF2\u7ED3\u675F\u3002\u8BF7\u628A\u58F0\u660E\u6EDA\u5230\u6587\u672B\uFF0C\u518D\u52FE\u9009\u3002",
+  "auth.hint.check": "\u5012\u8BA1\u65F6\u5DF2\u7ED3\u675F\u3002\u8BF7\u52FE\u9009\u5168\u90E8\u4E09\u9879\u3002",
+  "auth.check.read": "\u6211\u5DF2\u8BFB\u5B8C\u300A\u5B89\u5168\u4E0E\u7981\u6B62\u8FDD\u6CD5\u58F0\u660E\u300B\uFF0C\u5E76\u8BA4\u53EF\u5176\u4E2D\u7684\u5168\u90E8\u6761\u6B3E\u3002",
+  "auth.check.scope": "\u6211\u786E\u8BA4\u53EA\u7528\u5728\u672C\u673A\u5DF2\u6388\u6743\u73AF\u5883\u3001\u79BB\u7EBF\u9776\u6807\u6216\u5408\u89C4\u6F14\u7EC3\u4E2D\u3002",
+  "auth.check.ban": "\u6211\u786E\u8BA4\u7981\u6B62\u4EFB\u4F55\u8FDD\u6CD5\u7528\u9014\u3002\u672A\u5B8C\u6210\u672C\u6388\u6743\uFF0C\u4E0D\u5F97\u4F7F\u7528\u6F14\u7EC3\u53F0\u3002",
+  "auth.no": "\u6682\u4E0D\u8FDB\u5165",
+  "auth.ok": "\u786E\u8BA4\u6388\u6743",
+  "auth.ok.tab": "\u786E\u8BA4\u6388\u6743\u5E76\u8FDB\u5165\u6F14\u7EC3\u53F0",
+  "auth.ok.full": "\u786E\u8BA4\u6388\u6743\u5E76\u5168\u9762\u6D4F\u89C8",
+  "auth.ok.env": "\u786E\u8BA4\u6388\u6743\u5E76\u6253\u5F00\u73AF\u5883\u9002\u914D",
+  "envGate.title": "\u73AF\u5883\u8FD8\u6CA1\u914D\u597D",
+  "envGate.lead": "\u7EA2\u961F\u6A21\u5F0F\u53D1\u9001\u524D\u9700\u8981\u672C\u673A\u5DE5\u5177\u3002\u672A\u68C0\u6D4B\u5230\u53EF\u7528\u73AF\u5883\u65F6\uFF0C\u5148\u53BB\u73AF\u5883\u9002\u914D\uFF0C\u6216\u786E\u8BA4\u6682\u4E0D\u914D\u7F6E\u3002",
+  "envGate.kaliHint": "\u68C0\u6D4B\u5230 Kali \u65F6\u4F1A\u76F4\u63A5\u7528\u672C\u673A\u5DE5\u5177\uFF0C\u4E0D\u5FC5\u586B\u8DEF\u5F84\u3002\u6CA1\u6709 Kali \u65F6\uFF0C\u5728\u73AF\u5883\u9002\u914D\u91CC\u586B\u5199\u5404\u5DE5\u5177\u8DEF\u5F84\uFF0C\u6216\u9009\u4E00\u4E2A\u6574\u5305\u6587\u4EF6\u5939\u81EA\u52A8\u5206\u914D\u3002",
+  "envGate.skip": "\u6682\u4E0D\u914D\u7F6E",
+  "envGate.skipConfirm": "\u786E\u8BA4\u540E\u8FD9\u6B21\u53EF\u4EE5\u7EE7\u7EED\u5BF9\u8BDD\u3002\u626B\u63CF\u548C\u5229\u7528\u7C7B\u6280\u80FD\u4ECD\u4F1A\u56E0\u4E3A\u7F3A\u5C11\u5DE5\u5177\u800C\u4E0D\u53EF\u7528\uFF0C\u4E4B\u540E\u53EF\u4EE5\u5728 dsh-purge \u2192 \u73AF\u5883\u9002\u914D\u91CC\u8865\u8DEF\u5F84\u3002",
+  "envGate.skipNo": "\u8FD4\u56DE",
+  "envGate.skipYes": "\u786E\u8BA4\u6682\u4E0D\u914D\u7F6E",
+  "envGate.go": "\u53BB\u73AF\u5883\u9002\u914D",
+  "compat.host": "dsh-purge Community {version} \xB7 \u5BBF\u4E3B DSH {host} \xB7 \u517C\u5BB9\u7EA7\u522B\uFF1A{level}",
+  "compat.loading": "\u6B63\u5728\u8BFB\u53D6\u5BBF\u4E3B\u7248\u672C\u2026",
+  "compat.unavailable": "\u8BFB\u4E0D\u5230\u5BBF\u4E3B\u517C\u5BB9\u4FE1\u606F\uFF1A{error}",
+  "compat.level.qualified": "\u5DF2\u56DE\u5F52\u9A8C\u8BC1",
+  "compat.level.unverified": "\u672A\u9A8C\u8BC1\u7248\u672C",
+  "compat.level.mixed": "\u7EC4\u4EF6\u7248\u672C\u4E0D\u4E00\u81F4",
+  "compat.level.sealed": "\u5DF2\u5B9A\u4F4D\u5F52\u6863\u5BBF\u4E3B",
+  "compat.level.kernel-verified": "\u5185\u6838\u5DF2\u9A8C\u8BC1\uFF0C\u5BBF\u4E3B\u672A\u9A8C\u8BC1",
+  "compat.level.missing": "\u672A\u5B9A\u4F4D\u5BBF\u4E3B",
+  "compat.level.no-host": "\u672A\u5B9A\u4F4D\u5BBF\u4E3B",
+  "compat.level.unknown": "\u672A\u77E5",
+  "theme.aria": "\u5916\u89C2",
+  "theme.white": "\u767D",
+  "theme.ink": "\u58A8",
+  "purge.title": "\u8865\u4E01",
+  "override.title": "\u63D0\u793A\u8BCD",
+  "own.title": "\u81EA\u5DF1\u7684\u670D\u52A1\u5668",
+  "own.hint": "\u6BCF\u884C\u4E00\u4E2A IP \u6216\u5B8C\u6574\u4E3B\u673A\u540D\u3002\u53EF\u4EE5\u5199\u6210 \u8D26\u53F7@\u4E3B\u673A\uFF0C\u8D26\u53F7\u53EA\u7528\u6765\u8BA4\u51FA\u8FD9\u79CD\u5199\u6CD5\u3002\u4E3B\u673A\u540D\u4F1A\u8FDE\u540C\u5B83\u5F53\u65F6\u89E3\u6790\u51FA\u7684\u5730\u5740\u4E00\u8D77\u653E\u884C\u3002\u4E0D\u8981\u5199\u5BC6\u94A5\u3001\u5BC6\u7801\u3001\u7F51\u6BB5\u3002",
+  "own.save": "\u4FDD\u5B58\u540D\u5355",
+  "saved.own": "\u5DF2\u4FDD\u5B58\u81EA\u5DF1\u7684\u670D\u52A1\u5668",
+  "saved.own.dropped": "\u5DF2\u4FDD\u5B58\u3002\u6709 {n} \u884C\u4E0D\u662F\u5355\u4E2A IP \u6216\u4E3B\u673A\u540D\uFF0C\u5DF2\u4E22\u6389",
+  "metric.purged": "\u5DF2\u5199\u5165",
+  "metric.purged.skip": "\u5DF2\u5199\u5165\u3002\u8DF3\u8FC7 {n} \u9879\uFF0C\u672C\u673A\u6CA1\u6709\u8FD9\u4E9B\u6587\u4EF6",
+  "metric.pendingShort": "\u5F85\u5904\u7406 {n}",
+  "metric.unmatchedShort": "\u6CA1\u5BF9\u4E0A {n}",
+  "metric.partialShort": "\u90E8\u5206\u547D\u4E2D {n}",
+  "metric.driftedShort": "\u951A\u70B9\u6F02\u79FB {n}",
+  "metric.disabledShort": "\u53EF\u9009\u5173\u95ED {n}",
+  "metric.skipShort": "\u8DF3\u8FC7 {n}",
   "metric.unlocated.count": "\u2014",
   "metric.shim": "shim",
   "metric.shim.na": "\uC774 \uCABD\uC5D0\uB294 \uBD88\uD544\uC694",
@@ -9655,6 +9663,9 @@ var en = {
   "compat.level.qualified": "regression verified",
   "compat.level.unverified": "unverified version",
   "compat.level.mixed": "mixed component versions",
+  "compat.level.sealed": "host archive located",
+  "compat.level.kernel-verified": "kernel verified, host unverified",
+  "compat.level.missing": "host not located",
   "compat.level.no-host": "host not located",
   "compat.level.unknown": "unknown",
   "theme.aria": "Appearance",
@@ -13441,6 +13452,7 @@ function PurgeGlyph({ size = 18 } = {}) {
   );
 }
 function StatusStrip({ info }) {
+  const t = useT();
   const compat = info?.compatibility || {};
   const level = compat.level || "";
   const ok = level === "qualified";
@@ -13463,7 +13475,7 @@ function StatusStrip({ info }) {
       h(
         "b",
         null,
-        level === "qualified" ? "\uD68C\uADC0 \uAC80\uC99D\uB428" : level === "unverified" ? "\uBBF8\uAC80\uC99D \uBC84\uC804" : level === "mixed" ? "\uCEF4\uD3EC\uB10C\uD2B8 \uBC84\uC804 \uBD88\uC77C\uCE58" : level ? "\uD638\uC2A4\uD2B8 \uBBF8\uD0D0\uC9C0" : info?.ok === false ? "\uC77D\uAE30 \uC2E4\uD328" : "\uD655\uC778 \uC911"
+        level ? compatibilityLevelText(t, level) : info?.ok === false ? "\u8BFB\u53D6\u5931\u8D25" : "\u68C0\u6D4B\u4E2D"
       ),
       h(
         HelpTip,
@@ -13501,7 +13513,23 @@ function LayoutNotice({ info }) {
   const note = info.host_layout?.note || "\uB300\uC0C1 \uB514\uC2A4\uD06C\uC5D0 \uC544\uC9C1 app.asar \uAC00 \uC788\uACE0, \uD604\uC7AC \uD504\uB85C\uC138\uC2A4\uC758 \uB85C\uB4DC \uCD9C\uCC98\uB294 \uC544\uC9C1 \uD655\uC778\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4.";
   const handoff = info.asar_handoff ? ` \uD328\uD0A4\uC9C0 \uAD50\uCCB4 \uC0C1\uD0DC: ${{ not_scheduled: "\uC544\uC9C1 \uC801\uC6A9\uB418\uC9C0 \uC54A\uC74C. '\uC801\uC6A9'\uC744 \uB20C\uB7EC\uC57C \uD328\uD0A4\uC9C0 \uAD50\uCCB4\uAC00 \uC608\uC57D\uB429\uB2C8\uB2E4", archive_reappeared: "\uC544\uCE74\uC774\uBE0C\uAC00 \uB2E4\uC2DC \uB098\uD0C0\uB0AC\uC2B5\uB2C8\uB2E4. \uC61B \uAD50\uCCB4 \uAE30\uB85D\uC740 \uD604\uC7AC \uC644\uB8CC\uB97C \uB73B\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4", backup_missing: "\uC6D0\uBCF8 \uC544\uCE74\uC774\uBE0C \uBC31\uC5C5\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uC9C4\uB2E8\uC744 \uD655\uC778\uD558\uC138\uC694", unknown_target: "\uB300\uC0C1 \uC778\uC2A4\uD134\uC2A4\uAC00 \uD655\uC815\uB418\uC9C0 \uC54A\uC74C", unreadable: "\uAD50\uCCB4 \uAE30\uB85D\uC744 \uC77D\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uC9C4\uB2E8\uC744 \uD655\uC778\uD558\uC138\uC694", starting: "\uB3C4\uC6B0\uBBF8 \uC2DC\uC791 \uC911(\uC900\uBE44 \uD655\uC778 \uC804)", ready: "\uB3C4\uC6B0\uBBF8 \uC900\uBE44 \uC644\uB8CC", waiting_for_quit: "\uC644\uC804 \uC885\uB8CC \uB300\uAE30(macOS \u2318Q / Windows \uC2DC\uC2A4\uD15C \uD2B8\uB808\uC774)", waiting_for_unlock: "\uC544\uCE74\uC774\uBE0C \uC7A0\uAE08 \uD574\uC81C \uB300\uAE30", moving: "\uC6D0\uBCF8 \uC544\uCE74\uC774\uBE0C \uBCF4\uC874 \uC911", complete: "\uAD50\uCCB4 \uC644\uB8CC. DSH \uB97C \uC9C1\uC811 \uC5EC\uC138\uC694", already_unsealed: "\uC544\uCE74\uC774\uBE0C\uB97C \uC62E\uACBC\uC2B5\uB2C8\uB2E4. DSH \uB97C \uC9C1\uC811 \uC5EC\uC138\uC694", failed: "\uC2E4\uD328. \uC9C4\uB2E8\uC744 \uD655\uC778\uD558\uACE0 \uBCF5\uAD6C \uBB38\uC11C\uC5D0 \uB530\uB77C \uC870\uCE58\uD558\uC138\uC694", expired: "\uB300\uAE30 \uC2DC\uAC04 \uCD08\uACFC. \uB2E4\uC2DC \uC801\uC6A9\uD558\uAC70\uB098 \uBCF5\uAD6C \uBB38\uC11C\uC5D0 \uB530\uB77C \uC870\uCE58\uD558\uC138\uC694", helper_stopped: "\uB3C4\uC6B0\uBBF8\uAC00 \uC608\uAE30\uCE58 \uC54A\uAC8C \uC885\uB8CC\uB410\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC801\uC6A9\uD558\uAC70\uB098 \uBCF5\uAD6C \uBB38\uC11C\uC5D0 \uB530\uB77C \uC870\uCE58\uD558\uC138\uC694" }[info.asar_handoff.phase] || info.asar_handoff.phase}.` : "";
   const failure = info.asar_handoff?.error;
-  const detail = info.asar_handoff?.detail ? ` \uC0C1\uC138: ${info.asar_handoff.detail}${failure?.win32_code != null ? `(Windows \uC624\uB958 ${failure.win32_code})` : ""}` : "";
+  const detail = info.asar_handoff?.detail ? ` \u8BE6\u60C5\uFF1A${info.asar_handoff.detail}${failure?.win32_code != null ? `\uFF08Windows \u9519\u8BEF ${failure.win32_code}\uFF09` : ""}` : "";
+  const layout = info.host_layout;
+  if (info.ok !== false && info.surface === "web" && layout?.disk?.surface === "web" && layout.state === "unknown_runtime" && layout.process?.entry_layout === "unknown" && layout.process.matches_target === null && layout.disk.archive_exists === null && layout.disk.unpacked_exists === null && !info.desktop_exe && !info.desktop_install && !sealed && !layout.errors?.length && info.asar_handoff?.phase === "unknown_target" && !info.asar_handoff.error && !info.asar_handoff.detail) {
+    return h(
+      "details",
+      { className: "dshpp-layout-details" },
+      h("summary", null, "\u6362\u5305\u72B6\u6001\uFF1A\u4E0D\u9002\u7528\uFF08Web \u5BBF\u4E3B\uFF09"),
+      h(
+        "p",
+        { className: "dshpp-note" },
+        "Web \u670D\u52A1\u65E0\u9700\u684C\u9762\u5F52\u6863\u6362\u5305\u3002\u539F\u59CB\u8BCA\u65AD\uFF1A",
+        layout.state,
+        " / ",
+        info.asar_handoff.phase
+      )
+    );
+  }
   const confirmed = info.host_layout?.state === "unpacked_entry" && info.host_layout?.process?.matches_target === true && info.host_layout?.disk?.archive_exists === false;
   const diskNote = info.host_layout?.disk?.archive_exists === true ? " \uB300\uC0C1 \uB514\uC2A4\uD06C\uC5D0 \uC544\uC9C1 app.asar \uAC00 \uC788\uC2B5\uB2C8\uB2E4." : "";
   if (sealed || !confirmed) {
@@ -13685,6 +13713,9 @@ function installLegacyVisibility(doc = globalThis.document) {
   doc.head.append(style);
   return () => style.remove();
 }
+
+// src/components/rewind.js
+var import_react_dom = require("react-dom");
 
 // src/state/rewind-draft.js
 var DRAFT_KEY = "dshp-rewind-draft:";
@@ -14038,7 +14069,7 @@ var REWIND_CSS = `
 .dshp-rewind:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.12));color:var(--dsw-alias-label-primary,currentColor)}
 .dshp-rewind:disabled{opacity:.4;cursor:default}
 .dshp-rewind svg{display:block}
-.dshp-rewind-menu{position:fixed;z-index:2147483000;box-sizing:border-box;min-width:220px;padding:4px;border:0;border-radius:12px;background:var(--dsw-specific-menu,#fff);color:var(--dsw-alias-label-primary,#1a1a1a);--dsw-elevation-stroke-color:var(--dsw-alias-border-l1);box-shadow:var(--dsw-elevation-prominent,0 8px 24px rgba(0,0,0,.16));transform:translateY(-100%)}
+.dshp-rewind-menu{position:fixed;z-index:2147483000;box-sizing:border-box;width:max-content;min-width:min(220px,calc(100vw - 16px));max-width:calc(100vw - 16px);max-height:calc(100vh - 16px);overflow:auto;padding:4px;border:0;border-radius:12px;background:var(--dsw-specific-menu,#fff);color:var(--dsw-alias-label-primary,#1a1a1a);--dsw-elevation-stroke-color:var(--dsw-alias-border-l1);box-shadow:var(--dsw-elevation-prominent,0 8px 24px rgba(0,0,0,.16));transform:translateY(-100%)}
 body[data-ds-dark-theme] .dshp-rewind-menu{background:var(--dsw-specific-menu,#32312d);color:var(--dsw-alias-label-primary,#e6e2db);--dsw-elevation-stroke-color:var(--dsw-alias-border-l1,#3f3d38);box-shadow:var(--dsw-elevation-prominent,0 10px 28px rgba(0,0,0,.45))}
 .dshp-rewind-item{display:flex;flex-direction:column;gap:2px;width:100%;padding:8px 10px;border:0;border-radius:8px;background:transparent;color:inherit;text-align:left;cursor:pointer;font:12px/1.3 var(--ds-font-sans,system-ui,sans-serif)}
 .dshp-rewind-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(127,127,127,.12))}
@@ -14046,14 +14077,84 @@ body[data-ds-dark-theme] .dshp-rewind-menu{background:var(--dsw-specific-menu,#3
 .dshp-rewind-item span{color:var(--dsw-alias-label-tertiary,#9a958c);font-size:11px}
 body[data-ds-dark-theme] .dshp-rewind-item span{color:var(--dsw-alias-label-tertiary,#a8a39a)}
 `;
-function rewindMenuNode(t, menuPos, menuRef, runRewind) {
+var RewindMenu = class extends Component {
+  state = { position: null };
+  reposition = () => {
+    const { anchor, menuRef } = this.props;
+    const menu = menuRef.current;
+    if (!anchor || !menu) return;
+    const rect = anchor.getBoundingClientRect();
+    const size = menu.getBoundingClientRect();
+    const win = anchor.ownerDocument.defaultView;
+    const viewport = win.visualViewport;
+    const x = viewport?.offsetLeft ?? 0;
+    const y = viewport?.offsetTop ?? 0;
+    const right = x + (viewport?.width ?? win.innerWidth);
+    const bottom = y + (viewport?.height ?? win.innerHeight);
+    const above = rect.top - 8 - size.height;
+    const left = Math.max(
+      x + 8,
+      Math.min(rect.right - size.width, right - size.width - 8)
+    );
+    const top = Math.max(
+      y + 8,
+      Math.min(
+        above >= y + 8 ? above : rect.bottom + 8,
+        bottom - size.height - 8
+      )
+    );
+    const prev = this.state.position;
+    if (!prev || left !== prev.left || top !== prev.top)
+      this.setState({ position: { left, top } });
+  };
+  componentDidMount() {
+    const win = this.props.anchor?.ownerDocument?.defaultView;
+    if (!win || typeof import_react_dom.createPortal !== "function") return;
+    this.win = win;
+    this.reposition();
+    win.addEventListener("resize", this.reposition);
+    win.addEventListener("scroll", this.reposition, true);
+    win.visualViewport?.addEventListener("resize", this.reposition);
+    win.visualViewport?.addEventListener("scroll", this.reposition);
+    if (win.ResizeObserver) {
+      this.observer = new win.ResizeObserver(this.reposition);
+      this.observer.observe(this.props.anchor);
+      this.observer.observe(this.props.menuRef.current);
+    }
+  }
+  componentWillUnmount() {
+    this.win?.removeEventListener("resize", this.reposition);
+    this.win?.removeEventListener("scroll", this.reposition, true);
+    this.win?.visualViewport?.removeEventListener("resize", this.reposition);
+    this.win?.visualViewport?.removeEventListener("scroll", this.reposition);
+    this.observer?.disconnect();
+  }
+  render() {
+    const { t, menuRef, runRewind, anchor } = this.props;
+    const body = anchor?.ownerDocument?.body;
+    const portal = body && typeof import_react_dom.createPortal === "function";
+    const style = portal ? {
+      ...this.state.position,
+      visibility: this.state.position ? "visible" : "hidden",
+      transform: "none"
+    } : {
+      position: "absolute",
+      right: 0,
+      bottom: "calc(100% + 8px)",
+      transform: "none"
+    };
+    const menu = rewindMenuNode(t, style, menuRef, runRewind);
+    return portal ? (0, import_react_dom.createPortal)(menu, body) : menu;
+  }
+};
+function rewindMenuNode(t, style, menuRef, runRewind) {
   return h(
     "div",
     {
       className: "dshp-rewind-menu",
       role: "menu",
       ref: menuRef,
-      style: menuPos ? { left: menuPos.left + "px", top: menuPos.top + "px" } : { left: "8px", bottom: "48px", transform: "none" }
+      style
     },
     h(
       "button",
@@ -14112,12 +14213,12 @@ function rewindMenuNode(t, menuPos, menuRef, runRewind) {
 var RewindFallback = class extends Component {
   constructor(p) {
     super(p);
-    this.state = { menu: false, busy: false, notice: "", menuPos: null };
+    this.state = { menu: false, busy: false, notice: "" };
     this.wrap = null;
-    this.menuEl = null;
+    this.menuRef = { current: null };
     this.onDoc = (event) => {
       if (this.wrap && this.wrap.contains(event.target)) return;
-      if (this.menuEl && this.menuEl.contains(event.target)) return;
+      if (this.menuRef.current?.contains(event.target)) return;
       this.setState({ menu: false });
     };
   }
@@ -14157,15 +14258,7 @@ var RewindFallback = class extends Component {
     });
   }
   openMenu() {
-    const rect = this.wrap && this.wrap.getBoundingClientRect ? this.wrap.getBoundingClientRect() : null;
-    this.setState({
-      menu: !this.state.menu,
-      notice: "",
-      menuPos: rect ? {
-        left: Math.max(8, rect.right - 228),
-        top: Math.max(8, rect.top - 8)
-      } : null
-    });
+    this.setState(({ menu }) => ({ menu: !menu, notice: "" }));
   }
   render() {
     const sessionId = this.props.sessionId || currentSessionId(hostSessions());
@@ -14194,14 +14287,12 @@ var RewindFallback = class extends Component {
         },
         label
       ),
-      this.state.menu ? rewindMenuNode(
+      this.state.menu ? h(RewindMenu, {
         t,
-        this.state.menuPos,
-        (node) => {
-          this.menuEl = node;
-        },
-        (mode) => this.run(mode)
-      ) : null
+        anchor: this.wrap,
+        menuRef: this.menuRef,
+        runRewind: (mode) => this.run(mode)
+      }) : null
     );
   }
 };
@@ -14255,7 +14346,6 @@ function RewindButton(props) {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   const [menu, setMenu] = useState(false);
-  const [menuPos, setMenuPos] = useState(null);
   useEffect(() => {
     if (!sessionId) return;
     const armed = takeArmedFill(sessionId);
@@ -14317,13 +14407,6 @@ function RewindButton(props) {
       setMenu(false);
       return;
     }
-    const rect = wrapRef.current?.getBoundingClientRect?.();
-    if (rect) {
-      setMenuPos({
-        left: Math.max(8, rect.right - 228),
-        top: Math.max(8, rect.top - 8)
-      });
-    }
     setNotice("");
     setMenu(true);
   };
@@ -14361,7 +14444,7 @@ function RewindButton(props) {
       ),
       label
     ),
-    menu ? rewindMenuNode(t, menuPos, menuRef, runRewind) : null
+    menu ? h(RewindMenu, { t, anchor: wrapRef.current, menuRef, runRewind }) : null
   );
 }
 function installRewindWatch(ctx) {
