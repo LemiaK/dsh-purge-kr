@@ -184,12 +184,33 @@ export async function translateBatch(batch, cfg) {
   return out;
 }
 
+/**
+ * 배치를 번역하되, 실패하면 절반으로 쪼개 재시도한다.
+ * 한 번의 타임아웃으로 전체 번역이 날아가지 않게 하고, 끝까지 실패한 한 건만 미번역으로 남긴다.
+ */
+async function translateBatchSplitting(batch, cfg) {
+  try {
+    return await translateBatch(batch, cfg);
+  } catch (error) {
+    if (batch.length <= 1) {
+      // 단건 실패는 그 문자열만 미번역으로 남긴다(전체를 중단하지 않는다).
+      if (cfg.debug) console.error("translate: skipped one item — " + sanitize(error?.message ?? String(error), cfg.key));
+      return new Map();
+    }
+    const mid = Math.ceil(batch.length / 2);
+    const out = new Map();
+    for (const [id, ko] of await translateBatchSplitting(batch.slice(0, mid), cfg)) out.set(id, ko);
+    for (const [id, ko] of await translateBatchSplitting(batch.slice(mid), cfg)) out.set(id, ko);
+    return out;
+  }
+}
+
 /** 배치 크기로 나눠 순서대로 호출한다(레이트리밋 보호). */
-export async function translateAll(items, cfg, { batchSize = 40 } = {}) {
+export async function translateAll(items, cfg, { batchSize = Number(process.env.LLM_BATCH_SIZE) || 20 } = {}) {
   const out = new Map();
   for (let i = 0; i < items.length; i += batchSize) {
     const batch = items.slice(i, i + batchSize);
-    const got = await translateBatch(batch, cfg);
+    const got = await translateBatchSplitting(batch, cfg);
     for (const [id, ko] of got) out.set(id, ko);
   }
   return out;

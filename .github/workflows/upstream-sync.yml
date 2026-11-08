@@ -16,6 +16,7 @@ permissions:
   contents: write
   pull-requests: write
   actions: write
+  issues: write
 
 concurrency:
   group: upstream-sync
@@ -34,6 +35,8 @@ jobs:
       LLM_REASONING_EFFORT: ${{ vars.LLM_REASONING_EFFORT }}
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
       LLM_SESSION_ID: ${{ vars.LLM_SESSION_ID || github.run_id }}
+      # 추론 강도가 높으면 배치 하나가 2분을 넘긴다. 타임아웃을 넉넉히 주고, 실패한 배치는 코드가 절반씩 쪼갠다.
+      LLM_TIMEOUT_MS: "600000"
       SYNC_VERSION: ""
     steps:
       - uses: actions/checkout@v5
