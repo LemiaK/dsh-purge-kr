@@ -9,7 +9,7 @@ Self-hosted controls for DeepSeek Harness (usually called a "jailbreak" plugin) 
 [![Release](https://img.shields.io/github/v/release/wnduddld0513/dsh-purge-kr?label=release)](https://github.com/wnduddld0513/dsh-purge-kr/releases)
 [![Checks](https://github.com/wnduddld0513/dsh-purge-kr/actions/workflows/community.yml/badge.svg)](https://github.com/wnduddld0513/dsh-purge-kr/actions/workflows/community.yml)
 
-Current version **1.6.84** · Matches **DSH Desktop 0.2.2-rc.1** (0.2.1-rc.1 / rc.2 / rc.3 / rc.5 pass in the same way)
+Current version **1.6.86** · Matches **DSH Desktop 0.2.2-rc.1** (0.2.1-rc.1 / rc.2 / rc.3 / rc.5 pass in the same way)
 
 1.6.84 adds a one-time command-execution challenge to the authorized test entry, so a file write and a command run are verified as separate permissions. [Release notes](docs/releases/1.6.84.md).
 
@@ -99,7 +99,7 @@ DSH provides the UI and the install protocol; the community maintains the index 
 The command below is for **CLI/Web users who have the `dsh` command installed and use the `web` profile**. Run it in a macOS/Linux terminal or in Windows PowerShell. Desktop users should use the UI above first. Do not download another host with `npx` just to install the plugin.
 
 ```sh
-dsh plugin --profile web add "https://github.com/wnduddld0513/dsh-purge-kr/releases/download/v1.6.84/dsh-purge-community-1.6.84.tgz"
+dsh plugin --profile web add "https://github.com/wnduddld0513/dsh-purge-kr/releases/download/v1.6.86/dsh-purge-community-1.6.86.tgz"
 ```
 
 `web` must match the profile you actually started, and a custom data directory follows that instance's `DSH_HOME`. This command uses this release's pinned-version URL; it is neither `npm install -g` nor a bare npm package-name install. This project ships through GitHub releases, so **do not change it to `add dsh-purge` or `add dsh-purge-community`**. An official CLI install does not run our installer's Release SHA256 comparison or migration snapshot. If you need those, choose method 3. [Official CLI install guide](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/develop/basic/publish.zh.md)
@@ -201,7 +201,7 @@ Set "auto-check" and "auto-install" separately on the maintenance page. The defa
 
 | Component | Value |
 | --- | --- |
-| Plugin | `dsh-purge-community` 1.6.84 |
+| Plugin | `dsh-purge-community` 1.6.86 |
 | Verified hosts | DSH Desktop 0.2.2-rc.1 / 0.2.1-rc.1 / 0.2.1-rc.2 / 0.2.1-rc.3 / 0.2.1-rc.5 |
 | Other hosts | Installation is allowed. The self-check marks them "unverified"; look at `diagnose` first |
 | Node | ≥18 (the runtime bundled with the desktop build is enough); the red-team tools need ≥22.5 (`node:sqlite`) |
