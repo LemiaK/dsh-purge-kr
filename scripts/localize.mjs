@@ -115,14 +115,29 @@ async function main() {
 
     if (!checkOnly && !dryRun) {
       const source = fs.readFileSync(file, "utf8");
-      const replaced = entry.spans
-        .filter((s) => typeof s.ko === "string")
-        .map((s) => ({ start: s.start, end: s.end, text: s.prefix + s.ko + s.suffix }));
+      // 마크다운은 한 줄이 한 스팬이다. 번역문에 개행이나 코드펜스가 섞이면 문서 구조가 바뀌므로
+      // 그 스팬은 적용하지 않고 미번역으로 남긴다(다음 단계가 다시 시도한다).
+      const usable = entry.spans.filter((s) => {
+        if (typeof s.ko !== "string") return false;
+        if (s.kind === "markdown" && /[\r\n]|```|~~~/.test(s.ko)) {
+          s.ko = undefined;
+          entry.miss += 1;
+          leftover += 1;
+          report.totals.miss += 1;
+          return false;
+        }
+        return true;
+      });
+      const replaced = usable.map((s) => ({ start: s.start, end: s.end, text: s.prefix + s.ko + s.suffix }));
       if (!replaced.length) continue;
       const next = applySpans(source, replaced);
       // 코드 골격 불변 확인: 번역 전후의 영숫자 골격이 같아야 한다(문자열/주석만 바뀐다).
+      // 한 파일이 어긋나도 전체 동기화를 멈추지 않는다 — 그 파일만 건너뛰고 보고서에 남긴다.
       if (structuralSkeleton(next, kindOf(file)) !== structuralSkeleton(source, kindOf(file))) {
-        throw new Error("skeleton changed while rewriting " + file);
+        entry.error = "skeleton changed while rewriting";
+        report.totals.skeletonSkipped = (report.totals.skeletonSkipped ?? 0) + 1;
+        console.error(`localize: ${file} — ${entry.error}(건너뜀)`);
+        continue;
       }
       fs.writeFileSync(file, next, "utf8");
       report.totals.rewritten += 1;

@@ -12,6 +12,8 @@ import { spawnSync } from "node:child_process";
 
 const OUT_DIR = ".sync";
 const DROP_FILES = ["README.zh-CN.md", "docs/README.en.md"]; // 포크 정책: README 는 영문 1벌
+// 업스트림이 파일을 통째로 다시 써도 포크 판을 유지하는 파일(포크 정책이 내용을 소유한다).
+const FORK_OWNED = ["README.md"];
 
 const run = (cmd, args, opts = {}) => {
   const res = spawnSync(cmd, args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, ...opts });
@@ -52,8 +54,10 @@ function ensureClean() {
 }
 
 function commitArea(stage, message, body = "") {
-  if (!stage.length) return false;
-  git(["add", "-A", "--", ...stage]);
+  // .sync/ 같은 생성물은 커밋 대상이 아니다(업스트림 .gitignore 로 병합되면 무시 목록에서 빠질 수 있다).
+  const paths = stage.filter((p) => !/^(\.sync|node_modules)(\/|$)/.test(p));
+  if (!paths.length) return false;
+  git(["add", "-A", "--", ...paths]);
   const staged = git(["diff", "--cached", "--name-only"]).stdout.trim();
   if (!staged) return false;
   const args = ["commit", "-q", "-m", message];
@@ -61,6 +65,15 @@ function commitArea(stage, message, body = "") {
   git(args);
   log("commit: " + message);
   return true;
+}
+
+/** 병합 뒤에도 .sync/ 가 무시되도록 보장한다(포크가 추가한 줄이 업스트림 쪽으로 덮일 수 있다). */
+function ensureSyncIgnore() {
+  const file = ".gitignore";
+  const text = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "";
+  if (/^\.sync\/?$/m.test(text)) return;
+  fs.writeFileSync(file, text.replace(/\s*$/, "\n") + ".sync/\n", "utf8");
+  log(".gitignore 에 .sync/ 를 다시 넣었습니다");
 }
 
 function listChangedFiles(baseRef, ref) {
@@ -89,14 +102,21 @@ function main() {
   git(["checkout", "-B", branch]);
   log("branch: " + branch);
 
-  // 1) 병합: 트리는 업스트림과 동일하게 맞춘 뒤 우리 정책 파일을 다시 지운다.
+  // 1) 3-방향 병합. 업스트림이 건드린 줄은 업스트림(-X theirs)을 쓰고, 건드리지 않은 우리 변경은 남긴다.
+  //    예전처럼 `git checkout upstream/master -- .` 로 트리를 통째로 덮으면 README·package.json 같은
+  //    포크 고유 변경이 매번 사라져 check:docs 와 테스트가 깨진다.
   const syncedUpstream = lastSyncedUpstream();
   git(["merge", "upstream/master", "-s", "recursive", "-X", "theirs", "--no-commit"], { allowFail: true });
-  git(["checkout", "upstream/master", "--", "."]);
+  const conflicted = git(["diff", "--name-only", "--diff-filter=U"]).stdout.split("\n").map((s) => s.trim()).filter(Boolean);
+  for (const f of conflicted) git(["checkout", "--theirs", "--", f], { allowFail: true });
+  if (conflicted.length) log(`충돌 ${conflicted.length}건은 업스트림 쪽으로 정리했습니다`);
+  // 포크가 소유하는 파일: 업스트림이 통째로 다시 써도 우리 판을 유지한다(README 는 영문 1벌 정책).
+  for (const f of FORK_OWNED) git(["checkout", base, "--", f], { allowFail: true });
   for (const f of DROP_FILES) if (fs.existsSync(f)) fs.rmSync(f, { force: true });
+  ensureSyncIgnore();
   git(["add", "-A"]);
   commitArea(["."], `chore: merge upstream ${nextVersion}`,
-    "The tree is upstream's; localizations and fork-specific changes are re-applied by scripts/sync-upstream.mjs.");
+    "Upstream wins on the lines it changed; fork-only changes survive, and the fork-owned files are restored from the previous commit.");
 
   // 2) 델타 밖 파일은 우리 번역을 그대로 되돌린다.
   const changed = syncedUpstream ? listChangedFiles(syncedUpstream, "upstream/master") : [];
