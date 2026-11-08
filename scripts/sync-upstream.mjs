@@ -76,6 +76,32 @@ function ensureSyncIgnore() {
   log(".gitignore 에 .sync/ 를 다시 넣었습니다");
 }
 
+/**
+ * 문서의 버전 표기를 새 버전으로 맞춘다.
+ * check:docs 는 README 첫 화면·설치 링크·AGENTS/유지보수 문서의 현재 버전을 요구하는데,
+ * README 는 포크가 소유하므로 병합 뒤에도 예전 버전 번호가 남는다.
+ */
+function syncVersionStrings(prev, next) {
+  const rules = [
+    [/(Current version\s+\*\*)\d+\.\d+\.\d+(\*\*)/g, `$1${next}$2`],
+    [/(현재 버전\s*[:：]?\s*\*\*)\d+\.\d+\.\d+(\*\*)/g, `$1${next}$2`],
+    [/(`dsh-purge-community`\s+)\d+\.\d+\.\d+/g, `$1${next}`],
+    [/(releases\/download\/v)\d+\.\d+\.\d+(\/dsh-purge-community-)\d+\.\d+\.\d+(\.tgz)/g, `$1${next}$2${next}$3`],
+  ];
+  const touched = [];
+  for (const file of ["README.md", "AGENTS.md", "docs/INSTALLATION.md", "docs/MAINTENANCE.md"]) {
+    if (!fs.existsSync(file)) continue;
+    const before = fs.readFileSync(file, "utf8");
+    let after = before;
+    for (const [pattern, replacement] of rules) after = after.replace(pattern, replacement);
+    if (after !== before) {
+      fs.writeFileSync(file, after, "utf8");
+      touched.push(file);
+    }
+  }
+  if (touched.length) log(`버전 표기 갱신: ${touched.join(", ")} (${prev} → ${next})`);
+}
+
 function listChangedFiles(baseRef, ref) {
   return git(["diff", "--name-only", baseRef, ref]).stdout.split("\n").map((s) => s.trim()).filter(Boolean);
 }
@@ -143,6 +169,9 @@ function main() {
   process.stdout.write(loc.stdout || "");
   if (loc.stderr) process.stderr.write(loc.stderr);
   if (loc.status !== 0) log("localize 실패 — 남은 문자열은 검토 대상으로 보고합니다.");
+
+  // 3-b) 번역이 끝난 문서의 버전 표기를 새 버전으로 맞춘다(check:docs 가 요구한다).
+  syncVersionStrings(current, nextVersion);
 
   // 4) 영역별 커밋
   const after = git(["status", "--porcelain"]).stdout.split("\n").map((l) => l.slice(3).trim()).filter(Boolean);

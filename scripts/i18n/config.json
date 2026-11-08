@@ -9,7 +9,8 @@
     "package-lock.json",
     "i18n/**",
     "node_modules/**",
-    "**/*.lock"
+    "**/*.lock",
+    "release-notes.md"
   ],
   "commentOnlyGlobs": [
     "lib/patches/**",
