@@ -11,7 +11,7 @@ Self-hosted controls for DeepSeek Harness (usually called a "jailbreak" plugin) 
 
 Current version **1.6.86** · Matches **DSH Desktop 0.2.2-rc.1** (0.2.1-rc.1 / rc.2 / rc.3 / rc.5 pass in the same way)
 
-1.6.84 adds a one-time command-execution challenge to the authorized test entry, so a file write and a command run are verified as separate permissions. [Release notes](docs/releases/1.6.84.md).
+1.6.86 keeps the rewind menu inside the viewport, reports a Web-only host as "not applicable" for package swaps instead of raising a false alarm, separates the compatibility levels (archived, kernel-only, unlocated, unknown, unreadable), and adds the H3 Video 0.4.0 and 0.5.0 market entries. [Release notes](docs/releases/1.6.86.md).
 
 **Original project and author**: Maintained independently on top of [xiaoyang / YuJunZhiXue's dsh-purge](https://github.com/YuJunZhiXue/dsh-purge). The original repository has been restored. The original author's signature, copyright, and MIT license are preserved as they were. This repository maintains the community edition, and it is not an official release by the original author.
 
