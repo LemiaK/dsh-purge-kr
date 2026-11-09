@@ -9227,10 +9227,10 @@ function useT() {
 function compatibilityLevelText(t, level) {
   const key = "compat.level." + (level || "unknown");
   const hit = t(key);
-  return hit && hit !== key ? hit : zh[key] || level || t("unknown");
+  return hit && hit !== key ? hit : ko[key] || level || t("unknown");
 }
-var zh = {
-  nav: "\u89C4\u5219\u8BBE\u5B9A",
+var ko = {
+  nav: "\uADDC\uCE59 \uC124\uC815",
   "dock.clean": "\uC815\uB9AC",
   "dock.drill": "\uB4DC\uB9B4 \uCF58\uC194",
   "dock.toggle": "dsh-purge",
@@ -9273,23 +9273,23 @@ var zh = {
   "envGate.skipNo": "\uB3CC\uC544\uAC00\uAE30",
   "envGate.skipYes": "\uC124\uC815\uD558\uC9C0 \uC54A\uACE0 \uACC4\uC18D",
   "envGate.go": "\uD658\uACBD \uC801\uC751 \uC5F4\uAE30",
-  "compat.host": "dsh-purge Community {version} \xB7 \u5BBF\u4E3B DSH {host} \xB7 \u517C\u5BB9\u7EA7\u522B\uFF1A{level}",
-  "compat.loading": "\u6B63\u5728\u8BFB\u53D6\u5BBF\u4E3B\u7248\u672C\u2026",
-  "compat.unavailable": "\u8BFB\u4E0D\u5230\u5BBF\u4E3B\u517C\u5BB9\u4FE1\u606F\uFF1A{error}",
+  "compat.host": "dsh-purge Community {version} \xB7 \uD638\uC2A4\uD2B8 DSH {host} \xB7 \uD638\uD658 \uB4F1\uAE09: {level}",
+  "compat.loading": "\uD638\uC2A4\uD2B8 \uBC84\uC804\uC744 \uC77D\uB294 \uC911\u2026",
+  "compat.unavailable": "\uD638\uC2A4\uD2B8 \uD638\uD658 \uC815\uBCF4\uB97C \uC77D\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {error}",
   "compat.level.qualified": "\uD68C\uADC0 \uAC80\uC99D\uB428",
   "compat.level.unverified": "\uBBF8\uAC80\uC99D \uBC84\uC804",
   "compat.level.mixed": "\uCEF4\uD3EC\uB10C\uD2B8 \uBC84\uC804 \uBD88\uC77C\uCE58",
-  "compat.level.sealed": "\u5DF2\u5B9A\u4F4D\u5F52\u6863\u5BBF\u4E3B",
-  "compat.level.kernel-verified": "\u5185\u6838\u5DF2\u9A8C\u8BC1\uFF0C\u5BBF\u4E3B\u672A\u9A8C\u8BC1",
+  "compat.level.sealed": "\uC544\uCE74\uC774\uBE0C \uD638\uC2A4\uD2B8 \uD655\uC778\uB428",
+  "compat.level.kernel-verified": "\uCEE4\uB110 \uAC80\uC99D\uB428, \uD638\uC2A4\uD2B8 \uBBF8\uAC80\uC99D",
   "compat.level.missing": "\uD638\uC2A4\uD2B8 \uBBF8\uD0D0\uC9C0",
   "compat.level.no-host": "\uD638\uC2A4\uD2B8 \uBBF8\uD0D0\uC9C0",
-  "compat.level.unknown": "\u672A\u77E5",
-  "theme.aria": "\u5916\u89C2",
-  "theme.white": "\u767D",
-  "theme.ink": "\u58A8",
-  "purge.title": "\u8865\u4E01",
+  "compat.level.unknown": "\uC54C \uC218 \uC5C6\uC74C",
+  "theme.aria": "\uD14C\uB9C8",
+  "theme.white": "\uB77C\uC774\uD2B8",
+  "theme.ink": "\uC789\uD06C",
+  "purge.title": "\uD328\uCE58",
   "override.title": "\uD504\uB86C\uD504\uD2B8",
-  "own.title": "\u81EA\u5DF1\u7684\u670D\u52A1\u5668",
+  "own.title": "\uB0B4 \uC11C\uBC84",
   "own.hint": "\uD55C \uC904\uC5D0 IP \uD558\uB098 \uB610\uB294 \uC804\uCCB4 \uD638\uC2A4\uD2B8\uBA85 \uD558\uB098\uC785\uB2C8\uB2E4. \uACC4\uC815@\uD638\uC2A4\uD2B8 \uD615\uD0DC\uB3C4 \uB418\uACE0, \uACC4\uC815\uC740 \uC774 \uD45C\uAE30\uB97C \uC54C\uC544\uBCF4\uB294 \uC6A9\uB3C4\uC77C \uBFD0\uC785\uB2C8\uB2E4. \uD638\uC2A4\uD2B8\uBA85\uC740 \uADF8\uB54C \uD574\uC11D\uB41C \uC8FC\uC18C\uAE4C\uC9C0 \uD568\uAED8 \uD1B5\uACFC\uC2DC\uD0B5\uB2C8\uB2E4. \uD0A4, \uBE44\uBC00\uBC88\uD638, \uB300\uC5ED\uC740 \uC4F0\uC9C0 \uB9C8\uC138\uC694.",
   "own.save": "\uBAA9\uB85D \uC800\uC7A5",
   "saved.own": "\uB0B4 \uC11C\uBC84\uB97C \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4",
@@ -13519,11 +13519,11 @@ function LayoutNotice({ info }) {
     return h(
       "details",
       { className: "dshpp-layout-details" },
-      h("summary", null, "\u6362\u5305\u72B6\u6001\uFF1A\u4E0D\u9002\u7528\uFF08Web \u5BBF\u4E3B\uFF09"),
+      h("summary", null, "\uD328\uD0A4\uC9C0 \uAD50\uCCB4 \uC0C1\uD0DC: \uD574\uB2F9 \uC5C6\uC74C(Web \uD638\uC2A4\uD2B8)"),
       h(
         "p",
         { className: "dshpp-note" },
-        "Web \u670D\u52A1\u65E0\u9700\u684C\u9762\u5F52\u6863\u6362\u5305\u3002\u539F\u59CB\u8BCA\u65AD\uFF1A",
+        "Web \uC11C\uBE44\uC2A4\uB294 \uB370\uC2A4\uD06C\uD1B1 \uC544\uCE74\uC774\uBE0C \uAD50\uCCB4\uAC00 \uD544\uC694\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uC6D0\uBCF8 \uC9C4\uB2E8: ",
         layout.state,
         " / ",
         info.asar_handoff.phase
