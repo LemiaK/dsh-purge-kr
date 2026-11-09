@@ -1,514 +1,513 @@
-# AGENTS.md — 给 AI agent 的 Purge 使用说明书
+# AGENTS.md — AI agent 를 위한 Purge 사용 설명서
 
-> 这份文件是写给**在 DSH 里干活的 agent** 的，不是营销文档。
-> 当前版本：**1.6.86** · 适配 DSH Desktop **0.2.2-rc.1**（0.2.1-rc.1 / rc.2 / rc.3 / rc.5 同样通过）
-> 版本号由 `npm run check:docs` 与 `package.json` 校验，发版必须同步。
+> 이 파일은 **DSH 안에서 일하는 agent** 를 위해 쓴 것이며, 마케팅 문서가 아니다.
+> 현재 버전 **1.6.86** · DSH Desktop **0.2.2-rc.1** 대응(0.2.1-rc.1 / rc.2 / rc.3 / rc.5 도 동일하게 통과)
+> 버전 번호는 `npm run check:docs` 와 `package.json` 이 검증하며, 릴리스 때 반드시 동기화한다.
 
 ---
 
-## 0. 30 秒版本
+## 0. 30초 요약
 
-- 这个插件（`dsh-purge-community`）把 DSH 里**拦你的东西**拆掉：审批弹窗、沙箱拒绝、fs 围栏、工具结果修剪、计划模式硬拦、`ask_user_question` 等待、以及模型自己的拒绝倾向。
-- 你不需要"绕过"它——**它就是替你拆闸的**。看到"我不能/建议你先确认"这类输出，多半不是插件失效，而是模型层的问题，按 §5 排查。
-- 你的操作入口只有两个：**面板（左侧栏 Purge）** 和 **CLI（`purge-community`）**。别手改 `~/Library/.../Resources/app` 下的宿主文件，改了会被下一次「应用」覆盖。
+- 이 플러그인(`dsh-purge-community`)은 DSH 에서 **작업을 막는 것**을 걷어낸다: 승인 팝업, 샌드박스 거부, fs 울타리, 도구 결과 트리밍, 계획 모드 강제 차단, `ask_user_question` 대기, 그리고 모델 자체의 거부 성향.
+- "우회"할 필요가 없다 — **게이트를 대신 걷어내는 것이 이 플러그인**이다. "할 수 없다/먼저 확인을 권한다" 같은 출력이 보이면 대개 플러그인 고장이 아니라 모델 계층 문제이므로 §5 에서 점검한다.
+- 조작 진입점은 두 개뿐이다: **패널(왼쪽 사이드바 Purge)** 과 **CLI(`purge-community`)**. `~/Library/.../Resources/app` 아래의 호스트 파일을 직접 고치지 않는다. 고치면 다음 “적용”에 덮어써진다.
 
-## 1. 心智模型：五层，各管一件事
+## 1. 멘탈 모델: 다섯 계층, 각각 한 가지 역할
 
-| 层 | 由谁提供 | 生效方式 | 你能怎么查 |
+| 계층 | 제공 주체 | 적용 방식 | 확인 방법 |
 | --- | --- | --- | --- |
-| **宿主补丁**（86 条） | 本插件写进 DSH 源码 | 点「应用」写入 → **退出重开**才加载 | `selfcheck` 看各层 `applied/required` |
-| **提示词注入** | 插件运行时（每步重贴） | `prompt-inject.md` 作为 `dsh-purge` section | 探针（§4）或看 `selfcheck` 的「运行时提示词注入」 |
-| **破甲强化段** | 插件运行时 | 尾部 section（默认开） | `purge-community boost` |
-| **权限配置** | profile 的 `cordis.patch.yml` | `danger-full-access` + `approval: never` | `selfcheck` 的「当前 profile 的权限选择」 |
-| **agent 预设** | `unrestricted` 预设 | 新会话下拉里选 | 面板/预设下拉 |
+| **호스트 패치**(86개) | 이 플러그인이 DSH 소스에 기록 | “적용” 클릭으로 기록 → **종료 후 재시작**해야 로드 | `selfcheck` 로 계층별 `applied/required` 확인 |
+| **프롬프트 주입** | 플러그인 런타임(매 단계 재부착) | `prompt-inject.md` 를 `dsh-purge` section 으로 사용 | 프로브(§4) 또는 `selfcheck` 의 “런타임 프롬프트 주입” |
+| **탈옥 강화 섹션** | 플러그인 런타임 | 꼬리 section(기본 켜짐) | `purge-community boost` |
+| **권한 설정** | profile 의 `cordis.patch.yml` | `danger-full-access` + `approval: never` | `selfcheck` 의 “현재 profile 의 권한 선택” |
+| **agent 프리셋** | `unrestricted` 프리셋 | 새 세션 드롭다운에서 선택 | 패널/프리셋 드롭다운 |
 
-**关键结论**：宿主补丁与权限配置仍为全局；提示词注入和强化段默认全局，可用 `excludePresets` 按预设排除。排除不等于撤销全局补丁。
+**핵심 결론**: 호스트 패치와 권한 설정은 여전히 전역이다. 프롬프트 주입과 강화 섹션은 기본 전역이며 `excludePresets` 로 프리셋별 제외가 가능하다. 제외는 전역 패치 철회가 아니다.
 
-## 2. 生命周期：装 → 应用 → 重开
+## 2. 생애주기: 설치 → 적용 → 재시작
 
 ```
-通过官方界面/CLI 首次安装，或社区安装器备份迁移
+공식 인터페이스/CLI 로 최초 설치, 또는 커뮤니티 설치기로 백업 이전
    ↓
-点「应用」→ 解包 host / 写 86 条补丁 / 建快照
+“적용”클릭 → 호스트 언팩 / 86개 패치 기록 / 스냅샷 생성
    ↓
-退出并重开 DSH   ← 补丁只有重启后才被加载
+DSH 종료 후 재시작   ← 패치는 재시작 후에만 로드된다
    ↓
-selfcheck 全绿 = 可以开工
+selfcheck 전 항목 정상 = 작업 시작 가능
 ```
 
-**什么时候需要再点一次「应用」**（这是最高频的维护动作）：
+**언제 다시 “적용”을 눌러야 하는가**(가장 빈번한 유지보수 동작):
 
-1. DSH 官方更新之后（`app.asar` 会重新出现，旧补丁全部失效）；
-2. 插件自身升级之后（新补丁要重新写）；
-3. 新装了带工具面/预设的插件（会多出补丁目标）；
-4. 发现模型开始推脱、或者工具突然被追问审批。
+1. DSH 공식 업데이트 이후(`app.asar` 가 다시 생기고 기존 패치가 전부 무효화된다);
+2. 플러그인 자체 업그레이드 이후(새 패치를 다시 기록해야 한다);
+3. 도구 표면/프리셋을 가진 플러그인을 새로 설치한 경우(패치 대상이 늘어난다);
+4. 모델이 회피하기 시작했거나, 도구 실행 시 갑자기 승인을 요구받는 경우.
 
-一句话：**「应用」是幂等的**，不确定就点它，然后退出重开。
+한 줄로: **“적용”은 멱등이다**. 확신이 없으면 눌러서 적용하고, 종료 후 재시작한다.
 
-## 3. CLI 参考（全部命令 + 退出码）
+## 3. CLI 레퍼런스(전체 명령 + 종료 코드)
 
-下表的 `purge-community` 是命令简称，不保证安装进 profile 后已在系统 PATH。先按[CLI 回滚与定位说明](docs/INSTALLATION.md#cli-rollback)使用当前 profile 的 `bin/community.js` 与正确运行时；不要为了找命令再安装另一份 npm 包。安装验证看版本、bundle 和配置合成；不能把模型是否拒绝当作安装成功判据。
+아래 표의 `purge-community` 는 명령 약칭이며, profile 에 설치한 뒤 시스템 PATH 에 있다는 보장이 없다. 먼저 [CLI 롤백과 위치 확인 안내](docs/INSTALLATION.md#cli-rollback)에 따라 현재 profile 의 `bin/community.js` 와 올바른 런타임을 사용한다. 명령을 찾으려고 npm 패키지를 한 벌 더 설치하지 않는다. 설치 검증은 버전, bundle, 설정 합성으로 확인하며, 모델의 거부 여부를 설치 성공 판정으로 쓰지 않는다.
 
-| 命令 | 作用 | 退出码 |
+| 명령 | 역할 | 종료 코드 |
 | --- | --- | --- |
-| `purge-community status` | 宿主路径、补丁计数 | 0 |
-| `purge-community selfcheck [--json\|--text]` | 25 层逐层证据 | **broken → 1**，pending/ok → 0 |
-| `purge-community host-status` | 只读磁盘布局与当前服务入口证据，不退出/换包/重启 | 0，须检查 state |
-| `purge-community diagnose [--json]` | 锚点漂移诊断（含行号 + 片段） | 0 |
-| `purge-community reanchor list\|show\|apply <id> [--index n] [--lines a-b] [--yes]\|clear <id>` | 半自动重锚：把新锚点钉成本地覆盖 | 0 |
-| `purge-community probe [new]` | 生成/查看运行时探针 | 0 |
-| `purge-community audit [--limit n]` | 最近动作记录（apply/revert/boost/probe/preset/reanchor） | 0 |
-| `purge-community boost [on\|off]` | 尾部强化段开关 | 0 |
-| `purge-community preset [status\|install [--force]]` | `unrestricted` 预设落盘 | 0 |
-| `purge-community usage` / `prune` | 备份占用 / 清理+GC | 0 |
-| `purge-community backup` / `rollback <id>` | 快照 / 回滚插件 | 0 |
-| `purge-community apply` / `revert` / `uninstall` / `edit` | 原版能力（转发 `dsh-purge`） | 透传 |
+| `purge-community status` | 호스트 경로, 패치 개수 | 0 |
+| `purge-community selfcheck [--json\|--text]` | 25개 계층별 증거 | **broken → 1**, pending/ok → 0 |
+| `purge-community host-status` | 디스크 레이아웃과 현재 서비스 진입 증거만 읽음, 종료/패키지 교체/재시작 없음 | 0, state 확인 필수 |
+| `purge-community diagnose [--json]` | 앵커 드리프트 진단(행 번호 + 스니펫 포함) | 0 |
+| `purge-community reanchor list\|show\|apply <id> [--index n] [--lines a-b] [--yes]\|clear <id>` | 반자동 재앵커: 새 앵커를 로컬 오버라이드로 고정 | 0 |
+| `purge-community probe [new]` | 런타임 프로브 생성/조회 | 0 |
+| `purge-community audit [--limit n]` | 최근 동작 기록(apply/revert/boost/probe/preset/reanchor) | 0 |
+| `purge-community boost [on\|off]` | 꼬리 강화 섹션 스위치 | 0 |
+| `purge-community preset [status\|install [--force]]` | `unrestricted` 프리셋 기록 | 0 |
+| `purge-community usage` / `prune` | 백업 점유량 / 정리+GC | 0 |
+| `purge-community backup` / `rollback <id>` | 스냅샷 / 플러그인 롤백 | 0 |
+| `purge-community apply` / `revert` / `uninstall` / `edit` | 원본 기능(`dsh-purge` 로 전달) | 그대로 전달 |
 
-`selfcheck` 状态：`ok`（已确认）/ `pending`（待应用）/ `inferred`（宿主推导，黄）/ `unknown`（证据不足，黄）/ `broken`（已确认故障或权限不匹配）。
-**pending 不是故障**——别去改补丁表，点一次「应用」即可。
+`selfcheck` 상태: `ok`(확인됨) / `pending`(적용 대기) / `inferred`(호스트 추론, 노랑) / `unknown`(증거 부족, 노랑) / `broken`(고장 확인 또는 권한 불일치).
+**pending 은 고장이 아니다** — 패치 표를 고치지 말고 “적용”을 한 번 누른다.
 
-## 4. 运行时探针：证明"注入真的到了模型"
+## 4. 런타임 프로브: "주입이 실제로 모델에 도달했는지" 증명
 
-文件被改、section 被注册，只证明宿主侧就绪；探针证明模型**收到了**。
+파일이 수정되고 section 이 등록된 것은 호스트 측 준비 완료만 증명한다. 프로브가 모델이 **받았음**을 증명한다.
 
 ```sh
 purge-community probe new
-# → {"nonce":"purge-1a2b3c4d", "message":"请原样输出下面这行…[purge-1a2b3c4d]"}
+# → {"nonce":"purge-1a2b3c4d", "message":"다음 줄을 그대로 출력한다…[purge-1a2b3c4d]"}
 ```
 
-然后任意发一句对话。**模型原样回显该 nonce = 链路通**。探针 30 分钟自动过期，不会长期占 token。
+그런 다음 아무 대화나 보낸다. **모델이 해당 nonce 를 그대로 되돌려주면 = 연결 정상**. 프로브는 30분 뒤 자동 만료되며 token 을 오래 점유하지 않는다.
 
-排查原则：
-- 回显了但模型仍然推脱 → 问题在**模型层/人设**，不是插件（换强化段或预设人设）；
-- 没回显 → 注入没到达（看 `selfcheck` 的运行时注入层、`boost` 是否被关、`injectPosition` 是否被改成 `tail` 但宿主没重贴）。
+점검 원칙:
+- 되돌려주는데도 모델이 계속 회피 → 문제는 **모델 계층/페르소나**이며 플러그인이 아니다(강화 섹션 또는 프리셋 페르소나를 교체한다);
+- 되돌려주지 않음 → 주입이 도달하지 않았다(`selfcheck` 의 런타임 주입 계층, `boost` 가 꺼졌는지, `injectPosition` 이 `tail` 로 바뀌었는데 호스트가 재부착하지 않았는지 확인한다).
 
-## 5. 症状 → 动作（决策树）
+## 5. 증상 → 조치(의사결정 트리)
 
-| 症状 | 先跑 | 判读 | 动作 |
+| 증상 | 먼저 실행 | 판독 | 조치 |
 | --- | --- | --- | --- |
-| 补丁数不是 73/76（全量 84） | `selfcheck --json` | 看 `layers[].state` | pending → 点应用；broken → `diagnose` |
-| 全部 `missing_file` | `status` | `ai_base` 为空 | 宿主未解包：点应用 → 重开 |
-| 模型开始推脱/要求确认 | `probe new` | 回显否 | 回显：调人设/强化段；不回显：检查注入层 |
-| 工具被拒绝执行 | `selfcheck` | 沙箱/审批层是否绿 | 绿 → 属工具自身限制；红 → 点应用 |
-| DSH 刚更新过 | `status` | `asar_still_sealed` | 点应用 → 重开 → `selfcheck` |
-| 面板显示版本不一致 | 面板顶部黄条 | 界面与后端不同版本 | 先核对磁盘与运行版本；按 README 选择正确安装/迁移入口 |
-| 想撤销一切 | — | — | `revert`（只撤补丁）/ `rollback <id>`（回滚插件） |
+| 패치 수가 73/76 이 아님(전체 86) | `selfcheck --json` | `layers[].state` 확인 | pending → 적용 클릭; broken → `diagnose` |
+| 전부 `missing_file` | `status` | `ai_base` 가 비어 있음 | 호스트 미언팩: 적용 클릭 → 재시작 |
+| 모델이 회피하기 시작/확인 요구 | `probe new` | 되돌려주는지 여부 | 되돌려줌: 페르소나/강화 섹션 조정; 안 함: 주입 계층 점검 |
+| 도구 실행이 거부됨 | `selfcheck` | 샌드박스/승인 계층이 초록인지 | 초록 → 도구 자체의 제한; 빨강 → 적용 클릭 |
+| DSH 를 막 업데이트함 | `status` | `asar_still_sealed` | 적용 클릭 → 재시작 → `selfcheck` |
+| 패널 버전이 불일치 | 패널 상단 노란 띠 | UI 와 백엔드 버전 상이 | 먼저 디스크 버전과 실행 버전을 대조한다; README 에 따라 올바른 설치/마이그레이션 진입점을 선택한다 |
+| 모든 것을 되돌리려 함 | — | — | `revert`(패치만 철회) / `rollback <id>`(플러그인 롤백) |
 
-## 6. 状态与文件（你可以安全读，不要乱写）
+## 6. 상태와 파일(안전하게 읽을 수 있고, 함부로 쓰지 않는다)
 
-| 路径 | 内容 |
+| 경로 | 내용 |
 | --- | --- |
 | `$DSH_HOME/dsh-purge/tuning.json` | `{boost, injectPosition, askNoBlock}` |
-| `$DSH_HOME/dsh-purge/probe.json` | 探针 nonce（30 分钟 TTL） |
-| `$DSH_HOME/dsh-purge/anchor-overrides.json` | 本地重锚覆盖（不改插件源码；删掉即恢复出厂锚点） |
-| `$DSH_HOME/dsh-purge-community/audit.jsonl` | 动作审计（1MB 轮转，保留 2 份）；面板「维护 → 最近动作」 |
-| `$DSH_HOME/dsh-purge/applied.json` · `installed-rev` | 上次应用的插件版本 |
-| `$DSH_HOME/dsh-purge-community/backups/<id>/` | 快照（`manifest.json` + 小文件；大文件在 `objects/`） |
-| `$DSH_HOME/.agent-presets/unrestricted/` | 无限制模式预设（升级保留原文；首行模板标记不代表用户授权覆盖） |
-| `$DSH_HOME/prompt-inject.md` | **用户的注入正文**，插件只读不改（除非用户点保存） |
+| `$DSH_HOME/dsh-purge/probe.json` | 프로브 nonce(30분 TTL) |
+| `$DSH_HOME/dsh-purge/anchor-overrides.json` | 로컬 재앵커 오버라이드(플러그인 소스를 바꾸지 않는다; 삭제하면 출하 앵커로 복귀) |
+| `$DSH_HOME/dsh-purge-community/audit.jsonl` | 동작 감사(1MB 로테이션, 2개 보존); 패널 “유지보수 → 최근 동작” |
+| `$DSH_HOME/dsh-purge/applied.json` · `installed-rev` | 마지막 적용 시점의 플러그인 버전 |
+| `$DSH_HOME/dsh-purge-community/backups/<id>/` | 스냅샷(`manifest.json` + 소형 파일; 대형 파일은 `objects/`) |
+| `$DSH_HOME/.agent-presets/unrestricted/` | 무제한 모드 프리셋(업그레이드해도 원문을 보존한다; 첫 줄의 템플릿 표식은 사용자가 덮어쓰기를 승인했다는 뜻이 아니다) |
+| `$DSH_HOME/prompt-inject.md` | **사용자의 주입 본문**, 플러그인은 읽기만 하고 바꾸지 않는다(사용자가 저장을 누르는 경우 제외) |
 
-**不变量**：`prompt-inject.md`、规则集、其他插件配置，任何时候都不该被「应用」或「回滚」覆盖。
+**불변 조건**: `prompt-inject.md`, 규칙 세트, 다른 플러그인 설정은 어떤 경우에도 “적용”이나 “롤백”이 덮어써서는 안 된다.
 
-## 7. 补丁表：86 条，怎么读、怎么加
+## 7. 패치 표: 86개, 읽는 법과 추가하는 법
 
-- 定义在 `lib/core.js` 的 `ALL_PATCHES`（`PATCHES` / `CODE_PATCHES` / `ENGINE_PATCHES` / `NEW_TOOL_PATCHES`）。
-- 每条 = `{id, name, layer, file, replacements:[{pattern, replace}], markers, optional?}`；`pattern` 是对宿主源码的**精确片段**（或正则），`markers` 用来判断"已应用"。
-- 新增一条的规矩：
-  1. 在 `targetFiles()` 里登记目标文件键；
-  2. `replace` 里留一条 `[dsh-purge]` 标记，写进 `markers`；
-  3. 在 `test/patch-anchors.test.mjs` 里钉一份真实源码片段做回归；
-  4. `optional: true` 用于第三方插件目标（不在场时显示"不适用"而不是失败）。
-- 宿主升级后锚点漂移：`diagnose` 会给出文件、行号、旧锚点首行、以及**可能的新落点**片段。
-- 确认新落点后：`reanchor apply <id> --lines A-B`（先看 dry-run 的候选片段，再加 `--yes` 写入）。覆盖存 `anchor-overrides.json`，引擎会把它当该条的 pattern；`reanchor clear <id>` 撤销。
+- 정의는 `lib/core.js` 의 `ALL_PATCHES` 에 있다(`PATCHES` / `CODE_PATCHES` / `ENGINE_PATCHES` / `NEW_TOOL_PATCHES`).
+- 각 항목 = `{id, name, layer, file, replacements:[{pattern, replace}], markers, optional?}`; `pattern` 은 호스트 소스에 대한 **정확한 스니펫**(또는 정규식)이고, `markers` 는 "적용됨" 판정에 쓴다.
+- 새 항목을 추가하는 규칙:
+  1. `targetFiles()` 에 대상 파일 키를 등록한다;
+  2. `replace` 안에 `[dsh-purge]` 표식을 하나 남기고 `markers` 에 적는다;
+  3. `test/patch-anchors.test.mjs` 에 실제 소스 스니펫을 고정해 회귀를 건다;
+  4. `optional: true` 는 서드파티 플러그인 대상에 쓴다(없을 때 실패가 아니라 "해당 없음"으로 표시).
+- 호스트 업그레이드로 앵커가 드리프트하면: `diagnose` 가 파일, 행 번호, 옛 앵커 첫 줄, 그리고 **가능한 새 위치** 스니펫을 제시한다.
+- 새 위치를 확인한 뒤: `reanchor apply <id> --lines A-B`(먼저 dry-run 후보 스니펫을 보고, `--yes` 를 붙여 기록한다). 오버라이드는 `anchor-overrides.json` 에 저장되고 엔진은 이를 해당 항목의 pattern 으로 취급한다; `reanchor clear <id>` 로 철회한다.
 
-## 8. 预设：`unrestricted`（无限制模式）
+## 8. 프리셋: `unrestricted`(무제한 모드)
 
-- 它是 **standard 的超集**（20 行，工具面完全一致），差别只在人设：执行优先、不重复声明边界、多轮不退化。
-- 由 `lib/presets-plugin.js` 注册到 `agentPresets`（**只放文件不会出现在下拉里**）。
-- 安装：`purge-community preset install`；首次注册后，面板/新会话下拉可见。
-- 不要把它当成"额外破甲"——破甲靠宿主补丁，预设只改人格。
-- 回归测试卡：`docs/preset-test.md`（A/B 五条 prompt + 判读标准 + 不通过怎么办）。
+- **standard 의 상위집합**이다(20줄, 도구 표면은 완전히 동일). 차이는 페르소나뿐이다: 실행 우선, 경계 반복 선언 없음, 여러 턴에서도 퇴화하지 않음.
+- `lib/presets-plugin.js` 가 `agentPresets` 에 등록한다(**파일만 두면 드롭다운에 나타나지 않는다**).
+- 설치: `purge-community preset install`; 최초 등록 후에는 패널/새 세션 드롭다운에서 보인다.
+- 이것을 "추가 탈옥"으로 취급하지 않는다 — 탈옥은 호스트 패치가 담당하고, 프리셋은 인격만 바꾼다.
+- 회귀 테스트 카드: `docs/preset-test.md`(A/B 5개 prompt + 판독 기준 + 미통과 시 대응).
 
-## 9. 版本与兼容
+## 9. 버전과 호환성
 
-| 组件 | 值 |
+| 구성 요소 | 값 |
 | --- | --- |
-| 插件 | `dsh-purge-community` 1.6.86 |
-| 已验证宿主 | DSH Desktop 0.2.2-rc.1 / 0.2.1-rc.1 / 0.2.1-rc.2 / 0.2.1-rc.3 / 0.2.1-rc.5 |
-| 其它宿主 | 允许应用，但 `selfcheck` 会标"未验证"；先看 `diagnose` |
-| Node | ≥18（桌面版自带运行时即可）；**红队工具需 ≥22.5**（依赖 `node:sqlite`，低版本会在加载红队工具时失败） |
+| 플러그인 | `dsh-purge-community` 1.6.86 |
+| 검증된 호스트 | DSH Desktop 0.2.2-rc.1 / 0.2.1-rc.1 / 0.2.1-rc.2 / 0.2.1-rc.3 / 0.2.1-rc.5 |
+| 기타 호스트 | 적용은 허용되지만 `selfcheck` 가 "미검증"으로 표시한다; 먼저 `diagnose` 를 본다 |
+| Node | ≥18(데스크톱 버전 내장 런타임이면 충분); **레드팀 도구는 ≥22.5**(`node:sqlite` 에 의존하므로 낮은 버전에서는 레드팀 도구를 로드할 때 실패한다) |
 
-### 证据账本（1.6.81 起）
+### 증거 장부(1.6.81 부터)
 
-口头报告用 `claimed` 并填写 `source_agent`。工具默认按 `inferred` 记录。用 `redteam_evidence_upgrade` 提交实际核实的结果；普通引用和旧版缺少核实记录的引用保留，需另行核实。计数或哈希报错时先处理账本异常。导入文件须位于当前靶标目录，可暂存在其 `incoming/` 子目录，也可以直接传截图内容。已撤回的问题可按 `withdrawn` 查询。
+구두 보고는 `claimed` 로 적고 `source_agent` 를 채운다. 도구는 기본적으로 `inferred` 로 기록한다. 실제로 확인한 결과는 `redteam_evidence_upgrade` 로 제출한다; 일반 인용과 확인 기록이 빠진 옛 버전 인용은 그대로 두고 별도로 확인해야 한다. 카운트나 해시 오류가 나면 먼저 장부 이상을 처리한다. 가져오는 파일은 현재 표적 디렉터리 안에 있어야 하며, 그 `incoming/` 하위 디렉터리에 잠시 둘 수 있고 스크린샷 내용을 직접 넘겨도 된다. 철회된 문제는 `withdrawn` 으로 조회한다.
 
-## 10. 这份文档的维护规则
+## 10. 이 문서의 유지보수 규칙
 
-- 每次发版必须同步：首部版本行、§9 表格、§3 命令表（如有新增）。
-- `npm run check:docs` 会校验 `AGENTS.md` / `README.md` / `release-notes.md` / `package.json` 的版本一致，CI 里跑；不一致直接失败。
-- 面向人的概览在 `README.md`；**面向 agent 的操作细节以本文件为准**——两者冲突时，先信本文件，再去改 README。
+- 릴리스마다 반드시 동기화: 머리말 버전 줄, §9 표, §3 명령 표(신규가 있으면).
+- `npm run check:docs` 가 `AGENTS.md` / `README.md` / `release-notes.md` / `package.json` 의 버전 일치를 검증하며 CI 에서 실행된다; 불일치면 즉시 실패한다.
+- 사람용 개요는 `README.md` 에 있다; **agent 용 동작 세부는 이 파일을 기준으로 한다** — 둘이 충돌하면 이 파일을 먼저 믿고, 그다음 README 를 고친다.
 
-## 11. 更新偏好（1.6.5 起）
+## 11. 업데이트 선호(1.6.5 부터)
 
-维护页分别设置自动检查和自动安装。默认只检查，间隔 6 小时；旧 `autoUpdateOnStart` 只作为自动安装偏好的兼容默认值。显式新偏好存于 `$DSH_HOME/dsh-purge/update-preferences.json`，状态存于 `update-status.json`。不要为启用更新打开 `autoApplyOnStart`，不要改动提示词或 profile 权限。
+유지보수 페이지에서 자동 확인과 자동 설치를 따로 설정한다. 기본값은 확인만, 간격 6시간이다; 옛 `autoUpdateOnStart` 는 자동 설치 선호의 호환 기본값으로만 쓴다. 명시적 신규 선호는 `$DSH_HOME/dsh-purge/update-preferences.json` 에, 상태는 `update-status.json` 에 저장한다. 업데이트를 켜려고 `autoApplyOnStart` 를 열지 않고, 프롬프트나 profile 권한도 건드리지 않는다.
 
-`GET /dsh-purge/community` 返回 `update_preferences` 和 `update_status`；`POST` 同一路径，`{op:"preferences",value:{autoCheck:true,autoInstall:false,intervalHours:6}}` 保存偏好。省略字段保留当前值，间隔接受 1–168 的整数。保存不代表安装；安装后等待用户手动重启，不自行调用重启接口。
+`GET /dsh-purge/community` 는 `update_preferences` 와 `update_status` 를 반환한다; 같은 경로로 `POST` 하면 `{op:"preferences",value:{autoCheck:true,autoInstall:false,intervalHours:6}}` 로 선호를 저장한다. 생략한 필드는 현재 값을 유지하고, 간격은 1–168 정수를 받는다. 저장은 설치를 뜻하지 않는다; 설치 후에는 사용자가 직접 재시작하기를 기다리며, 재시작 인터페이스를 스스로 호출하지 않는다.
 
-Electron 的 app.asar 本体必须用 `diskFs()` 读取；不要把普通 Node 自检通过当作 Electron 运行时通过。`npm run test:electron` 在临时目录内运行真实 Electron 测试，不改动安装或用户设置。
+Electron 의 app.asar 본체는 반드시 `diskFs()` 로 읽는다; 일반 Node 자체 점검 통과를 Electron 런타임 통과로 간주하지 않는다. `npm run test:electron` 은 임시 디렉터리 안에서 실제 Electron 테스트를 실행하며 설치나 사용자 설정을 바꾸지 않는다.
 
 <a id="installation"></a>
-## 12. 安装 / 更新失败：Agent 必读（1.6.47）
+## 12. 설치 / 업데이트 실패: Agent 필독(1.6.47)
 
-1. **先选入口，不把社区脚本称为官方方法**。首次安装：DSH 官方插件界面/市场确认框，或该实例的 `dsh plugin --profile <实际名称> add <固定版本TGZ URL>`。官方管理器维护 `dsh.bundle`；我们的索引、TGZ 和 `scripts/install.sh` / `scripts/install.ps1` 是社区内容。本项目没有供此流程使用的裸 npm 包名，不运行 `add dsh-purge`、`add dsh-purge-community` 或全局 npm 安装。已有 `dsh-purge`/独立面板时选社区安装器迁移，不能先卸载旧包。完整可复制命令见 [README](README.md#安装) 与 [安装指南](docs/INSTALLATION.md)。
-2. 读取目标 DSH 版本、可执行文件、`DSH_HOME`、profile，先确认已经初始化。旧 Desktop CLI 默认 `desktop`，独立 dsh CLI 的新壳及 CLI/Web 默认为 `web`，不能混用；不要下载另一套 npx 宿主来安装到当前桌面实例。先下载脚本到独立临时路径，审阅后 dry-run，再按已有授权执行。dry-run 只验证前置条件、下载与 SHA256，不安装依赖、不验证完整启动。正式安装会备份、调用官方 CLI、迁移旧包引用并验证磁盘版本；它可能修复解包桌面的 `app/runtime` 链接，Linux 可能准备用户宿主副本，并非完全不写宿主目录。脚本与 bootstrap 来自 master，SHA256 校验的对象是发行 TGZ，不能声称脚本也经过独立签名校验。不改提示词、权限、代理、更新偏好或其他插件；不要安装后自动 apply/restart。
-3. `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` 不是一律“发布太新”。若同时明确报 `@dsh-ops/bash-win32-x64@<版本> ... version not present in registry manifest`，先比较当前公开镜像与 npm 官方元数据。本版安装器仅对这一公开包、明确的公开镜像执行一次 scoped registry 重试；官方 name/version/time/integrity/tarball 不完整则停止。其余依赖保持原源，不改变全局设置。
-4. 市场 JSON 首次安装失败时插件尚未加载，插件运行时无法修复宿主安装器。先让用户选择 npm 官方源，或用独立安装入口。不要承诺“升级插件就能让旧宿主市场自动重试”；换 tgz 仍会触发宿主锁文件校验。
-5. 真实的发布时间不足、integrity/trust 错误、私有源、未知错误：保持失败，保留日志与快照；不要设 minimumReleaseAge=0、trustLockfile，也不要删锁文件、全局清缓存、修改全局 npm 源或把所有错误都归为镜像问题。GitHub `UND_ERR_DESTROYED` 是独立的网络线索，不能承诺换 npm 源会解决。
-6. 失败时查看返回的 backup_id，确认 package.json/锁文件/安装状态。需要恢复时走 `rollback <id>`，保留当前用户内容。不能把失败说成安装成功；不能自动重启。公开 issue 只附脱敏错误，不上传配置、凭证、提示词或完整备份。
-7. 版本核对以 package.json / release-notes 为准。README.md 与 README.zh-CN.md 必须一致，维护文档不能再停在 1.2.0/1.3.0。安装器测试与完整 Windows DSH 界面/宿主补丁验收分开记录，不混为“全部 Windows 功能已验证”。
+1. **먼저 진입점을 고르고, 커뮤니티 스크립트를 공식 방법이라 부르지 않는다**. 최초 설치: DSH 공식 플러그인 인터페이스/마켓 확인 대화상자, 또는 해당 인스턴스의 `dsh plugin --profile <실제 이름> add <고정 버전TGZ URL>`. 공식 관리자는 `dsh.bundle` 을 관리한다; 우리의 인덱스, TGZ, `scripts/install.sh` / `scripts/install.ps1` 은 커뮤니티 산출물이다. 이 프로젝트에는 이 흐름에 쓸 bare npm 패키지 이름이 없으므로 `add dsh-purge`, `add dsh-purge-community`, 전역 npm 설치를 실행하지 않는다. 이미 `dsh-purge`/독립 패널이 있으면 커뮤니티 설치기로 마이그레이션하며, 먼저 기존 패키지를 제거해서는 안 된다. 복사 가능한 전체 명령은 [README](README.md#installation) 와 [설치 안내](docs/INSTALLATION.md) 에 있다.
+2. 대상 DSH 버전, 실행 파일, `DSH_HOME`, profile 을 읽고 이미 초기화되었는지 먼저 확인한다. 옛 Desktop CLI 기본은 `desktop`, 독립 dsh CLI 가 붙은 새 셸과 CLI/Web 기본은 `web` 이며 섞어 쓸 수 없다; 다른 npx 호스트를 내려받아 현재 데스크톱 인스턴스에 설치하지 않는다. 먼저 스크립트를 별도 임시 경로에 내려받고, 검토한 뒤 dry-run 하고, 이미 받은 권한 범위에서 실행한다. dry-run 은 사전 조건, 다운로드, SHA256 만 검증하며 의존성을 설치하지 않고 전체 기동도 검증하지 않는다. 정식 설치 는 백업하고, 공식 CLI 를 호출하고, 옛 패키지 참조를 마이그레이션하고, 디스크 버전을 검증한다; 언팩된 데스크톱의 `app/runtime` 링크를 고칠 수 있고, Linux 에서는 사용자 호스트 사본을 준비할 수 있어 호스트 디렉터리에 전혀 쓰지 않는 것은 아니다. 스크립트와 bootstrap 은 master 에서 오며, SHA256 검증 대상은 릴리스 TGZ 이므로 스크립트까지 별도 서명 검증을 거쳤다고 주장하지 않는다. 프롬프트, 권한, 프록시, 업데이트 선호, 다른 플러그인은 바꾸지 않는다; 설치 후 자동 apply/restart 금지.
+3. `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` 이 항상 "배포가 너무 새롭다"는 뜻은 아니다. 동시에 `@dsh-ops/bash-win32-x64@<버전> ... version not present in registry manifest` 가 명확히 나오면, 현재 공개 미러와 npm 공식 메타데이터를 먼저 비교한다. 이 버전의 설치기는 이 공개 패키지, 명확한 공개 미러에 대해서만 scoped registry 재시도를 한 번 수행한다; 공식 name/version/time/integrity/tarball 이 불완전하면 중단한다. 나머지 의존성은 원래 소스를 유지하고 전역 설정을 바꾸지 않는다.
+4. 마켓 JSON 최초 설치가 실패하면 플러그인이 아직 로드되지 않았으므로 플러그인 런타임이 호스트 설치기를 고칠 수 없다. 사용자가 npm 공식 소스를 고르게 하거나 독립 설치 진입점을 쓴다. "플러그인을 업그레이드하면 옛 호스트 마켓이 자동으로 재시도한다"고 약속하지 않는다; tgz 를 바꿔도 호스트 잠금 파일 검증이 다시 걸린다.
+5. 실제 배포 시각 미달, integrity/trust 오류, 사설 소스, 알 수 없는 오류: 실패로 유지하고 로그와 스냅샷을 보존한다; minimumReleaseAge=0 이나 trustLockfile 을 설정하지 않고, 잠금 파일 삭제, 전역 캐시 삭제, 전역 npm 소스 변경, 모든 오류를 미러 문제로 돌리는 것도 하지 않는다. GitHub `UND_ERR_DESTROYED` 는 별개의 네트워크 단서이며, npm 소스를 바꾸면 해결된다고 장담하지 않는다.
+6. 실패하면 반환된 backup_id 를 보고 package.json/잠금 파일/설치 상태를 확인한다. 복원이 필요하면 `rollback <id>` 로 진행하고 현재 사용자 내용을 보존한다. 실패를 설치 성공이라고 말하지 않는다; 자동 재시작도 없다. 공개 issue 에는 민감정보를 제거한 오류만 첨부하고, 설정, 자격 증명, 프롬프트, 전체 백업을 업로드하지 않는다.
+7. 버전 대조는 package.json / release-notes 를 기준으로 한다. README.md 는 영문 한 벌만 유지하며(별도 언어 사본을 두지 않는다), 유지보수 문서가 1.2.0/1.3.0 에 멈춰 있어서는 안 된다. 설치기 테스트와 전체 Windows DSH UI/호스트 패치 검수는 따로 기록하고, "모든 Windows 기능 검증 완료"로 뭉뚱그리지 않는다.
 
-Linux CLI/Web 先按 README 下载脚本再运行；只有已进入仓库根目录时才可用 `sh scripts/install.sh`，默认选择当前 PATH 的 `node` / `dsh` 与 `web` profile，显式指定实例可用 `DSH_NODE` / `PURGE_DSH_CLI` / `DSH_HOME` / `--profile=名称`。系统 npm 宿主只读时准备用户副本，插件迁移成功后才激活 `~/.local/bin/dsh`；失败保留原入口，完整但未激活的副本供重试复用。入口被用户并发修改时停止，不覆盖。不要自行重启、修改系统目录权限或代理。卸载仅清理本 home 内插件目录及链接本身，外部源码/共享包保留。验收边界见 [PR #42 维护说明](docs/maintenance-pr-42.md)。
+Linux CLI/Web 는 README 대로 스크립트를 내려받은 뒤 실행한다; 저장소 루트에 들어와 있을 때만 `sh scripts/install.sh` 를 쓸 수 있고, 기본값은 현재 PATH 의 `node` / `dsh` 와 `web` profile 을 선택하며, 인스턴스를 명시하려면 `DSH_NODE` / `PURGE_DSH_CLI` / `DSH_HOME` / `--profile=이름` 을 쓴다. 시스템 npm 호스트가 읽기 전용이면 사용자 사본을 준비하고, 플러그인 마이그레이션이 성공한 뒤에야 `~/.local/bin/dsh` 를 활성화한다; 실패하면 원래 진입점을 유지하고, 완전하지만 활성화되지 않은 사본은 재시도에 재사용한다. 진입점이 사용자에 의해 동시에 수정되면 중단하고 덮어쓰지 않는다. 스스로 재시작하거나 시스템 디렉터리 권한·프록시를 바꾸지 않는다. 제거는 이 home 안의 플러그인 디렉터리와 링크 자체만 정리하며, 외부 소스/공유 패키지는 보존한다. 검수 경계는 [PR #42 유지보수 안내](docs/maintenance-pr-42.md) 를 본다.
 
-## 13. Windows Electron 安装验收（1.6.13）
+## 13. Windows Electron 설치 검수(1.6.13)
 
-Windows Desktop 的 exe 是 GUI 子系统。PowerShell 的 `& exe ...` 可能在子进程结束前返回，不能用它后面的 `$LASTEXITCODE` 推断已完成。安装器必须等待明确的进程对象、检查其真实 ExitCode、收集 UTF-8 输出后再清理 bootstrap。回归必须同时覆盖普通 Node 控制台进程与真正 GUI 子系统进程；只用 node.exe 模拟 Desktop 不够。
+Windows Desktop 의 exe 는 GUI 서브시스템이다. PowerShell 의 `& exe ...` 는 자식 프로세스가 끝나기 전에 반환할 수 있으므로, 그 뒤의 `$LASTEXITCODE` 로 완료 여부를 추론할 수 없다. 설치기는 명확한 프로세스 객체를 기다리고, 실제 ExitCode 를 확인하고, UTF-8 출력을 수집한 뒤에 bootstrap 을 정리해야 한다. 회귀는 일반 Node 콘솔 프로세스와 실제 GUI 서브시스템 프로세스를 모두 포함해야 한다; node.exe 만으로 Desktop 을 흉내내는 것은 충분하지 않다.
 
-`desktop` profile 由 Electron 应用初始化；普通 `--profile desktop --dump-config` 会报 managed exclusively，不能因此判断程序坏了，也不能手造“已接受协议/已登录”的记录。隔离实测明确设置 DSH_HOME 与独立 user-data-dir，不碰默认用户目录，不自动应用宿主补丁。界面/登录/完整补丁能力与安装、备份、回滚分别记录；遇到协议或登录确认交给用户决定。
+`desktop` profile 은 Electron 앱이 초기화한다; 일반 `--profile desktop --dump-config` 는 managed exclusively 를 보고하므로 그것으로 프로그램이 고장났다고 판단하지 않고, "약관 수락/로그인 완료" 기록을 손으로 만들지도 않는다. 격리 실측에서는 DSH_HOME 과 별도 user-data-dir 를 명확히 설정하고, 기본 사용자 디렉터리를 건드리지 않으며, 호스트 패치를 자동 적용하지 않는다. UI/로그인/전체 패치 능력과 설치, 백업, 롤백은 따로 기록한다; 약관이나 로그인 확인은 사용자에게 맡긴다.
 
-macOS 开发验收不能再复制同名 `.app` 后直接运行，也不能回退使用正式 DSH 可执行文件。使用命令行专用副本、独立测试标识和操作系统写入限制；完整安装/迁移/回滚方法与测试边界见 [隔离验收](docs/INSTALLATION.md#isolated-acceptance)。这条是维护者测试规则，不改变用户正常安装入口。
+macOS 개발 검수에서는 같은 이름의 `.app` 를 복사해 곧바로 실행할 수 없고, 정식 DSH 실행 파일로 되돌아가서도 안 된다. CLI 전용 사본, 별도 테스트 식별자, 운영체제 쓰기 제한을 쓴다; 전체 설치/마이그레이션/롤백 방법과 테스트 경계는 [격리 검수](docs/INSTALLATION.md#isolated-acceptance) 를 본다. 이 항목은 유지보수자 테스트 규칙이며 사용자의 정상 설치 진입점을 바꾸지 않는다.
 
-通用安装验收使用实际 CLI/pnpm 执行首次安装、旧包/旧别名迁移、升级、回滚及失败恢复，校验备份后追加的用户内容。`scripts/check-install-lifecycle-runtime.mjs` 必须由隔离 Electron 的 Node 模式执行，不能拿正式 DSH 或手写 profile 冒充；说明见 [PR #78 验收记录](docs/pr78-runtime-integrity.md)。报告需区分组件模拟、实际 CLI 事务、缓存复用和未测的 UI/宿主功能，不能以一种通过代替另一种。
+일반 설치 검수는 실제 CLI/pnpm 으로 최초 설치, 옛 패키지/옛 별칭 마이그레이션, 업그레이드, 롤백, 실패 복구를 수행하고, 백업 후 추가된 사용자 내용을 검증한다. `scripts/check-install-lifecycle-runtime.mjs` 는 격리 Electron 의 Node 모드로 실행해야 하며, 정식 DSH 나 손으로 쓴 profile 로 대신할 수 없다; 설명은 [PR #78 검수 기록](docs/pr78-runtime-integrity.md) 을 본다. 보고서는 컴포넌트 시뮬레이션, 실제 CLI 트랜잭션, 캐시 재사용, 미검증 UI/호스트 기능을 구분해야 하며, 하나가 통과했다고 다른 하나를 대신할 수 없다.
 
-PowerShell 5.1 读取 UTF-8 JSON/文档应使用 `Get-Content -Raw -Encoding UTF8`，不要把默认 ANSI 解码造成的中文乱码误判为安装包损坏。
+PowerShell 5.1 에서 UTF-8 JSON/문서를 읽을 때는 `Get-Content -Raw -Encoding UTF8` 을 쓰고, 기본 ANSI 디코딩으로 생긴 중국어 깨짐을 설치 패키지 손상으로 오판하지 않는다.
 
-## 14. Windows 换包与设置接口（1.6.13）
+## 14. Windows 패키지 교체와 설정 인터페이스(1.6.13)
 
-- issue #10 / PR #11：Windows 密封宿主的「应用」只写磁盘补丁并启动等待助手，**不定时退出 host、不杀 Electron、不自动重开**。提醒用户从系统托盘完整退出，确认换包完成后手动打开。不要把关闭窗口当成退出，也不要自行执行旧版重启脚本。
-- `/dsh-purge/status` 的 `asar_handoff.phase`：`starting` 只是启动请求；`ready` / `waiting_for_quit` 才证明助手运行过；`complete` 才表示保留原归档并完成换包。`failed` / `expired` / `helper_stopped` 要读取 `resources/app.asar.purge-handoff.json` 及同名 `.log` 排查，不把 `.rename-pending` 当成功。状态与日志只包含换包诊断，不要上传用户配置。
-- 归档备份为 `app.asar.purge-<token>.bak`，独立于 profile 快照；不覆盖已有备份。等待期间归档被官方更新替换会停止，必须重新应用新宿主。离线修复/恢复见维护文档。
-- 助手启动异常时还要看 `.json.broker.log`、`.json.launch.log` 和 `.json.launch.log.error`。Windows Electron 的 detached PowerShell 可静默退出；不能改回直接 detached spawn，也不能把 broker 退出码 0 当作助手已就绪。设置 `PURGE_ELECTRON_EXEC` 后运行 `node --test test/windows-electron-handoff.test.mjs` 验证真实 Electron 的父进程退出后交接。
-- issue #9：原生存在 `describe` / `replace` 的宿主不能注入 legacy `register`，否则特性探测型插件会读错存储。升级会逆向移除 #42 的精确旧模板，保留两处设置通知；未知改版停止并诊断，不能整份覆盖 settings 源码或迁移/清空用户 settings 文档。缺少现代 API 的老宿主保留原兼容接口。
-- 应用前逐文件备份有任一错误，停止写入，不能声称可回滚。Windows 实测必须验证打开的备份描述符已关闭、应用/还原字节一致；普通 Node/Linux 通过不足以证明 Windows 文件句柄正常。
+- issue #10 / PR #11: Windows 밀봉 호스트의 “적용”은 디스크 패치만 기록하고 대기 도우미를 실행하며, **host 를 예약 종료하지 않고 Electron 을 죽이지 않고 자동 재실행하지 않는다**. 사용자에게 시스템 트레이에서 완전히 종료하도록 알리고, 패키지 교체 완료를 확인한 뒤 직접 열게 한다. 창 닫기를 종료로 보지 않고, 옛 버전 재시작 스크립트도 직접 실행하지 않는다.
+- `/dsh-purge/status` 의 `asar_handoff.phase`: `starting` 은 시작 요청일 뿐이다; `ready` / `waiting_for_quit` 이어야 도우미가 실행된 것이고; `complete` 여야 원본 아카이브를 보존하고 패키지 교체를 마친 것이다. `failed` / `expired` / `helper_stopped` 는 `resources/app.asar.purge-handoff.json` 과 같은 이름의 `.log` 를 읽어 점검하고, `.rename-pending` 을 성공으로 보지 않는다. 상태와 로그에는 패키지 교체 진단만 담기므로 사용자 설정을 업로드하지 않는다.
+- 아카이브 백업은 `app.asar.purge-<token>.bak` 이며 profile 스냅샷과 별개다; 기존 백업을 덮어쓰지 않는다. 대기 중에 아카이브가 공식 업데이트로 교체되면 중단하므로 새 호스트에 다시 적용해야 한다. 오프라인 복구/복원은 유지보수 문서를 본다.
+- 도우미 기동이 비정상이면 `.json.broker.log`, `.json.launch.log`, `.json.launch.log.error` 도 본다. Windows Electron 의 detached PowerShell 은 조용히 종료될 수 있다; 직접 detached spawn 으로 되돌리지 않고, broker 종료 코드 0 을 도우미 준비 완료로 보지 않는다. `PURGE_ELECTRON_EXEC` 을 설정한 뒤 `node --test test/windows-electron-handoff.test.mjs` 를 실행해 실제 Electron 의 부모 프로세스 종료 후 인계를 검증한다.
+- issue #9: 네이티브로 `describe` / `replace` 가 있는 호스트에는 legacy `register` 를 주입할 수 없다. 그러면 기능 탐지형 플러그인이 저장소를 잘못 읽는다. 업그레이드는 #42 의 정확한 옛 템플릿을 역으로 제거하고 설정 알림 두 곳을 유지한다; 알 수 없는 개정에서는 중단하고 진단하며, settings 소스를 통째로 덮어쓰거나 사용자 settings 문서를 마이그레이션/비우지 않는다. 최신 API 가 없는 옛 호스트는 기존 호환 인터페이스를 유지한다.
+- 적용 전 파일별 백업에서 하나라도 오류가 나면 기록을 중단하며, 롤백 가능하다고 말하지 않는다. Windows 실측에서는 열어 둔 백업 디스크립터가 닫혔는지, 적용/되돌리기 바이트가 일치하는지 확인해야 한다; 일반 Node/Linux 통과만으로는 Windows 파일 핸들이 정상이라고 증명할 수 없다.
 
-## 15. 解包后无法再次安装（1.6.13）
+## 15. 언팩 후 다시 설치할 수 없음(1.6.13)
 
-若 CLI 报 app/runtime 下的 pnpm.mjs 不存在，检查当前安装的 app/runtime 链接。Windows junction 必须使用同 resources 目录下 runtime 的绝对目标，不能传相对的 `..\\runtime`。新安装器会保留旧错误链接后修复；现有真实目录或其他有效运行时冲突时停止，不删除目录内容。旧更新器尚未加载修复代码时，使用独立 Windows 安装入口安装 1.6.13，不要反复点更新、删锁文件或全局重装 pnpm。
+CLI 가 app/runtime 아래 pnpm.mjs 가 없다고 보고하면 현재 설치의 app/runtime 링크를 확인한다. Windows junction 은 같은 resources 디렉터리 아래 runtime 의 절대 대상을 써야 하며, 상대 경로 `..\\runtime` 를 넘길 수 없다. 새 설치기는 옛 잘못된 링크를 보존한 뒤 고친다; 기존 실제 디렉터리나 다른 유효 런타임이 충돌하면 중단하고 디렉터리 내용을 삭제하지 않는다. 옛 업데이터가 아직 수정 코드를 로드하지 않았으면 독립 Windows 설치 진입점으로 1.6.13 을 설치하고, 업데이트를 반복 클릭하거나 잠금 파일을 지우거나 pnpm 을 전역 재설치하지 않는다.
 
-验收顺序必须覆盖：密封宿主安装 → 应用补丁 → 完整退出换包 → 打开解包宿主 → 再次真实安装/升级 → 备份/回滚/重新升级。只在归档还在时测试升级，不能证明换包之后的 CLI 路径仍正确。对比当前提示词与 profile 配置，不能用旧快照覆盖用户后续修改。
+검수 순서는 밀봉 호스트 설치 → 패치 적용 → 완전 종료 후 패키지 교체 → 언팩 호스트 열기 → 다시 실제 설치/업그레이드 → 백업/롤백/재업그레이드를 반드시 포함한다. 아카이브가 남아 있을 때만 업그레이드를 테스트하면 패키지 교체 이후의 CLI 경로가 여전히 올바른지 증명할 수 없다. 현재 프롬프트와 profile 설정을 대조하고, 옛 스냅샷으로 사용자의 이후 수정을 덮어쓰지 않는다.
 
 
-## 16. 命令冲突与自检证据（1.6.13）
+## 16. 명령 충돌과 자체 점검 증거(1.6.13)
 
-同名命令由原插件保留。Purge 备用命令依次为 `/purge-community`、`/purge-rules`、`/purge-skills`、`/purge-rewind`；`status.commands` 可查看实际注册名称。备用名称也占用时只跳过该命令并报警，不覆盖他人命令，不影响其他命令、工具、提示词与 HTTP 接口。不要为恢复面板卸载用户的回退插件。
+같은 이름의 명령은 원본 플러그인이 유지한다. Purge 대체 명령은 차례로 `/purge-community`, `/purge-rules`, `/purge-skills`, `/purge-rewind` 이다; `status.commands` 로 실제 등록 이름을 볼 수 있다. 대체 이름까지 점유되어 있으면 해당 명령만 건너뛰고 경고하며, 다른 사람의 명령을 덮어쓰지 않고 다른 명령, 도구, 프롬프트, HTTP 인터페이스에 영향을 주지 않는다. 패널 복구를 위해 사용자의 폴백 플러그인을 제거하지 않는다.
 
-面板自检优先通过 `permissionPresets.defaultPreset` / `resolve()` 读取**未来会话的默认权限**；不代表每个已有会话的覆盖值。CLI 无法访问该服务时，仅将正确 permission 节点下完整的 YAML 字面量作为文件证据；不执行 `!!js`，不推测环境表达式、include 或未加载设置。文件证据与 runtime 来源分别标注。
+패널 자체 점검은 `permissionPresets.defaultPreset` / `resolve()` 로 **향후 세션의 기본 권한**을 우선 읽는다; 이미 있는 각 세션의 오버라이드 값을 뜻하지는 않는다. CLI 가 그 서비스에 접근할 수 없으면 올바른 permission 노드 아래의 완전한 YAML 리터럴만 파일 증거로 쓴다; `!!js` 를 실행하지 않고 환경 표현식, include, 로드되지 않은 설정을 추측하지 않는다. 파일 증거와 runtime 출처는 따로 표기한다.
 
-未显式设置不等于未生效：当前有效但未固定为 `inferred`；看不到实际值为 `unknown`。只有确认的权限不匹配或补丁错误为 `broken`。JSON/text 均仅在 `broken` 时退出码 1，其余为 0；自动化还应检查 `state`，不能把 0 当成“已全部证明”。不要改权限、删配置或重装以消除黄色项。
+명시적으로 설정되지 않은 것이 적용되지 않은 것은 아니다: 현재 유효하지만 고정되지 않은 상태는 `inferred`; 실제 값을 볼 수 없으면 `unknown` 이다. 확인된 권한 불일치나 패치 오류만 `broken` 이다. JSON/text 모두 `broken` 일 때만 종료 코드 1, 나머지는 0 이다; 자동화는 `state` 도 확인해야 하며 0 을 "전부 증명됨"으로 취급하지 않는다. 노란 항목을 없애려고 권한을 바꾸거나 설정을 지우거나 재설치하지 않는다.
 
-路由跟随 Cordis 的 webServer 子作用域注册和回收，不加入进程级轮询或固定超时假装 ready。只读状态不依赖 connection/session 列表。生命周期回归必须覆盖服务晚到、撤销/替换、父插件重载、卸载后不复活，以及真正 Desktop CommandRuntime 重名时其余工具和提示词仍注册。
+라우팅은 Cordis 의 webServer 하위 스코프 등록/해제를 따르며, 프로세스 수준 폴링이나 고정 타임아웃으로 ready 인 척하지 않는다. 읽기 전용 상태는 connection/session 목록에 의존하지 않는다. 생애주기 회귀는 서비스 지연 도착, 철회/교체, 상위 플러그인 재로드, 언로드 후 되살아나지 않음, 그리고 실제 Desktop CommandRuntime 과 이름이 겹칠 때 나머지 도구와 프롬프트가 여전히 등록되는지를 포함해야 한다.
 
-## 17. 独立安装器不能提前依赖 runtime 包（1.6.13）
+## 17. 독립 설치기는 runtime 패키지에 미리 의존할 수 없음(1.6.13)
 
-引导器解压 tgz 后直接执行 bin/community.js migrate，此时尚无 node_modules。CLI 顶层必须仅依赖随包模块和 Node 内建；自检等运行时依赖应在相应命令分支按需导入。1.6.11 将 yaml 经 selfcheck 提前引入，真实公开 Windows 入口失败，已转为预发布。不要在 bootstrap 阶段增加不受宿主控制的 npm install 来掩盖这一问题。
+부트스트래퍼는 tgz 를 푼 뒤 곧바로 bin/community.js migrate 를 실행하며, 이 시점에는 node_modules 가 없다. CLI 최상위는 패키지 동봉 모듈과 Node 내장에만 의존해야 한다; 자체 점검 같은 런타임 의존성은 해당 명령 분기에서 필요할 때 import 한다. 1.6.11 은 yaml 을 selfcheck 를 통해 미리 끌어와 실제 공개 Windows 진입점이 실패했고, 프리릴리스로 전환했다. 이 문제를 덮으려고 bootstrap 단계에 호스트가 통제하지 않는 npm install 을 추가하지 않는다.
 
-发布验收必须先对无依赖的真实解压包运行引导 CLI，再安装依赖验证插件入口。还要用候选 tgz 和实际 Desktop CLI 执行完整 bootstrapInstall，不得只用 mock bin/community.js 或先安装依赖的 smoke 代替。供应链校验、备份和不自动重启策略保持不变。
+릴리스 검수는 의존성이 없는 실제 언팩 패키지에서 먼저 부트스트랩 CLI 를 실행하고, 그 뒤 의존성을 설치해 플러그인 진입점을 검증해야 한다. 또한 후보 tgz 와 실제 Desktop CLI 로 전체 bootstrapInstall 을 수행해야 하며, mock bin/community.js 나 의존성을 먼저 설치한 smoke 로 대신할 수 없다. 공급망 검증, 백업, 자동 재시작 금지 정책은 그대로 유지한다.
 
-## 18. 旧自定义预设加载失败（1.6.13）
+## 18. 옛 사용자 정의 프리셋 로드 실패(1.6.13)
 
-DSH 0.2.1 的 `tool-subagent` 不再接受 `toolFilter`。不能只删除它：旧 deny 清单是子任务的工具策略，删除会改变行为。`presets-plugin` 通过 `preset-compat.js` 先生成私有 SHA256 备份，再将该策略转换为原生子预设和父工具的 `agentPreset` 引用。父会话仍有全部工具，子会话只排除原清单中的工具；`maxDepth`、人设、其他配置和 `!!js` 表达式保留。
+DSH 0.2.1 의 `tool-subagent` 는 더 이상 `toolFilter` 를 받지 않는다. 그것만 삭제할 수는 없다: 옛 deny 목록은 서브태스크의 도구 정책이므로 삭제하면 동작이 바뀐다. `presets-plugin` 은 `preset-compat.js` 로 먼저 비공개 SHA256 백업을 만들고, 그 정책을 네이티브 하위 프리셋과 상위 도구의 `agentPreset` 참조로 변환한다. 상위 세션은 여전히 모든 도구를 가지며, 하위 세션은 원래 목록의 도구만 제외한다; `maxDepth`, 페르소나, 기타 설정, `!!js` 표현식은 유지한다.
 
-转换发生在注册时，用户的 `agent.cordis.yml` / `preset.yml` 原始字节不改写，后续用户修改仍会在重新加载时生效。备份在 `$DSH_HOME/dsh-purge-community/preset-migrations/<id>-<hash>/`，包含原文件和校验清单，不上传公开仓库。设置页会多一个「无限制模式 · 子任务」辅助预设；主会话仍选「无限制模式」。
+변환은 등록 시점에 일어나며, 사용자의 `agent.cordis.yml` / `preset.yml` 원본 바이트는 다시 쓰지 않고, 이후 사용자 수정도 재로드 시 그대로 반영된다. 백업은 `$DSH_HOME/dsh-purge-community/preset-migrations/<id>-<hash>/` 에 원본 파일과 검증 매니페스트를 담아 두며 공개 저장소에 올리지 않는다. 설정 페이지에는 “무제한 모드 · 서브태스크” 보조 프리셋이 하나 추가된다; 주 세션은 여전히 “무제한 모드”를 고른다.
 
-当前自动迁移仅处理能逐项对应到原生工具行的单个 spawn deny 策略；未知工具、allow 策略、多个策略或已有独立子预设冲突时停止并诊断，不能静默放宽。注册 disposer 不代表成功，必须检查真实 registry.resolve 的 broken 字段。
+현재 자동 마이그레이션은 네이티브 도구 행에 하나씩 대응시킬 수 있는 단일 spawn deny 정책만 처리한다; 알 수 없는 도구, allow 정책, 여러 정책, 이미 존재하는 독립 하위 프리셋과의 충돌에서는 중단하고 진단하며, 조용히 완화하지 않는다. disposer 등록이 성공을 뜻하지 않으므로 실제 registry.resolve 의 broken 필드를 확인해야 한다.
 
-普通测试之外，用实际 Desktop Electron 运行 `test/desktop-presets.mjs`（`ELECTRON_RUN_AS_NODE=1`，`PURGE_TEST_HOST` 指向宿主的 `node_modules/@deepseek-ai`）。它在隔离目录复现旧错误、加载迁移后的父/子预设、创建空白 Agent 并核对真实工具可见性，不调用 LLM，不重启用户应用。可用 `PURGE_TEST_PRESET` 指定本机旧文件目录做私有验收，不能把该目录内容或用户提示词加入测试夹具。
+일반 테스트 외에 실제 Desktop Electron 으로 `test/desktop-presets.mjs` 를 실행한다(`ELECTRON_RUN_AS_NODE=1`, `PURGE_TEST_HOST` 는 호스트의 `node_modules/@deepseek-ai` 를 가리킨다). 격리 디렉터리에서 옛 오류를 재현하고, 마이그레이션된 상위/하위 프리셋을 로드하고, 빈 Agent 를 만들어 실제 도구 가시성을 확인하며, LLM 을 호출하지 않고 사용자 앱을 재시작하지 않는다. `PURGE_TEST_PRESET` 으로 이 PC 의 옛 파일 디렉터리를 지정해 비공개 검수를 할 수 있지만, 그 디렉터리 내용이나 사용자 프롬프트를 테스트 픽스처에 넣을 수 없다.
 
-回滚代码会恢复旧版注册行为，原始用户文件本来就未改写；它也会恢复旧版在新宿主上的加载问题。不可为了回滚覆盖用户之后修改的提示词或设置。备份损坏或不可写时停止迁移，不绕开备份。
+롤백 코드는 옛 등록 동작을 복원하며, 사용자 원본 파일은 애초에 다시 쓰지 않았다; 새 호스트에서 옛 버전의 로드 문제도 함께 되살아난다. 롤백을 이유로 사용자가 이후 수정한 프롬프트나 설정을 덮어쓸 수 없다. 백업이 손상되었거나 쓸 수 없으면 마이그레이션을 중단하고 백업을 우회하지 않는다.
 
 
-## 19. CLI 执行权限与运行入口证据（1.6.14）
+## 19. CLI 실행 권한과 실행 진입 증거(1.6.14)
 
-issue #20：重写已有文件必须保留普通 rwx 权限；0600 私有配置不能变成0644，0755 启动器不能丢执行位。原子写入与复制共用 `lib/atomic-files.js`，临时文件名唯一，写入、权限恢复或重命名失败时清理临时文件并抛错。CLI 修复必须先完成备份；已存在备份不覆盖。仅对已识别的官方 shell 启动器修复旧版丢失的执行位，按现有读取权限增加对应执行权限，不扩大读取/写入权限，不改任意用户脚本。
+issue #20: 기존 파일을 다시 쓸 때는 일반 rwx 권한을 유지해야 한다; 0600 사설 설정이 0644 가 되면 안 되고, 0755 실행기가 실행 비트를 잃어도 안 된다. 원자 쓰기와 복사는 `lib/atomic-files.js` 를 공유하며, 임시 파일 이름은 고유하고, 쓰기·권한 복원·이름 변경이 실패하면 임시 파일을 정리하고 오류를 던진다. CLI 수리는 반드시 백업을 먼저 완료한다; 이미 있는 백업은 덮어쓰지 않는다. 식별된 공식 shell 실행기에 대해서만 옛 버전이 잃은 실행 비트를 고치고, 현재 읽기 권한에 대응하는 실행 권한만 추가하며 읽기/쓰기 권한을 넓히지 않고 임의 사용자 스크립트를 바꾸지 않는다.
 
-issue #19：`purge-community host-status` 输出 `disk.archive_exists` / `disk.unpacked_exists` 与 `process.entry_layout` / `source` / `matches_target`。它只读目标安装；不会扫描其他设备、换包、退出或重启。state 为 `unknown_runtime` / `different_instance` / `unreadable` 时不得写成“已加载”或“未加载”。`archive_entry` / `unpacked_entry` 也只证明启动入口，不能证明随后改动的每个模块都重载。命令退出0仅代表报告生成成功，调用方必须读取state。完整命令行、环境变量、令牌不进入报告。
+issue #19: `purge-community host-status` 는 `disk.archive_exists` / `disk.unpacked_exists` 와 `process.entry_layout` / `source` / `matches_target` 를 출력한다. 대상 설치만 읽는다; 다른 장치를 스캔하거나 패키지를 교체하거나 종료/재시작하지 않는다. state 가 `unknown_runtime` / `different_instance` / `unreadable` 이면 "로드됨"이나 "로드되지 않음"으로 쓰면 안 된다. `archive_entry` / `unpacked_entry` 도 기동 진입점만 증명하며, 이후 바뀐 모든 모듈이 다시 로드되었다는 증명은 아니다. 명령이 0 으로 종료된 것은 보고서 생성 성공만 뜻하므로 호출자는 반드시 state 를 읽어야 한다. 전체 명령행, 환경 변수, 토큰은 보고서에 들어가지 않는다.
 
-在独立 CLI 调用时，没有宿主服务启动参数通常显示 unknown_runtime，这属于预期；可先明确 DSH_BASE 或 PURGE_DSH_CLI 选择目标安装，再对照正在运行服务的状态接口 `host_layout`。不要拿 CLI 自己的 PID 当成桌面服务 PID。
+독립 CLI 호출에서는 호스트 서비스 기동 인자가 없으면 보통 unknown_runtime 이 나오며 이는 정상이다; 먼저 DSH_BASE 나 PURGE_DSH_CLI 를 명확히 해 대상 설치를 고르고, 실행 중인 서비스의 상태 인터페이스 `host_layout` 과 대조한다. CLI 자신의 PID 를 데스크톱 서비스 PID 로 취급하지 않는다.
 
-1.6.18 起根因已定位并修复：`sealedAsarHandoff()` 先看 surface，Web GUI 触发应用时返回 null，导致走普通重启、归档不动。现在 `sealedDesktopHandoffAnySurface()` + `runningDesktopPid()` 让跨 surface 也能等桌面退出后换包；桌面没运行则返回 `needsDesktopApply`，不假装成功。决策由 `planApplyRestartAction()` 覆盖（sealed / cross-surface / manual / plain）。#19 以「1.6.18 修复」关闭，报告者复测后如有残留可重开。
+1.6.18 부터 근본 원인을 찾아 수정했다: `sealedAsarHandoff()` 가 surface 를 먼저 보는데, Web GUI 에서 적용을 트리거하면 null 이 반환되어 일반 재시작 경로로 빠지고 아카이브는 그대로였다. 이제 `sealedDesktopHandoffAnySurface()` + `runningDesktopPid()` 로 surface 가 달라도 데스크톱 종료를 기다려 패키지를 교체한다; 데스크톱이 실행 중이 아니면 `needsDesktopApply` 를 반환하고 성공한 척하지 않는다. 결정은 `planApplyRestartAction()` 이 담당한다(sealed / cross-surface / manual / plain). #19 는 “1.6.18 수정”으로 닫았고, 보고자가 재검증 후 잔여 문제가 있으면 다시 열 수 있다.
 
-## 20. 交互语义：等待回答与插话（1.6.25 / 1.6.26）
+## 20. 상호작용 의미: 답변 대기와 끼어들기(1.6.25 / 1.6.26)
 
-**等待回答（#89，1.6.25 起）**：`ask_user_question` 不再被硬压成 1 秒。现在只把 `-1`（无限等）收成 300 秒，模型传多少就等多少，不传则按原版默认 120 秒。旧安装里若还留着 `const timeout = 1; // [dsh-purge] ask_user_question never blocks a turn`，补丁带 `forbid` 标记，会判为未应用并在下次「应用」时**精确替换**；匹配不到保持原样并报 `pattern_not_found`。
+**답변 대기(#89, 1.6.25 부터)**: `ask_user_question` 은 더 이상 1초로 강제 압축되지 않는다. 이제 `-1`(무한 대기)만 300초로 줄이고, 모델이 넘긴 값만큼 기다리며, 넘기지 않으면 원본 기본값 120초다. 옛 설치에 `const timeout = 1; // [dsh-purge] ask_user_question never blocks a turn` 가 남아 있으면 그 패치는 `forbid` 표식을 가진 것으로 보아 미적용으로 판정하며, 다음 “적용”에서 **정확히 교체**한다; 매칭되지 않으면 그대로 두고 `pattern_not_found` 를 보고한다.
 
-**插话（#90，1.6.27 起）**：恢复 DSH 原生消息投递，迁移原版 1.1.69/1.1.71 与 fork 旧 #85/#86/#90。直接发送按 mode 区分 steer/queue；队列插话只转换仍在 next-turn 且正在运行的消息。已经在 next-step 的消息不移回下一轮；空闲时不重排队列；已经被消费的消息不重建。保留原生错误码，前端按既有协议对重复/过期请求收敛。
+**끼어들기(#90, 1.6.27 부터)**: DSH 네이티브 메시지 전달을 복원하고, 원본 1.1.69/1.1.71 과 fork 의 옛 #85/#86/#90 을 마이그레이션한다. 직접 전송은 mode 에 따라 steer/queue 로 갈린다; 대기열 끼어들기는 아직 next-turn 이면서 실행 중인 메시지만 변환한다. 이미 next-step 인 메시지는 다음 라운드로 되돌리지 않고, 유휴 상태에서는 대기열을 다시 넣지 않으며, 이미 소비된 메시지는 재생성하지 않는다. 네이티브 오류 코드를 유지하고, 프런트엔드는 기존 프로토콜대로 중복/만료 요청을 정리한다.
 
-1.6.26 的降级为 followup 会误撤回成功插话并打乱顺序，本版撤销该兜底。旧版迁移同时覆盖 controller 与 agent-loop，不只检查单个标记。未知改写保持原文件，报告 pattern_not_found；不要删用户参数或强写宿主来消除报错。
+1.6.26 의 followup 강등은 성공한 끼어들기를 잘못 철회하고 순서를 흐트러뜨리므로 이 버전에서 그 폴백을 철회한다. 옛 버전 마이그레이션은 controller 와 agent-loop 를 함께 다루며, 단일 표식만 확인하지 않는다. 알 수 없는 개정은 원본 파일을 유지하고 `pattern_not_found` 를 보고한다; 오류를 없애려고 사용자 인자를 지우거나 호스트를 강제로 쓰지 않는다.
 
-安装、应用和加载是三个不同阶段。安装不自动应用或重启；应用会备份并写磁盘，当前进程不热重载这些模块。用户方便时手动退出并重开后再确认真实界面。排查 #25 请提供 DSH/插件版本、系统、直接发送还是队列插话、单次还是重复点击、当前是否正在生成；不要索取整份配置、提示词、令牌或会话日志。
+설치, 적용, 로드는 서로 다른 세 단계다. 설치는 자동 적용이나 재시작을 하지 않는다; 적용은 백업하고 디스크에 쓰지만 현재 프로세스는 그 모듈을 핫 리로드하지 않는다. 사용자가 편할 때 직접 종료하고 재실행한 뒤 실제 UI 를 확인한다. #25 점검 시에는 DSH/플러그인 버전, 운영체제, 직접 전송인지 대기열 끼어들기인지, 한 번 클릭인지 반복 클릭인지, 현재 생성 중인지를 제공받는다; 전체 설정, 프롬프트, 토큰, 세션 로그를 요구하지 않는다.
 
-验证：`npm test` 包含真实方法运行、延迟投影重复请求、消息消费、队列顺序与旧版迁移测试。可设置 `PURGE_TEST_HOST` 指向本机只读 `@deepseek-ai` 目录，运行 `node --test test/steering-runtime.test.mjs` 对实际安装方法验收。该测试使用内存服务，不等于完整桌面或真实模型验收。详见 [插话维护说明](docs/steer-notes.md)。
+검증: `npm test` 는 실제 메서드 실행, 지연 프로젝션 중복 요청, 메시지 소비, 대기열 순서, 옛 버전 마이그레이션 테스트를 포함한다. `PURGE_TEST_HOST` 를 이 PC 의 읽기 전용 `@deepseek-ai` 디렉터리로 지정하고 `node --test test/steering-runtime.test.mjs` 를 실행해 실제 설치 메서드를 검수할 수 있다. 이 테스트는 메모리 서비스를 쓰므로 전체 데스크톱이나 실제 모델 검수와 같지 않다. 자세한 내용은 [끼어들기 유지보수 안내](docs/steer-notes.md) 를 본다.
 
-## 21. 多 profile 更新与源码 ZIP 校验
+## 21. 다중 profile 업데이트와 소스 ZIP 검증
 
-维护更新时以每个 profile 的实际包版本为准，不能把 `applied: true` 当成全部成功：需同时检查 `ok`、`hasUpdate`、`targets` 和错误。部分安装仍可能需要用户手动重启，但重启不能替代失败目标的重试。不要因此修改用户的更新开关、版本 pin、提示词或权限。
+업데이트를 유지보수할 때는 각 profile 의 실제 패키지 버전을 기준으로 하고, `applied: true` 를 전부 성공으로 보지 않는다: `ok`, `hasUpdate`, `targets` 와 오류를 함께 확인한다. 일부 설치는 여전히 사용자의 수동 재시작이 필요할 수 있지만, 재시작이 실패한 대상의 재시도를 대신할 수는 없다. 그렇다고 사용자의 업데이트 스위치, 버전 pin, 프롬프트, 권한을 바꾸지 않는다.
 
-上游 ZIP 固定完整 commit SHA，并对全部文件校验 Git blob 摘要；GitHub API 不可用／清单不完整则停止，不能跳过校验。正式 TGZ 的 SHA256SUMS 校验保持不变。诊断返回 unknown 时保留未知状态，不能称为全绿，也不要自动重装。
+업스트림 ZIP 은 전체 commit SHA 를 고정하고 모든 파일의 Git blob 다이제스트를 검증한다; GitHub API 를 쓸 수 없거나 매니페스트가 불완전하면 중단하며 검증을 건너뛸 수 없다. 정식 TGZ 의 SHA256SUMS 검증은 그대로 유지한다. 진단이 unknown 을 반환하면 미지 상태를 유지하고, 전부 초록이라고 하지 않으며 자동 재설치도 하지 않는다.
 
-审查与测试边界见 [更新维护说明](docs/maintenance-issues-27-30.md)。普通任务能力反馈需独立复现，不能用安装器测试通过代替模型质量对照。
+검토와 테스트 경계는 [업데이트 유지보수 안내](docs/maintenance-issues-27-30.md) 를 본다. 일반 작업 능력 피드백은 따로 재현해야 하며, 설치기 테스트 통과로 모델 품질 대조를 대신할 수 없다.
 
-## 22. 面板回滚与更新网络（1.6.29）
+## 22. 패널 롤백과 업데이트 네트워크(1.6.29)
 
-#34：回滚必须走 `.tgz` 安装，禁止对快照裸目录执行 add；后者会产生缺依赖的 link。安装命令退出 0 不足以成功，需在新进程检查依赖和插件入口。失败时恢复本次操作前的依赖图和清单，保留当前用户设置；发生并发修改则停止覆盖并提供恢复目录。不要拿旧更新器的目录回滚测试代替面板 Maintenance.rollback 的真实 CLI 测试。
+#34: 롤백은 반드시 `.tgz` 설치로 진행하고, 스냅샷 디렉터리에 그대로 add 하는 것은 금지한다; 후자는 의존성이 빠진 link 를 만든다. 설치 명령이 0 으로 종료된 것만으로는 성공이 아니며, 새 프로세스에서 의존성과 플러그인 진입점을 확인해야 한다. 실패하면 이번 작업 이전의 의존성 그래프와 매니페스트를 복원하고 현재 사용자 설정을 보존한다; 동시 수정이 있으면 덮어쓰기를 중단하고 복구 디렉터리를 제공한다. 옛 업데이터의 디렉터리 롤백 테스트로 패널 Maintenance.rollback 의 실제 CLI 테스트를 대신하지 않는다.
 
-#35：插件内所有更新请求共用 update-http。Token 从宿主的 GITHUB_TOKEN / GH_TOKEN 读取，仅发往 api.github.com，跨域不转发；代理优先 PURGE_HTTPS_PROXY，再 HTTPS_PROXY/HTTP_PROXY（支持小写），否则只读 Windows 静态系统代理；尊重 NO_PROXY。不改全局代理、不关证书校验、不改 Claude/SSH 网络。PAC/SOCKS 不支持时应明确提示；没有 token 仍可匿名，不要强迫用户提供密钥。不要把 token 或代理凭证写进公开 issue。
+#35: 플러그인 안의 모든 업데이트 요청은 update-http 를 공유한다. Token 은 호스트의 GITHUB_TOKEN / GH_TOKEN 에서 읽고 api.github.com 으로만 보내며, 교차 출처로 전달하지 않는다; 프록시는 PURGE_HTTPS_PROXY 를 우선하고, 다음 HTTPS_PROXY/HTTP_PROXY(소문자 지원), 없으면 Windows 정적 시스템 프록시만 읽는다; NO_PROXY 를 존중한다. 전역 프록시를 바꾸지 않고, 인증서 검증을 끄지 않고, Claude/SSH 네트워크를 바꾸지 않는다. PAC/SOCKS 를 지원하지 않으면 명확히 알린다; 토큰이 없어도 익명으로 쓸 수 있으므로 사용자에게 키를 강요하지 않는다. 토큰이나 프록시 자격 증명을 공개 issue 에 쓰지 않는다.
 
-错误区分额度耗尽、认证、资源不可用和网络超时；缓存/Atom 降级必须展示原因。环境设置需要由启动 DSH 的进程继承；不要为更新环境而擅自重启。独立 bootstrap 自包含下载器不属于插件内这层，不能声称所有入口都已继承。详见 [维护说明](docs/maintenance-issues-34-35.md)。
+오류는 할당량 소진, 인증, 리소스 불가, 네트워크 타임아웃으로 구분한다; 캐시/Atom 폴백은 반드시 이유를 표시한다. 환경 설정은 DSH 를 기동한 프로세스가 상속해야 한다; 환경을 갱신하려고 임의로 재시작하지 않는다. 독립 bootstrap 의 자체 포함 다운로더는 플러그인 안의 이 계층이 아니므로 모든 진입점이 상속한다고 말할 수 없다. 자세한 내용은 [유지보수 안내](docs/maintenance-issues-34-35.md) 를 본다.
 
-## 23. 嵌套布局自检（PR #33）
+## 23. 중첩 레이아웃 자체 점검(PR #33)
 
-安装根与组件根分开：`currentHost()` 保留实例定位语义，自检使用 `normalizeHostBase()` 检查固定嵌套布局。不要把全局 `findAiBase()` 当维护自检的兜底；裸 CLI 缺少目标信息时报告未知，要求指定 `DSH_BASE` / `PURGE_DSH_CLI`。错误路径不能静默换到另一份安装。
+설치 루트와 컴포넌트 루트를 분리한다: `currentHost()` 는 인스턴스 위치 판정 의미를 유지하고, 자체 점검은 `normalizeHostBase()` 로 고정된 중첩 레이아웃을 검사한다. 전역 `findAiBase()` 를 유지보수 자체 점검의 폴백으로 쓰지 않는다; 대상 정보가 없는 bare CLI 는 미지로 보고하고 `DSH_BASE` / `PURGE_DSH_CLI` 지정을 요구한다. 잘못된 경로에서 조용히 다른 설치로 옮겨가지 않는다.
 
-自检按原始条目计数，面板可合并显示组，数字不必强行一致。`missing_file` 不一律等于不适用；必需文件缺失保留分母并告警。`skipped` 只有明确的撤销迁移无需执行时才排除；未知和失败不能算成功。不得改用户权限或禁用功能来消除红黄项。测试需同时覆盖自检和同一实例的真实安装/回滚入口，详见 [维护说明](docs/maintenance-pr-33.md)。
+자체 점검은 원본 항목 기준으로 세고, 패널은 표시 그룹을 합칠 수 있으므로 숫자를 억지로 맞출 필요는 없다. `missing_file` 이 항상 해당 없음은 아니다; 필수 파일 누락은 분모를 유지한 채 경고한다. `skipped` 는 철회 마이그레이션이 실행될 필요가 없다고 명확할 때만 제외한다; 미지와 실패는 성공으로 셀 수 없다. 빨강/노랑 항목을 없애려고 사용자 권한을 바꾸거나 기능을 끄지 않는다. 테스트는 자체 점검과 같은 인스턴스의 실제 설치/롤백 진입점을 함께 포함해야 한다. 자세한 내용은 [유지보수 안내](docs/maintenance-pr-33.md) 를 본다.
 
-## 24. 默认预设诊断（1.6.31 / #38）
+## 24. 기본 프리셋 진단(1.6.31 / #38)
 
-#76 的 skipped 不能直接解释为失败或已完成。selfcheck 对当前 home 的预设做只读 YAML 检查；确认字面正文无需处理时标为 not_needed，并从必需分母排除。动态、损坏、重复或不可读配置保留 unknown；残留内容不匹配保持 broken。不执行 !!js，不读其他 profile 来代替当前文件，不改权限或反复应用来消除未知。补丁本体和用户文件不变。详见 [维护说明](docs/maintenance-issue-38.md)。
+#76 의 skipped 를 실패나 완료로 바로 해석할 수 없다. selfcheck 는 현재 home 의 프리셋에 대해 읽기 전용 YAML 검사를 한다; 리터럴 본문이 처리할 필요가 없다고 확인되면 not_needed 로 표시하고 필수 분모에서 제외한다. 동적이거나 손상되었거나 중복되었거나 읽을 수 없는 설정은 unknown 으로 두고; 잔여 내용이 일치하지 않으면 broken 을 유지한다. !!js 를 실행하지 않고, 현재 파일 대신 다른 profile 을 읽지 않으며, 미지를 없애려고 권한을 바꾸거나 반복 적용하지 않는다. 패치 본체와 사용자 파일은 그대로다. 자세한 내용은 [유지보수 안내](docs/maintenance-issue-38.md) 를 본다.
 
-## 25. 桌面归档诊断目标（1.6.32 / #40）
+## 25. 데스크톱 아카이브 진단 대상(1.6.32 / #40)
 
-status/selfcheck/diagnose 使用 `diagnosticHost` 统一检查当前安装的物理目录；`currentHost` 保留安装/启动定位语义。归档内启动路径仅映射到同一 Resources 下的 app 或 app.asar.unpacked，不能扫描别的安装来凑出绿色。部分或不可读的目标不能跳过，归档仍存在和权限差异继续提示。磁盘已应用不代表运行进程已加载；不因此自动重启、删归档或修改权限。复现和实际 HTTP handler 验收见 `npm run test:electron` 与 [维护说明](docs/maintenance-issue-40.md)。
+status/selfcheck/diagnose 는 `diagnosticHost` 로 현재 설치의 물리 디렉터리를 일관되게 검사한다; `currentHost` 는 설치/기동 위치 판정 의미를 유지한다. 아카이브 안의 기동 경로는 같은 Resources 아래 app 또는 app.asar.unpacked 로만 매핑하며, 초록을 만들려고 다른 설치를 스캔하지 않는다. 일부만 있거나 읽을 수 없는 대상은 건너뛰지 않고, 아카이브가 여전히 존재한다는 점과 권한 차이는 계속 알린다. 디스크에 적용되었다는 것이 실행 프로세스에 로드되었다는 뜻은 아니다; 그렇다고 자동 재시작하거나 아카이브를 지우거나 권한을 바꾸지 않는다. 재현과 실제 HTTP handler 검수는 `npm run test:electron` 과 [유지보수 안내](docs/maintenance-issue-40.md) 를 본다.
 
 
-## macOS #40：手动退出换包（1.6.35 起）
+## macOS #40: 수동 종료 후 패키지 교체(1.6.35 부터)
 
-- 「应用」写入磁盘后，确认 `host-status.handoff.phase` / 面板 `asar_handoff.phase`。`waiting_for_quit` 仅代表助手已就绪，不代表宿主已加载；请用户使用 ⌘Q 完整退出，确认 `complete` 后再由用户手动打开。不得自动退出或重开。
-- `not_scheduled` 是未安排，不是等待；`failed/expired/helper_stopped/unreadable` 必须展开 detail 排查；`archive_reappeared` 表示旧完成记录不能证明新归档，`backup_missing` 表示备份丢失。不得隐藏这些状态。
-- 终端诊断先定位同一安装与 profile。示例：`PURGE_DSH_CLI='/实际安装/Contents/Resources/app/dsh/node_modules/@deepseek-ai/dsh-desktop-host/lib/cli.js' purge-community host-status --profile desktop`；同样环境运行 `selfcheck --json`。不要照抄别人的路径；无实例证据就保持 unknown。仅为诊断 Desktop shell 不再需要额外伪造 DSH_SURFACE。
-- #71 完全未安装家族才是 na；已安装缺失、YAML 损坏或读取未知须继续排查。CLI 权限 unknown 应到对应运行实例面板核实，不能自动改权限。
-- 恢复步骤与收集字段见 [维护说明](docs/maintenance-issue-40.md)。不上传提示词、密钥、完整配置。
+- “적용”이 디스크에 기록된 뒤 `host-status.handoff.phase` / 패널 `asar_handoff.phase` 를 확인한다. `waiting_for_quit` 은 도우미가 준비되었다는 뜻일 뿐 호스트가 로드되었다는 뜻이 아니다; 사용자에게 ⌘Q 로 완전히 종료하도록 하고, `complete` 를 확인한 뒤 사용자가 직접 열게 한다. 자동 종료나 자동 재실행은 없다.
+- `not_scheduled` 는 예약되지 않음이지 대기가 아니다; `failed/expired/helper_stopped/unreadable` 은 반드시 detail 을 펼쳐 점검한다; `archive_reappeared` 는 옛 완료 기록으로 새 아카이브를 증명할 수 없다는 뜻이고, `backup_missing` 은 백업이 사라졌다는 뜻이다. 이런 상태를 숨기지 않는다.
+- 터미널 진단은 먼저 같은 설치와 profile 을 특정한다. 예: `PURGE_DSH_CLI='/실제설치/Contents/Resources/app/dsh/node_modules/@deepseek-ai/dsh-desktop-host/lib/cli.js' purge-community host-status --profile desktop`; 같은 환경에서 `selfcheck --json` 을 실행한다. 남의 경로를 그대로 베끼지 않는다; 인스턴스 증거가 없으면 unknown 을 유지한다. Desktop shell 진단만을 위해 DSH_SURFACE 를 추가로 위조할 필요는 이제 없다.
+- #71 은 해당 계열이 완전히 설치되지 않았을 때만 na 다; 설치되었는데 누락, YAML 손상, 읽기 미지이면 계속 점검한다. CLI 권한 unknown 은 해당 실행 인스턴스의 패널에서 확인하며, 권한을 자동으로 바꾸지 않는다.
+- 복구 절차와 수집 항목은 [유지보수 안내](docs/maintenance-issue-40.md) 를 본다. 프롬프트, 키, 전체 설정을 업로드하지 않는다.
 
-## 26. 拒绝检测 + 单次重试（1.6.34 起）
+## 26. 거부 감지 + 1회 재시도(1.6.34 부터)
 
-开关：`purge-community retry on|off`（默认 **off**，存在 `tuning.json` 的 `refusalRetry`）。
+스위치: `purge-community retry on|off`(기본 **off**, `tuning.json` 의 `refusalRetry` 에 존재).
 
-实现：插件在 `llm/stream` waterfall 上包一层，不改宿主、不改注入正文。
+구현: 플러그인이 `llm/stream` waterfall 에 한 겹 감싼다. 호스트를 바꾸지 않고 주입 본문도 바꾸지 않는다.
 
-1. 缓冲输出开头最多 400 字符（或遇到工具调用/结束块）；
-2. 命中拒绝特征 → 丢弃本次输出，在**系统提示尾部**追加一段加固语，重跑一次；
-3. 未命中 → 缓冲块原样吐出，之后流式透传，与未装钩子一致；
-4. 每次重试写 `audit.jsonl` 的 `refusal_retry`（只记长度与前 80 字符）。
+1. 출력 시작 부분을 최대 400자까지 버퍼링한다(또는 도구 호출/종료 블록을 만나면 중단);
+2. 거부 특징에 적중 → 이번 출력을 버리고 **시스템 프롬프트 꼬리**에 강화 문구를 덧붙여 한 번 다시 실행한다;
+3. 미적중 → 버퍼 블록을 그대로 내보내고, 이후 스트리밍으로 통과시킨다(훅을 설치하지 않은 것과 동일);
+4. 재시도마다 `audit.jsonl` 의 `refusal_retry` 에 기록한다(길이와 앞 80자만).
 
-只重试一次，避免死循环。排查拒绝率先看 `purge-community audit --limit 20` 有没有 `refusal_retry`，再决定是否调整 `tuning.injectPosition`。本层与 §20 的插话、§19 的换包互不影响。
+한 번만 재시도해 무한 루프를 피한다. 거부율을 점검할 때는 먼저 `purge-community audit --limit 20` 에 `refusal_retry` 가 있는지 보고, 그다음 `tuning.injectPosition` 조정 여부를 정한다. 이 계층은 §20 의 끼어들기, §19 의 패키지 교체와 서로 영향을 주지 않는다.
 
-## 1.6.38：慢网更新与审计属主
+## 1.6.38: 느린 네트워크 업데이트와 감사 소유자
 
-归档预算使用 `PURGE_DOWNLOAD_TIMEOUT_MS`（默认 180000，范围 30000–900000）；可选 `PURGE_GH_MIRROR` 仅传输社区 TGZ，官方摘要不可用就停止。容器 root home 需明确服务 UID/GID；不要扩大权限或改全局代理。完整步骤、变量及测试边界见 [维护说明](docs/maintenance-issues-44-47.md)。不自动重启。
+아카이브 예산은 `PURGE_DOWNLOAD_TIMEOUT_MS` 를 쓴다(기본 180000, 범위 30000–900000); 선택 사항인 `PURGE_GH_MIRROR` 는 커뮤니티 TGZ 만 전송하며 공식 다이제스트를 쓸 수 없으면 중단한다. 컨테이너 root home 은 서비스 UID/GID 를 명확히 해야 한다; 권한을 넓히거나 전역 프록시를 바꾸지 않는다. 전체 절차, 변수, 테스트 경계는 [유지보수 안내](docs/maintenance-issues-44-47.md) 를 본다. 자동 재시작은 없다.
 
-## 1.6.39：独立安装器下载诊断（#52）
+## 1.6.39: 독립 설치기 다운로드 진단(#52)
 
-`fetch failed` 不等于发行包未上传。独立安装器按 metadata / archive / checksum 输出失败阶段、当前官方域名、transport、attempt 和底层错误码；不要索取完整环境变量、代理地址、令牌或带签名的重定向 URL。瞬时连接错误和 408/429/500/502/503/504 最多两次 fetch，再尝试一次系统 curl，每次从原始官方 URL 重新开始。证书、来源、大小、SHA256、401/403/404 等永久错误停止；不要用关闭证书校验或跳过摘要来“解决”。
+`fetch failed` 는 릴리스 패키지가 업로드되지 않았다는 뜻이 아니다. 독립 설치기는 metadata / archive / checksum 단계별로 실패 단계, 현재 공식 도메인, transport, attempt, 저수준 오류 코드를 출력한다; 전체 환경 변수, 프록시 주소, 토큰, 서명된 리다이렉트 URL 을 요구하지 않는다. 일시적 연결 오류와 408/429/500/502/503/504 는 최대 두 번 fetch 하고, 그다음 시스템 curl 을 한 번 시도하며, 매번 원래 공식 URL 에서 다시 시작한다. 인증서, 출처, 크기, SHA256, 401/403/404 같은 영구 오류는 중단한다; 인증서 검증을 끄거나 다이제스트를 건너뛰어 "해결"하지 않는다.
 
-备用 curl 沿用当前进程环境，禁用 curlrc，逐跳校验官方 HTTPS 域名（443），不使用镜像，不修改代理，也不保证修复所有网络问题。Windows 使用 System32/curl.exe，macOS/Linux 使用 /usr/bin/curl；缺失会明确报错。它不继承插件内 update-http 的系统代理读取逻辑。归档总预算默认 180 秒，可用 PURGE_DOWNLOAD_TIMEOUT_MS 在 30000–900000 范围设置；版本信息与校验清单各 60 秒。仅下载恢复不代表安装完成，必须继续通过 SHA256、包身份及迁移验证。
+폴백 curl 은 현재 프로세스 환경을 따르고, curlrc 를 비활성화하고, 홉마다 공식 HTTPS 도메인(443)을 검증하며, 미러를 쓰지 않고, 프록시를 바꾸지 않고, 모든 네트워크 문제 해결을 보장하지 않는다. Windows 는 System32/curl.exe, macOS/Linux 는 /usr/bin/curl 을 쓴다; 없으면 명확히 오류를 낸다. 플러그인 안 update-http 의 시스템 프록시 읽기 로직은 상속하지 않는다. 아카이브 총 예산은 기본 180초이며 PURGE_DOWNLOAD_TIMEOUT_MS 로 30000–900000 범위에서 설정한다; 버전 정보와 검증 매니페스트는 각각 60초다. 다운로드만 복구된 것은 설치 완료가 아니므로 SHA256, 패키지 신원, 마이그레이션 검증을 계속 통과해야 한다.
 
-先让用户重新下载 install.sh/install.ps1，再执行 dry-run。仍失败时只收集系统/DSH 版本及脱敏的 `[download]` / `Release download failed` 行，区分 API、归档/CDN和校验清单，不擅自修改网络。安装前失败无须回滚，也不应动现有 profile。详见 [#52 维护说明](docs/maintenance-issue-52.md)。
+사용자에게 install.sh/install.ps1 을 다시 내려받게 한 뒤 dry-run 을 실행한다. 여전히 실패하면 시스템/DSH 버전과 민감정보를 제거한 `[download]` / `Release download failed` 줄만 수집해 API, 아카이브/CDN, 검증 매니페스트를 구분하고, 네트워크를 임의로 바꾸지 않는다. 설치 전 실패는 롤백이 필요 없고 기존 profile 도 건드리지 않는다. 자세한 내용은 [#52 유지보수 안내](docs/maintenance-issue-52.md) 를 본다.
 
-## 按预设排除提示词（1.6.40，#53）
+## 프리셋별 프롬프트 제외(1.6.40, #53)
 
-用户要求角色扮演、minimal 等预设不受 Purge 提示词影响时，先读当前 profile 的配置并备份，只在已有 `id: dsh-purge` 条目的 `config` 中加入 `excludePresets: [roleplay, minimal]`；不要用示例覆盖整份配置。默认 `[]` 保持旧行为。匹配实际预设 ID（忽略大小写、首尾空格），不是显示名称或子串。
+사용자가 역할극, minimal 등 프리셋이 Purge 프롬프트의 영향을 받지 않기를 요구하면, 먼저 현재 profile 의 설정을 읽고 백업한 뒤 이미 있는 `id: dsh-purge` 항목의 `config` 에만 `excludePresets: [roleplay, minimal]` 를 추가한다; 예시로 설정 전체를 덮어쓰지 않는다. 기본값 `[]` 는 기존 동작을 유지한다. 표시 이름이나 부분 문자열이 아니라 실제 프리셋 ID 로 매칭한다(대소문자·앞뒤 공백 무시).
 
-主提示、头尾段、能力说明、boost、probe、postPrompt、宿主兜底使用同一判定。被排除的装配保留其现有人设、工作区规则和工具；只清理 Purge 的段落及有来源记录的改写，不猜测删除用户文本。子 Agent 按自己的实际预设判断；缺少预设信息时，在非空排除列表下暂停注入，避免旧宿主无参兜底泄漏。可选 refusalRetry 在无法识别请求会话时也不追加提示。
+주 프롬프트, 머리/꼬리 섹션, 능력 설명, boost, probe, postPrompt, 호스트 폴백이 같은 판정을 쓴다. 제외된 조립은 기존 페르소나, 워크스페이스 규칙, 도구를 유지한다; Purge 의 섹션과 출처가 기록된 개정만 정리하고, 사용자 텍스트를 추측해 삭제하지 않는다. 서브에이전트는 자기 실제 프리셋으로 판정한다; 프리셋 정보가 없으면 비어 있지 않은 제외 목록에서는 주입을 멈춰 옛 호스트의 무인자 폴백 유출을 막는다. 선택 사항인 refusalRetry 도 요청 세션을 식별할 수 없으면 프롬프트를 덧붙이지 않는다.
 
-升级包不会自动改用户配置、应用补丁或重启。若要让旧宿主兜底识别会话，需要用户安排时间应用新版补丁并手动退出重开；无参旧调用在启用排除后会返回空。测试 standard → minimal → standard，并行 standard/roleplay，以及子 Agent；观察 `assemble.excluded` 的 preset/excluded/unknown。不要把“排除注入”称为“恢复原生权限”：全局补丁、已有部署配置和历史聊天均不会被撤销或删除。详情见 [维护说明](docs/maintenance-issue-53.md)。
+업그레이드 패키지는 사용자 설정을 자동으로 바꾸지 않고, 패치를 적용하지 않으며, 재시작하지 않는다. 옛 호스트 폴백이 세션을 식별하게 하려면 사용자가 시간을 내어 새 버전 패치를 적용하고 직접 종료 후 재실행해야 한다; 무인자 옛 호출은 제외를 켜면 빈 값을 반환한다. standard → minimal → standard, 병렬 standard/roleplay, 서브에이전트를 테스트하고, `assemble.excluded` 의 preset/excluded/unknown 을 관찰한다. "주입 제외"를 "원래 권한 복원"이라고 부르지 않는다: 전역 패치, 기존 배포 설정, 과거 대화는 철회되거나 삭제되지 않는다. 자세한 내용은 [유지보수 안내](docs/maintenance-issue-53.md) 를 본다.
 
-## 1.6.41：更新状态核对
+## 1.6.41: 업데이트 상태 대조
 
-运行版本与当前 profile 磁盘版本分开核对；旧 pendingVersion 不代表当前安装。未知版本或读取失败继续告警，安装失败不会被成功检查掩盖。旧版已卡住时先手动安装新版，由用户手动退出重开一次；不要删除设置、改更新开关或自动重启。详见 [状态迁移与测试说明](docs/maintenance-update-state.md)。
+실행 버전과 현재 profile 의 디스크 버전을 따로 대조한다; 옛 pendingVersion 은 현재 설치를 뜻하지 않는다. 미지 버전이나 읽기 실패는 계속 경고하고, 설치 실패가 성공 점검으로 가려지지 않는다. 옛 버전이 이미 멈춰 있으면 새 버전을 수동 설치하고 사용자가 직접 한 번 종료 후 재실행한다; 설정을 지우거나 업데이트 스위치를 바꾸거나 자동 재시작하지 않는다. 자세한 내용은 [상태 마이그레이션과 테스트 안내](docs/maintenance-update-state.md) 를 본다.
 
-## 1.6.42：设置与流诊断
+## 1.6.42: 설정과 스트림 진단
 
-`tuning_setting` 记录实际保存后的已知设置变化，旧事件历史保留。未知字段保留在配置中但不写入日志；重复保存不新增变更事件。不要以审计条目数推断功能是否启用。
+`tuning_setting` 은 실제로 저장된 뒤의 알려진 설정 변경을 기록하고, 옛 이벤트 이력은 보존한다. 미지 필드는 설정에 남기되 로그에는 쓰지 않는다; 같은 값 재저장은 변경 이벤트를 추가하지 않는다. 감사 항목 수로 기능 활성 여부를 추론하지 않는다.
 
-`refusal_retry_outcome` 的 text / tool_call / reasoning_only / empty 只表示传输形态，error / cancelled 表示失败或取消，不能据此宣称任务成功或内容质量。retry 设置在下一次请求读取；rewind 的前端可见性仍需重载。不要自动重启用户的 DSH。详情见 [维护说明](docs/maintenance-pr-58-61.md)。
+`refusal_retry_outcome` 의 text / tool_call / reasoning_only / empty 는 전송 형태만 뜻하고, error / cancelled 는 실패나 취소를 뜻하며, 이것으로 작업 성공이나 내용 품질을 주장할 수 없다. retry 설정은 다음 요청에서 읽힌다; rewind 의 프런트엔드 가시성은 여전히 재로드가 필요하다. 사용자의 DSH 를 자동 재시작하지 않는다. 자세한 내용은 [유지보수 안내](docs/maintenance-pr-58-61.md) 를 본다.
 
-## 27. 注入位置与强化段排序（1.6.43）
+## 27. 주입 위치와 강화 섹션 정렬(1.6.43)
 
-- 宿主 section 的 order 区间是 `-1000…10200`（persona-prefix 0、工具 1000–3100、DELIVERABLE 9000、STRUCTURED_OUTPUT 9900、WEB_SURFACE 10100、persona-suffix 10200）。低于 0 的 order 排在 persona 之前，**不能用 `GLOBAL_PROMPT_ORDER + n` 表示"尾部"**。
-- 本版：**boost 默认 `-50000`（最前）**，tail 注入 `10150`。实测同一组 6 条易拒请求：boost 在最前 0/6 首拒，放 9500 时 2/6 首拒（issue #76）。`inject tail|both` 只影响注入正文，不移动强化段。
-- A/B：写 `$DSH_HOME/dsh-purge/boost-order.json`（`{"order": 9500}`）或设 `PURGE_BOOST_ORDER`，改文件后开新会话即生效。优先级：环境变量 > 文件 > 默认。
-- 切换段位：`purge-community inject head|tail|both`（写 tuning + 记 `tuning_setting`，下一轮生效，不需要重启）。
-- 改排序属于"行为变更"：发布前应做真机 A/B（同一组易拒请求，比较 `refusal_retry` 次数与回答形态），不能只靠单测的 order 数字。
+- 호스트 section 의 order 범위는 `-1000…10200`(persona-prefix 0, 도구 1000–3100, DELIVERABLE 9000, STRUCTURED_OUTPUT 9900, WEB_SURFACE 10100, persona-suffix 10200)이다. 0 보다 작은 order 는 persona 앞에 오므로 **`GLOBAL_PROMPT_ORDER + n` 으로 "꼬리"를 표현할 수 없다**.
+- 이 버전: **boost 기본 `-50000`(맨 앞)**, tail 주입 `10150`. 같은 6건의 거부되기 쉬운 요청으로 실측했을 때 boost 가 맨 앞이면 0/6 첫 거부, 9500 에 두면 2/6 첫 거부였다(issue #76). `inject tail|both` 는 주입 본문에만 영향을 주고 강화 섹션은 옮기지 않는다.
+- A/B: `$DSH_HOME/dsh-purge/boost-order.json`(`{"order": 9500}`)을 쓰거나 `PURGE_BOOST_ORDER` 를 설정하고, 파일을 바꾼 뒤 새 세션을 열면 적용된다. 우선순위: 환경 변수 > 파일 > 기본값.
+- 섹션 위치 전환: `purge-community inject head|tail|both`(tuning 기록 + `tuning_setting` 감사, 다음 라운드에 적용, 재시작 불필요).
+- 정렬 변경은 "동작 변경"이다: 릴리스 전에 실제 기기 A/B(같은 거부되기 쉬운 요청 세트로 `refusal_retry` 횟수와 응답 형태 비교)를 해야 하며, 단위 테스트의 order 숫자만으로 판단하지 않는다.
 
-## 1.6.44：市场安装与旧包迁移
+## 1.6.44: 마켓 설치와 옛 패키지 마이그레이션
 
-市场重复安装拦截发生在插件加载前，不能靠修改插件运行时代码解决。旧版用户使用本仓库独立安装器迁移，不先卸载；保留数据目录、权限、更新偏好及提示词。安装后检查实际包入口、启用 bundle 和配置合成；失败恢复依赖树、清单与锁文件，不能把 CLI 退出 0 当作全部成功。已知旧包 `name` 引用精确迁移；未知 ID、手动 insert 或动态入口停止并报告，不删参数。回滚反向迁移已记录的包引用，保留后续配置值。说明和实际验收命令见 [市场迁移指南](docs/MARKET-MIGRATION.md)。第三方索引/市场 PR 待其发布，不自动重启。
+마켓 중복 설치 차단은 플러그인 로드 전에 일어나므로 플러그인 런타임 코드 수정으로는 해결되지 않는다. 옛 버전 사용자는 이 저장소의 독립 설치기로 마이그레이션하며 먼저 제거하지 않는다; 데이터 디렉터리, 권한, 업데이트 선호, 프롬프트를 보존한다. 설치 후 실제 패키지 진입점, 활성화된 bundle, 설정 합성을 확인한다; 실패하면 의존성 트리, 매니페스트, 잠금 파일을 복구하며 CLI 종료 0 을 전부 성공으로 보지 않는다. 알려진 옛 패키지 `name` 참조는 정확히 마이그레이션한다; 미지 ID, 수동 insert, 동적 진입점은 중단하고 보고하며 인자를 지우지 않는다. 롤백은 기록된 패키지 참조를 역방향 마이그레이션하고 이후 설정 값은 보존한다. 설명과 실제 검수 명령은 [마켓 마이그레이션 안내](docs/MARKET-MIGRATION.md) 를 본다. 서드파티 인덱스/마켓 PR 은 배포를 기다리며, 자동 재시작하지 않는다.
 
-## 1.6.45：应用失败诊断（#64）
+## 1.6.45: 적용 실패 진단(#64)
 
-不要把所有 `complete: false` 都归为 CMD 故障。按 `failed`、`host_written`、`hook_restore_failed`、`cli_repair` 与 `cmd_flash` 的明确结果逐项诊断；旧后端缺少字段时保留未知错误，不假定成功或提示词已写入。收集客户端发行名称、客户端和底层 DSH 版本、操作系统及脱敏错误，不索取完整配置或提示词。#63 的第三方宿主兼容性尚未确认，不能套用官方宿主结论。见 [维护说明](docs/maintenance-issues-63-64.md)。
+모든 `complete: false` 를 CMD 고장으로 분류하지 않는다. `failed`, `host_written`, `hook_restore_failed`, `cli_repair`, `cmd_flash` 의 명확한 결과별로 항목을 진단한다; 옛 백엔드에 필드가 없으면 미지 오류를 유지하고 성공이나 프롬프트 기록 완료를 가정하지 않는다. 클라이언트 릴리스 이름, 클라이언트와 기저 DSH 버전, 운영체제, 민감정보를 제거한 오류를 수집하고 전체 설정이나 프롬프트를 요구하지 않는다. #63 의 서드파티 호스트 호환성은 아직 확인되지 않았으므로 공식 호스트 결론을 적용할 수 없다. [유지보수 안내](docs/maintenance-issues-63-64.md) 를 본다.
 
-## 1.6.46：链接目标保护（#67）
+## 1.6.46: 링크 대상 보호(#67)
 
-Windows Electron 的递归删除可能进入 Junction。清理使用 `removeTreeNoFollowSync` / `removeTreeNoFollow`，不要回退到原生 recursive rm。旧运行进程仍会执行旧清理代码，因此受影响 Windows 版本应通过新版独立安装器升级；不要先触发旧面板更新或回滚。保留当前设置、外部依赖与可用备份；清理警告不代表安装验证失败，不能用部分删除的 checkpoint 回滚。已丢文件单独从可信来源或适当备份恢复，不假设 Purge 备份覆盖所有第三方数据。详情见 [#67 维护说明](docs/maintenance-issue-67.md)。
+Windows Electron 의 재귀 삭제는 Junction 으로 들어갈 수 있다. 정리는 `removeTreeNoFollowSync` / `removeTreeNoFollow` 를 쓰고, 네이티브 recursive rm 으로 되돌리지 않는다. 옛 실행 프로세스는 여전히 옛 정리 코드를 실행하므로, 영향을 받은 Windows 버전은 새 버전 독립 설치기로 업그레이드해야 한다; 먼저 옛 패널 업데이트나 롤백을 트리거하지 않는다. 현재 설정, 외부 의존성, 사용 가능한 백업을 보존한다; 정리 경고가 설치 검증 실패를 뜻하지는 않으며, 부분 삭제된 checkpoint 로 롤백할 수 없다. 이미 잃은 파일은 신뢰할 수 있는 출처나 적절한 백업에서 따로 복구하고, Purge 백업이 모든 서드파티 데이터를 포함한다고 가정하지 않는다. 자세한 내용은 [#67 유지보수 안내](docs/maintenance-issue-67.md) 를 본다.
 
-## 桌面壳入口诊断（1.6.47，#68）
+## 데스크톱 셸 진입점 진단(1.6.47, #68)
 
-`diagnose` 的 `desktop_entry` 与自检、应用使用相同解析器。优先所选物理 app 目录的 package.json/main；仅在无声明时使用唯一已知布局。`missing_entry`、`invalid_manifest`、`invalid_main`、`outside_app`、`not_file`、`unreadable_entry`、`ambiguous_entry` 都不能当作补丁已生效。不要删 main 字段、伪造 marker 或复制旧入口消除红点；核对安装文件与宿主版本，保留配置和原文件。已定位但锚点不匹配仍按原有漂移诊断处理。磁盘状态不证明当前进程已加载，不能自行重启用户 DSH。
+`diagnose` 의 `desktop_entry` 는 자체 점검, 적용과 같은 파서를 쓴다. 선택된 물리 app 디렉터리의 package.json/main 을 우선하고, 선언이 없을 때만 유일하게 알려진 레이아웃을 쓴다. `missing_entry`, `invalid_manifest`, `invalid_main`, `outside_app`, `not_file`, `unreadable_entry`, `ambiguous_entry` 는 모두 패치가 이미 적용되었다는 뜻으로 볼 수 없다. main 필드를 지우거나 marker 를 위조하거나 옛 진입점을 복사해 빨간 점을 없애지 않는다; 설치 파일과 호스트 버전을 대조하고 설정과 원본 파일을 보존한다. 위치는 찾았지만 앵커가 맞지 않으면 기존 드리프트 진단으로 처리한다. 디스크 상태가 현재 프로세스 로드를 증명하지 않으므로 사용자 DSH 를 임의로 재시작할 수 없다.
 
-## 1.6.48：正文保护与安装别名（#72 / #74）
+## 1.6.48: 본문 보호와 설치 별칭(#72 / #74)
 
-不要把用户正文包含模板标记当成默认值。自定义、手改、记录缺失或损坏的非空正文保留；仅精确匹配可证明来源的默认内容允许自动刷新。读取失败保留错误，不把失败当空文件。已丢内容只能从用户确认的稿件或备份恢复，不自动回滚整份配置。
+사용자 본문에 템플릿 표식이 포함되어 있다고 해서 기본값으로 보지 않는다. 사용자 정의·수동 편집·기록 누락·손상된 비어 있지 않은 본문은 보존한다; 출처를 증명할 수 있는 기본 내용과 정확히 일치할 때만 자동 갱신을 허용한다. 읽기 실패는 오류로 유지하고 실패를 빈 파일로 취급하지 않는다. 이미 잃은 내용은 사용자가 확인한 원고나 백업에서만 복구하며, 설정 전체를 자동 롤백하지 않는다.
 
-版本对账只读当前 profile 的启用入口及真实包身份，支持 `dsh-purge-community` 与 `dsh-purge` 别名；pnpm 的 YAML 从物理包目录解析。缺包、错误身份、多个不同副本继续报错；不要改名目录、删锁文件或清空 update-status.json 来消除告警。旧版对账失败会阻止自动安装，使用新版独立安装器原地升级，之后由用户手动重启。别名回滚保留原依赖名与用户后续编辑；回滚旧版会带回其旧缺陷。详见 [维护说明](docs/maintenance-issues-72-74.md)。
+버전 대조는 현재 profile 의 활성화된 진입점과 실제 패키지 신원만 읽고, `dsh-purge-community` 와 `dsh-purge` 별칭을 지원한다; pnpm 의 YAML 은 물리 패키지 디렉터리에서 해석한다. 패키지 누락, 잘못된 신원, 서로 다른 사본 여러 개는 계속 오류로 보고한다; 경고를 없애려고 디렉터리 이름을 바꾸거나 잠금 파일을 지우거나 update-status.json 을 비우지 않는다. 옛 버전의 대조 실패는 자동 설치를 막으므로 새 버전 독립 설치기로 제자리 업그레이드하고, 이후 사용자가 직접 재시작한다. 별칭 롤백은 원래 의존성 이름과 사용자의 이후 편집을 보존한다; 옛 버전 롤백은 그 옛 결함을 되살린다. 자세한 내용은 [유지보수 안내](docs/maintenance-issues-72-74.md) 를 본다.
 
-## PR #78：安装目标与架构运行时
+## PR #78: 설치 대상과 아키텍처 런타임
 
-目标应用使用显式路径和包结构校验；不要仅凭 `app.asar` 存在或名称含 DSH 判定为宿主。自定义位置先设置 `DSH_APP` / `DSH_EXE`，多个有效目标请让用户明确选择。不要遍历挂载卷或任意父目录，不要在目标校验失败后改用另一份应用。macOS 的 XML/二进制 plist 均经系统解析；无效字段、越界路径和符号链接保持报错，不用猜测的可执行文件消除错误。
+대상 앱은 명시적 경로와 패키지 구조 검증을 쓴다; `app.asar` 의 존재만으로, 또는 이름에 DSH 가 들어 있다는 것만으로 호스트로 판정하지 않는다. 사용자 지정 위치는 먼저 `DSH_APP` / `DSH_EXE` 를 설정하고, 유효한 대상이 여러 개면 사용자가 명확히 고르게 한다. 마운트된 볼륨이나 임의의 상위 디렉터리를 순회하지 않고, 대상 검증이 실패한 뒤 다른 앱으로 전환하지 않는다. macOS 의 XML/바이너리 plist 는 모두 시스템 파서로 처리한다; 무효 필드, 범위를 벗어난 경로, 심볼릭 링크는 오류로 유지하고, 추측한 실행 파일로 오류를 없애지 않는다.
 
-按实际运行进程的架构定位运行时。架构目录存在不等于 CLI 可以加载；需要实际执行 pnpm 和安装事务。已有有效链接或真实目录不能为迁就新布局被直接覆盖。测试必须使用带标记的新隔离副本；`scripts/check-architecture-runtime.mjs` 会调整测试副本的布局，只能用于一次性验收环境，不能对正式应用运行。具体证据和边界见 [PR #78 验收记录](docs/pr78-runtime-integrity.md)。
+런타임은 실제 실행 프로세스의 아키텍처로 찾는다. 아키텍처 디렉터리가 있다고 CLI 가 로드된다는 뜻은 아니며, 실제 pnpm 실행과 설치 트랜잭션이 필요하다. 이미 유효한 링크나 실제 디렉터리는 새 레이아웃에 맞추려고 직접 덮어쓸 수 없다. 테스트는 표식이 있는 새 격리 사본을 써야 한다; `scripts/check-architecture-runtime.mjs` 는 테스트 사본의 레이아웃을 조정하므로 일회성 검수 환경에만 쓸 수 있고 정식 앱에 실행할 수 없다. 구체적 증거와 경계는 [PR #78 검수 기록](docs/pr78-runtime-integrity.md) 를 본다.
 
-## 28. 不做公网门禁（1.6.52）
+## 28. 공인망 게이트를 두지 않는다(1.6.52)
 
-- 本 fork **没有**「目标解析到公网就拒绝」的门禁。上游 1.1.74–1.1.77 曾在 `agent/pre-step` 里塞「不行，这是严令禁止的」并清空本轮消息，本版已连判定逻辑一起删除。
-- 不要以「靶场限制」「公网门禁」为由恢复这段代码；需要限制范围由操作者自己声明，插件不替用户判断目标归属。
-- `lib/net-scope.js` 只剩白名单文件 API（`readAllowText` / `writeAllowText` / `normalizeAllowText`）与 `ownServerNote()`（空实现）；`test/no-region-gate.test.mjs` 会在有人重新引入安装器或 `严令禁止` 时直接失败。
-- 上游的 ReDoS 窗口扫描只为那个门禁服务，未采纳；`already queued` 的补丁改写与 pnpm postinstall 也未采纳，原因见 1.6.52 发行说明。
+- 이 fork 에는 “대상이 공인망으로 해석되면 거부” 게이트가 **없다**. 업스트림 1.1.74–1.1.77 은 `agent/pre-step` 에 “안 된다, 이것은 엄금한다”를 넣고 이번 라운드 메시지를 비웠는데, 이 버전은 판정 로직까지 함께 삭제했다.
+- “드릴 콘솔 제한”“공인망 게이트”를 이유로 이 코드를 되살리지 않는다; 범위 제한이 필요하면 운영자가 직접 선언하며, 플러그인이 사용자 대신 대상 소유권을 판단하지 않는다.
+- `lib/net-scope.js` 에는 화이트리스트 파일 API(`readAllowText` / `writeAllowText` / `normalizeAllowText`)와 `ownServerNote()`(빈 구현)만 남아 있다; `test/no-region-gate.test.mjs` 는 누군가 설치기를 다시 넣거나 “엄금한다”를 재도입하면 즉시 실패한다.
+- 업스트림의 ReDoS 윈도 스캔은 그 게이트만을 위한 것이라 채택하지 않았다; `already queued` 패치 개정과 pnpm postinstall 도 채택하지 않았으며 이유는 1.6.52 릴리스 노트에 있다.
 
-## 1.6.54：旧运行时链接与应用失败诊断（#79 / #77）
+## 1.6.54: 옛 런타임 링크와 적용 실패 진단(#79 / #77)
 
-升级遇到 `Desktop CLI runtime repair failed` 时，查看同一次响应的 `cli_repair`，不要断言用户没点应用。只有同一安装的 `app/runtime` 链接指向外层 `runtime`，且当前架构目录及 pnpm 加载器均解析在该运行时内，才备份链接并迁移。真实目录、其他活链接、越界与权限错误仍停止；不删除目标目录。创建/校验失败恢复原链接；恢复失败保留备份并显式报错。
+업그레이드 중 `Desktop CLI runtime repair failed` 를 만나면 같은 응답의 `cli_repair` 를 보고, 사용자가 적용을 누르지 않았다고 단정하지 않는다. 같은 설치의 `app/runtime` 링크가 바깥 `runtime` 을 가리키고, 현재 아키텍처 디렉터리와 pnpm 로더가 모두 그 런타임 안에서 해석될 때만 링크를 백업하고 마이그레이션한다. 실제 디렉터리, 다른 활성 링크, 범위 초과, 권한 오류는 계속 중단한다; 대상 디렉터리를 삭제하지 않는다. 생성/검증이 실패하면 원래 링크를 복원하고; 복원이 실패하면 백업을 보존하고 명시적으로 오류를 낸다.
 
-界面显示具体 reason、错误码、启动器错误与恢复结果，不上传整份响应、提示词或配置。用户仍报错时收集操作系统/架构、客户端发行名称/版本、插件实际运行版本、详细错误；预设消失需单独确认，不能仅凭总报错认定同源。不自动 apply 或重启。实际验证范围见 [#79 维护记录](docs/maintenance-issue-79.md)。
+UI 는 구체적 reason, 오류 코드, 런처 오류, 복구 결과를 표시하고, 응답 전체나 프롬프트, 설정을 업로드하지 않는다. 사용자가 여전히 오류를 보고하면 운영체제/아키텍처, 클라이언트 릴리스 이름/버전, 플러그인의 실제 실행 버전, 상세 오류를 수집한다; 프리셋이 사라진 것은 따로 확인해야 하며 전체 오류만으로 같은 원인이라 단정할 수 없다. 자동 apply 나 재시작은 없다. 실제 검증 범위는 [#79 유지보수 기록](docs/maintenance-issue-79.md) 를 본다.
 
-## 1.6.56：状态读取与缓存（#81 / #82 / #83）
+## 1.6.56: 상태 읽기와 캐시(#81 / #82 / #83)
 
-`读取失败: timeout` 表示本次请求未完成，不能据此判断宿主缺失、补丁为零或提示词丢失。先刷新，持续失败时收集操作系统/架构、DSH 发行名称和版本、插件运行版本、等待时间及脱敏错误。不要为消除错误卸载重装、删除配置或自动重启。缓存只在一次只读诊断内共享；下一次请求重新核对文件证据。真实 missing_file / unmatched / 错误仍需排查。性能与验收边界见 [维护记录](docs/maintenance-issues-81-83.md)。
+읽기 실패: timeout 은 이번 요청이 완료되지 않았다는 뜻이며, 이것으로 호스트 누락, 패치 0개, 프롬프트 소실을 판단할 수 없다. 먼저 새로고침하고, 계속 실패하면 운영체제/아키텍처, DSH 릴리스 이름과 버전, 플러그인 실행 버전, 대기 시간, 민감정보를 제거한 오류를 수집한다. 오류를 없애려고 제거 후 재설치하거나 설정을 지우거나 자동 재시작하지 않는다. 캐시는 한 번의 읽기 전용 진단 안에서만 공유한다; 다음 요청은 파일 증거를 다시 확인한다. 실제 missing_file / unmatched / 오류는 여전히 점검해야 한다. 성능과 검수 경계는 [유지보수 기록](docs/maintenance-issues-81-83.md) 를 본다.
 
-## 29. 逐文件补丁状态（1.6.58，#85）
+## 29. 파일별 패치 상태(1.6.58, #85)
 
-- `patchStatus` 仍按补丁聚合，但 `patchStatusDetail()` 会同时返回 `files[id] = [{key, path, status}]`，状态为 `applied|pending|skipped|unmatched|missing|unreadable`；接口字段名 `patch_files`。
-- 新状态 `partial`：只有声明了 `fileAllRequired: true` 的多文件补丁才会产生。含义是「至少一个**存在的**目标文件没命中，另一个已命中」。`patchStatusReady("partial")` 为 false，`patchDrift` 以 `partial_drift` 上报，自检计入 `partial` 并让所在层变成异常。
-- 没有 `fileAllRequired` 的老补丁保持原聚合行为：它们的目标文件可能随宿主版本增删（实测 #32/#36/#50/#62 在 rc.3 上各有一个目标逻辑已搬走），一律按部分命中会把真正的漂移淹掉。
-- 给某条补丁加这个标记前，先确认它的每个 `file` 在新版宿主里都必须落地；加完用 `diagnose` 确认真实宿主不再误报。
+- `patchStatus` 는 여전히 패치 단위로 집계하지만, `patchStatusDetail()` 가 `files[id] = [{key, path, status}]` 를 함께 반환하며 상태는 `applied|pending|skipped|unmatched|missing|unreadable` 이다; 인터페이스 필드명은 `patch_files`.
+- 새 상태 `partial`: `fileAllRequired: true` 를 선언한 다중 파일 패치에서만 생긴다. 의미는 “**존재하는** 대상 파일 중 최소 하나가 매칭되지 않았고 다른 하나는 매칭되었다”이다. `patchStatusReady("partial")` 는 false 이고, `patchDrift` 는 `partial_drift` 로 보고하며, 자체 점검은 `partial` 로 집계해 해당 계층을 이상으로 만든다.
+- `fileAllRequired` 가 없는 옛 패치는 기존 집계 동작을 유지한다: 그 대상 파일은 호스트 버전에 따라 늘거나 줄 수 있다(실측으로 #32/#36/#50/#62 는 rc.3 에서 각각 대상 로직 하나가 옮겨갔다). 전부 부분 매칭으로 처리하면 진짜 드리프트가 묻힌다.
+- 어떤 패치에 이 표식을 추가하기 전에, 그 각 `file` 이 새 호스트에서 반드시 자리를 잡아야 하는지 확인한다; 추가한 뒤 `diagnose` 로 실제 호스트가 더 이상 오탐하지 않는지 확인한다.
 
-## 30. `fileOptional` 与已知不适用目标（1.6.59）
+## 30. `fileOptional` 과 알려진 해당 없음 대상(1.6.59)
 
-- `fileOptional: ["key"]` 表示这个目标**在新版宿主里已不承载该行为**，不参与 `partial` 判定；它仍然逐文件出现在 `patchStatusDetail().files` 里，状态照实显示。
-- 加之前必须核对：目标文件是真没有这段逻辑，还是只是换了写法。说不清就不加。
-- 当前名单与依据：#32 `harness-dev-context`（`legacyParagraph` 匹配常量，改了会漏历史段落）、#36 `tool-fs`（措辞已由审批补丁写成 `Approval is auto-granted.`）、#62 `dsh-tools`（rc.3 把判断只留在 `types/index.js`）。#50 不是 optional，而是补了等价的"已达成"标记。
+- `fileOptional: ["key"]` 는 이 대상이 **새 호스트에서 이미 그 동작을 담당하지 않는다**는 뜻이며 `partial` 판정에 참여하지 않는다; 그래도 `patchStatusDetail().files` 에 파일별로 나타나고 상태는 사실대로 표시된다.
+- 추가하기 전에 반드시 확인한다: 대상 파일에 정말 그 로직이 없는지, 아니면 표기만 바뀐 것인지. 설명할 수 없으면 추가하지 않는다.
+- 현재 목록과 근거: #32 `harness-dev-context`(`legacyParagraph` 매칭 상수, 바꾸면 과거 단락이 누락된다), #36 `tool-fs`(문구가 이미 승인 패치에 의해 `Approval is auto-granted.` 로 바뀌었다), #62 `dsh-tools`(rc.3 이 판정을 `types/index.js` 에만 남겼다). #50 은 optional 이 아니라, 동등한 "달성됨" 표식을 추가한 것이다.
 
-## 1.6.60：缺目标异常与遗留维护锁（#86 / #87）
+## 1.6.60: 대상 누락 예외와 잔여 유지보수 잠금(#86 / #87)
 
-1.6.58–1.6.59 的 `detail is not defined` 是缺目标分支的异常，不能据此断言宿主版本不兼容。升级修复后继续检查具体 missing_file / partial / unknown，不隐藏真正缺失。
+1.6.58–1.6.59 의 `detail is not defined` 는 대상 누락 분기의 예외이며, 이것으로 호스트 버전 비호환을 단정할 수 없다. 업그레이드로 수정한 뒤 구체적 missing_file / partial / unknown 을 계속 점검하고, 실제 누락을 숨기지 않는다.
 
-维护锁不按超龄强删。新版通过非空互斥目录协调回收，并保留旧版识别的 maintenance.lock；确认进程已结束或 PID 被复用后才回收。活着的旧版长任务、跨机或不可读/无效锁继续阻止写入并给出诊断。丢锁时停止安装/回滚后续提交及 checkpoint 自动恢复，保留恢复目录，不能手工删除锁强行继续。
+유지보수 잠금은 초과 연령만으로 강제 삭제하지 않는다. 새 버전은 비어 있지 않은 상호 배제 디렉터리로 회수를 조정하고, 옛 버전이 인식하는 maintenance.lock 을 보존한다; 프로세스가 끝났거나 PID 가 재사용된 것이 확인된 뒤에만 회수한다. 살아 있는 옛 버전의 장기 작업, 다른 기기, 읽을 수 없거나 무효인 잠금은 계속 쓰기를 막고 진단을 제공한다. 잠금을 잃으면 설치/롤백의 이후 커밋과 checkpoint 자동 복구를 중단하고 복구 디렉터리를 보존하며, 잠금을 손으로 지워 강제로 진행할 수 없다.
 
-#89 的 Windows 助手退出故障已在受控 Job Object 环境重建，尚未确认报告者现场的启动/Job 机制，本版不宣称已修复。操作边界及脚本见 [维护记录](docs/maintenance-issues-86-89.md)。不自动 apply/restart，不修改提示词、配置或代理。
+#89 의 Windows 도우미 종료 고장은 통제된 Job Object 환경에서 재현했다. 보고자 현장의 기동/Job 메커니즘은 아직 확인되지 않았으므로 이 버전이 수정되었다고 주장하지 않는다. 작업 경계와 스크립트는 [유지보수 기록](docs/maintenance-issues-86-89.md) 를 본다. 자동 apply/restart 는 없고, 프롬프트, 설정, 프록시를 바꾸지 않는다.
 
 
-## 1.6.61：维护锁、子路径与更新通道
+## 1.6.61: 유지보수 잠금, 하위 경로, 업데이트 채널
 
-维护锁使用完整元数据原子发布；不按年龄删除，也不擅自清除旧版遗留的空/损坏锁。`LOCK_UNREADABLE` 表示归属暂时无法读取，`LOCK_LOST` 表示锁记录缺失/变化；两者都停止后续写入。安装已验证提交后的清理失败作为明确的 `cleanup_warnings` 返回，保留现场，不反向覆盖已提交安装。释放失败保留互斥门，仅同一进程记录的原释放操作可重试。
+유지보수 잠금은 전체 메타데이터를 원자적으로 게시한다; 나이로 삭제하지 않고, 옛 버전이 남긴 빈/손상 잠금을 임의로 지우지도 않는다. `LOCK_UNREADABLE` 은 소유권을 일시적으로 읽을 수 없다는 뜻이고, `LOCK_LOST` 는 잠금 기록이 사라졌거나 바뀌었다는 뜻이다; 둘 다 이후 쓰기를 중단한다. 검증된 커밋 이후의 정리 실패는 명시적 `cleanup_warnings` 로 반환하고 현장을 보존하며, 이미 커밋된 설치를 역방향으로 덮어쓰지 않는다. 해제 실패는 상호 배제 게이트를 유지하고, 같은 프로세스가 기록한 원래 해제 작업만 재시도할 수 있다.
 
-更新通道里的代理和 GitHub 密钥仅用于更新请求。留空继承已有更新环境，不等于强制直连；清除插件保存的密钥也不会删除外部环境变量。凭据保存到本机 `dsh-purge/update-channel.json`，不要提交或要求用户贴出。公开状态隐藏密钥和代理认证信息。配置损坏需报告，不能静默直连。SOCKS5 使用代理侧域名解析，TLS、来源限制和 SHA256 校验不变；不调整系统/模型代理。
+업데이트 채널의 프록시와 GitHub 키는 업데이트 요청에만 쓴다. 비워 두면 기존 업데이트 환경을 상속하며 강제 직결을 뜻하지 않는다; 플러그인이 저장한 키를 지워도 외부 환경 변수는 삭제되지 않는다. 자격 증명은 로컬 `dsh-purge/update-channel.json` 에 저장하며, 커밋하거나 사용자에게 붙여 달라고 요구하지 않는다. 공개 상태에서는 키와 프록시 인증 정보를 숨긴다. 설정이 손상되었으면 보고해야 하고 조용히 직결로 넘어가면 안 된다. SOCKS5 는 프록시 측 도메인 해석을 쓰고, TLS, 출처 제한, SHA256 검증은 그대로다; 시스템/모델 프록시를 조정하지 않는다.
 
-Web 子路径请求按实际插件脚本路径定位挂载点，根路径和桌面入口继续兼容。不为修复 404 扩大 Cookie 域或合并端口。预设恢复宿主原生技能目录发现，保留技能自身禁止模型调用的声明与用户自定义预设。未验证的第三方桌面、Cookie 修改、Windows 换包助手问题单独保持待确认，不据此宣称已修复。
+Web 하위 경로 요청은 실제 플러그인 스크립트 경로로 마운트 지점을 찾고, 루트 경로와 데스크톱 진입점은 계속 호환한다. 404 를 고치려고 Cookie 도메인을 넓히거나 포트를 합치지 않는다. 프리셋은 호스트 네이티브 스킬 디렉터리 탐색을 복원하고, 스킬 자체의 모델 호출 금지 선언과 사용자 정의 프리셋을 보존한다. 검증되지 않은 서드파티 데스크톱, Cookie 수정, Windows 패키지 교체 도우미 문제는 따로 확인 대기로 남기며, 그것으로 수정되었다고 주장하지 않는다.
 
-## 31. 讨论型 issue 不关闭（运维约定）
+## 31. 토론형 issue 는 닫지 않는다(운영 규약)
 
-- 用户自己发起的讨论、经验分享、提问帖（非 bug / 非重复诉求）**只回复，不关闭**。
-- 只有「已修复」「重复」「明确不在支持范围」的 bug/feature 才关闭，并在评论里写依据。
-- 关闭时若带说明，用 `gh issue close -c`；**纯评论**必须用 `gh issue comment --body/--body-file`，`-c` 在 comment 子命令上无效，会静默失败。
+- 사용자가 직접 시작한 토론, 경험 공유, 질문 글(bug 아님 / 중복 요구 아님)은 **답변만 하고 닫지 않는다**.
+- “이미 수정됨”“중복”“명확히 지원 범위 밖”인 bug/feature 만 닫고, 근거를 댓글로 적는다.
+- 닫을 때 설명을 붙이려면 `gh issue close -c` 를 쓰고; **순수 댓글**은 반드시 `gh issue comment --body/--body-file` 을 쓴다. `-c` 는 comment 하위 명령에서 동작하지 않고 조용히 실패한다.
 
-## 1.6.63：漂移判定（取自上游 1.1.83 通用部分）
+## 1.6.63: 드리프트 판정(업스트림 1.1.83 공용 부분에서 가져옴)
 
-- 目标文件存在、marker 不在、锚点全不中 → `drifted`（以前是 `skipped`，软成功、状态页假绿）。
-  `patchStatusReady("drifted")` 为 false，面板标「锚点漂移」，自检计入异常。
-- 自标记补丁（pattern 含 `[dsh-purge]`）与声明 `silentWhenMissing` 的补丁（#76）仍判 `skipped`。
-- `fileOptional` 的目标漂移不牵连整条补丁。
-- `ensureHostClean` 不再忽略 `pattern_not_found`。
-- 未取：NEXT 识别、allowBuilds/pnpm、cordis.patch 空 `[]`、子代理继承父预设（与 #53 契约冲突）、redteam 默认清理。
+- 대상 파일이 있고 marker 가 없고 앵커가 하나도 맞지 않음 → `drifted`(이전에는 `skipped`, 소프트 성공, 상태 페이지 거짓 초록).
+  `patchStatusReady("drifted")` 는 false 이고, 패널은 “앵커 드리프트”로 표시하며, 자체 점검은 이상으로 집계한다.
+- 자체 표식 패치(pattern 에 `[dsh-purge]` 포함)와 `silentWhenMissing` 을 선언한 패치(#76)는 여전히 `skipped` 로 판정한다.
+- `fileOptional` 대상의 드리프트는 패치 전체에 영향을 주지 않는다.
+- `ensureHostClean` 은 더 이상 `pattern_not_found` 를 무시하지 않는다.
+- 미채택: NEXT 인식, allowBuilds/pnpm, cordis.patch 빈 `[]`, 서브에이전트의 상위 프리셋 상속(#53 계약과 충돌), redteam 기본 정리.
 
-## 1.6.64：expect 命中数契约与能力审计
+## 1.6.64: expect 적중 수 계약과 능력 감사
 
-- `{ pattern, replace, expect: N }`：实际命中数不等于 N（含 0）时整条拒写，返回 `hitMismatch {patch_id, expected, actual, file}`；应用路径记为 `hit_mismatch:期望!=实际` 并计入未打上。
-- 真机探针 `test/expect-contract.test.mjs` 要求每个字面锚点在原始宿主（优先 `.dshpurge.bak`）里恰好出现一次；新增锚点必须收窄或声明 expect。
-- complete 模式注入段改为排在官方段之前（`[...dshPurgeSections, ...dshPurgeRest]`），旧宿主有专门迁移 pattern。
-- 审计口径：与上游 1.1.83 同名对比，72 条替换逐字一致，6 条为加强；上游独有的 #18/#19 是上下文保护（非闸），不启用。
+- `{ pattern, replace, expect: N }`: 실제 적중 수가 N 과 다르면(0 포함) 해당 항목 전체를 쓰지 않고 `hitMismatch {patch_id, expected, actual, file}` 를 반환한다; 적용 경로는 `hit_mismatch:기대!=실제` 로 기록하고 미적용에 포함한다.
+- 실기 프로브 `test/expect-contract.test.mjs` 는 각 리터럴 앵커가 원본 호스트(우선 `.dshpurge.bak`)에 정확히 한 번 나타날 것을 요구한다; 새 앵커는 좁히거나 expect 를 선언해야 한다.
+- complete 모드 주입 섹션은 공식 섹션 앞에 오도록 바꿨다(`[...dshPurgeSections, ...dshPurgeRest]`), 옛 호스트에는 전용 마이그레이션 pattern 이 있다.
+- 감사 기준: 업스트림 1.1.83 과 같은 이름으로 대조해 72개 대체가 글자 단위로 일치하고 6개는 강화였다; 업스트림 고유의 #18/#19 는 컨텍스트 보호(게이트 아님)라 활성화하지 않는다.
 
-## DSH Store 提交与复检
+## DSH Store 제출과 재검토
 
-主插件申请必须使用 `GitHub repository: https://github.com/kingcharleslzy-ai/dsh-purge`、`Plugin path (optional): .`，不能因为表单提示根目录留空就省略。保留 `packages/purge-panel`；它不是本次安装目标。兼容信息从根 manifest 的 `dsh.compatibility` 读取，不把 README 范围或相邻版本推断写成精确 `compatible`。rc.4 和 alpha.2 尚为 unknown；rc.5 的作者声明依据与局限见 [DSH Store 说明](docs/DSH-STORE.md)。不得伪造固定 Commit 的 install/start/uninstall/rollback 证据，不为市场准入删功能或隐藏宿主维护能力。
+주 플러그인 신청은 반드시 `GitHub repository: https://github.com/wnduddld0513/dsh-purge-kr`, `Plugin path (optional): .` 를 써야 하며, 폼이 루트 디렉터리를 비워 두라고 해서 생략할 수 없다. `packages/purge-panel` 은 유지한다; 그것은 이번 설치 대상이 아니다. 호환 정보는 루트 manifest 의 `dsh.compatibility` 에서 읽고, README 범위나 인접 버전을 정확한 `compatible` 로 추론해 쓰지 않는다. rc.4 와 alpha.2 는 아직 unknown 이며; rc.5 의 작성자 선언 근거와 한계는 [DSH Store 안내](docs/DSH-STORE.md) 를 본다. 고정 Commit 의 install/start/uninstall/rollback 증거를 위조할 수 없고, 마켓 승인을 받으려고 기능을 지우거나 호스트 유지보수 능력을 숨기지 않는다.
 
-## 1.6.65：默认关闭的可选补丁（#18/#19）
+## 1.6.65: 기본 꺼짐 선택형 패치(#18/#19)
 
-- 一条补丁可以声明 `disabledByDefault: true`；只有 `tuning.json` 的 `extraPatches` 列出它的 id 时才打。
-- CLI：`purge-community patches [list|enable 18,19|disable 19]`；开关后要**点一次「应用」**再退出重开。
-- 状态：`disabled` 表示"按选择关闭"，`patchStatusReady("disabled")` 为 true，自检计入明确不适用，不报红。
-- apply 汇总同口径：`disabled` 属于软通过（`ALWAYS_SOFT_STATUSES`），不计入 `failed`，于是面板不会在每次「应用」后报「N 项处理失败（#18,#19）」。真失败（写入错误、锚点不中）仍然计入。
-- 当前 opt-in 名单：
-  - **#18 重复调用提醒关闭**：收益是工具循环提示词干净；代价是模型可能在同一处反复试错而没人提醒。
-  - **#19 工具结果修剪关闭**：收益是能读到完整工具输出（大文件/长日志/完整 diff）；代价是上下文线性膨胀、更快触顶、更贵、长会话更容易答非所问。
-  - 两者都**不解锁任何门禁**，只改上下文管理；默认关闭。
+- 패치는 `disabledByDefault: true` 를 선언할 수 있고, `tuning.json` 의 `extraPatches` 가 그 id 를 나열할 때만 적용된다.
+- CLI: `purge-community patches [list|enable 18,19|disable 19]`; 스위치를 바꾼 뒤에는 **“적용”을 한 번 누르고** 종료 후 재실행한다.
+- 상태: `disabled` 는 "선택에 따라 꺼짐"을 뜻하고, `patchStatusReady("disabled")` 는 true 이며, 자체 점검은 명확한 해당 없음으로 집계하고 빨강을 표시하지 않는다.
+- apply 요약도 같은 기준: `disabled` 는 소프트 통과(`ALWAYS_SOFT_STATUSES`)이며 `failed` 에 포함되지 않으므로, 패널이 “적용”할 때마다 “N개 처리 실패(#18,#19)”를 보고하지 않는다. 진짜 실패(쓰기 오류, 앵커 미스매치)는 여전히 포함된다.
+- 현재 opt-in 목록:
+  - **#18 중복 호출 알림 끄기**: 이점은 도구 루프 프롬프트가 깨끗해진다는 것; 대가는 모델이 같은 지점에서 반복 시행착오를 해도 알려 주는 사람이 없다는 것.
+  - **#19 도구 결과 트리밍 끄기**: 이점은 전체 도구 출력(대용량 파일/장문 로그/전체 diff)을 읽을 수 있다는 것; 대가는 컨텍스트가 선형으로 팽창하고 더 빨리 한계에 닿고 더 비싸지며 긴 세션에서 동문서답이 늘어난다는 것.
+  - 둘 다 **어떤 게이트도 열지 않고** 컨텍스트 관리만 바꾼다; 기본은 꺼짐.
 
-## 1.6.66：当前宿主诊断与 Windows 换包错误
+## 1.6.66: 현재 호스트 진단과 Windows 패키지 교체 오류
 
-桌面进程仅带 `--updated` 时，只读诊断可检查该进程经包身份校验的 `resourcesPath`；不要据此扩大安装/写入目标，也不要全局扫描其他安装。运行入口可由 Electron `app.getAppPath()` 提供，但磁盘存在 `app` 不等于当前进程已加载。未知、跨实例、读取失败和真实缺失继续报出。
+데스크톱 프로세스가 `--updated` 만 가지고 있으면, 읽기 전용 진단은 그 프로세스의 패키지 신원 검증을 거친 `resourcesPath` 를 검사할 수 있다; 이것으로 설치/쓰기 대상을 넓히거나 다른 설치를 전역 스캔하지 않는다. 실행 진입점은 Electron `app.getAppPath()` 로 제공될 수 있지만, 디스크에 `app` 이 있다고 현재 프로세스에 로드되었다는 뜻은 아니다. 미지, 교차 인스턴스, 읽기 실패, 실제 누락은 계속 보고한다.
 
-Windows 换包仅对真实共享/锁冲突继续等待；其他错误保留 `detail`、HRESULT 和可用的 Win32 错误码。不要关闭 Defender、覆盖原备份或用自动重启掩盖失败。#118 的特定卡住原因仍待用户脱敏日志确认；本次不代表 #102 的 NEXT 桌面发行版完整兼容。详见 [验证记录](docs/host-diagnostics-118-119.md)。
+Windows 패키지 교체는 실제 공유/잠금 충돌에 대해서만 계속 기다린다; 다른 오류는 `detail`, HRESULT, 사용 가능한 Win32 오류 코드를 보존한다. Defender 를 끄거나 원본 백업을 덮어쓰거나 자동 재시작으로 실패를 가리지 않는다. #118 의 특정 멈춤 원인은 아직 사용자의 민감정보 제거 로그 확인을 기다린다; 이번 작업이 #102 의 NEXT 데스크톱 릴리스 완전 호환을 뜻하지 않는다. 자세한 내용은 [검증 기록](docs/host-diagnostics-118-119.md) 를 본다.
 
-## 1.6.67：更新网络与凭据保护（#122）
+## 1.6.67: 업데이트 네트워크와 자격 증명 보호(#122)
 
-更新代理探测失败不代表 GitHub 已收到请求。Windows 先只读 `reg.exe`，必要时再用 PowerShell；不得自行关闭 TUN、改系统代理或忽略失败走直连。连接重置等瞬时错误最多重试两次，仍受原超时限制；HTTP、认证、证书、权限与 SHA256 错误要保留并处理根因。
+업데이트 프록시 탐지가 실패했다고 GitHub 가 요청을 받았다는 뜻은 아니다. Windows 는 먼저 `reg.exe` 로 읽기 전용 조회를 하고, 필요할 때만 PowerShell 을 쓴다; 임의로 TUN 을 끄거나 시스템 프록시를 바꾸거나 실패를 무시하고 직결로 넘어갈 수 없다. 연결 재설정 같은 일시적 오류는 최대 두 번 재시도하며 원래 타임아웃 제한을 따른다; HTTP, 인증, 인증서, 권한, SHA256 오류는 보존하고 근본 원인을 처리한다.
 
-`update-channel.json` 的 token 不回显、不写日志；Windows 首次读取旧文件时收紧 DACL，新凭据在受保护文件创建后才写入。保护失败就报错，不降级成明文宽权限文件。不要删除旧配置、关 Defender 或加白名单来让更新显示成功。行为偏好、提示词、规则和宿主补丁不变，安装后不要自动重启。实测入口与限制见 [#122 维护说明](docs/update-channel-122.md)。
+`update-channel.json` 의 token 은 다시 표시하지 않고 로그에도 쓰지 않는다; Windows 에서 옛 파일을 처음 읽을 때 DACL 을 좁히고, 새 자격 증명은 보호된 파일이 만들어진 뒤에 쓴다. 보호가 실패하면 오류를 내고 평문 광범위 권한 파일로 격하하지 않는다. 업데이트가 성공으로 표시되게 하려고 옛 설정을 지우거나 Defender 를 끄거나 화이트리스트를 추가하지 않는다. 동작 선호, 프롬프트, 규칙, 호스트 패치는 그대로이며, 설치 후 자동 재시작하지 않는다. 실측 진입점과 한계는 [#122 유지보수 안내](docs/update-channel-122.md) 를 본다.
 
-## 1.6.69：恢复完整性、解包边界与生命周期
+## 1.6.69: 복원 무결성, 언팩 경계, 생애주기
 
-- 空或非普通文件的宿主源码备份不能覆盖原文件；错误包含备份路径，失败备份保留。不要删除备份来伪造恢复成功。原子替换失败保留当前文件，权限沿用现有文件（目标不存在时沿用备份权限）。
-- ASAR 条目、数据范围或链接目标异常，解包整体失败并保留正在使用的安装。不得忽略越界条目、吞掉链接创建错误后继续换包。资源路径必须同时通过文字路径与真实链接目标校验。
-- 插件停用/卸载后旧回调失效，仅清理该实例自己的全局入口。旧实例不能清掉新实例的回调；用户提示词、配置及宿主磁盘补丁不因此删除。
-- `apply` / `revert` 的错误以非零退出码报告；先检查输出与失败项目，重启不能修复失败写入。主动关闭的可选项按既有口径处理，不新增误报。
-- 列表性能优化保持详情字段、顺序和既有长度上限；统计读取失败要保留错误，不能显示为零。
-- 维护者使用 `PURGE_ELECTRON_EXEC=<隔离运行时> npm run test:maintenance:electron`；没有显式运行时就停止，不回退到正式应用。验收范围及 Windows Defender 阻碍见 [维护记录](docs/maintenance-integrity-169.md)。本次维护者已知悉该阻碍并明确要求发布，发行说明保留未通过的实机验收；不能把此决定说成问题已修复，也不能关防护、加白名单或把组件测试说成完整通过。
+- 비어 있거나 일반 파일이 아닌 호스트 소스 백업은 원본 파일을 덮어쓸 수 없다; 오류에 백업 경로가 포함되며 실패한 백업은 보존한다. 복원 성공을 조작하려고 백업을 삭제하지 않는다. 원자 교체가 실패하면 현재 파일을 유지하고, 권한은 기존 파일을 따르며(대상이 없으면 백업 권한을 따른다).
+- ASAR 엔트리, 데이터 범위, 링크 대상이 비정상이면 언팩 전체를 실패로 처리하고 사용 중인 설치를 보존한다. 범위를 벗어난 엔트리를 무시하거나 링크 생성 오류를 삼키고 패키지 교체를 계속할 수 없다. 리소스 경로는 문자 경로와 실제 링크 대상 검증을 모두 통과해야 한다.
+- 플러그인이 비활성화/제거된 뒤 옛 콜백은 무효이며, 그 인스턴스 자신의 전역 진입점만 정리한다. 옛 인스턴스가 새 인스턴스의 콜백을 지울 수 없다; 사용자 프롬프트, 설정, 호스트 디스크 패치는 이 때문에 삭제되지 않는다.
+- `apply` / `revert` 의 오류는 0 이 아닌 종료 코드로 보고한다; 먼저 출력과 실패 항목을 확인하고, 재시작이 실패한 쓰기를 고칠 수는 없다. 사용자가 끈 선택형 항목은 기존 기준대로 처리하고 오탐을 새로 만들지 않는다.
+- 목록 성능 최적화는 상세 필드, 순서, 기존 길이 상한을 유지한다; 통계 읽기 실패는 오류를 보존해야 하고 0 으로 표시할 수 없다.
+- 유지보수자는 `PURGE_ELECTRON_EXEC=<격리 런타임> npm run test:maintenance:electron` 을 쓴다; 명시적 런타임이 없으면 중단하고 정식 앱으로 폴백하지 않는다. 검수 범위와 Windows Defender 장애는 [유지보수 기록](docs/maintenance-integrity-169.md) 를 본다. 이번 유지보수자는 그 장애를 인지한 상태에서 릴리스를 명시적으로 요구했고, 릴리스 노트에 통과하지 못한 실기 검수를 남긴다; 이 결정을 문제가 수정되었다고 말할 수 없고, 보호 기능을 끄거나 화이트리스트를 추가하거나 컴포넌트 테스트를 전체 통과라고 말할 수도 없다.
 
+## 1.6.70: 호스트 진단과 모듈 마이그레이션
 
-## 1.6.70：宿主诊断与模块迁移
+인스턴스 진단은 명시적 대상이나 현재 프로세스의 진입점에서만 증거를 수집하며, 다른 설치를 스캔해 대신 채우지 않는다. 비교 대상이 특정되지 않으면 unknown_target 으로 보고한다; 컴포넌트 누락이나 읽기 실패는 원래 증거를 보존한다. NEXT 는 독립적이고 아직 검증되지 않은 호스트 계열이므로, 패키지 이름이 인식되었다거나 디스크 쓰기가 성공했다는 사실을 완전한 실행 호환 증명으로 삼을 수 없다.
 
-实例诊断统一从显式目标或当前进程入口取证，不扫描另一份安装顶替。未定位比较目标时报告 unknown_target；缺失组件、读取失败保留原证据。NEXT 是独立、未验证宿主家族，不能将包名识别或磁盘写入成功当成完整运行兼容证明。
+유지보수 모듈 분리는 기존 export 를 유지한다; 옛 settings 마이그레이션에 필요한 함수와 상수는 호출하는 쪽으로 함께 옮겼고, 알 수 없는 템플릿은 여전히 중단하고 보고한다. #127 의 httpServer/webServer 계약 문제는 병합하지 않았다; 검증되지 않은 서비스 별칭을 임의로 추가하거나 HTTP 접속이 가능하다는 것을 컨슈머의 정상 기동으로 간주할 수 없다.
 
-维护模块拆分保留既有导出；旧 settings 迁移所需函数与常量随调用方移动，未知模板仍停止并报告。#127 的 httpServer/webServer 契约问题未合入；不得自行添加未经验证的服务别名或将 HTTP 可连接当作消费者正常启动。
+업그레이드는 기존 설치 진입점과 데이터 디렉터리를 따르며, 사용자 프롬프트, 설정, 프리셋을 바꾸지 않고 자동 재시작하지 않는다. Windows 4090 에서 Defender 가 전체 롤백을 막는 문제는 여전히 해결되지 않았다; [릴리스 범위](docs/releases/1.6.70.md)를 본다.
 
-升级沿用既有安装入口与数据目录，不改用户提示词、设置或预设，不自动重启。受影响 Windows 4090 的 Defender 完整回滚阻断仍未解决，见 [发行范围](docs/releases/1.6.70.md)。
+## 1.6.71: 진단 카운트와 0.2.2-rc.1 경계
 
-## 1.6.71：诊断计数与 0.2.2-rc.1 边界
+진단 패널은 drifted, disabled, partial 을 명확히 표시하고 카운트를 0 으로 초기화한다; 분모와 적용 수의 차이를 전부 기능 고장으로 해석하지 않고, 경고를 없애려고 드리프트를 성공으로 바꾸지 않는다. 디스크 집계와 그룹 집계는 서로 다른 표시 단위를 쓴다.
 
-诊断面板明确显示 drifted、disabled 和 partial，计数初始化为零；不要将分母与已应用数的差值全部解释为功能损坏，也不要将漂移改为成功来消除告警。磁盘汇总与分组汇总使用不同展示粒度。
+0.2.2-rc.1 은 아직 완전히 적응되지 않았다. 옛 패치 여섯 개 #14/#17/#60/#62/#67/#74 는 원래 정의를 유지하며 아직 수정되지 않았다. 네이티브 메시지 턴 계약 테스트는 통과했지만, 콜백에 messages 가 없는 예외는 여전히 드러나야 하며 오류를 삼키거나 입력을 버릴 수 없다. 실제 테스트 범위, 나머지 두 옛 앵커, 미확인 사항은 [진단 기록](docs/maintenance-022-diagnostics.md)을 본다. 패치를 자동 적용하거나 사용자 DSH 를 재시작하지 않는다.
 
-0.2.2-rc.1 仍未完整适配。六项旧补丁 #14/#17/#60/#62/#67/#74 保持原定义，尚未修复。原生消息回合契约测试通过，但回调缺少 messages 的异常仍应暴露，不可吞掉错误或丢弃输入。实际测试范围、另外两条旧锚点和未确认事项见 [诊断记录](docs/maintenance-022-diagnostics.md)。不得自动应用补丁或重启用户 DSH。
+## 1.6.74: 메시지 보존과 일반 프롬프트 오류
 
-## 1.6.74：保留消息与普通提示词错误
+`PURGE_INVALID_PRE_STEP_DECISION` 은 콜백이 반환한 메시지 필드가 계약을 벗어났다는 뜻이므로 그 콜백을 찾아야 한다; 빈 배열을 채워 이번 라운드가 완료되었다고 가장하지 않고, 거부된 작업을 다시 재생하지도 않는다. 프롬프트 조립 실패는 원래 오류를 보존하며, 빈 프롬프트를 보내거나 도구 목록을 비우지 않는다. 제공자가 복구되면 정상 요청을 다시 시도할 수 있다.
 
-`PURGE_INVALID_PRE_STEP_DECISION` 表示回调返回的消息字段不符合契约，应定位该回调；不要补空数组假装本轮完成，也不要重放被拒绝的任务。提示词装配失败保留原始错误，不发送空提示词或清空工具列表。提供方恢复后可再次尝试正常请求。
+메시지/프롬프트 수정은 플러그인 실행 계층에서 데이터 무결성을 다룬다. 또한 #67 의 줄바꿈 이스케이프 오류를 고치고 알려진 손상 산출물만 마이그레이션하며, 기존 메시지 길이 조건은 바꾸지 않는다. 1.6.73 의 호스트 적응은 별개의 변경 묶음이며 여기의 검증 결론에 포함되지 않는다. 일반 프롬프트의 실제 모듈 테스트와 경계는 [테스트 기록](docs/native-input-integrity.md)을 본다. 사용자 설정을 바꾸지 않고, 자동 적용이나 재시작도 하지 않는다.
 
-消息/提示词修复在插件运行层处理数据完整性。另修正 #67 的换行转义错误，只迁移已知损坏产物，不改原有消息长度条件。1.6.73 的宿主适配属于另一批改动，不属于这里的验证结论。普通提示词实际模块测试及边界见 [测试记录](docs/native-input-integrity.md)。不改用户配置，不自动应用或重启。
+### 옛 진입점 가져오기 실패: 먼저 위치를 찾고, 설정은 보존하며 마이그레이션한다
 
-### 旧入口导入失败：先定位，再保留配置迁移
+`Cannot find package 'dsh-purge'` 만으로 중복 설치라고 판정할 수 없다. 먼저 오류를 낸 프로세스가 쓰는 home/profile, bundle, 의존성 별칭, 실제 패키지 manifest/링크를 확인한다. 옛 의존성 별칭이 커뮤니티 패키지로 해석되고 있다면 여전히 지원된다.
 
-`Cannot find package 'dsh-purge'` 不能单凭包名判定重复安装。先核实报错进程使用的 home/profile、bundle、依赖别名和实际包 manifest/链接。旧依赖别名解析到社区包时仍受支持。
+수동 insert 와 bundle 진입점이 실제로 중복이라고 확인되면, 백업 후 원래 config 를 필드 단위로 보존하고(프롬프트, 미지 항목, false, 빈 문자열 포함) 같은 ID 의 설정 오버라이드로 병합한다; 충돌하거나 의미를 알 수 없는 진입점 필드는 먼저 멈추고 확인한다. 확인된 중복 항목만 제거하고 insert 안의 다른 플러그인은 보존하며, `dsh-purge-redteam` 같은 접두사로 일괄 삭제하지 않고 이미 설치된 bundle 을 편집하지 않는다. 원래 오류가 남아 있으면 전체 예외를 기준으로 점검하고, 계속 무작정 삭제하지 않는다. 자세한 내용은 [설치 문제 해결](docs/INSTALLATION.md#시작-경고-cannot-find-package-dsh-purge)을 본다.
 
-如已确认手工 insert 与 bundle 入口重复，备份后逐字段保留原 config（包括提示词、未知项、false 和空字符串），合并为同 ID 配置覆盖；冲突或未知入口字段先停下核对。只移除那个已确认重复项，保留 insert 中其他插件，不按 dsh-purge-redteam 等前缀删除，不编辑已安装 bundle。原生错误仍在时按完整异常排查，不继续盲删。详见 [安装排障](docs/INSTALLATION.md#启动告警cannot-find-package-dsh-purge)。
+아카이브 예시는 원문을 보존하고 경고를 바로 옆에 둔다. `check:docs` 는 YAML 펜스 예시를 파싱해 인용부호가 있거나 없는 옛 모듈 진입점을 식별하고, 일반 프롬프트나 오류 문구를 설치 진입점으로 취급하지 않는다; 대응 회귀는 `test/install-docs.test.mjs` 이다. 마이그레이션/롤백 설정 보존 회귀는 `test/market-migration.test.mjs` 이며 둘 다 기본 테스트에 포함된다.
 
-归档示例保留原文并紧邻警告。`check:docs` 解析 YAML fenced 示例，识别有/无引号的旧模块入口，不把普通提示词和报错文字当成安装入口；对应回归为 `test/install-docs.test.mjs`。迁移/回滚配置保留回归为 `test/market-migration.test.mjs`，均纳入默认测试。
+### 1.6.73 기동 구문 오류
 
-### 1.6.73 启动语法错误
+핵심 agent-loop 가져오기가 `Missing catch or finally after try` 를 보고하면, 먼저 소스 파일에 #67 의 두 줄 사이에 있는 리터럴 역슬래시 n 이 있는지 확인한다. 1.6.74 는 템플릿을 고치고 이 알려진 손상 산출물 한 곳만 정확히 마이그레이션한다; 모든 역슬래시 n 을 전역으로 줄바꿈으로 바꿀 수 없다. 수정 전에 백업하고, 이후 전체 모듈에 구문 검사를 한다. 패치 marker 가 있다는 것만으로 성공으로 판정하지 않고, 이 모듈 하나를 고치려고 서드파티 플러그인 전체를 자동 비활성화하지 않는다. 이 수정은 어떤 권한 판정도 바꾸지 않으며, DSH 를 자동 재시작하지 않는다.
 
-若核心 agent-loop 导入报 `Missing catch or finally after try`，先核对源文件是否含 #67 两行之间的字面反斜线 n。1.6.74 修正模板，并精确迁移这一处已知损坏产物；不得把所有反斜线 n 全局换成换行。修复前备份，之后对完整模块做语法检查。不要仅因有补丁 marker 就判成功，也不要为修这一个模块自动禁用所有第三方插件。此修复不改任何权限判断；不自动重启 DSH。
+## 1.6.75: 대상 설치, 마켓과 미러
 
-## 1.6.75：目标安装、市场与镜像
-
-- #130：安装入口兼容旧 `dsh-desktop-host/lib/cli.js` 和由 `@deepseek-ai/dsh` manifest 声明的新 CLI。新壳存在 `harness-node-entry.mjs` 时沿用它。不要从 cwd、profile 依赖或用户目录找另一份宿主顶替；显式目标无效应报错。旧 CLI 默认 desktop，独立 dsh CLI 默认 web；已有自定义 profile 必须显式传入，不能搬运或重建用户配置。
-- 归档的只读识别与可写目标分开：`sealed_host:true` 表示 app.asar 已定位但还未解包，不等于补丁已加载。已有 app 目录缺组件时仍报告缺失，不用归档的健康文件掩盖故障。识别宿主不等于所有补丁已适配。
-- #132：`mirrorUrl` 存于现有 update-channel.json，可填完整 HTTPS 前缀或 `gh-proxy.org`；这是可选通道，不默认启用任何公共服务。显式空值关闭镜像；旧文件未声明则继承 PURGE_GH_MIRROR。代理与镜像可以并用，只影响更新请求。
-- 镜像覆盖发行查询、raw 元数据和归档传输；GitHub Token 不发送给镜像或镜像引发的重定向。安装前官方 API digest / SHA256SUMS 必须通过 GitHub（可走现有更新代理）取得；失败停止安装，不能把镜像同时提供的包和摘要当作独立来源证明，也不能关闭 TLS/SHA256。
-- #137：市场索引逐发行读取 manifest.dsh.compatibility.dsh；历史未声明版本保留原有限定。刷新索引即可读取新范围，不需要卸载插件、改用户兼容豁免或重启应用。
-- 本次不改宿主补丁定义，不改用户设置，不自动 apply/restart。隔离安装测试不代表模型行为或全部 GUI 功能验收。
+- #130: 설치 진입점은 옛 `dsh-desktop-host/lib/cli.js` 와 `@deepseek-ai/dsh` manifest 가 선언한 새 CLI 를 모두 지원한다. 새 셸에 `harness-node-entry.mjs` 가 있으면 그것을 따른다. cwd, profile 의존성, 사용자 디렉터리에서 다른 호스트를 찾아 대신 채우지 않는다; 명시적 대상이 무효이면 오류를 낸다. 옛 CLI 기본은 desktop, 독립 dsh CLI 기본은 web 이다; 이미 있는 사용자 정의 profile 은 반드시 명시적으로 넘기고, 사용자 설정을 옮기거나 다시 만들지 않는다.
+- 아카이브의 읽기 전용 인식과 쓰기 가능 대상은 분리한다: `sealed_host:true` 는 app.asar 를 찾았지만 아직 언팩하지 않았다는 뜻이며 패치가 로드되었다는 뜻이 아니다. 이미 있는 app 디렉터리에 컴포넌트가 없으면 여전히 누락으로 보고하고, 아카이브의 건강한 파일로 고장을 가리지 않는다. 호스트를 인식했다고 모든 패치가 적응되었다는 뜻도 아니다.
+- #132: `mirrorUrl` 은 기존 update-channel.json 에 저장하며, 전체 HTTPS 접두사나 `gh-proxy.org` 를 넣을 수 있다; 선택 사항인 채널이며 어떤 공개 서비스도 기본으로 켜지 않는다. 명시적 빈 값은 미러를 끄고, 옛 파일에 선언이 없으면 PURGE_GH_MIRROR 를 상속한다. 프록시와 미러는 함께 쓸 수 있고 업데이트 요청에만 영향을 준다.
+- 미러는 릴리스 조회, raw 메타데이터, 아카이브 전송을 담당한다; GitHub Token 은 미러나 미러가 유발한 리다이렉트로 보내지 않는다. 설치 전 공식 API digest / SHA256SUMS 는 GitHub 에서(기존 업데이트 프록시 사용 가능) 받아야 한다; 실패하면 설치를 중단하고, 미러가 함께 제공하는 패키지와 요약을 독립 출처 증명으로 삼을 수 없으며 TLS/SHA256 을 끌 수 없다.
+- #137: 마켓 인덱스는 릴리스별 manifest.dsh.compatibility.dsh 를 읽는다; 역사적으로 선언이 없는 버전은 기존 제한을 유지한다. 인덱스를 새로고침하면 새 범위를 읽을 수 있고, 플러그인을 제거하거나 사용자 호환 예외를 바꾸거나 앱을 재시작할 필요가 없다.
+- 이번 변경은 호스트 패치 정의를 바꾸지 않고 사용자 설정도 바꾸지 않으며, 자동 apply/restart 도 하지 않는다. 격리 설치 테스트는 모델 동작이나 GUI 전체 기능 검수를 뜻하지 않는다.
