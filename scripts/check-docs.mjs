@@ -1,5 +1,5 @@
 // 문서는 버전을 따라간다: 버전 번호, 릴리스 노트 첫 줄, README 의 버전 줄이 일치해야 한다.
-// README 는 영문 한 벌만 유지한다. README.ko-KR.md / docs/README.en.md 같은 사본 검사는 두지 않는다.
+// README.md 는 한국어 기본 본이고 docs/README.en.md 가 영문 사본이다. 두 벌 모두 같은 버전을 가리켜야 한다.
 // CI 에서 실행해 "코드는 릴리스했는데 README 는 이전 버전에 멈춰 있는" 상태를 막는다.
 import fs from "node:fs";
 import { checkInstallExamples } from "./lib/check-install-examples.mjs";
@@ -39,8 +39,8 @@ for (const file of ["docs/MAINTENANCE.md", "docs/INSTALLATION.md"]) {
   if (!read(file).includes(`현재 버전 **${version}**`)) problems.push(`${file} 의 현재 버전이 ${version} 로 동기화되지 않았다`);
 }
 
-// 4. README(영문 단일 본)에 반드시 있어야 하는 버전·설치 경계 문구.
-for (const needle of ["scripts/install.ps1", "issue #7", "before the plugin loads", "global npm registry"]) {
+// 4. README(한국어 기본 본)에 반드시 있어야 하는 버전·설치 경계 문구.
+for (const needle of ["scripts/install.ps1", "issue #7", "플러그인이 로드되기 전", "전역 npm 레지스트리"]) {
   if (!readme.includes(needle)) problems.push(`README.md 에 설치 경계 문구가 없다: ${needle}`);
 }
 if (!readme.includes(`**${version}**`)) {
@@ -48,6 +48,13 @@ if (!readme.includes(`**${version}**`)) {
 }
 const hostLine = readme.match(/\*\*DSH Desktop ([0-9a-z.\-]+)\*\*/i);
 if (!hostLine) problems.push("README.md 에 “**DSH Desktop …**” 대응 버전 줄이 없다");
+
+// 4b. 영문 사본도 같은 버전을 가리켜야 한다(사본이 뒤처지면 바로 드러나게).
+if (has("docs/README.en.md")) {
+  const readmeEn = read("docs/README.en.md");
+  if (!readmeEn.includes(`**${version}**`)) problems.push(`docs/README.en.md 의 버전이 ${version} 로 동기화되지 않았다`);
+  if (!readmeEn.includes("README.md")) problems.push("docs/README.en.md 에 한국어 본으로 돌아가는 링크가 없다");
+}
 
 // 5. 설치기는 이 포크의 master 에서 내려받아야 한다(다른 저장소 raw 경로 금지).
 for (const ext of ["sh", "ps1"]) {
