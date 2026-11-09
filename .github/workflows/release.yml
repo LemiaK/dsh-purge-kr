@@ -67,7 +67,10 @@ jobs:
         run: |
           set -euo pipefail
           version="$(node -p "require('./package.json').version")"
-          gh release create "$GITHUB_REF_NAME" "dsh-purge-community-$version.tgz" SHA256SUMS.txt --verify-tag --title "dsh-purge Community $version" --notes-file release-notes.md
+          # 발행 본문에는 이번 버전 구간만 넣는다. 과거 버전 기록은 release-notes.md 에 그대로 남는다.
+          awk 'NR==1{print;next} /^# /{exit} {print}' release-notes.md > release-body.md
+          test -s release-body.md
+          gh release create "$GITHUB_REF_NAME" "dsh-purge-community-$version.tgz" SHA256SUMS.txt --verify-tag --title "dsh-purge Community $version" --notes-file release-body.md
 
   installer:
     needs: preflight
