@@ -1,7 +1,7 @@
 {
   "name": "dsh-purge-community",
   "version": "1.6.86",
-  "description": "让 AI 更专注地辅助学习与动手实验：DSH 附加组件，提供状态自检、提示词与规则管理、本机备份与回滚。",
+  "description": "AI 가 학습과 직접 해보는 실험에 더 집중하도록 돕습니다: DSH 부가 컴포넌트로 상태 자체 점검, 프롬프트·규칙 관리, 로컬 백업과 롤백을 제공합니다.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

@@ -138,11 +138,11 @@ export function LayoutNotice({ info }) {
     return h(
       "details",
       { className: "dshpp-layout-details" },
-      h("summary", null, "换包状态：不适用（Web 宿主）"),
+      h("summary", null, "패키지 교체 상태: 해당 없음(Web 호스트)"),
       h(
         "p",
         { className: "dshpp-note" },
-        "Web 服务无需桌面归档换包。原始诊断：",
+        "Web 서비스는 데스크톱 아카이브 교체가 필요하지 않습니다. 원본 진단: ",
         layout.state,
         " / ",
         info.asar_handoff.phase,

@@ -212,12 +212,12 @@ test("a confirmed missing host remains a visible diagnostic, not a read failure"
 test("the compatibility strip distinguishes archived, kernel-only and unknown future levels", () => {
   const h = harness();
   for (const [level, label] of Object.entries({
-    qualified: "已回归验证",
-    mixed: "组件版本不一致",
-    unverified: "未验证版本",
-    sealed: "已定位归档宿主",
-    "kernel-verified": "内核已验证，宿主未验证",
-    "no-host": "未定位宿主",
+    qualified: "회귀 검증됨",
+    mixed: "컴포넌트 버전 불일치",
+    unverified: "미검증 버전",
+    sealed: "아카이브 호스트 확인됨",
+    "kernel-verified": "커널 검증됨, 호스트 미검증",
+    "no-host": "호스트 미탐지",
     "future-level": "future-level",
   })) {
     const html = renderToStaticMarkup(

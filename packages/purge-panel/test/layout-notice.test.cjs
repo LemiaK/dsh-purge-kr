@@ -91,9 +91,9 @@ test("only a confirmed Web target without desktop evidence or failures gets a ne
   const render = (info) =>
     renderToStaticMarkup(React.createElement(LayoutNotice, { info }));
   const html = render(web);
-  assert.match(html, /不适用（Web 宿主）/);
+  assert.match(html, /해당 없음\(Web 호스트\)/);
   assert.match(html, /unknown_runtime/);
-  assert.doesNotMatch(html, /dshpp-warn|换包完成/);
+  assert.doesNotMatch(html, /dshpp-warn|교체 완료/);
   for (const info of [
     { ...web, surface: "desktop" },
     { ...web, desktop_exe: "host.exe" },
@@ -114,6 +114,6 @@ test("only a confirmed Web target without desktop evidence or failures gets a ne
     { ...web, surface: undefined },
   ]) {
     assert.match(render(info), /dshpp-warn/);
-    assert.doesNotMatch(render(info), /不适用（Web 宿主）/);
+    assert.doesNotMatch(render(info), /해당 없음\(Web 호스트\)/);
   }
 });

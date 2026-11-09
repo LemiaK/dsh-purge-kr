@@ -94,7 +94,7 @@ test("compatibility reports instead of disabling: 0.2.1 qualified, unknown versi
     assert.equal(base.patch_writes_allowed, true);
     assert.equal(base.qualified, true);
     assert.equal(base.level, "qualified");
-    // 有宿主就允许写：门禁只挡"完全找不到宿主"，不按版本一刀切。
+    // 호스트가 있으면 기록을 허용한다: 게이트는 "호스트를 전혀 못 찾은 경우"만 막고, 버전으로 일괄 차단하지 않는다.
     assert.doesNotThrow(() => requirePatchCompatibility(f.aiBase));
     fs.writeFileSync(
       path.join(f.aiBase, "dsh-system-prompt/package.json"),
@@ -102,7 +102,7 @@ test("compatibility reports instead of disabling: 0.2.1 qualified, unknown versi
     );
     const mixed = compatibility(f.aiBase);
     assert.equal(mixed.level, "mixed");
-    // 版本不一致只报告，不再挡写入：补丁照打，状态与备份兜底。
+    // 버전이 달라도 보고만 하고 기록을 막지 않는다: 패치는 그대로 쓰고 상태·백업으로 보완한다.
     assert.equal(mixed.patch_writes_allowed, true);
     assert.doesNotThrow(() => requirePatchCompatibility(f.aiBase));
     for (const pkg of ["dsh-agent-loop", "dsh-system-prompt"])
@@ -374,7 +374,7 @@ test("large files are stored once and restored byte-for-byte", async () => {
     const b = await f.manager.backup("dedupe-b");
     const objects = path.join(f.home, "dsh-purge-community", "objects");
     assert.equal(fs.readdirSync(objects).length, 1, "same content -> one object");
-    // 备份目录里不再重复放这份大文件
+    // 백업 디렉터리에 이 큰 파일을 다시 넣지 않는다
     assert(
       !fs.existsSync(
         path.join(f.home, "dsh-purge-community", "backups", a.id, "plugins", PACKAGE, "client.js"),
@@ -384,7 +384,7 @@ test("large files are stored once and restored byte-for-byte", async () => {
     assert(f.manager.verify(a.id));
     assert(f.manager.verify(b.id));
 
-    // 回滚能把内容完整写回
+    // 롤백이 내용을 온전히 되돌린다
     const before = f.installs.length;
     await f.manager.rollback(a.id);
     const staged = f.installs.slice(before).find((p) => p.endsWith(PACKAGE + ".tgz"));
@@ -393,7 +393,7 @@ test("large files are stored once and restored byte-for-byte", async () => {
 
     const usage = f.manager.usage();
     assert(usage.objects > 0);
-    // 全部删掉以后，对象被回收
+    // 전부 지우면 객체가 회수된다
     const pr = f.manager.prune({ keepLast: 0, keepDays: 0, maxTotalBytes: 0 });
     assert(pr.gc.removed >= 0);
     assert.equal(f.manager.list().length <= 1, true);
@@ -415,7 +415,7 @@ test("atomicCopyFileSync copies atomically and cleans up on failure", async () =
       0,
       "no temp file left behind",
     );
-    // 目标目录不可写：抛错且不留临时文件
+    // 대상 디렉터리에 쓸 수 없으면 오류를 내고 임시 파일을 남기지 않는다
     fs.chmodSync(path.dirname(dst), 0o500);
     try {
       atomicCopyFileSync(src, path.join(path.dirname(dst), "x.txt"));
@@ -449,7 +449,7 @@ test('native installer stages a fresh source for its own rollback link and resto
 });
 
 test("overlay targets that are files are skipped instead of aborting the update", () => {
-  // issue #118：file:<tgz> 依赖会把 tar 包路径当成安装目录
+  // issue #118: file:<tgz> 의존성은 tar 경로를 설치 디렉터리로 착각한다
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "purge-dirs-"));
   try {
     const realDir = path.join(dir, "pkg");
